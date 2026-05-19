@@ -851,3 +851,67 @@ html, body {
 .dark .finput { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.10); color: var(--n-900); }
 .ftextarea { min-height: 64px; padding: 8px 12px; background: var(--n-0); border: 1px solid var(--n-150); border-radius: 8px; font-family: var(--sans); font-size: 13px; color: var(--n-900); outline: none; width: 100%; line-height: 1.5; resize: vertical; }
 .dark .ftextarea { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.10); }
+
+/* ─── RECIBOS · form primitives ─── */
+.flbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--n-500); font-weight: 500; display: flex; align-items: center; gap: 6px; }
+.flbl .req { color: var(--dang-500); margin-left: 2px; }
+.flbl .lock, .flbl .auto, .flbl .sugg { display: inline-flex; align-items: center; gap: 4px; font-size: 9.5px; padding: 1px 6px; border-radius: 4px; border: 1px solid; text-transform: none; letter-spacing: .02em; font-weight: 500; }
+.flbl .lock { color: var(--n-500); background: var(--n-50); border-color: var(--n-100); }
+.flbl .auto { color: var(--info-700); background: var(--info-50); border-color: #C8DFFC; }
+.flbl .sugg { color: var(--warn-700); background: var(--warn-50); border-color: #FCE7B0; }
+.dark .flbl .lock { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.10); }
+.dark .flbl .auto { background: rgba(46,144,250,.16); border-color: rgba(46,144,250,.35); color:#84CAFF; }
+.dark .flbl .sugg { background: rgba(247,144,9,.16);  border-color: rgba(247,144,9,.35);  color:#FDB022; }
+.finput.locked { background: var(--n-50); color: var(--n-700); }
+.dark .finput.locked { background: rgba(255,255,255,.03); }
+.fselect { height: 38px; background: var(--n-0); border: 1px solid var(--n-150); border-radius: 8px; padding: 0 12px; font-family: var(--sans); font-size: 13px; color: var(--n-900); outline: none; width: 100%; appearance: none; }
+.dark .fselect { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.10); }
+.fprefix { display: flex; align-items: stretch; background: var(--n-0); border: 1px solid var(--n-150); border-radius: 8px; overflow: hidden; }
+.fprefix .pre { display: flex; align-items: center; padding: 0 12px; background: var(--n-50); border-right: 1px solid var(--n-150); font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--n-500); }
+.fprefix input { flex: 1; height: 38px; border: none; outline: none; background: transparent; padding: 0 12px; font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--n-900); }
+.dark .fprefix { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.10); }
+.dark .fprefix .pre { background: rgba(255,255,255,.04); border-right-color: rgba(255,255,255,.10); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.divider-eb { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--n-300); font-weight: 500; margin: 4px 0; padding-top: 6px; border-top: 1px dashed var(--n-150); }
+
+/* ─── RECIBOS · cot search results ─── */
+.cot-result { display: flex; align-items: center; gap: 14px; padding: 11px 14px; border: 1px solid var(--n-150); border-radius: 10px; background: var(--n-0); cursor: pointer; transition: border-color 150ms ease; }
+.cot-result:hover { border-color: var(--n-300); }
+.cot-result.sel { border-color: var(--p-600); background: var(--p-50); border-width: 2px; padding: 10px 13px; }
+.dark .cot-result { background: rgba(255,255,255,.02); border-color: rgba(255,255,255,.08); }
+.dark .cot-result.sel { background: rgba(45,60,229,.16); border-color: var(--p-500); }
+.cot-result .cnum { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--n-900); }
+.cot-result .ccli { font-size: 13px; color: var(--n-900); font-weight: 500; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cot-result .cmeta { font-family: var(--mono); font-size: 11px; color: var(--n-500); }
+.cot-result .ctot { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--n-900); }
+.cot-result .csel-tag { font-size: 11px; font-weight: 600; color: var(--p-700); background: var(--p-100); padding: 3px 9px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; }
+.dark .cot-result .csel-tag { background: rgba(45,60,229,.3); color: #C2CCFF; }
+
+/* ─── RECIBOS · consolidación tabla ─── */
+.consolid { background: var(--n-50); border-radius: 8px; overflow: hidden; border: 1px solid var(--n-100); }
+.consolid table { width: 100%; border-collapse: collapse; }
+.consolid th { background: transparent; font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--n-500); padding: 8px 12px; text-align: left; font-weight: 500; }
+.consolid td { padding: 8px 12px; border-top: 1px solid var(--n-100); font-size: 12px; color: var(--n-700); }
+.consolid td.r { text-align: right; font-family: var(--mono); font-weight: 500; color: var(--n-900); }
+.consolid tr.total-row td { background: var(--succ-50); font-weight: 600; color: var(--succ-700); border-top: 2px solid #CCEDD8; }
+.consolid tr.total-row td.r { color: var(--succ-700); font-size: 14px; }
+.dark .consolid { background: rgba(255,255,255,.02); border-color: rgba(255,255,255,.06); }
+.dark .consolid td { border-color: rgba(255,255,255,.06); }
+.dark .consolid tr.total-row td { background: rgba(18,183,106,.14); color:#6CE9A6; border-top-color: rgba(18,183,106,.4); }
+
+/* ─── RECIBOS · consec banner (warn) ─── */
+.banner-warn { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; background: var(--warn-50); border: 1px solid #FCE7B0; border-radius: 8px; color: var(--warn-700); }
+.banner-warn .body { flex: 1; font-size: 12.5px; line-height: 1.5; }
+.banner-warn .body b { font-family: var(--mono); font-weight: 500; }
+.dark .banner-warn { background: rgba(247,144,9,.12); border-color: rgba(247,144,9,.35); color:#FDB022; }
+
+/* ─── RECIBOS · back btn ─── */
+.back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 500; color: var(--n-500); background: transparent; border: none; cursor: pointer; padding: 0; }
+.back-btn:hover { color: var(--n-900); }
+
+/* ─── RECIBOS · sub-tabs (cot / manual) ─── */
+.subtabs { display: inline-flex; padding: 3px; background: var(--n-100); border-radius: 8px; gap: 2px; }
+.subtabs .stab { padding: 6px 14px; border-radius: 6px; font-size: 12.5px; font-weight: 500; color: var(--n-500); cursor: pointer; background: transparent; border: none; font-family: inherit; }
+.subtabs .stab.active { background: var(--n-0); color: var(--n-900); box-shadow: 0 1px 2px rgba(14,16,24,.06); }
+.dark .subtabs { background: rgba(255,255,255,.05); }
+.dark .subtabs .stab.active { background: rgba(255,255,255,.10); color: var(--n-900); box-shadow: none; }
