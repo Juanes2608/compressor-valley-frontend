@@ -99,3 +99,59 @@ export const COTIZACIONES_ROWS: CotRow[] = [
 ];
 
 export const COT_PAGINATION = { shown: 8, total: 33, page: 1, totalPages: 5 };
+
+/* ─── Detalle canónico Cot-1042 ─── */
+
+export const COT_1042_DETALLE = {
+  num: "Cot-1042",
+  version: "v1",
+  estado: "apr" as CotEstado,
+  estadoLabel: "Aprobada",
+  fechaAprobacion: "19 abr 2026",
+  venceTexto: "Vence en 12 días (4 may 2026)",
+  total: 1840000,
+  cliente: {
+    razon: "Industrial XYZ S.A.S.",
+    nit: "800.123.456-7",
+    telefono: "+57 318 442 5512",
+    correo: "compras@industrialxyz.co",
+    contacto: "Sandra Pérez",
+    cargo: "Jefe de Mantenimiento",
+    direccion: "Calle 13 #62-50, Yumbo",
+    otrasCotizaciones: 3,
+  },
+  productos: [
+    { sku: "CMP-2210-A", nombre: "Filtro de aire GA-22",       meta: "Atlas Copco · 1613-7409-00", cant: 3, unit: 245000, sub: 735000 },
+    { sku: "CMP-2308-B", nombre: "Aceite ISO VG-46 5L",         meta: "Shell · Sintético",          cant: 2, unit: 142000, sub: 284000 },
+    { sku: "CMP-1985-C", nombre: 'Manguera descarga 1/2" 3m',   meta: "Genérica · Trenzada",        cant: 1, unit: 89500,  sub: 89500 },
+    { sku: "LBS-0421-X", nombre: "Mantenimiento mayor",         meta: "Labor · 4h técnico",         cant: 1, unit: 437718, sub: 437718 },
+  ],
+  totales: { subtotal: 1546218, iva: 293781, total: 1840000 },
+  terminos: {
+    validez: "15 días hábiles · vence 4 may 2026",
+    iva: "19%",
+    pago: "50% anticipo, saldo contra entrega.",
+    entrega: "5 a 7 días hábiles después de aprobación.",
+  },
+  bancos: [
+    { nombre: "Bancolombia · Cta. Ahorros",  numero: "123-4567890-1" },
+    { nombre: "Davivienda · Cta. Corriente", numero: "098-7654321"   },
+  ],
+  vinculacion: {
+    ot: "OT-2845",
+    cliente: "Industrial XYZ S.A.S.",
+    estado: "En proceso",
+    saldoPendiente: 1340000,
+    abonado: 500000,
+  },
+  abonos: [
+    { fecha: "20 abr 09:45", monto: 500000, metodo: "Transferencia", ref: "Ref. 8472" },
+  ],
+  abonoPct: 27,
+  historial: [
+    { tipo: "neut", accion: "Creada como borrador",       actor: "María L. · Vendedor",                       fecha: "19 abr 11:00" },
+    { tipo: "info", accion: "Enviada al cliente",         actor: "WhatsApp · María L.",                       fecha: "19 abr 14:20" },
+    { tipo: "succ", accion: "Aprobada por el cliente",    actor: 'Sandra Pérez · "Aceptada vía WhatsApp"',     fecha: "20 abr 09:00" },
+    { tipo: "info", accion: "Vinculada a OT-2845",        actor: "María L.",                                  fecha: "20 abr 09:10" },
+  ] as { tipo: "neut" | "info" | "succ"; accion: string; actor: string; fecha: string }[],
+};
