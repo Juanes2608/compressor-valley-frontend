@@ -412,6 +412,12 @@ html, body {
 .link-pill:hover { background: var(--p-100); }
 .dark .link-pill { background: rgba(45, 60, 229, 0.16); color: #C2CCFF; border-color: rgba(45, 60, 229, 0.35); }
 .dark .link-pill:hover { background: rgba(45, 60, 229, 0.25); }
+.link-pill.cot { background: var(--p-50);    color: var(--p-700);    border-color: var(--p-200); }
+.link-pill.v   { background: var(--succ-50); color: var(--succ-700); border-color: #CCEDD8; }
+.link-pill.ot  { background: var(--info-50); color: var(--info-700); border-color: #C8DFFC; }
+.dark .link-pill.cot { background: rgba(45,60,229,.18);  color:#C2CCFF; border-color: rgba(45,60,229,.4); }
+.dark .link-pill.v   { background: rgba(18,183,106,.16); color:#6CE9A6; border-color: rgba(18,183,106,.35); }
+.dark .link-pill.ot  { background: rgba(46,144,250,.16); color:#7CC4FD; border-color: rgba(46,144,250,.35); }
 
 /* ─── BTN (header/CTA del módulo) ─── */
 .btn {
