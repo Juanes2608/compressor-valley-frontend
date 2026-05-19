@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowLeftCircle, User, Package, FileText, Link2, Activity, Wallet,
   Phone, Mail, RefreshCw, Receipt, Download, MessageCircle,
-  MoreHorizontal, Minus, Plus, Maximize2, ChevronDown,
+  MoreHorizontal, Minus, Plus, Maximize2,
 } from "lucide-react";
 import { COT_1042_DETALLE } from "@/lib/cotizaciones-data";
 import { formatCOP } from "@/lib/format";
