@@ -35,6 +35,9 @@ import { Route as AdminCierresRouteImport } from './routes/admin.cierres'
 import { Route as AdminAuditoriaRouteImport } from './routes/admin.auditoria'
 import { Route as AdminAnalisisAbcRouteImport } from './routes/admin.analisis-abc'
 import { Route as AdminAlertasRouteImport } from './routes/admin.alertas'
+import { Route as OpsCotizacionesIndexRouteImport } from './routes/ops.cotizaciones.index'
+import { Route as OpsCotizacionesNuevaRouteImport } from './routes/ops.cotizaciones.nueva'
+import { Route as OpsCotizacionesIdRouteImport } from './routes/ops.cotizaciones.$id'
 
 const OpsRoute = OpsRouteImport.update({
   id: '/ops',
@@ -166,6 +169,21 @@ const AdminAlertasRoute = AdminAlertasRouteImport.update({
   path: '/alertas',
   getParentRoute: () => AdminRoute,
 } as any)
+const OpsCotizacionesIndexRoute = OpsCotizacionesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OpsCotizacionesRoute,
+} as any)
+const OpsCotizacionesNuevaRoute = OpsCotizacionesNuevaRouteImport.update({
+  id: '/nueva',
+  path: '/nueva',
+  getParentRoute: () => OpsCotizacionesRoute,
+} as any)
+const OpsCotizacionesIdRoute = OpsCotizacionesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => OpsCotizacionesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -183,7 +201,7 @@ export interface FileRoutesByFullPath {
   '/admin/top-10': typeof AdminTop10Route
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/ops/compras': typeof OpsComprasRoute
-  '/ops/cotizaciones': typeof OpsCotizacionesRoute
+  '/ops/cotizaciones': typeof OpsCotizacionesRouteWithChildren
   '/ops/devoluciones': typeof OpsDevolucionesRoute
   '/ops/ensambles': typeof OpsEnsamblesRoute
   '/ops/garantias': typeof OpsGarantiasRoute
@@ -194,6 +212,9 @@ export interface FileRoutesByFullPath {
   '/ops/recibos': typeof OpsRecibosRoute
   '/ops/traspasos': typeof OpsTraspasosRoute
   '/ops/ventas': typeof OpsVentasRoute
+  '/ops/cotizaciones/$id': typeof OpsCotizacionesIdRoute
+  '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
+  '/ops/cotizaciones/': typeof OpsCotizacionesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -211,7 +232,6 @@ export interface FileRoutesByTo {
   '/admin/top-10': typeof AdminTop10Route
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/ops/compras': typeof OpsComprasRoute
-  '/ops/cotizaciones': typeof OpsCotizacionesRoute
   '/ops/devoluciones': typeof OpsDevolucionesRoute
   '/ops/ensambles': typeof OpsEnsamblesRoute
   '/ops/garantias': typeof OpsGarantiasRoute
@@ -222,6 +242,9 @@ export interface FileRoutesByTo {
   '/ops/recibos': typeof OpsRecibosRoute
   '/ops/traspasos': typeof OpsTraspasosRoute
   '/ops/ventas': typeof OpsVentasRoute
+  '/ops/cotizaciones/$id': typeof OpsCotizacionesIdRoute
+  '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
+  '/ops/cotizaciones': typeof OpsCotizacionesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -240,7 +263,7 @@ export interface FileRoutesById {
   '/admin/top-10': typeof AdminTop10Route
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/ops/compras': typeof OpsComprasRoute
-  '/ops/cotizaciones': typeof OpsCotizacionesRoute
+  '/ops/cotizaciones': typeof OpsCotizacionesRouteWithChildren
   '/ops/devoluciones': typeof OpsDevolucionesRoute
   '/ops/ensambles': typeof OpsEnsamblesRoute
   '/ops/garantias': typeof OpsGarantiasRoute
@@ -251,6 +274,9 @@ export interface FileRoutesById {
   '/ops/recibos': typeof OpsRecibosRoute
   '/ops/traspasos': typeof OpsTraspasosRoute
   '/ops/ventas': typeof OpsVentasRoute
+  '/ops/cotizaciones/$id': typeof OpsCotizacionesIdRoute
+  '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
+  '/ops/cotizaciones/': typeof OpsCotizacionesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -281,6 +307,9 @@ export interface FileRouteTypes {
     | '/ops/recibos'
     | '/ops/traspasos'
     | '/ops/ventas'
+    | '/ops/cotizaciones/$id'
+    | '/ops/cotizaciones/nueva'
+    | '/ops/cotizaciones/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -298,7 +327,6 @@ export interface FileRouteTypes {
     | '/admin/top-10'
     | '/admin/usuarios'
     | '/ops/compras'
-    | '/ops/cotizaciones'
     | '/ops/devoluciones'
     | '/ops/ensambles'
     | '/ops/garantias'
@@ -309,6 +337,9 @@ export interface FileRouteTypes {
     | '/ops/recibos'
     | '/ops/traspasos'
     | '/ops/ventas'
+    | '/ops/cotizaciones/$id'
+    | '/ops/cotizaciones/nueva'
+    | '/ops/cotizaciones'
   id:
     | '__root__'
     | '/'
@@ -337,6 +368,9 @@ export interface FileRouteTypes {
     | '/ops/recibos'
     | '/ops/traspasos'
     | '/ops/ventas'
+    | '/ops/cotizaciones/$id'
+    | '/ops/cotizaciones/nueva'
+    | '/ops/cotizaciones/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -530,6 +564,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAlertasRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/ops/cotizaciones/': {
+      id: '/ops/cotizaciones/'
+      path: '/'
+      fullPath: '/ops/cotizaciones/'
+      preLoaderRoute: typeof OpsCotizacionesIndexRouteImport
+      parentRoute: typeof OpsCotizacionesRoute
+    }
+    '/ops/cotizaciones/nueva': {
+      id: '/ops/cotizaciones/nueva'
+      path: '/nueva'
+      fullPath: '/ops/cotizaciones/nueva'
+      preLoaderRoute: typeof OpsCotizacionesNuevaRouteImport
+      parentRoute: typeof OpsCotizacionesRoute
+    }
+    '/ops/cotizaciones/$id': {
+      id: '/ops/cotizaciones/$id'
+      path: '/$id'
+      fullPath: '/ops/cotizaciones/$id'
+      preLoaderRoute: typeof OpsCotizacionesIdRouteImport
+      parentRoute: typeof OpsCotizacionesRoute
+    }
   }
 }
 
@@ -561,9 +616,25 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface OpsCotizacionesRouteChildren {
+  OpsCotizacionesIdRoute: typeof OpsCotizacionesIdRoute
+  OpsCotizacionesNuevaRoute: typeof OpsCotizacionesNuevaRoute
+  OpsCotizacionesIndexRoute: typeof OpsCotizacionesIndexRoute
+}
+
+const OpsCotizacionesRouteChildren: OpsCotizacionesRouteChildren = {
+  OpsCotizacionesIdRoute: OpsCotizacionesIdRoute,
+  OpsCotizacionesNuevaRoute: OpsCotizacionesNuevaRoute,
+  OpsCotizacionesIndexRoute: OpsCotizacionesIndexRoute,
+}
+
+const OpsCotizacionesRouteWithChildren = OpsCotizacionesRoute._addFileChildren(
+  OpsCotizacionesRouteChildren,
+)
+
 interface OpsRouteChildren {
   OpsComprasRoute: typeof OpsComprasRoute
-  OpsCotizacionesRoute: typeof OpsCotizacionesRoute
+  OpsCotizacionesRoute: typeof OpsCotizacionesRouteWithChildren
   OpsDevolucionesRoute: typeof OpsDevolucionesRoute
   OpsEnsamblesRoute: typeof OpsEnsamblesRoute
   OpsGarantiasRoute: typeof OpsGarantiasRoute
@@ -578,7 +649,7 @@ interface OpsRouteChildren {
 
 const OpsRouteChildren: OpsRouteChildren = {
   OpsComprasRoute: OpsComprasRoute,
-  OpsCotizacionesRoute: OpsCotizacionesRoute,
+  OpsCotizacionesRoute: OpsCotizacionesRouteWithChildren,
   OpsDevolucionesRoute: OpsDevolucionesRoute,
   OpsEnsamblesRoute: OpsEnsamblesRoute,
   OpsGarantiasRoute: OpsGarantiasRoute,
