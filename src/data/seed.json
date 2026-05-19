@@ -1,0 +1,347 @@
+{
+  "_metadata": {
+    "version": "1.0",
+    "fecha_corte": "19 may 2026",
+    "descripcion": "Datos canónicos del ciclo comercial CHV. La cadena Cot-1042 → V-2847 → Rec-1284 → OT-2845 debe mantenerse coherente entre todos los mocks y la futura base de datos del proyecto. Cuando Claude Code genere datos hardcoded para mocks, debe respetar estas entidades exactamente."
+  },
+
+  "sedes": [
+    { "id": "WH-01", "nombre": "Cali", "completo": "WH-01 Cali", "ciudad": "Cali", "principal": true, "color": "#12B76A", "sede_color": "succ" },
+    { "id": "WH-02", "nombre": "Norte", "completo": "WH-02 Norte", "ciudad": "Cali", "color": "#2E90FA", "sede_color": "info" },
+    { "id": "WH-03", "nombre": "Sur", "completo": "WH-03 Sur", "ciudad": "Cali", "color": "#F79009", "sede_color": "warn" },
+    { "id": "WH-04", "nombre": "Tuluá", "completo": "WH-04 Tuluá", "ciudad": "Tuluá", "color": "#9A6FDF", "sede_color": "progress" }
+  ],
+
+  "usuarios": [
+    { "id": "u-001", "nombre": "Carlos Ríos", "iniciales": "CR", "rol": "Admin", "email": "carlos@cv.co", "sede_default": "WH-01", "activo": true, "ultima_conexion": "Hoy 09:15" },
+    { "id": "u-002", "nombre": "María Lozano", "iniciales": "ML", "rol": "Vendedor", "email": "maria@cv.co", "sede_default": "WH-01", "activo": true, "ultima_conexion": "Hoy 11:42" },
+    { "id": "u-003", "nombre": "Andrés Mejía", "iniciales": "AM", "rol": "Vendedor", "email": "andres@cv.co", "sede_default": "WH-02", "activo": true, "ultima_conexion": "Hoy 10:30" },
+    { "id": "u-004", "nombre": "Diego Páez", "iniciales": "DP", "rol": "Técnico", "email": "diego@cv.co", "sede_default": "WH-01", "activo": true, "ultima_conexion": "Hoy 13:00" },
+    { "id": "u-005", "nombre": "Sandra López", "iniciales": "SL", "rol": "Bodeguero", "email": "sandra@cv.co", "sede_default": "WH-01", "activo": true, "ultima_conexion": "Hoy 08:50" },
+    { "id": "u-006", "nombre": "Carlos Restrepo", "iniciales": "CR2", "rol": "Bodeguero", "email": "crestrepo@cv.co", "sede_default": "WH-04", "activo": true, "ultima_conexion": "Ayer 16:40" }
+  ],
+
+  "categorias": [
+    { "id": "cat-cmp", "nombre": "Compresores", "color": "#4456C2", "descripcion": "Compresores industriales nuevos y usados" },
+    { "id": "cat-rpt", "nombre": "Repuestos", "color": "#159F8A", "descripcion": "Filtros, válvulas, sellos, empaques, etc." },
+    { "id": "cat-hrm", "nombre": "Herramientas", "color": "#7244D5", "descripcion": "Herramientas neumáticas y de mantenimiento" },
+    { "id": "cat-lbr", "nombre": "Lubricantes", "color": "#C68420", "descripcion": "Aceites y lubricantes industriales" },
+    { "id": "cat-acc", "nombre": "Accesorios", "color": "#D24E8E", "descripcion": "Mangueras, acoples, conexiones" }
+  ],
+
+  "productos_canonicos": [
+    {
+      "sku": "CMP-2210-A",
+      "nombre": "Filtro de aire Atlas Copco GA-22",
+      "marca": "Atlas Copco",
+      "modelo": "1613-7409-00",
+      "codigo_proveedor": "1613-7409-00",
+      "codigo_interno": "F-AT-GA22-001",
+      "categoria": "cat-rpt",
+      "precio_venta": 245000,
+      "costo_promedio": 142500,
+      "ultimo_costo": 145000,
+      "stock_por_sede": { "WH-01": 8, "WH-02": 12, "WH-03": 6, "WH-04": 4 },
+      "stock_minimo": 5,
+      "stock_maximo": 50,
+      "punto_reorden": 10,
+      "abc": "A"
+    },
+    {
+      "sku": "CMP-2308-B",
+      "nombre": "Aceite ISO VG-46 5L",
+      "marca": "Shell",
+      "modelo": "Corena S2 R 46",
+      "categoria": "cat-lbr",
+      "precio_venta": 142000,
+      "costo_promedio": 89500,
+      "stock_por_sede": { "WH-01": 24, "WH-02": 18, "WH-03": 12, "WH-04": 8 },
+      "stock_minimo": 10,
+      "abc": "B"
+    },
+    {
+      "sku": "CMP-1985-C",
+      "nombre": "Manguera descarga 1/2\" 3m",
+      "marca": "Parker",
+      "modelo": "MH-1500-3",
+      "categoria": "cat-rpt",
+      "precio_venta": 89500,
+      "costo_promedio": 52000,
+      "stock_por_sede": { "WH-01": 15, "WH-02": 22, "WH-03": 8, "WH-04": 6 },
+      "stock_minimo": 8,
+      "abc": "B"
+    },
+    {
+      "sku": "LBS-0421-X",
+      "nombre": "Servicio mantenimiento mayor",
+      "marca": "Servicio interno",
+      "categoria": "cat-rpt",
+      "precio_venta": 437718,
+      "stock_por_sede": null,
+      "es_servicio": true
+    }
+  ],
+
+  "clientes_recurrentes": [
+    {
+      "razon_social": "Industrial XYZ S.A.S.",
+      "nit": "800.123.456-7",
+      "contacto": "Sandra Pérez",
+      "cargo": "Jefe de mantenimiento",
+      "telefono": "+57 318 442 5512",
+      "email": "compras@industrialxyz.co",
+      "direccion": "Zona Industrial Acopi, Yumbo",
+      "veces_comprado": 8,
+      "ultima_compra": "2026-04-08",
+      "monto_ultima": 620500
+    },
+    { "razon_social": "Constructora del Valle", "nit": "900.554.221-3", "telefono": "+57 315 778 4421", "veces_comprado": 5 },
+    { "razon_social": "Petrocali S.A.S.", "nit": "830.118.667-1", "telefono": "+57 312 442 9080", "veces_comprado": 12 },
+    { "razon_social": "Refinadora Pacífico", "nit": "860.998.331-2", "telefono": "+57 318 005 7711", "veces_comprado": 3 },
+    { "razon_social": "Embotelladora Norte", "nit": "901.224.118-9", "telefono": "+57 313 884 2105", "veces_comprado": 4 },
+    { "razon_social": "Compañía Lácteos Cali", "nit": "890.331.557-4", "telefono": "+57 317 990 1142", "veces_comprado": 7 },
+    { "razon_social": "Manufacturera del Pacífico", "nit": "900.778.220-6", "telefono": "+57 314 558 6677", "veces_comprado": 2 },
+    { "razon_social": "Industrias Andinas", "nit": "860.445.221-3", "telefono": "+57 318 220 4455", "veces_comprado": 9 },
+    { "razon_social": "Tecnologías del Sur", "nit": "901.667.110-2", "telefono": "+57 312 008 7799", "veces_comprado": 1 },
+    { "razon_social": "Manufacturas Andes", "nit": "890.221.110-5", "telefono": "+57 317 445 0011", "veces_comprado": 6 }
+  ],
+
+  "proveedores": [
+    { "nit": "900.123.456-7", "razon_social": "Atlas Copco Colombia", "contacto": "Pedro Sánchez", "condiciones_pago": "30 días" },
+    { "nit": "860.555.221-3", "razon_social": "Shell Lubricantes S.A.", "condiciones_pago": "60 días" },
+    { "nit": "901.778.110-2", "razon_social": "Distribuidora del Sur", "condiciones_pago": "Contado" },
+    { "nit": "800.442.018-9", "razon_social": "Industrias Hidráulicas", "condiciones_pago": "30 días" },
+    { "nit": "901.220.554-1", "razon_social": "Sullair Colombia", "condiciones_pago": "30 días" },
+    { "nit": "860.118.220-7", "razon_social": "Ingersoll Rand Distribución", "condiciones_pago": "30 días" },
+    { "nit": "901.005.339-4", "razon_social": "Tornillos y Tuercas SAS", "condiciones_pago": "Contado" },
+    { "nit": "800.770.991-2", "razon_social": "Lubricantes del Pacífico", "condiciones_pago": "60 días" },
+    { "nit": "860.448.012-3", "razon_social": "Bandas Industriales SA", "condiciones_pago": "30 días" }
+  ],
+
+  "cuentas_bancarias_empresa": [
+    { "id": "cb-001", "banco": "Bancolombia", "tipo": "Ahorros", "numero": "123-4567890-1", "con_iva": true, "default": true },
+    { "id": "cb-002", "banco": "Davivienda", "tipo": "Corriente", "numero": "098-7654321", "con_iva": true, "default": true },
+    { "id": "cb-003", "banco": "BBVA", "tipo": "Corriente", "numero": "567-8901234", "con_iva": false, "default": false },
+    { "id": "cb-004", "banco": "Nequi / Daviplata", "tipo": "Digital", "numero": "318-442-XX-XX", "con_iva": false, "default": false }
+  ],
+
+  "herramientas_taller": [
+    { "id": "HRM-2410-S", "nombre": "Llave torque digital", "marca": "Stanley", "modelo": "STN-2410", "categoria": "cat-hrm", "estado": "Prestada", "sede": "WH-01", "ubicacion": "Estante A-03" },
+    { "id": "HRM-3320-F", "nombre": "Multímetro Fluke", "marca": "Fluke", "modelo": "F-87V", "categoria": "cat-hrm", "estado": "Prestada", "sede": "WH-01", "ubicacion": "Estante A-15" },
+    { "id": "HRM-1180-B", "nombre": "Manómetro digital", "marca": "Bosch", "modelo": "BCH-MG-100", "categoria": "cat-hrm", "estado": "Prestada", "sede": "WH-01", "ubicacion": "Estante A-08" },
+    { "id": "HRM-2235-I", "nombre": "Pistola neumática", "marca": "Ingersoll Rand", "modelo": "IR-2235", "categoria": "cat-hrm", "estado": "Disponible", "sede": "WH-01", "ubicacion": "Estante B-04" },
+    { "id": "HRM-0500-G", "nombre": "Generador de ozono", "marca": "Generic", "modelo": "GZ-500", "categoria": "cat-hrm", "estado": "Mantenimiento", "sede": "WH-01", "ubicacion": "Servicio técnico" },
+    { "id": "HRM-3601-M", "nombre": "Sopladora industrial", "marca": "Makita", "modelo": "MK-BL360", "categoria": "cat-hrm", "estado": "Disponible", "sede": "WH-02", "ubicacion": "Estante C-22" },
+    { "id": "HRM-5001-M", "nombre": "Calibrador digital", "marca": "Mitutoyo", "modelo": "MTY-500", "categoria": "cat-hrm", "estado": "Disponible", "sede": "WH-01", "ubicacion": "Estante A-11" },
+    { "id": "HRM-2002-L", "nombre": "Soldadora MIG", "marca": "Lincoln", "modelo": "LC-MIG-200", "categoria": "cat-hrm", "estado": "Disponible", "sede": "WH-01", "ubicacion": "Estante B-09" },
+    { "id": "HRM-0501-A", "nombre": "Compresor portátil", "marca": "Atlas Copco", "modelo": "AC-PRT-50", "categoria": "cat-hrm", "estado": "Disponible", "sede": "WH-04", "ubicacion": "Estante D-01" },
+    { "id": "HRM-2767-M", "nombre": "Llave de impacto", "marca": "Milwaukee", "modelo": "MW-2767", "categoria": "cat-hrm", "estado": "Dañada", "sede": "WH-01", "ubicacion": "Servicio técnico" },
+    { "id": "HRM-PRO-S", "nombre": "Linterna industrial", "marca": "Streamlight", "modelo": "SL-PRO", "categoria": "cat-hrm", "estado": "Disponible", "sede": "WH-01", "ubicacion": "Estante A-22" },
+    { "id": "HRM-0718-F", "nombre": "Tester de presión", "marca": "Fluke", "modelo": "F-718", "categoria": "cat-hrm", "estado": "Disponible", "sede": "WH-02", "ubicacion": "Estante C-15" }
+  ],
+
+  "ciclo_comercial_canonico": {
+    "cotizacion": {
+      "id": "Cot-1042",
+      "fecha_creacion": "2026-04-19T11:00:00-05:00",
+      "fecha_envio": "2026-04-19T14:20:00-05:00",
+      "fecha_aprobacion": "2026-04-20T09:00:00-05:00",
+      "validez_dias": 15,
+      "vence": "2026-05-04",
+      "cliente_razon_social": "Industrial XYZ S.A.S.",
+      "cliente_nit": "800.123.456-7",
+      "cliente_contacto": "Sandra Pérez",
+      "cliente_telefono": "+57 318 442 5512",
+      "cotizado_por": "u-002",
+      "version": 1,
+      "estado": "Aprobada",
+      "items": [
+        { "sku": "CMP-2210-A", "cantidad": 3, "precio_unit": 245000, "subtotal": 735000 },
+        { "sku": "CMP-2308-B", "cantidad": 2, "precio_unit": 142000, "subtotal": 284000 },
+        { "sku": "CMP-1985-C", "cantidad": 1, "precio_unit": 89500, "subtotal": 89500 },
+        { "sku": "LBS-0421-X", "cantidad": 1, "precio_unit": 437718, "subtotal": 437718 }
+      ],
+      "subtotal": 1546218,
+      "iva": 293781,
+      "iva_pct": 19,
+      "total": 1840000,
+      "condiciones_pago": "50% anticipo, saldo contra entrega",
+      "tiempo_entrega": "5 a 7 días hábiles después de aprobación",
+      "cuentas_bancarias": ["cb-001", "cb-002"],
+      "ot_vinculada": "OT-2845",
+      "aprobada_via": "WhatsApp"
+    },
+
+    "venta": {
+      "id": "V-2847",
+      "fecha": "2026-05-15T14:23:00-05:00",
+      "cliente_razon_social": "Industrial XYZ S.A.S.",
+      "cliente_nit": "800.123.456-7",
+      "vendedor": "u-002",
+      "metodo_pago": "Transferencia",
+      "items_referencia": "Cot-1042",
+      "subtotal": 1546218,
+      "iva": 293781,
+      "total": 1840000,
+      "recibo_emitido": "Rec-1284",
+      "cotizacion_origen": "Cot-1042",
+      "ot_relacionada": "OT-2845",
+      "estado": "Completada"
+    },
+
+    "recibo": {
+      "id": "Rec-1284",
+      "fecha_emision": "2026-05-15T14:25:00-05:00",
+      "consecutivo_bd_auto": true,
+      "cliente_razon_social": "Industrial XYZ S.A.S.",
+      "concepto": "Pago V-2847 · 4 productos",
+      "tipo": "Por cotización",
+      "monto_total": 1840000,
+      "abonos_consolidados_de_ot": 500000,
+      "monto_neto_nuevo": 1340000,
+      "metodo_pago": "Transferencia",
+      "referencia_pago": "8472",
+      "emitido_por": "u-002",
+      "cotizacion_origen": "Cot-1042",
+      "venta_origen": "V-2847",
+      "ot_vinculada": "OT-2845",
+      "estado": "Activo"
+    },
+
+    "orden_trabajo": {
+      "id": "OT-2845",
+      "fecha_apertura": "2026-04-19T09:00:00-05:00",
+      "cliente_razon_social": "Industrial XYZ S.A.S.",
+      "cliente_nit": "800.123.456-7",
+      "cliente_contacto": "Sandra Pérez",
+      "cliente_telefono": "+57 318 442 5512",
+      "equipo_tipo": "Compresor",
+      "equipo_marca": "Atlas Copco",
+      "equipo_modelo": "GA-22",
+      "equipo_modelo_completo": "8112-3203-12",
+      "equipo_serie": "KS-2024-00847",
+      "equipo_anio": 2019,
+      "tecnico_asignado": "u-004",
+      "diagnostico": "Fuga de aceite por sello de eje principal. Cliente reporta caída de presión durante operación continua.",
+      "fecha_estimada_entrega": "2026-04-26",
+      "estado_actual": "En proceso",
+      "autorizacion_estado": "Autorizado",
+      "autorizacion_fecha": "2026-04-20T09:15:00-05:00",
+      "autorizado_por": "Sandra Pérez",
+      "autorizacion_via": "WhatsApp",
+      "evidencia_adjunta": true,
+      "abonos": [
+        {
+          "id": "ab-001",
+          "fecha": "2026-04-20T09:45:00-05:00",
+          "monto": 500000,
+          "metodo": "Transferencia",
+          "referencia": "8472",
+          "registrado_por": "u-002"
+        }
+      ],
+      "abonado_total": 500000,
+      "saldo_pendiente": 1340000,
+      "checklist_recepcion_marcados": 12,
+      "checklist_recepcion_total": 24,
+      "checklist_observaciones": "Llaves de servicio entregadas son genéricas, no las originales del fabricante. Lubricante recibido por debajo del nivel mínimo (vacío parcial).",
+      "cotizaciones_asociadas": ["Cot-1042"]
+    }
+  },
+
+  "checklist_oficial_24_items": [
+    { "orden": 1, "item": "Compresor", "categoria": "Estructura" },
+    { "orden": 2, "item": "Cabezote", "categoria": "Componentes mecánicos" },
+    { "orden": 3, "item": "Motor", "categoria": "Componentes mecánicos" },
+    { "orden": 4, "item": "Manómetro", "categoria": "Componentes mecánicos" },
+    { "orden": 5, "item": "Filtro de aire", "categoria": "Componentes mecánicos" },
+    { "orden": 6, "item": "Filtro de aceite", "categoria": "Componentes mecánicos" },
+    { "orden": 7, "item": "Válvula de seguridad", "categoria": "Componentes mecánicos" },
+    { "orden": 8, "item": "Mangueras de descarga", "categoria": "Accesorios" },
+    { "orden": 9, "item": "Mangueras de aspiración", "categoria": "Accesorios" },
+    { "orden": 10, "item": "Cables de alimentación", "categoria": "Componentes eléctricos" },
+    { "orden": 11, "item": "Ruedas", "categoria": "Estructura" },
+    { "orden": 12, "item": "Patas / soportes", "categoria": "Estructura" },
+    { "orden": 13, "item": "Empaques", "categoria": "Componentes mecánicos" },
+    { "orden": 14, "item": "Llaves de servicio", "categoria": "Accesorios" },
+    { "orden": 15, "item": "Manuales", "categoria": "Documentación" },
+    { "orden": 16, "item": "Acoples", "categoria": "Accesorios" },
+    { "orden": 17, "item": "Reguladores de presión", "categoria": "Componentes mecánicos" },
+    { "orden": 18, "item": "Lubricante incluido", "categoria": "Accesorios" },
+    { "orden": 19, "item": "Tablero eléctrico", "categoria": "Componentes eléctricos" },
+    { "orden": 20, "item": "Sensores", "categoria": "Componentes eléctricos" },
+    { "orden": 21, "item": "Bobinas", "categoria": "Componentes eléctricos" },
+    { "orden": 22, "item": "Correas", "categoria": "Componentes mecánicos" },
+    { "orden": 23, "item": "Carcasa", "categoria": "Estructura" },
+    { "orden": 24, "item": "Documentos del fabricante", "categoria": "Documentación" }
+  ],
+
+  "estados_ot": [
+    { "id": "abierta", "nombre": "Abierta", "color_semantico": "neutral" },
+    { "id": "en-proceso", "nombre": "En proceso", "color_semantico": "info" },
+    { "id": "esperando-repuesto", "nombre": "Esperando repuesto", "color_semantico": "warn" },
+    { "id": "completada", "nombre": "Completada", "color_semantico": "success" },
+    { "id": "pend-recogida", "nombre": "Pendiente de recogida", "color_semantico": "warn", "dot_pulsante": true, "criterio_F12": "OT > 30 días sin reclamar" },
+    { "id": "entregada", "nombre": "Entregada", "color_semantico": "neutral", "opacity": 0.55 }
+  ],
+
+  "estados_cotizacion": [
+    { "id": "borrador", "nombre": "Borrador", "color": "neutral" },
+    { "id": "enviada", "nombre": "Enviada", "color": "info" },
+    { "id": "aprobada", "nombre": "Aprobada", "color": "success" },
+    { "id": "rechazada", "nombre": "Rechazada", "color": "danger" },
+    { "id": "vencida", "nombre": "Vencida", "color": "warn", "dot_pulsante": true },
+    { "id": "convertida", "nombre": "Convertida", "color": "progress" }
+  ],
+
+  "estados_recepcion_compras": [
+    { "id": "pendiente", "nombre": "Pendiente", "color": "neutral" },
+    { "id": "completo", "nombre": "Completo", "color": "success" },
+    { "id": "parcial", "nombre": "Parcial", "color": "warn" },
+    { "id": "faltante", "nombre": "Faltante", "color": "danger" },
+    { "id": "excedente", "nombre": "Excedente", "color": "warn" }
+  ],
+
+  "estados_traspaso": [
+    { "id": "pendiente", "nombre": "Pendiente", "color": "neutral" },
+    { "id": "enviado", "nombre": "Enviado", "color": "info" },
+    { "id": "en-transito", "nombre": "En tránsito", "color": "warn", "dot_pulsante": true },
+    { "id": "recibido", "nombre": "Recibido", "color": "success" },
+    { "id": "cancelado", "nombre": "Cancelado", "color": "danger" }
+  ],
+
+  "estados_garantia": [
+    { "id": "activa", "nombre": "Activa", "color": "neutral" },
+    { "id": "en-analisis", "nombre": "En análisis", "color": "info" },
+    { "id": "aprobada", "nombre": "Aprobada", "color": "success" },
+    { "id": "en-proceso", "nombre": "En proceso", "color": "info", "dot_pulsante": true },
+    { "id": "resuelta", "nombre": "Resuelta", "color": "success" },
+    { "id": "rechazada", "nombre": "Rechazada", "color": "danger" },
+    { "id": "vencida", "nombre": "Vencida", "color": "warn", "dot_pulsante": true }
+  ],
+
+  "estados_herramienta": [
+    { "id": "disponible", "nombre": "Disponible", "color": "success" },
+    { "id": "prestada", "nombre": "Prestada", "color": "warn" },
+    { "id": "mantenimiento", "nombre": "Mantenimiento", "color": "neutral" },
+    { "id": "danada", "nombre": "Dañada", "color": "danger" }
+  ],
+
+  "parametros_sistema_default": {
+    "iva_pct": 19,
+    "validez_cotizacion_dias": 15,
+    "dias_alerta_ot_sin_recoger": 30,
+    "dias_garantia_default": 90,
+    "dias_conteo_ciclico": 15,
+    "dias_habiles_laborales": ["lunes", "martes", "miercoles", "jueves", "viernes"]
+  },
+
+  "contadores_sidebar_default": {
+    "inventario": "2.847",
+    "cotizaciones": 5,
+    "traspasos": 3,
+    "ordenes_trabajo": 14,
+    "herramientas": 2,
+    "alertas_admin": 8
+  }
+}
