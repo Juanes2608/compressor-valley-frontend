@@ -38,6 +38,7 @@ import { Route as AdminAlertasRouteImport } from './routes/admin.alertas'
 import { Route as OpsVentasIndexRouteImport } from './routes/ops.ventas.index'
 import { Route as OpsCotizacionesIndexRouteImport } from './routes/ops.cotizaciones.index'
 import { Route as OpsVentasNuevaRouteImport } from './routes/ops.ventas.nueva'
+import { Route as OpsVentasIdRouteImport } from './routes/ops.ventas.$id'
 import { Route as OpsCotizacionesNuevaRouteImport } from './routes/ops.cotizaciones.nueva'
 import { Route as OpsCotizacionesIdRouteImport } from './routes/ops.cotizaciones.$id'
 
@@ -186,6 +187,11 @@ const OpsVentasNuevaRoute = OpsVentasNuevaRouteImport.update({
   path: '/nueva',
   getParentRoute: () => OpsVentasRoute,
 } as any)
+const OpsVentasIdRoute = OpsVentasIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => OpsVentasRoute,
+} as any)
 const OpsCotizacionesNuevaRoute = OpsCotizacionesNuevaRouteImport.update({
   id: '/nueva',
   path: '/nueva',
@@ -226,6 +232,7 @@ export interface FileRoutesByFullPath {
   '/ops/ventas': typeof OpsVentasRouteWithChildren
   '/ops/cotizaciones/$id': typeof OpsCotizacionesIdRoute
   '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
+  '/ops/ventas/$id': typeof OpsVentasIdRoute
   '/ops/ventas/nueva': typeof OpsVentasNuevaRoute
   '/ops/cotizaciones/': typeof OpsCotizacionesIndexRoute
   '/ops/ventas/': typeof OpsVentasIndexRoute
@@ -257,6 +264,7 @@ export interface FileRoutesByTo {
   '/ops/traspasos': typeof OpsTraspasosRoute
   '/ops/cotizaciones/$id': typeof OpsCotizacionesIdRoute
   '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
+  '/ops/ventas/$id': typeof OpsVentasIdRoute
   '/ops/ventas/nueva': typeof OpsVentasNuevaRoute
   '/ops/cotizaciones': typeof OpsCotizacionesIndexRoute
   '/ops/ventas': typeof OpsVentasIndexRoute
@@ -291,6 +299,7 @@ export interface FileRoutesById {
   '/ops/ventas': typeof OpsVentasRouteWithChildren
   '/ops/cotizaciones/$id': typeof OpsCotizacionesIdRoute
   '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
+  '/ops/ventas/$id': typeof OpsVentasIdRoute
   '/ops/ventas/nueva': typeof OpsVentasNuevaRoute
   '/ops/cotizaciones/': typeof OpsCotizacionesIndexRoute
   '/ops/ventas/': typeof OpsVentasIndexRoute
@@ -326,6 +335,7 @@ export interface FileRouteTypes {
     | '/ops/ventas'
     | '/ops/cotizaciones/$id'
     | '/ops/cotizaciones/nueva'
+    | '/ops/ventas/$id'
     | '/ops/ventas/nueva'
     | '/ops/cotizaciones/'
     | '/ops/ventas/'
@@ -357,6 +367,7 @@ export interface FileRouteTypes {
     | '/ops/traspasos'
     | '/ops/cotizaciones/$id'
     | '/ops/cotizaciones/nueva'
+    | '/ops/ventas/$id'
     | '/ops/ventas/nueva'
     | '/ops/cotizaciones'
     | '/ops/ventas'
@@ -390,6 +401,7 @@ export interface FileRouteTypes {
     | '/ops/ventas'
     | '/ops/cotizaciones/$id'
     | '/ops/cotizaciones/nueva'
+    | '/ops/ventas/$id'
     | '/ops/ventas/nueva'
     | '/ops/cotizaciones/'
     | '/ops/ventas/'
@@ -607,6 +619,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpsVentasNuevaRouteImport
       parentRoute: typeof OpsVentasRoute
     }
+    '/ops/ventas/$id': {
+      id: '/ops/ventas/$id'
+      path: '/$id'
+      fullPath: '/ops/ventas/$id'
+      preLoaderRoute: typeof OpsVentasIdRouteImport
+      parentRoute: typeof OpsVentasRoute
+    }
     '/ops/cotizaciones/nueva': {
       id: '/ops/cotizaciones/nueva'
       path: '/nueva'
@@ -669,11 +688,13 @@ const OpsCotizacionesRouteWithChildren = OpsCotizacionesRoute._addFileChildren(
 )
 
 interface OpsVentasRouteChildren {
+  OpsVentasIdRoute: typeof OpsVentasIdRoute
   OpsVentasNuevaRoute: typeof OpsVentasNuevaRoute
   OpsVentasIndexRoute: typeof OpsVentasIndexRoute
 }
 
 const OpsVentasRouteChildren: OpsVentasRouteChildren = {
+  OpsVentasIdRoute: OpsVentasIdRoute,
   OpsVentasNuevaRoute: OpsVentasNuevaRoute,
   OpsVentasIndexRoute: OpsVentasIndexRoute,
 }
