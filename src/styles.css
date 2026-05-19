@@ -468,6 +468,20 @@ html, body {
   background: linear-gradient(90deg, #11185C 0%, #161F4A 100%);
 }
 
+/* ─── BOTTOM NAV (mobile) ─── */
+.chv-bottomnav {
+  background: var(--p-700);
+  color: #fff;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 -1px 0 0 rgba(17, 24, 92, 0.18);
+}
+.dark .chv-bottomnav {
+  background: #161F4A;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  box-shadow: none;
+}
+
+
 /* ─── STOCK PILLS (tabla Inventario) ─── */
 .stk-pill {
   font-family: var(--mono);

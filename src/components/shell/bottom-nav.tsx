@@ -12,7 +12,7 @@ const ITEMS = [
 export function BottomNav() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   return (
-    <nav className="lg:hidden sticky bottom-0 z-30 grid grid-cols-5 border-t border-[--n-100] bg-[--n-0] dark:border-white/[0.06]">
+    <nav className="chv-bottomnav lg:hidden sticky bottom-0 z-30 grid grid-cols-5">
       {ITEMS.map((it, i) => {
         const active = pathname === it.href;
         const Icon = it.icon;
@@ -23,10 +23,10 @@ export function BottomNav() {
               to={it.href}
               className="relative flex items-center justify-center"
             >
-              <span className="absolute -top-5 grid h-12 w-12 place-items-center rounded-full bg-[--p-600] text-white shadow-[--shadow-elevation]">
+              <span className="absolute -top-5 grid h-12 w-12 place-items-center rounded-full bg-white text-[--p-700] ring-2 ring-white/30 shadow-[--shadow-elevation]">
                 <Icon className="h-5 w-5" strokeWidth={2} />
               </span>
-              <span className="mt-7 text-[10px] font-medium text-[--n-500]">{it.label}</span>
+              <span className="mt-7 text-[10px] font-medium text-white/75">{it.label}</span>
             </Link>
           );
         }
@@ -38,10 +38,10 @@ export function BottomNav() {
             data-active={active}
           >
             <Icon
-              className={`h-[18px] w-[18px] ${active ? "text-[--p-600]" : "text-[--n-500]"}`}
+              className={`h-[18px] w-[18px] ${active ? "text-white" : "text-white/70"}`}
               strokeWidth={active ? 2 : 1.75}
             />
-            <span className={active ? "font-medium text-[--p-700]" : "text-[--n-500]"}>{it.label}</span>
+            <span className={active ? "font-medium text-white" : "text-white/70"}>{it.label}</span>
           </Link>
         );
       })}
