@@ -413,6 +413,30 @@ html, body {
 .dark .link-pill { background: rgba(45, 60, 229, 0.16); color: #C2CCFF; border-color: rgba(45, 60, 229, 0.35); }
 .dark .link-pill:hover { background: rgba(45, 60, 229, 0.25); }
 
+/* ─── BTN (header/CTA del módulo) ─── */
+.btn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 7px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid;
+  line-height: 1;
+  white-space: nowrap;
+}
+.btn-pri { background: var(--p-600); color: #fff; border-color: var(--p-600); }
+.btn-pri:hover { background: var(--p-700); border-color: var(--p-700); }
+.btn-out { background: var(--n-0); color: var(--n-700); border-color: var(--n-200); }
+.btn-out:hover { background: var(--n-50); }
+.dark .btn-out { background: rgba(255,255,255,0.04); color: var(--n-700); border-color: rgba(255,255,255,0.12); }
+.dark .btn-out:hover { background: rgba(255,255,255,0.08); }
+
+
 /* ─── SIDEBAR (oscura fija) ─── */
 .chv-sidebar {
   background: #0B1320;
