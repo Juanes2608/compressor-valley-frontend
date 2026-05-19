@@ -213,12 +213,17 @@ function Th({
 }
 
 function CotRowItem({ row }: { row: CotRow }) {
+  const navigate = useNavigate();
   return (
-    <tr className="h-12 cursor-pointer border-b border-border/60 last:border-b-0 hover:bg-muted/40">
+    <tr
+      className="h-12 cursor-pointer border-b border-border/60 last:border-b-0 hover:bg-muted/40"
+      onClick={() => navigate({ to: "/ops/cotizaciones/$id", params: { id: row.num } })}
+    >
       <Td>
         <Link
           to="/ops/cotizaciones/$id"
           params={{ id: row.num }}
+          onClick={(e) => e.stopPropagation()}
           className="font-mono text-[13px] font-medium text-foreground hover:underline"
         >
           {row.num}
