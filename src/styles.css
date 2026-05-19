@@ -748,3 +748,100 @@ html, body {
 .pdf-section-list b { font-weight: 600; color: #181A24; }
 .pdf-footer-legal { font-size: 8px; color: #5C6070; line-height: 1.55; }
 .pdf-footer-page  { font-family: var(--mono); font-size: 7.5px; letter-spacing: .1em; text-transform: uppercase; color: #7E8290; text-align: center; font-weight: 600; padding-top: 8px; border-top: .5px solid #DADCE3; }
+
+/* ─── VENTAS · vendor avatars ─── */
+.av-mini { width: 24px; height: 24px; border-radius: 999px; color: #fff; font-size: 10px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; font-family: var(--mono); flex-shrink: 0; }
+.av-mini.ml { background: linear-gradient(135deg, #3D4DE8, #1F2BC2); }
+.av-mini.am { background: linear-gradient(135deg, #C98A0F, #7E5708); }
+.av-mini.cr { background: linear-gradient(135deg, #2DA75A, #176B38); }
+
+/* ─── VENTAS · pago pills (efectivo/transfer/tarjeta/mixto) ─── */
+.pay-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 500; border: 1px solid; line-height: 1.35; white-space: nowrap; }
+.pay-pill .dot { width: 5px; height: 5px; border-radius: 999px; }
+.pay-pill.efectivo      { background: var(--n-50);    color: var(--n-700);    border-color: var(--n-150); }
+.pay-pill.efectivo .dot { background: #7E8290; }
+.pay-pill.transferencia      { background: var(--info-50); color: var(--info-700); border-color: #C8DFFC; }
+.pay-pill.transferencia .dot { background: var(--info-500); }
+.pay-pill.tarjeta      { background: var(--p-50); color: var(--p-700); border-color: var(--p-200); }
+.pay-pill.tarjeta .dot { background: var(--p-500); }
+.pay-pill.mixto        { background: var(--warn-50); color: var(--warn-700); border-color: #FCE7B0; }
+.pay-pill.mixto .dot   { background: var(--warn-500); }
+.dark .pay-pill.efectivo      { background: rgba(255,255,255,.04); color: var(--n-700); border-color: rgba(255,255,255,.08); }
+.dark .pay-pill.transferencia { background: rgba(46,144,250,.16); color: #7CC4FD; border-color: rgba(46,144,250,.35); }
+.dark .pay-pill.tarjeta       { background: rgba(123,135,255,.16); color: #C2CCFF; border-color: rgba(123,135,255,.35); }
+.dark .pay-pill.mixto         { background: rgba(247,144,9,.16); color: #FDB022; border-color: rgba(247,144,9,.35); }
+
+/* ─── VENTAS · estado pills extra ─── */
+.s-pill.s-comp { background: var(--succ-50); color: var(--succ-700); border-color: #CCEDD8; }
+.s-pill.s-comp .dot { background: var(--succ-500); }
+.s-pill.s-devp { background: var(--warn-50); color: var(--warn-700); border-color: #FCE7B0; }
+.s-pill.s-devp .dot { background: var(--warn-500); }
+.s-pill.s-anul { background: var(--dang-50); color: var(--dang-700); border-color: #F9CFCB; }
+.s-pill.s-anul .dot { background: var(--dang-500); }
+.dark .s-pill.s-comp { background: rgba(18,183,106,.16); color: #6CE9A6; border-color: rgba(18,183,106,.35); }
+.dark .s-pill.s-devp { background: rgba(247,144,9,.16);  color: #FDB022; border-color: rgba(247,144,9,.35); }
+.dark .s-pill.s-anul { background: rgba(240,68,56,.16);  color: #FDA29B; border-color: rgba(240,68,56,.35); }
+
+/* ─── VENTAS · cycle highlight ─── */
+.row-cycle { background: linear-gradient(90deg, var(--p-50) 0%, transparent 32%); }
+.row-cycle .v-num { color: var(--p-700); }
+.dark .row-cycle { background: linear-gradient(90deg, rgba(45,60,229,.18) 0%, transparent 32%); }
+.dark .row-cycle .v-num { color: #C2CCFF; }
+
+/* ─── VENTAS · receipt pill ─── */
+.rec-pill { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 6px; background: var(--p-50); color: var(--p-700); font-family: var(--mono); font-size: 11.5px; font-weight: 500; border: 1px solid var(--p-200); text-decoration: none; }
+.rec-pill:hover { background: var(--p-100); }
+.dark .rec-pill { background: rgba(45,60,229,.18); color: #C2CCFF; border-color: rgba(45,60,229,.4); }
+
+/* ─── VENTAS · vinculaciones del ciclo (3 columnas) ─── */
+.vinc-link-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 720px) { .vinc-link-grid { grid-template-columns: 1fr; } }
+.vinc-link { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; background: var(--n-0); border: 1px solid var(--n-150); border-radius: 8px; }
+.dark .vinc-link { background: rgba(255,255,255,.02); border-color: rgba(255,255,255,.08); }
+.vinc-link .vlk { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--n-300); }
+.vinc-link .vpill { display: inline-flex; width: fit-content; padding: 4px 10px; border-radius: 6px; background: var(--p-50); color: var(--p-700); font-family: var(--mono); font-size: 12.5px; font-weight: 500; border: 1px solid var(--p-200); }
+.dark .vinc-link .vpill { background: rgba(45,60,229,.18); color: #C2CCFF; border-color: rgba(45,60,229,.4); }
+.vinc-link .vst { font-size: 11.5px; color: var(--n-500); }
+
+/* ─── VENTAS · pay row (detalle) ─── */
+.pay-row { display: flex; align-items: center; gap: 14px; padding: 10px 12px; background: var(--n-50); border-radius: 8px; }
+.dark .pay-row { background: rgba(255,255,255,.04); }
+.pay-row .pdate { font-family: var(--mono); font-size: 11.5px; color: var(--n-500); }
+.pay-row .pamt  { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--n-900); margin-left: auto; }
+
+/* ─── VENTAS · stepper wizard ─── */
+.stepper { display: flex; align-items: center; gap: 0; background: var(--n-0); border: 1px solid var(--n-150); border-radius: 10px; padding: 14px 24px; }
+.dark .stepper { background: rgba(255,255,255,.02); border-color: rgba(255,255,255,.08); }
+.step { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 0 0 auto; min-width: 120px; }
+.step-dot { width: 28px; height: 28px; border-radius: 999px; border: 2px solid; font-family: var(--mono); font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
+.step.active .step-dot { background: var(--p-600); border-color: var(--p-600); color: #fff; }
+.step.todo   .step-dot { background: var(--n-0);   border-color: var(--n-200); color: var(--n-400); }
+.step.done   .step-dot { background: var(--succ-600); border-color: var(--succ-600); color: #fff; }
+.step-lbl { font-size: 12px; color: var(--n-500); }
+.step.active .step-lbl { color: var(--n-900); font-weight: 500; }
+.step-line { flex: 1; height: 2px; background: var(--n-150); margin-top: 14px; border-radius: 2px; }
+.step-line.done { background: var(--succ-500); }
+
+/* ─── VENTAS · banner cliente recurrente ─── */
+.banner-info { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 8px; background: var(--info-50); border: 1px solid #C8DFFC; color: var(--info-700); }
+.dark .banner-info { background: rgba(46,144,250,.12); border-color: rgba(46,144,250,.35); color: #84CAFF; }
+.banner-info .body { flex: 1; font-size: 12.5px; line-height: 1.5; }
+.banner-info .body b { font-family: var(--mono); font-weight: 500; }
+.banner-info .body sub { font-size: 11px; opacity: .85; display: block; margin-top: 2px; }
+
+/* ─── VENTAS · resumen cart ─── */
+.cart { background: var(--n-0); border: 1px solid var(--n-150); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 8px; position: sticky; top: 16px; }
+.dark .cart { background: rgba(255,255,255,.02); border-color: rgba(255,255,255,.08); }
+.cart-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--n-300); font-weight: 500; }
+.cart-line { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--n-500); padding: 4px 0; }
+.cart-line .v { font-family: var(--mono); font-weight: 500; color: var(--n-700); }
+.cart-line.tot { padding-top: 8px; border-top: 1px solid var(--n-150); color: var(--n-900); font-weight: 500; font-size: 14px; margin-top: 4px; }
+.cart-line.tot .v { font-size: 18px; color: var(--n-900); }
+
+/* ─── Form inputs (wizard) ─── */
+.finput { height: 38px; background: var(--n-0); border: 1px solid var(--n-150); border-radius: 8px; padding: 0 12px; font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--n-900); outline: none; width: 100%; }
+.finput.sans { font-family: var(--sans); font-weight: 400; }
+.finput:focus { border-color: var(--p-500); }
+.dark .finput { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.10); color: var(--n-900); }
+.ftextarea { min-height: 64px; padding: 8px 12px; background: var(--n-0); border: 1px solid var(--n-150); border-radius: 8px; font-family: var(--sans); font-size: 13px; color: var(--n-900); outline: none; width: 100%; line-height: 1.5; resize: vertical; }
+.dark .ftextarea { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.10); }
