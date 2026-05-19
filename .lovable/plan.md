@@ -1,63 +1,84 @@
-# Plan de acción · Frontend CHV en Lovable
+# Plan de acción · Migrar CHV de Claude Code a Lovable
 
-## Qué leí del ZIP
+## Qué tengo
 
-El `claude-code-kit` que subiste es un kit completo de migración pensado **explícitamente para Claude Code**, no para Lovable. Incluye:
+**Kit de docs (ZIP 1):**
+- `MASTER_PROMPT.md`, `ESTADO_PROYECTO.md`, `README.md`
+- `design-system/tokens.css` + `tailwind.config.ts` (sistema CHV v1.0: royal `#2D3CE5`, 5 pills semánticas, 5 categorías, 4 sedes, IBM Plex Sans/Mono)
+- `specs/SPEC_FUNCIONAL_CHV.md`, `REGLAS_UI_CHV.md`, `seed.json` (ciclo Cot-1042 → V-2847 → Rec-1284 → OT-2845)
+- `prompts/PLANTILLA_PROMPT_MODULO.md`, `ORDEN_DE_IMPLEMENTACION.md`
 
-- `MASTER_PROMPT.md` — prompt fundacional (Next.js 14 + App Router + Tailwind v3 + shadcn/ui).
-- `ESTADO_PROYECTO.md` — 18 pantallas canónicas archivadas, 22 módulos totales (12 `/ops` + 10 `/admin`), 16 con referencia visual lista.
-- `design-system/tokens.css` + `tailwind.config.ts` — sistema CHV v1.0 (royal `#2D3CE5`, 5 pills semánticas, 5 categorías, 4 sedes, IBM Plex).
-- `specs/SPEC_FUNCIONAL_CHV.md`, `REGLAS_UI_CHV.md`, `seed.json` — ciclo comercial canónico Cot-1042 → V-2847 → Rec-1284 → OT-2845.
-- `prompts/` — plantilla por módulo + orden de implementación.
+**18 HTML canónicos (ZIP 2):** Foundation Shell, Inventario v2, Cockpit v2, OT Lista + Detalle, Cotizaciones (Lista + Wizard + Detalle), Ventas, Recibos F14, Compras, Traspasos, Devoluciones, Garantías F13, Herramientas, Configuración + Usuarios, Sistema CHV v1.0, Picking. Todos disponibles, ya los tengo extraídos y puedo leerlos durante la construcción.
 
-El propio README dice que **descartaron Lovable previamente** porque el stack es distinto (TanStack Router + Tailwind v4 + Lovable Cloud). Si vamos a trabajar en Lovable de todas formas, hay que adaptar el kit, no aplicarlo literal.
+## Adaptación de stack obligatoria
 
-## Dos cosas importantes antes de arrancar
+El kit asume Next.js 14 + App Router + Tailwind v3. Lovable corre **TanStack Start v1 + React 19 + Tailwind v4 + Vite**. La traducción es directa pero hay que hacerla:
 
-1. **No puedo crear el repo de GitHub por vos.** La conexión a GitHub se hace desde la UI de Lovable: botón `+` (abajo a la izquierda en el chat) → GitHub → Connect project → autorizar Lovable GitHub App → Create Repository. A partir de ese momento, todo cambio que yo haga se sincroniza automáticamente al repo (sync bidireccional). Yo te aviso cuando estemos en el momento adecuado para conectarlo.
-2. **Faltan los 18 HTML canónicos de referencia.** El kit los referencia pero el ZIP solo trae los docs. Sin esos HTML no hay forma de hacer pixel-match de los módulos. Necesito que los subas (un ZIP aparte está bien) antes de empezar con módulos individuales.
+| Kit (Next.js) | Lovable (TanStack Start) |
+|---|---|
+| `app/(ops)/inventario/page.tsx` | `src/routes/ops.inventario.tsx` |
+| `app/(ops)/layout.tsx` con `children` | `src/routes/ops.tsx` con `<Outlet />` |
+| `app/layout.tsx` | `src/routes/__root.tsx` |
+| `next/font/google` | `<link>` Google Fonts en `__root` head |
+| `next-themes` | manejo manual de clase `dark` con persistencia en `localStorage` |
+| `tailwind.config.ts` v3 (`hex` en `:root`) | `src/styles.css` con `@theme inline` v4, manteniendo hex tal cual |
+| Server actions / route handlers | `createServerFn` o `src/routes/api/*` (solo cuando se integre backend) |
 
-## Decisión de stack — pedirte input
+Mantengo idénticos: tokens visuales, tipografía, ciclo comercial, spec funcional, reglas de tono, lista canónica de módulos.
 
-El kit pide Next.js 14 + Tailwind v3. Lovable corre TanStack Start v1 + React 19 + Tailwind v4 + Vite. Tres caminos:
+## Repo en GitHub
 
-- **A · Construir en Lovable adaptando el kit** (recomendado si querés usar Lovable). Traduzco rutas Next App Router → file-based routing de TanStack (`src/routes/ops.inventario.tsx`, etc.), `tokens.css` y la config Tailwind a la sintaxis `@theme inline` de v4, y mantengo idénticos: tokens, tipografía, spec, seed, ciclo comercial, reglas de UI/tono.
-- **B · Construir literal en Claude Code afuera de Lovable.** Es lo que el kit recomienda. Lovable no aporta valor acá.
-- **C · Híbrido.** Lovable para iterar visual rápido, exportar a GitHub, terminar en Claude Code. Más fricción.
+No puedo crearlo yo. Lo hacés vos desde la UI:
 
-Asumo **A** salvo que digas lo contrario.
+**Desktop:** botón `+` (abajo izquierda del chat) → **GitHub** → **Connect project** → autorizar la Lovable GitHub App → **Create Repository**.
+**Mobile:** botón `+` (abajo izquierda en modo Chat) → **GitHub**.
 
-## Plan de ejecución (asumiendo A)
+A partir de ahí el sync es bidireccional automático. Recomiendo conectarlo **antes** de que empiece a generar archivos para que todo quede versionado desde el commit inicial.
 
-1. **Conectar GitHub** desde la UI (vos, ahora).
-2. **Foundation** en Lovable:
-   - Portar `tokens.css` a `src/styles.css` (formato `@theme inline` + `oklch` o `hex` según corresponda).
-   - Fuentes IBM Plex Sans + Mono.
-   - Constantes `MODULOS_OPS`, `MODULOS_ADMIN`, `SEDES`, `CATEGORIAS`, `ROLES` en `src/lib/constants.ts`.
-   - `seed.json` tipado en `src/lib/mock-data.ts`.
-   - Shell `/ops`: sidebar oscura canónica (5 secciones, 12 módulos exactos con iconos y contadores), header con buscador Cmd+K, chip de sede, theme toggle, avatar.
-   - Shell `/admin`: sidebar con filete royal a la derecha, header "PANEL ADMINISTRATIVO" con dot info pulsante, 3 secciones / 10 módulos, active state info-500.
-   - Light/dark con persistencia.
-   - 22 rutas placeholder usando `<ModulePlaceholder name referenceFile />`.
-   - Redirect `/` → `/ops/inventario`.
-3. **Validación de la foundation** contra `Foundation Shell · 8 vistas.html` (necesito que lo subas).
-4. **Módulos uno por uno** siguiendo `ORDEN_DE_IMPLEMENTACION.md`, cada uno con su HTML canónico como referencia. Empezamos por Inventario.
-5. **Backend opcional** con Lovable Cloud cuando estén los módulos principales.
+## Plan de ejecución
 
-## Detalle técnico (sección para referencia)
+### Paso 0 · Vos
+Conectar el repo de GitHub.
 
-- `app/(ops)/layout.tsx` (Next) → `src/routes/ops.tsx` (layout con `<Outlet />`) + `src/routes/ops.inventario.tsx`, etc. Mismo para `admin`.
-- `tokens.css` v3 (`hsl` o `hex` en `:root`) → mantengo los hex tal cual y los expongo vía `@theme inline` mapeando `--color-*: var(--*)` para que las utilities Tailwind (`bg-p-600`, `text-cat-cmp`) funcionen en v4.
-- shadcn/ui ya está en el template — uso esos primitivos directamente.
-- `lucide-react` ya disponible.
-- Cero emojis, IDs en mono, montos COP con punto miles, fechas `19 abr 2026`, sin em dashes, sin flechas en texto — todo según `REGLAS_UI_CHV.md`.
-- `next-themes` → equivalente en Vite/React (manejo manual de clase `dark` con persistencia en localStorage).
-- `next/font/google` → `<link>` en `__root.tsx` head a Google Fonts IBM Plex.
+### Paso 1 · Foundation (un solo turno largo)
+- Portar `tokens.css` a `src/styles.css` con `@theme inline` (Tailwind v4) preservando todos los hex.
+- IBM Plex Sans + Mono vía Google Fonts en `__root.tsx`.
+- `src/lib/constants.ts`: `MODULOS_OPS`, `MODULOS_ADMIN`, `SEDES`, `CATEGORIAS`, `ROLES`.
+- `src/lib/mock-data.ts`: import tipado del `seed.json`.
+- `src/lib/utils.ts`: helpers `formatCOP`, `formatFechaCorta`, `formatFechaHora`, `formatIdMono`.
+- Layout `src/routes/ops.tsx`: sidebar oscura canónica (5 secciones, 12 módulos, iconos lucide, contadores), header (buscador Cmd+K, chip sede WH-01, theme toggle, avatar, botón "Panel Admin" si rol = Admin), bottom nav mobile.
+- Layout `src/routes/admin.tsx`: sidebar con filete royal derecho + header "PANEL ADMINISTRATIVO" con dot info pulsante, 10 módulos en 3 secciones, active state info-500, botón "Volver a Operaciones".
+- Light/dark toggle con persistencia, sin flash en primer paint.
+- 22 rutas placeholder con `<ModulePlaceholder name referenceFile />`.
+- Redirect `/` → `/ops/inventario`.
+- Login básico `/login` (visual del kit, sin auth real todavía).
 
-## Qué necesito de vos para arrancar
+Referencia visual primaria: `Foundation Shell · 8 vistas.html`.
 
-1. Confirmación del camino (A, B o C).
-2. Conectar GitHub desde la UI cuando te lo indique.
-3. Subir el ZIP con los **18 HTML canónicos** de `references/` (sin ellos, los módulos no se pueden replicar fiel).
+### Paso 2 · Validación de la foundation
+Comparás contra Foundation Shell. Si algo no cuadra, corrijo antes de avanzar.
 
-Si confirmás A y subís las referencias, estoy listo para empezar por la foundation.
+### Paso 3 · Módulos uno por uno
+Siguiendo `ORDEN_DE_IMPLEMENTACION.md`. Cada módulo: leo su HTML canónico, identifico patrones (estructura, estados, mobile), implemento en React con los primitivos shadcn ya disponibles, valido contra el HTML. Empezamos por **Inventario** (`Inventario v2 · 7 vistas.html`).
+
+### Paso 4 · Backend (opcional, post-módulos)
+Lovable Cloud para auth + Postgres + storage cuando los módulos visuales estén estables. Migrar mocks a queries reales.
+
+## Reglas que aplico en todo momento
+
+- Cero emojis en UI, iconos solo lucide-react.
+- IDs (Cot-1042, V-2847, OT-2845, SKUs) siempre en mono.
+- Montos COP: `$ 1.840.000` (mono, punto miles, sin centavos).
+- Fechas: `19 abr 2026` y `19 abr 2026 · 14:23`.
+- Sin em dashes (`—`), sin flechas en texto, sin lenguaje de IA ni superlativos.
+- Lista canónica de 22 módulos cerrada — no inventar entradas.
+- Coherencia obligatoria del ciclo Industrial XYZ en todos los módulos que la muestren.
+- Cero JS poblador: todo el contenido visible va hardcoded en JSX (los mocks se importan al render, no se generan en `useEffect`).
+- Contenedores principales sin `overflow: hidden`; tablas con `overflow-x: auto`; mobile transforma tablas a cards.
+
+## Qué necesito de vos ahora
+
+1. Confirmar que vamos con Lovable + TanStack Start (estás de acuerdo con la adaptación).
+2. Conectar el repo de GitHub (instrucciones arriba).
+
+Cuando esos dos pasos estén listos, arranco con la Foundation en un turno.
