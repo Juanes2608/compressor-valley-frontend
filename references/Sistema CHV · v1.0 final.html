@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Sistema CHV · v1.0 final</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after { box-sizing: border-box; }
+  :root {
+    /* NEUTROS */
+    --n-0:#FFFFFF; --n-25:#FBFBFC; --n-50:#F7F8FA; --n-75:#F2F4F7; --n-100:#EEF1F5;
+    --n-150:#E4E7EC; --n-200:#D0D5DD; --n-300:#98A2B3; --n-500:#667085;
+    --n-700:#475467; --n-800:#344054; --n-900:#1D2939; --n-950:#101828; --n-975:#0B1320;
+    /* PRIMARY ROYAL */
+    --p-50:#F0F2FF; --p-100:#E0E5FF; --p-200:#C2CCFF; --p-300:#94A3FF;
+    --p-400:#6B7BFF; --p-500:#4B5BF5; --p-600:#2D3CE5; --p-700:#2531C8;
+    --p-800:#1F2BA8; --p-900:#1A2389; --p-950:#11185C;
+    /* SPACING */
+    --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px;
+    --space-6:24px; --space-8:32px; --space-10:40px; --space-12:48px;
+    --r-card:12px; --r-md:6px; --r-sm:4px;
+  }
+  html,body{margin:0;padding:0}
+  body{font-family:'IBM Plex Sans',sans-serif;background:var(--n-25);color:var(--n-950);
+    padding:var(--space-12) var(--space-10) 96px;-webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale}
+  .page{max-width:1320px;margin:0 auto}
+
+  /* HEADER DOC */
+  .doc-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);
+    letter-spacing:.06em;text-transform:uppercase;margin:0 0 var(--space-2)}
+  .doc-meta span+span::before{content:" · ";margin:0 6px;color:var(--n-200)}
+  .doc-h1{font-weight:600;font-size:34px;letter-spacing:-0.025em;margin:0 0 var(--space-2)}
+  .doc-sub{font-size:15px;color:var(--n-500);margin:0 0 var(--space-3);max-width:780px;line-height:1.55}
+  .doc-tag{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;
+    border-radius:999px;font-size:11.5px;font-weight:500;font-family:'IBM Plex Mono',monospace;
+    background:#ECFDF3;color:#027A48;border:1px solid #A6F4C5;letter-spacing:.04em}
+  .doc-tag .dot{width:6px;height:6px;border-radius:999px;background:#12B76A}
+
+  /* TOC */
+  .toc{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3) var(--space-6);
+    margin:var(--space-8) 0 var(--space-12);padding:var(--space-5) var(--space-6);
+    background:#fff;border:1px solid var(--n-150);border-radius:var(--r-card)}
+  .toc a{text-decoration:none;color:var(--n-700);font-size:13.5px;display:flex;gap:var(--space-3);
+    align-items:baseline;padding:var(--space-1) 0}
+  .toc a:hover{color:var(--p-600)}
+  .toc-num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);font-weight:500;letter-spacing:.06em}
+
+  /* SECTION */
+  .section{margin-bottom:var(--space-12);scroll-margin-top:var(--space-6)}
+  .sec-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--n-300);margin:0 0 6px;font-weight:500}
+  .sec-title{font-weight:600;font-size:22px;letter-spacing:-0.018em;margin:0 0 var(--space-1)}
+  .sec-sub{font-size:13.5px;color:var(--n-500);margin:0 0 var(--space-5);max-width:780px;line-height:1.6}
+
+  /* CARDS */
+  .card{background:#fff;border:1px solid var(--n-150);border-radius:var(--r-card);padding:var(--space-5)}
+  .card-tight{padding:0;background:#fff;border:1px solid var(--n-150);border-radius:var(--r-card);overflow:hidden}
+  .card h4, .card-tight h4{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--n-500);margin:0 0 var(--space-4);font-weight:500}
+
+  /* TYPE TABLE */
+  .type-row{display:grid;grid-template-columns:80px 1fr 200px;align-items:baseline;
+    gap:var(--space-4);padding:var(--space-4) var(--space-5);border-bottom:1px solid var(--n-100)}
+  .type-row:last-child{border-bottom:none}
+  .type-token{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+    letter-spacing:.04em;text-transform:uppercase;font-weight:500}
+  .type-spec{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);text-align:right}
+  code.tk{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--n-700);
+    background:var(--n-50);padding:1px 6px;border-radius:3px;border:1px solid var(--n-150)}
+
+  /* RAMP */
+  .ramp{display:grid;grid-template-columns:170px repeat(11,1fr);gap:0;border:1px solid var(--n-150);
+    border-radius:var(--r-card);overflow:hidden;background:#fff;margin-bottom:var(--space-3)}
+  .ramp-12{display:grid;grid-template-columns:170px repeat(14,1fr);gap:0;border:1px solid var(--n-150);
+    border-radius:var(--r-card);overflow:hidden;background:#fff;margin-bottom:var(--space-3)}
+  .ramp-label{padding:var(--space-4);background:var(--n-50);border-right:1px solid var(--n-150);
+    display:flex;flex-direction:column;gap:var(--space-1);justify-content:center}
+  .ramp-name{font-weight:600;font-size:13px;letter-spacing:-0.01em;display:flex;align-items:center;gap:8px}
+  .ramp-dot{width:11px;height:11px;border-radius:999px}
+  .ramp-meaning{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--n-500);
+    letter-spacing:.04em;text-transform:uppercase}
+  .swatch{height:84px;position:relative;display:flex;flex-direction:column;justify-content:space-between;
+    padding:var(--space-2) 9px}
+  .sw-step{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500}
+  .sw-hex{font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1}
+  .star{outline:2px solid #fff;outline-offset:-4px}
+
+  /* PILLS LIGHT */
+  .pill{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:999px;
+    font-weight:500;font-size:12px;line-height:1;border:1px solid transparent}
+  .pill .dot{width:6px;height:6px;border-radius:999px}
+  .p-success{background:#ECFDF3;color:#027A48;border-color:#A6F4C5}.p-success .dot{background:#12B76A}
+  .p-warn{background:#FFFAEB;color:#B54708;border-color:#FEDF89}.p-warn .dot{background:#F79009}
+  .p-danger{background:#FEF3F2;color:#B42318;border-color:#FECDCA}.p-danger .dot{background:#F04438}
+  .p-info{background:#EFF8FF;color:#175CD3;border-color:#B2DDFF}.p-info .dot{background:#2E90FA}
+  .p-progress{background:#F4EBFF;color:#6941C6;border-color:#D9C2FF}.p-progress .dot{background:#9A6FDF}
+  .p-neutral{background:var(--n-100);color:var(--n-700);border-color:var(--n-200)}.p-neutral .dot{background:var(--n-300)}
+
+  /* CATEGORIES LIGHT — paso 500 canónico */
+  .cat{display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 12px 0 10px;
+    border-radius:6px;font-weight:500;font-size:12.5px;border:1px solid transparent}
+  .cat .sw{width:10px;height:10px;border-radius:2px}
+  .cat-cmp{background:#EEF2FF;color:#2A3478;border-color:#C7D0F2}.cat-cmp .sw{background:#4456C2}
+  .cat-rpt{background:#E8FAF6;color:#0E5F5A;border-color:#99E8DD}.cat-rpt .sw{background:#159F8A}
+  .cat-hrm{background:#F5F0FF;color:#5B21B6;border-color:#D9C2FF}.cat-hrm .sw{background:#7244D5}
+  .cat-lbr{background:#FEF3D6;color:#7A340B;border-color:#F8D58A}.cat-lbr .sw{background:#C68420}
+  .cat-acc{background:#FEEEF4;color:#9B226B;border-color:#FBC8DD}.cat-acc .sw{background:#D24E8E}
+  .cat-tibio{background:#FAFAFA;color:#475467;border-color:#E4E7EC}.cat-tibio .sw{background:#98A2B3}
+
+  /* CATEGORIES DARK */
+  .catd{display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 12px 0 10px;
+    border-radius:6px;font-weight:500;font-size:12.5px;border:1px solid transparent}
+  .catd .sw{width:10px;height:10px;border-radius:2px}
+  .catd-cmp{background:rgba(68,86,194,.14);color:#C7D0F2;border-color:rgba(68,86,194,.35)}
+  .catd-cmp .sw{background:#7886D2}
+  .catd-rpt{background:rgba(21,159,138,.14);color:#99E8DD;border-color:rgba(21,159,138,.35)}
+  .catd-rpt .sw{background:#2DBBA8}
+  .catd-hrm{background:rgba(114,68,213,.14);color:#D9C2FF;border-color:rgba(114,68,213,.35)}
+  .catd-hrm .sw{background:#B692F6}
+  .catd-lbr{background:rgba(198,132,32,.14);color:#FCD888;border-color:rgba(198,132,32,.4)}
+  .catd-lbr .sw{background:#F0B85A}
+  .catd-acc{background:rgba(210,78,142,.14);color:#FBC8DD;border-color:rgba(210,78,142,.35)}
+  .catd-acc .sw{background:#E972A0}
+
+  /* TABLE LIGHT */
+  .tbl{width:100%;border-collapse:collapse;font-size:13px}
+  .tbl th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--n-500);font-weight:500;padding:10px 12px;
+    border-bottom:1px solid var(--n-150);background:var(--n-50)}
+  .tbl td{padding:var(--space-3);border-bottom:1px solid var(--n-100);vertical-align:middle}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl td.sku{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--n-700)}
+  .tbl td.qty{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;text-align:right;color:var(--n-950)}
+  .tr-default{}
+  .tr-hover{background:var(--n-50)}
+  .tr-selected{background:var(--p-50);box-shadow:inset 2px 0 0 0 var(--p-600)}
+  .tr-focus{outline:2px solid var(--p-300);outline-offset:-2px;border-radius:4px}
+
+  /* CASE ROW (estado se siente light) */
+  .case-row{display:grid;grid-template-columns:90px 1fr 150px 100px;align-items:center;
+    gap:var(--space-3);padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--n-100)}
+  .case-row:last-child{border-bottom:none}
+  .case-id{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--n-700)}
+  .case-title{font-size:13px;font-weight:500}
+  .case-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);text-align:right}
+
+  /* DARK SURFACE */
+  .dark-block{background:var(--n-975);border:1px solid var(--n-800);border-radius:var(--r-card);
+    padding:var(--space-6);color:var(--n-50)}
+  .dark-block h4{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--n-300);margin:0 0 var(--space-4);font-weight:500}
+  .dark-tbl-wrap{background:var(--n-950);border:1px solid var(--n-800);border-radius:10px;overflow:hidden}
+  .dark-row{display:grid;grid-template-columns:90px 1fr 150px 100px;align-items:center;gap:var(--space-3);
+    padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--n-800)}
+  .dark-row:last-child{border-bottom:none}
+  .dark-id{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--n-300)}
+  .dark-title{font-size:13px;font-weight:500;color:var(--n-50)}
+  .dark-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);text-align:right}
+
+  .pill-d{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:999px;
+    font-weight:500;font-size:12px;line-height:1;border:1px solid transparent}
+  .pill-d .dot{width:6px;height:6px;border-radius:999px}
+  .pd-success{background:rgba(18,183,106,.12);color:#6CE9A6;border-color:rgba(18,183,106,.35)}.pd-success .dot{background:#32D583}
+  .pd-warn{background:rgba(247,144,9,.12);color:#FEC84B;border-color:rgba(247,144,9,.35)}.pd-warn .dot{background:#FDB022}
+  .pd-danger{background:rgba(240,68,56,.14);color:#FDA29B;border-color:rgba(240,68,56,.4)}.pd-danger .dot{background:#F97066}
+  .pd-info{background:rgba(46,144,250,.14);color:#84CAFF;border-color:rgba(46,144,250,.35)}.pd-info .dot{background:#53B1FD}
+  .pd-progress{background:rgba(154,111,223,.14);color:#D6BBFB;border-color:rgba(154,111,223,.35)}.pd-progress .dot{background:#B692F6}
+  .pd-neutral{background:var(--n-800);color:var(--n-300);border-color:var(--n-700)}.pd-neutral .dot{background:var(--n-500)}
+
+  .tbl-d{width:100%;border-collapse:collapse;font-size:13px;background:var(--n-950);
+    border:1px solid var(--n-800);border-radius:10px;overflow:hidden}
+  .tbl-d th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--n-300);font-weight:500;padding:10px 12px;
+    border-bottom:1px solid var(--n-800);background:rgba(255,255,255,.02)}
+  .tbl-d td{padding:var(--space-3);border-bottom:1px solid var(--n-800);vertical-align:middle;color:var(--n-50)}
+  .tbl-d tr:last-child td{border-bottom:none}
+  .tbl-d td.sku{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--n-300)}
+  .tbl-d td.qty{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;text-align:right;color:var(--n-50)}
+
+  /* BUTTONS */
+  .btn{height:36px;padding:0 14px;border-radius:var(--r-md);border:1px solid transparent;
+    font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:13px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px}
+  .btn-primary{background:var(--p-600);color:#fff}
+  .btn-primary:hover{background:var(--p-700)}
+  .btn-primary.is-focus{outline:2px solid var(--p-300);outline-offset:2px}
+  .btn-disabled{background:var(--n-50);color:var(--n-300);border-color:var(--n-150);cursor:not-allowed}
+  .btn-d-primary{background:var(--p-500);color:#fff;height:36px;padding:0 14px;border-radius:var(--r-md);
+    border:1px solid transparent;font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:13px;
+    display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+  .btn-d-primary.is-focus{outline:2px solid var(--p-200);outline-offset:2px}
+
+  /* ROW DARK FOCUS demo */
+  .row-d-demo{display:grid;grid-template-columns:90px 1fr 150px 100px;align-items:center;
+    gap:var(--space-3);padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--n-800)}
+  .row-d-demo:last-child{border-bottom:none}
+  .row-d-demo.focus{outline:2px solid var(--p-200);outline-offset:-2px;border-radius:6px}
+
+  /* SPACING demo */
+  .space-grid{display:grid;grid-template-columns:90px 1fr 320px;gap:var(--space-3);align-items:center}
+  .space-bar{height:18px;background:var(--p-200);border-radius:3px;display:inline-block;vertical-align:middle}
+  .space-token{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-700)}
+  .space-use{font-size:12.5px;color:var(--n-500)}
+  .space-row{display:contents}
+  .space-row > *{padding:var(--space-3) 0;border-bottom:1px solid var(--n-100)}
+
+  .siblings{display:flex;gap:var(--space-3);flex-wrap:wrap;padding:var(--space-5);
+    background:var(--n-50);border:1px solid var(--n-150);border-radius:10px}
+
+  /* SHY VS WEIGHT */
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)}
+  .compare-side{padding:var(--space-5);border-radius:var(--r-card);border:1px solid var(--n-150)}
+  .compare-side h5{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--n-500);margin:0 0 var(--space-3);font-weight:500}
+
+  /* WARN VS DANGER */
+  .vs{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--n-150);border-radius:10px;overflow:hidden}
+  .vs > div{padding:var(--space-5)}
+  .vs-card{background:#fff;border-radius:8px;padding:var(--space-3) var(--space-4);margin-bottom:var(--space-2)}
+  .vs-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+  .vs-id{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--n-700)}
+  .vs-title{font-size:13px;font-weight:500}
+
+  /* BLUE TRIO */
+  .trio{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3)}
+  .trio-cell{padding:var(--space-5);border-radius:var(--r-card);border:1px solid var(--n-150);background:#fff}
+  .trio-swatch{height:84px;border-radius:8px;margin-bottom:var(--space-3)}
+  .trio-name{font-weight:600;font-size:14px;letter-spacing:-0.01em;margin:0 0 4px}
+  .trio-hex{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--n-500);margin:0 0 var(--space-2)}
+  .trio-use{font-size:12.5px;color:var(--n-700);line-height:1.5}
+
+  /* CLOSED DECISIONS */
+  .closed{background:#fff;border:1px solid var(--n-150);border-radius:var(--r-card);overflow:hidden}
+  .closed-row{display:grid;grid-template-columns:24px 1fr;gap:var(--space-3);padding:var(--space-4) var(--space-5);
+    border-bottom:1px solid var(--n-100);align-items:start}
+  .closed-row:last-child{border-bottom:none}
+  .check-dot{width:18px;height:18px;border-radius:999px;background:#12B76A;display:flex;
+    align-items:center;justify-content:center;color:#fff;font-size:10px;margin-top:2px}
+  .closed-text{font-size:13.5px;color:var(--n-800);line-height:1.55}
+  .closed-text strong{font-weight:600;color:var(--n-950)}
+
+  /* DEPRECATED notice */
+  .deprecated{background:#FFFAEB;border:1px solid #FEDF89;border-radius:var(--r-card);
+    padding:var(--space-4) var(--space-5);margin-bottom:var(--space-12);display:flex;gap:var(--space-3);align-items:start}
+  .deprecated-icon{width:20px;height:20px;border-radius:999px;background:#F79009;color:#fff;
+    font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+  .deprecated-body{font-size:13px;color:#7A340B;line-height:1.55}
+  .deprecated-body strong{font-weight:600}
+
+  /* TYPE SAMPLE */
+  .type-sample-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)}
+  .type-sample{padding:var(--space-5);border:1px solid var(--n-150);border-radius:var(--r-card);background:#fff}
+  .type-sample h4{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--n-500);margin:0 0 var(--space-4);font-weight:500}
+
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <p class="doc-meta"><span>Compresores del Valle S.A.S.</span><span>Sistema de diseño · v1.0 final</span><span>Documento canónico</span></p>
+  <h1 class="doc-h1">Sistema CHV · v1.0 final</h1>
+  <p class="doc-sub">Documento de referencia único para tipografía, color, spacing y estados. Este archivo reemplaza a las versiones v1, v2 y v3 — donde existieron contradicciones, gana la decisión más reciente. Se aplica a todas las pantallas a partir de Órdenes de servicio · Kanban.</p>
+  <span class="doc-tag"><span class="dot"></span> Vigente · 02 may 2026</span>
+
+  <!-- DEPRECATED -->
+  <div class="deprecated" style="margin-top:var(--space-8)">
+    <div class="deprecated-icon">!</div>
+    <div class="deprecated-body">
+      <strong>v1, v2 y v3 quedan archivados.</strong> No usar como referencia para pantallas nuevas. Cambios sustantivos respecto a v1: Compresores Indigo Steel <code class="tk">#4456C2</code> (no <code class="tk">#1849A9</code>) · categorías canónicas en paso 500 (no 600) · Repuestos teal vivo <code class="tk">#159F8A</code> · Lubricantes ámbar dorado <code class="tk">#C68420</code> · focus ring light primary-300 / dark primary-200 · spacing scale formal añadida.
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <a href="#s01"><span class="toc-num">01</span> Tipografía</a>
+    <a href="#s02"><span class="toc-num">02</span> Neutros base</a>
+    <a href="#s03"><span class="toc-num">03</span> Primario royal</a>
+    <a href="#s04"><span class="toc-num">04</span> Estados semánticos</a>
+    <a href="#s05"><span class="toc-num">05</span> Categorías de producto</a>
+    <a href="#s06"><span class="toc-num">06</span> Estados de componente</a>
+    <a href="#s07"><span class="toc-num">07</span> Spacing scale</a>
+    <a href="#s08"><span class="toc-num">08</span> Dark mode</a>
+    <a href="#s09"><span class="toc-num">09</span> Verificación de pares</a>
+  </nav>
+
+  <!-- 01 TIPOGRAFÍA -->
+  <section class="section" id="s01">
+    <p class="sec-eyebrow">01 · Tipografía</p>
+    <h2 class="sec-title">IBM Plex Sans + IBM Plex Mono</h2>
+    <p class="sec-sub">Plex Sans para todo lo humano (labels, copy, headings). Plex Mono para todo lo que es dato técnico — la regla operativa: si es identificador, cantidad, código, ubicación, fecha, dinero o medida, va en mono. Esto da a la interfaz su carácter de "consola de operaciones" y elimina ambigüedad numérica.</p>
+
+    <div class="card-tight" style="margin-bottom:var(--space-4)">
+      <div class="type-row" style="background:var(--n-50);border-bottom:1px solid var(--n-150)">
+        <span class="type-token">token</span>
+        <span class="type-token">muestra</span>
+        <span class="type-token" style="text-align:right">spec</span>
+      </div>
+      <div class="type-row">
+        <span class="type-token">display</span>
+        <span style="font-family:'IBM Plex Sans';font-size:30px;font-weight:600;letter-spacing:-0.025em;line-height:1.15">Compresores del Valle</span>
+        <span class="type-spec">Sans 30 / 600 / -2.5%</span>
+      </div>
+      <div class="type-row">
+        <span class="type-token">h1</span>
+        <span style="font-family:'IBM Plex Sans';font-size:22px;font-weight:600;letter-spacing:-0.018em;line-height:1.2">Órdenes de servicio</span>
+        <span class="type-spec">Sans 22 / 600 / -1.8%</span>
+      </div>
+      <div class="type-row">
+        <span class="type-token">h2</span>
+        <span style="font-family:'IBM Plex Sans';font-size:18px;font-weight:600;letter-spacing:-0.015em;line-height:1.25">En reparación · 12 órdenes</span>
+        <span class="type-spec">Sans 18 / 600 / -1.5%</span>
+      </div>
+      <div class="type-row">
+        <span class="type-token">body-lg</span>
+        <span style="font-family:'IBM Plex Sans';font-size:15px;font-weight:400;letter-spacing:0;line-height:1.5">Texto principal de cards y descripciones largas.</span>
+        <span class="type-spec">Sans 15 / 400 / 0</span>
+      </div>
+      <div class="type-row">
+        <span class="type-token">body</span>
+        <span style="font-family:'IBM Plex Sans';font-size:14px;font-weight:400;letter-spacing:0;line-height:1.5">Texto base · filas de tabla · labels de formulario.</span>
+        <span class="type-spec">Sans 14 / 400 / 0</span>
+      </div>
+      <div class="type-row">
+        <span class="type-token">body-sm</span>
+        <span style="font-family:'IBM Plex Sans';font-size:12.5px;font-weight:500;letter-spacing:-0.005em;line-height:1.4">Texto secundario · meta · pills · badges.</span>
+        <span class="type-spec">Sans 12.5 / 500 / -0.5%</span>
+      </div>
+      <div class="type-row">
+        <span class="type-token">caption</span>
+        <span style="font-family:'IBM Plex Sans';font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;line-height:1.4;color:var(--n-500)">eyebrow · etiqueta de sección</span>
+        <span class="type-spec">Sans 11 / 500 / +6%</span>
+      </div>
+    </div>
+
+    <div class="card-tight">
+      <div class="type-row" style="background:var(--n-50);border-bottom:1px solid var(--n-150)">
+        <span class="type-token">mono</span>
+        <span class="type-token">muestra</span>
+        <span class="type-token" style="text-align:right">spec</span>
+      </div>
+      <div class="type-row">
+        <span class="type-token">mono-lg</span>
+        <span style="font-family:'IBM Plex Mono';font-size:18px;font-weight:500;letter-spacing:-0.01em">$ 1.847.300<span style="color:var(--n-500)"> COP</span></span>
+        <span class="type-spec">Mono 18 / 500 / -1%</span>
+      </div>
+      <div class="type-row">
+        <span class="type-token">mono-md</span>
+        <span style="font-family:'IBM Plex Mono';font-size:14px;font-weight:500">OS-2845 · VTA-00128 · A-04-12</span>
+        <span class="type-spec">Mono 14 / 500 / 0</span>
+      </div>
+      <div class="type-row">
+        <span class="type-token">mono-sm</span>
+        <span style="font-family:'IBM Plex Mono';font-size:12.5px;font-weight:400;color:var(--n-700)">SKU CMP-A2H-220 · Lote L-0428 · 02 may 2026 14:32</span>
+        <span class="type-spec">Mono 12.5 / 400 / 0</span>
+      </div>
+      <div class="type-row">
+        <span class="type-token">mono-xs</span>
+        <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--n-500)">timestamp · auditoría · token de recurso</span>
+        <span class="type-spec">Mono 11 / 500 / +6%</span>
+      </div>
+    </div>
+
+    <p style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-500);margin:var(--space-4) 0 0;line-height:1.6">
+      <strong>Regla mono:</strong> SKU, OS-####, VTA-####, COT-####, OC-####, cantidad, ubicación A-04-12, sede WH01, total $, timestamp, lote, medidas (1/2", 220V, 30 N·m). <strong>Regla sans:</strong> todo el resto.
+    </p>
+  </section>
+
+  <!-- 02 NEUTROS -->
+  <section class="section" id="s02">
+    <p class="sec-eyebrow">02 · Neutros</p>
+    <h2 class="sec-title">Cool gray azulado · 14 stops</h2>
+    <p class="sec-sub">Una sola rampa de neutros para light y dark — invertibles. Saturación baja con tilt azul (~210° H) que convive con el royal sin chocar y mantiene tono industrial sin caer en gris muerto.</p>
+
+    <div class="ramp-12">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:#475467"></span> Neutros</div>
+        <div class="ramp-meaning">cool gray · base universal</div>
+      </div>
+      <div class="swatch" style="background:#FFFFFF;color:#101828;border-right:1px solid var(--n-150)"><span class="sw-step">0</span><span class="sw-hex">#FFFFFF</span></div>
+      <div class="swatch" style="background:#FBFBFC;color:#101828"><span class="sw-step">25</span><span class="sw-hex">#FBFBFC</span></div>
+      <div class="swatch" style="background:#F7F8FA;color:#101828"><span class="sw-step">50</span><span class="sw-hex">#F7F8FA</span></div>
+      <div class="swatch" style="background:#F2F4F7;color:#101828"><span class="sw-step">75</span><span class="sw-hex">#F2F4F7</span></div>
+      <div class="swatch" style="background:#EEF1F5;color:#101828"><span class="sw-step">100</span><span class="sw-hex">#EEF1F5</span></div>
+      <div class="swatch" style="background:#E4E7EC;color:#101828"><span class="sw-step">150</span><span class="sw-hex">#E4E7EC</span></div>
+      <div class="swatch" style="background:#D0D5DD;color:#101828"><span class="sw-step">200</span><span class="sw-hex">#D0D5DD</span></div>
+      <div class="swatch" style="background:#98A2B3;color:#fff"><span class="sw-step">300</span><span class="sw-hex">#98A2B3</span></div>
+      <div class="swatch" style="background:#667085;color:#fff"><span class="sw-step">500</span><span class="sw-hex">#667085</span></div>
+      <div class="swatch" style="background:#475467;color:#fff"><span class="sw-step">700</span><span class="sw-hex">#475467</span></div>
+      <div class="swatch" style="background:#344054;color:#fff"><span class="sw-step">800</span><span class="sw-hex">#344054</span></div>
+      <div class="swatch" style="background:#1D2939;color:#fff"><span class="sw-step">900</span><span class="sw-hex">#1D2939</span></div>
+      <div class="swatch" style="background:#101828;color:#fff"><span class="sw-step">950</span><span class="sw-hex">#101828</span></div>
+      <div class="swatch" style="background:#0B1320;color:#fff"><span class="sw-step">975</span><span class="sw-hex">#0B1320</span></div>
+    </div>
+
+    <div class="card" style="margin-top:var(--space-4)">
+      <h4>Reglas de uso · neutros</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3) var(--space-6);font-size:13px;line-height:1.6">
+        <div><code class="tk">n-950</code> Texto principal · headings</div>
+        <div><code class="tk">n-700</code> Texto en mono — tablas y meta</div>
+        <div><code class="tk">n-500</code> Texto secundario · captions</div>
+        <div><code class="tk">n-300</code> Texto terciario · placeholders</div>
+        <div><code class="tk">n-200</code> Borders fuertes — separadores principales</div>
+        <div><code class="tk">n-150</code> Borders por defecto — cards e inputs</div>
+        <div><code class="tk">n-100</code> Borders débiles — divisores entre filas</div>
+        <div><code class="tk">n-50</code> Hover de fila · background de header de tabla</div>
+        <div><code class="tk">n-25</code> Background de página principal en light</div>
+        <div><code class="tk">n-0</code> Surface de cards · modales</div>
+        <div><code class="tk">n-975</code> Background de página en dark</div>
+        <div><code class="tk">n-950</code> Surface de cards en dark</div>
+        <div><code class="tk">n-900</code> Surface elevada en dark · toolbars</div>
+        <div><code class="tk">n-800</code> Borders en dark</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 PRIMARY -->
+  <section class="section" id="s03">
+    <p class="sec-eyebrow">03 · Primario</p>
+    <h2 class="sec-title">Royal · paso 600 como CTA canónico</h2>
+    <p class="sec-sub">Color de marca y de acción. Royal indigo con suficiente saturación para destacar pero sin caer en azul corporativo genérico. Un solo paso (600) como CTA principal por pantalla — múltiples CTAs primarios diluyen jerarquía.</p>
+
+    <div class="ramp">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:#2D3CE5"></span> Primary · Royal</div>
+        <div class="ramp-meaning">marca · CTA · activo</div>
+      </div>
+      <div class="swatch" style="background:#F0F2FF;color:#11185C"><span class="sw-step">50</span><span class="sw-hex">#F0F2FF</span></div>
+      <div class="swatch" style="background:#E0E5FF;color:#11185C"><span class="sw-step">100</span><span class="sw-hex">#E0E5FF</span></div>
+      <div class="swatch" style="background:#C2CCFF;color:#11185C"><span class="sw-step">200</span><span class="sw-hex">#C2CCFF</span></div>
+      <div class="swatch" style="background:#94A3FF;color:#11185C"><span class="sw-step">300</span><span class="sw-hex">#94A3FF</span></div>
+      <div class="swatch" style="background:#6B7BFF;color:#fff"><span class="sw-step">400</span><span class="sw-hex">#6B7BFF</span></div>
+      <div class="swatch" style="background:#4B5BF5;color:#fff"><span class="sw-step">500</span><span class="sw-hex">#4B5BF5</span></div>
+      <div class="swatch star" style="background:#2D3CE5;color:#fff"><span class="sw-step">600 ★</span><span class="sw-hex">#2D3CE5</span></div>
+      <div class="swatch" style="background:#2531C8;color:#fff"><span class="sw-step">700</span><span class="sw-hex">#2531C8</span></div>
+      <div class="swatch" style="background:#1F2BA8;color:#fff"><span class="sw-step">800</span><span class="sw-hex">#1F2BA8</span></div>
+      <div class="swatch" style="background:#1A2389;color:#fff"><span class="sw-step">900</span><span class="sw-hex">#1A2389</span></div>
+      <div class="swatch" style="background:#11185C;color:#fff"><span class="sw-step">950</span><span class="sw-hex">#11185C</span></div>
+    </div>
+
+    <div class="card" style="margin-top:var(--space-4)">
+      <h4>Reglas de uso · primary</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3) var(--space-6);font-size:13px;line-height:1.6">
+        <div><code class="tk">p-600</code> ★ CTA principal · navegación activa · botón "Crear/Confirmar"</div>
+        <div><code class="tk">p-700</code> Hover sobre p-600</div>
+        <div><code class="tk">p-500</code> CTA primario en dark mode</div>
+        <div><code class="tk">p-300</code> Focus ring en light · 2 px / offset 2 px</div>
+        <div><code class="tk">p-200</code> Focus ring en dark · 2 px / offset 2 px</div>
+        <div><code class="tk">p-50</code> Background de fila seleccionada · highlight sutil</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 ESTADOS -->
+  <section class="section" id="s04">
+    <p class="sec-eyebrow">04 · Estados</p>
+    <h2 class="sec-title">Seis rampas semánticas</h2>
+    <p class="sec-sub">Cada rampa entrega una pill con la misma fórmula: <code class="tk">bg = paso 50</code>, <code class="tk">border = paso 200</code>, <code class="tk">text = paso 700</code>, <code class="tk">dot = paso 500 ★</code>. Esto evita que cada pantalla improvise tonos.</p>
+
+    <!-- six ramps -->
+    <div class="ramp">
+      <div class="ramp-label"><div class="ramp-name"><span class="ramp-dot" style="background:#12B76A"></span> Success</div><div class="ramp-meaning">esmeralda cálido</div></div>
+      <div class="swatch" style="background:#ECFDF3;color:#054F31"><span class="sw-step">50</span><span class="sw-hex">#ECFDF3</span></div>
+      <div class="swatch" style="background:#D1FADF;color:#054F31"><span class="sw-step">100</span><span class="sw-hex">#D1FADF</span></div>
+      <div class="swatch" style="background:#A6F4C5;color:#054F31"><span class="sw-step">200</span><span class="sw-hex">#A6F4C5</span></div>
+      <div class="swatch" style="background:#6CE9A6;color:#054F31"><span class="sw-step">300</span><span class="sw-hex">#6CE9A6</span></div>
+      <div class="swatch" style="background:#32D583;color:#054F31"><span class="sw-step">400</span><span class="sw-hex">#32D583</span></div>
+      <div class="swatch star" style="background:#12B76A;color:#fff"><span class="sw-step">500 ★</span><span class="sw-hex">#12B76A</span></div>
+      <div class="swatch" style="background:#039855;color:#fff"><span class="sw-step">600</span><span class="sw-hex">#039855</span></div>
+      <div class="swatch" style="background:#027A48;color:#fff"><span class="sw-step">700</span><span class="sw-hex">#027A48</span></div>
+      <div class="swatch" style="background:#05603A;color:#fff"><span class="sw-step">800</span><span class="sw-hex">#05603A</span></div>
+      <div class="swatch" style="background:#054F31;color:#fff"><span class="sw-step">900</span><span class="sw-hex">#054F31</span></div>
+      <div class="swatch" style="background:#053321;color:#fff"><span class="sw-step">950</span><span class="sw-hex">#053321</span></div>
+    </div>
+
+    <div class="ramp">
+      <div class="ramp-label"><div class="ramp-name"><span class="ramp-dot" style="background:#F79009"></span> Warning</div><div class="ramp-meaning">ámbar cálido</div></div>
+      <div class="swatch" style="background:#FFFAEB;color:#7A2E0E"><span class="sw-step">50</span><span class="sw-hex">#FFFAEB</span></div>
+      <div class="swatch" style="background:#FEF0C7;color:#7A2E0E"><span class="sw-step">100</span><span class="sw-hex">#FEF0C7</span></div>
+      <div class="swatch" style="background:#FEDF89;color:#7A2E0E"><span class="sw-step">200</span><span class="sw-hex">#FEDF89</span></div>
+      <div class="swatch" style="background:#FEC84B;color:#7A2E0E"><span class="sw-step">300</span><span class="sw-hex">#FEC84B</span></div>
+      <div class="swatch" style="background:#FDB022;color:#7A2E0E"><span class="sw-step">400</span><span class="sw-hex">#FDB022</span></div>
+      <div class="swatch star" style="background:#F79009;color:#fff"><span class="sw-step">500 ★</span><span class="sw-hex">#F79009</span></div>
+      <div class="swatch" style="background:#DC6803;color:#fff"><span class="sw-step">600</span><span class="sw-hex">#DC6803</span></div>
+      <div class="swatch" style="background:#B54708;color:#fff"><span class="sw-step">700</span><span class="sw-hex">#B54708</span></div>
+      <div class="swatch" style="background:#93370D;color:#fff"><span class="sw-step">800</span><span class="sw-hex">#93370D</span></div>
+      <div class="swatch" style="background:#7A2E0E;color:#fff"><span class="sw-step">900</span><span class="sw-hex">#7A2E0E</span></div>
+      <div class="swatch" style="background:#4E1D09;color:#fff"><span class="sw-step">950</span><span class="sw-hex">#4E1D09</span></div>
+    </div>
+
+    <div class="ramp">
+      <div class="ramp-label"><div class="ramp-name"><span class="ramp-dot" style="background:#F04438"></span> Danger</div><div class="ramp-meaning">coral rojizo</div></div>
+      <div class="swatch" style="background:#FEF3F2;color:#7A271A"><span class="sw-step">50</span><span class="sw-hex">#FEF3F2</span></div>
+      <div class="swatch" style="background:#FEE4E2;color:#7A271A"><span class="sw-step">100</span><span class="sw-hex">#FEE4E2</span></div>
+      <div class="swatch" style="background:#FECDCA;color:#7A271A"><span class="sw-step">200</span><span class="sw-hex">#FECDCA</span></div>
+      <div class="swatch" style="background:#FDA29B;color:#7A271A"><span class="sw-step">300</span><span class="sw-hex">#FDA29B</span></div>
+      <div class="swatch" style="background:#F97066;color:#7A271A"><span class="sw-step">400</span><span class="sw-hex">#F97066</span></div>
+      <div class="swatch star" style="background:#F04438;color:#fff"><span class="sw-step">500 ★</span><span class="sw-hex">#F04438</span></div>
+      <div class="swatch" style="background:#D92D20;color:#fff"><span class="sw-step">600</span><span class="sw-hex">#D92D20</span></div>
+      <div class="swatch" style="background:#B42318;color:#fff"><span class="sw-step">700</span><span class="sw-hex">#B42318</span></div>
+      <div class="swatch" style="background:#912018;color:#fff"><span class="sw-step">800</span><span class="sw-hex">#912018</span></div>
+      <div class="swatch" style="background:#7A271A;color:#fff"><span class="sw-step">900</span><span class="sw-hex">#7A271A</span></div>
+      <div class="swatch" style="background:#55160C;color:#fff"><span class="sw-step">950</span><span class="sw-hex">#55160C</span></div>
+    </div>
+
+    <div class="ramp">
+      <div class="ramp-label"><div class="ramp-name"><span class="ramp-dot" style="background:#2E90FA"></span> Info</div><div class="ramp-meaning">azul royal claro</div></div>
+      <div class="swatch" style="background:#EFF8FF;color:#194185"><span class="sw-step">50</span><span class="sw-hex">#EFF8FF</span></div>
+      <div class="swatch" style="background:#D1E9FF;color:#194185"><span class="sw-step">100</span><span class="sw-hex">#D1E9FF</span></div>
+      <div class="swatch" style="background:#B2DDFF;color:#194185"><span class="sw-step">200</span><span class="sw-hex">#B2DDFF</span></div>
+      <div class="swatch" style="background:#84CAFF;color:#194185"><span class="sw-step">300</span><span class="sw-hex">#84CAFF</span></div>
+      <div class="swatch" style="background:#53B1FD;color:#194185"><span class="sw-step">400</span><span class="sw-hex">#53B1FD</span></div>
+      <div class="swatch star" style="background:#2E90FA;color:#fff"><span class="sw-step">500 ★</span><span class="sw-hex">#2E90FA</span></div>
+      <div class="swatch" style="background:#1570EF;color:#fff"><span class="sw-step">600</span><span class="sw-hex">#1570EF</span></div>
+      <div class="swatch" style="background:#175CD3;color:#fff"><span class="sw-step">700</span><span class="sw-hex">#175CD3</span></div>
+      <div class="swatch" style="background:#1849A9;color:#fff"><span class="sw-step">800</span><span class="sw-hex">#1849A9</span></div>
+      <div class="swatch" style="background:#194185;color:#fff"><span class="sw-step">900</span><span class="sw-hex">#194185</span></div>
+      <div class="swatch" style="background:#102A56;color:#fff"><span class="sw-step">950</span><span class="sw-hex">#102A56</span></div>
+    </div>
+
+    <div class="ramp">
+      <div class="ramp-label"><div class="ramp-name"><span class="ramp-dot" style="background:#9A6FDF"></span> In-progress</div><div class="ramp-meaning">ciruela violeta</div></div>
+      <div class="swatch" style="background:#F4EBFF;color:#42307D"><span class="sw-step">50</span><span class="sw-hex">#F4EBFF</span></div>
+      <div class="swatch" style="background:#E9D7FE;color:#42307D"><span class="sw-step">100</span><span class="sw-hex">#E9D7FE</span></div>
+      <div class="swatch" style="background:#D9C2FF;color:#42307D"><span class="sw-step">200</span><span class="sw-hex">#D9C2FF</span></div>
+      <div class="swatch" style="background:#C0A1F7;color:#42307D"><span class="sw-step">300</span><span class="sw-hex">#C0A1F7</span></div>
+      <div class="swatch" style="background:#B692F6;color:#42307D"><span class="sw-step">400</span><span class="sw-hex">#B692F6</span></div>
+      <div class="swatch star" style="background:#9A6FDF;color:#fff"><span class="sw-step">500 ★</span><span class="sw-hex">#9A6FDF</span></div>
+      <div class="swatch" style="background:#7F56D9;color:#fff"><span class="sw-step">600</span><span class="sw-hex">#7F56D9</span></div>
+      <div class="swatch" style="background:#6941C6;color:#fff"><span class="sw-step">700</span><span class="sw-hex">#6941C6</span></div>
+      <div class="swatch" style="background:#53389E;color:#fff"><span class="sw-step">800</span><span class="sw-hex">#53389E</span></div>
+      <div class="swatch" style="background:#42307D;color:#fff"><span class="sw-step">900</span><span class="sw-hex">#42307D</span></div>
+      <div class="swatch" style="background:#2C1C5F;color:#fff"><span class="sw-step">950</span><span class="sw-hex">#2C1C5F</span></div>
+    </div>
+
+    <div class="ramp">
+      <div class="ramp-label"><div class="ramp-name"><span class="ramp-dot" style="background:#98A2B3"></span> Neutral</div><div class="ramp-meaning">estado tibio</div></div>
+      <div class="swatch" style="background:#F7F8FA;color:#1D2939"><span class="sw-step">50</span><span class="sw-hex">#F7F8FA</span></div>
+      <div class="swatch" style="background:#EEF1F5;color:#1D2939"><span class="sw-step">100</span><span class="sw-hex">#EEF1F5</span></div>
+      <div class="swatch" style="background:#D0D5DD;color:#1D2939"><span class="sw-step">200</span><span class="sw-hex">#D0D5DD</span></div>
+      <div class="swatch" style="background:#B0B7C3;color:#1D2939"><span class="sw-step">300</span><span class="sw-hex">#B0B7C3</span></div>
+      <div class="swatch" style="background:#98A2B3;color:#1D2939"><span class="sw-step">400</span><span class="sw-hex">#98A2B3</span></div>
+      <div class="swatch star" style="background:#98A2B3;color:#fff"><span class="sw-step">500 ★</span><span class="sw-hex">#98A2B3</span></div>
+      <div class="swatch" style="background:#667085;color:#fff"><span class="sw-step">600</span><span class="sw-hex">#667085</span></div>
+      <div class="swatch" style="background:#475467;color:#fff"><span class="sw-step">700</span><span class="sw-hex">#475467</span></div>
+      <div class="swatch" style="background:#344054;color:#fff"><span class="sw-step">800</span><span class="sw-hex">#344054</span></div>
+      <div class="swatch" style="background:#1D2939;color:#fff"><span class="sw-step">900</span><span class="sw-hex">#1D2939</span></div>
+      <div class="swatch" style="background:#101828;color:#fff"><span class="sw-step">950</span><span class="sw-hex">#101828</span></div>
+    </div>
+
+    <!-- DEMO: estado se siente light -->
+    <div class="card-tight" style="margin-top:var(--space-4)">
+      <div style="padding:var(--space-4) var(--space-5);border-bottom:1px solid var(--n-150);background:var(--n-50)">
+        <h4 style="margin:0">Demo · "estado se siente" · OS en light</h4>
+      </div>
+      <div class="case-row">
+        <span class="case-id">OS-2845</span>
+        <span class="case-title">Cambio de aceite + filtros · Atlas Copco GA-22</span>
+        <span><span class="pill p-progress"><span class="dot"></span>En reparación</span></span>
+        <span class="case-meta">02d 04h</span>
+      </div>
+      <div class="case-row">
+        <span class="case-id">OS-2844</span>
+        <span class="case-title">Diagnóstico falla térmica · Kaeser SX-7</span>
+        <span><span class="pill p-info"><span class="dot"></span>Diagnóstico</span></span>
+        <span class="case-meta">06h 12m</span>
+      </div>
+      <div class="case-row">
+        <span class="case-id">OS-2841</span>
+        <span class="case-title">Reemplazo válvula admisión · Ingersoll R5</span>
+        <span><span class="pill p-warn"><span class="dot"></span>Esperando repuesto</span></span>
+        <span class="case-meta">04d 18h</span>
+      </div>
+      <div class="case-row">
+        <span class="case-id">OS-2839</span>
+        <span class="case-title">Mantenimiento preventivo 2.000h</span>
+        <span><span class="pill p-success"><span class="dot"></span>Completada</span></span>
+        <span class="case-meta">— ayer</span>
+      </div>
+      <div class="case-row">
+        <span class="case-id">OS-2832</span>
+        <span class="case-title">Reparación urgente compresor línea 3</span>
+        <span><span class="pill p-danger"><span class="dot"></span>Vencida</span></span>
+        <span class="case-meta">+1d 02h</span>
+      </div>
+      <div class="case-row">
+        <span class="case-id">OS-2811</span>
+        <span class="case-title">Cambio bandas · Sullair LS-25</span>
+        <span><span class="pill p-neutral"><span class="dot"></span>Entregada</span></span>
+        <span class="case-meta">12 abr</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 CATEGORIES -->
+  <section class="section" id="s05">
+    <p class="sec-eyebrow">05 · Categorías</p>
+    <h2 class="sec-title">Cinco familias hermanas · paso 500 canónico</h2>
+    <p class="sec-sub">Una rampa por familia. Token canónico de swatch y texto en paso 500 — más vivo, lee como hermano. Patrón de badge: <code class="tk">bg = paso 50</code>, <code class="tk">border = paso 200</code>, <code class="tk">text = paso 700/800</code>, <code class="tk">swatch = paso 500</code>.</p>
+
+    <div class="ramp">
+      <div class="ramp-label"><div class="ramp-name"><span class="ramp-dot" style="background:#4456C2"></span> Compresores</div><div class="ramp-meaning">indigo steel</div></div>
+      <div class="swatch" style="background:#EEF2FF;color:#1E2273"><span class="sw-step">50</span><span class="sw-hex">#EEF2FF</span></div>
+      <div class="swatch" style="background:#DCE2FB;color:#1E2273"><span class="sw-step">100</span><span class="sw-hex">#DCE2FB</span></div>
+      <div class="swatch" style="background:#C7D0F2;color:#1E2273"><span class="sw-step">200</span><span class="sw-hex">#C7D0F2</span></div>
+      <div class="swatch" style="background:#A0ADE3;color:#1E2273"><span class="sw-step">300</span><span class="sw-hex">#A0ADE3</span></div>
+      <div class="swatch" style="background:#7886D2;color:#fff"><span class="sw-step">400</span><span class="sw-hex">#7886D2</span></div>
+      <div class="swatch star" style="background:#4456C2;color:#fff"><span class="sw-step">500 ★</span><span class="sw-hex">#4456C2</span></div>
+      <div class="swatch" style="background:#3445B5;color:#fff"><span class="sw-step">600</span><span class="sw-hex">#3445B5</span></div>
+      <div class="swatch" style="background:#2A3892;color:#fff"><span class="sw-step">700</span><span class="sw-hex">#2A3892</span></div>
+      <div class="swatch" style="background:#212E78;color:#fff"><span class="sw-step">800</span><span class="sw-hex">#212E78</span></div>
+      <div class="swatch" style="background:#1A2461;color:#fff"><span class="sw-step">900</span><span class="sw-hex">#1A2461</span></div>
+      <div class="swatch" style="background:#10173E;color:#fff"><span class="sw-step">950</span><span class="sw-hex">#10173E</span></div>
+    </div>
+
+    <div class="ramp">
+      <div class="ramp-label"><div class="ramp-name"><span class="ramp-dot" style="background:#159F8A"></span> Repuestos</div><div class="ramp-meaning">teal vivo</div></div>
+      <div class="swatch" style="background:#E8FAF6;color:#0E5F5A"><span class="sw-step">50</span><span class="sw-hex">#E8FAF6</span></div>
+      <div class="swatch" style="background:#CDF3EC;color:#0E5F5A"><span class="sw-step">100</span><span class="sw-hex">#CDF3EC</span></div>
+      <div class="swatch" style="background:#99E8DD;color:#0E5F5A"><span class="sw-step">200</span><span class="sw-hex">#99E8DD</span></div>
+      <div class="swatch" style="background:#5DD3C2;color:#0E5F5A"><span class="sw-step">300</span><span class="sw-hex">#5DD3C2</span></div>
+      <div class="swatch" style="background:#2DBBA8;color:#fff"><span class="sw-step">400</span><span class="sw-hex">#2DBBA8</span></div>
+      <div class="swatch star" style="background:#159F8A;color:#fff"><span class="sw-step">500 ★</span><span class="sw-hex">#159F8A</span></div>
+      <div class="swatch" style="background:#0E8576;color:#fff"><span class="sw-step">600</span><span class="sw-hex">#0E8576</span></div>
+      <div class="swatch" style="background:#0E6D62;color:#fff"><span class="sw-step">700</span><span class="sw-hex">#0E6D62</span></div>
+      <div class="swatch" style="background:#0E5F5A;color:#fff"><span class="sw-step">800</span><span class="sw-hex">#0E5F5A</span></div>
+      <div class="swatch" style="background:#094945;color:#fff"><span class="sw-step">900</span><span class="sw-hex">#094945</span></div>
+      <div class="swatch" style="background:#052B29;color:#fff"><span class="sw-step">950</span><span class="sw-hex">#052B29</span></div>
+    </div>
+
+    <div class="ramp">
+      <div class="ramp-label"><div class="ramp-name"><span class="ramp-dot" style="background:#7244D5"></span> Herramientas</div><div class="ramp-meaning">púrpura</div></div>
+      <div class="swatch" style="background:#F5F0FF;color:#3D1B7C"><span class="sw-step">50</span><span class="sw-hex">#F5F0FF</span></div>
+      <div class="swatch" style="background:#EADDFD;color:#3D1B7C"><span class="sw-step">100</span><span class="sw-hex">#EADDFD</span></div>
+      <div class="swatch" style="background:#D9C2FF;color:#3D1B7C"><span class="sw-step">200</span><span class="sw-hex">#D9C2FF</span></div>
+      <div class="swatch" style="background:#B692F6;color:#3D1B7C"><span class="sw-step">300</span><span class="sw-hex">#B692F6</span></div>
+      <div class="swatch" style="background:#9268EA;color:#fff"><span class="sw-step">400</span><span class="sw-hex">#9268EA</span></div>
+      <div class="swatch star" style="background:#7244D5;color:#fff"><span class="sw-step">500 ★</span><span class="sw-hex">#7244D5</span></div>
+      <div class="swatch" style="background:#5F35BC;color:#fff"><span class="sw-step">600</span><span class="sw-hex">#5F35BC</span></div>
+      <div class="swatch" style="background:#5B21B6;color:#fff"><span class="sw-step">700</span><span class="sw-hex">#5B21B6</span></div>
+      <div class="swatch" style="background:#4A1B95;color:#fff"><span class="sw-step">800</span><span class="sw-hex">#4A1B95</span></div>
+      <div class="swatch" style="background:#3D1B7C;color:#fff"><span class="sw-step">900</span><span class="sw-hex">#3D1B7C</span></div>
+      <div class="swatch" style="background:#251052;color:#fff"><span class="sw-step">950</span><span class="sw-hex">#251052</span></div>
+    </div>
+
+    <div class="ramp">
+      <div class="ramp-label"><div class="ramp-name"><span class="ramp-dot" style="background:#C68420"></span> Lubricantes</div><div class="ramp-meaning">ámbar dorado</div></div>
+      <div class="swatch" style="background:#FEF7E0;color:#5C2D08"><span class="sw-step">50</span><span class="sw-hex">#FEF7E0</span></div>
+      <div class="swatch" style="background:#FEEFBF;color:#5C2D08"><span class="sw-step">100</span><span class="sw-hex">#FEEFBF</span></div>
+      <div class="swatch" style="background:#F8D58A;color:#5C2D08"><span class="sw-step">200</span><span class="sw-hex">#F8D58A</span></div>
+      <div class="swatch" style="background:#F0B85A;color:#5C2D08"><span class="sw-step">300</span><span class="sw-hex">#F0B85A</span></div>
+      <div class="swatch" style="background:#E2A03A;color:#fff"><span class="sw-step">400</span><span class="sw-hex">#E2A03A</span></div>
+      <div class="swatch star" style="background:#C68420;color:#fff"><span class="sw-step">500 ★</span><span class="sw-hex">#C68420</span></div>
+      <div class="swatch" style="background:#A06614;color:#fff"><span class="sw-step">600</span><span class="sw-hex">#A06614</span></div>
+      <div class="swatch" style="background:#7A340B;color:#fff"><span class="sw-step">700</span><span class="sw-hex">#7A340B</span></div>
+      <div class="swatch" style="background:#622C0A;color:#fff"><span class="sw-step">800</span><span class="sw-hex">#622C0A</span></div>
+      <div class="swatch" style="background:#5C2D08;color:#fff"><span class="sw-step">900</span><span class="sw-hex">#5C2D08</span></div>
+      <div class="swatch" style="background:#321A04;color:#fff"><span class="sw-step">950</span><span class="sw-hex">#321A04</span></div>
+    </div>
+
+    <div class="ramp">
+      <div class="ramp-label"><div class="ramp-name"><span class="ramp-dot" style="background:#D24E8E"></span> Accesorios</div><div class="ramp-meaning">rosa magenta</div></div>
+      <div class="swatch" style="background:#FEEEF4;color:#7A1947"><span class="sw-step">50</span><span class="sw-hex">#FEEEF4</span></div>
+      <div class="swatch" style="background:#FCDBE6;color:#7A1947"><span class="sw-step">100</span><span class="sw-hex">#FCDBE6</span></div>
+      <div class="swatch" style="background:#FBC8DD;color:#7A1947"><span class="sw-step">200</span><span class="sw-hex">#FBC8DD</span></div>
+      <div class="swatch" style="background:#F799BB;color:#7A1947"><span class="sw-step">300</span><span class="sw-hex">#F799BB</span></div>
+      <div class="swatch" style="background:#E972A0;color:#fff"><span class="sw-step">400</span><span class="sw-hex">#E972A0</span></div>
+      <div class="swatch star" style="background:#D24E8E;color:#fff"><span class="sw-step">500 ★</span><span class="sw-hex">#D24E8E</span></div>
+      <div class="swatch" style="background:#B83280;color:#fff"><span class="sw-step">600</span><span class="sw-hex">#B83280</span></div>
+      <div class="swatch" style="background:#9B226B;color:#fff"><span class="sw-step">700</span><span class="sw-hex">#9B226B</span></div>
+      <div class="swatch" style="background:#7A1947;color:#fff"><span class="sw-step">800</span><span class="sw-hex">#7A1947</span></div>
+      <div class="swatch" style="background:#5E0F33;color:#fff"><span class="sw-step">900</span><span class="sw-hex">#5E0F33</span></div>
+      <div class="swatch" style="background:#33081C;color:#fff"><span class="sw-step">950</span><span class="sw-hex">#33081C</span></div>
+    </div>
+
+    <!-- DEMO siblings -->
+    <div class="card" style="margin-top:var(--space-4)">
+      <h4>Demo · cinco hermanas en una fila</h4>
+      <div class="siblings">
+        <span class="cat cat-cmp"><span class="sw"></span> Compresores</span>
+        <span class="cat cat-rpt"><span class="sw"></span> Repuestos</span>
+        <span class="cat cat-hrm"><span class="sw"></span> Herramientas</span>
+        <span class="cat cat-lbr"><span class="sw"></span> Lubricantes</span>
+        <span class="cat cat-acc"><span class="sw"></span> Accesorios</span>
+      </div>
+    </div>
+
+    <!-- DEMO timido vs con peso -->
+    <div class="card" style="margin-top:var(--space-4)">
+      <h4>Demo · tímido vs con peso</h4>
+      <div class="compare">
+        <div class="compare-side">
+          <h5>Tímido — solo dot, sin label coloreado</h5>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px"><span style="width:8px;height:8px;border-radius:999px;background:#4456C2"></span>Compresor pistón 2HP</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px"><span style="width:8px;height:8px;border-radius:999px;background:#159F8A"></span>Filtro succión 1/2"</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px"><span style="width:8px;height:8px;border-radius:999px;background:#7244D5"></span>Llave torque 30-150 N·m</div>
+          </div>
+          <p style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-500);margin:var(--space-3) 0 0">Funciona — pero pasa desapercibido en una tabla densa.</p>
+        </div>
+        <div class="compare-side">
+          <h5>Con peso — badge completo</h5>
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start">
+            <span class="cat cat-cmp"><span class="sw"></span> Compresores</span>
+            <span class="cat cat-rpt"><span class="sw"></span> Repuestos</span>
+            <span class="cat cat-hrm"><span class="sw"></span> Herramientas</span>
+          </div>
+          <p style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-500);margin:var(--space-3) 0 0">Lectura inmediata. Esta es la versión canónica.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEMO tabla -->
+    <div class="card-tight" style="margin-top:var(--space-4)">
+      <div style="padding:var(--space-4) var(--space-5);border-bottom:1px solid var(--n-150);background:var(--n-50)">
+        <h4 style="margin:0">Demo · tabla con SKU · producto · familia · stock</h4>
+      </div>
+      <table class="tbl">
+        <thead><tr><th style="width:160px">SKU</th><th>Producto</th><th style="width:160px">Familia</th><th style="width:80px;text-align:right">Stock</th></tr></thead>
+        <tbody>
+          <tr><td class="sku">CMP-A2H-220</td><td>Compresor pistón 2HP · 220V</td><td><span class="cat cat-cmp"><span class="sw"></span> Compresores</span></td><td class="qty">14</td></tr>
+          <tr><td class="sku">RPT-FS-12</td><td>Filtro succión 1/2"</td><td><span class="cat cat-rpt"><span class="sw"></span> Repuestos</span></td><td class="qty">238</td></tr>
+          <tr><td class="sku">HRM-LT-150</td><td>Llave torque 1/2" 30-150 N·m</td><td><span class="cat cat-hrm"><span class="sw"></span> Herramientas</span></td><td class="qty">06</td></tr>
+          <tr><td class="sku">LBR-ISO46-20</td><td>Aceite ISO-VG 46 · 20L</td><td><span class="cat cat-lbr"><span class="sw"></span> Lubricantes</span></td><td class="qty">42</td></tr>
+          <tr><td class="sku">ACC-MNG-08</td><td>Manguera 8mm presión</td><td><span class="cat cat-acc"><span class="sw"></span> Accesorios</span></td><td class="qty">120</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 06 ESTADOS COMPONENTE -->
+  <section class="section" id="s06">
+    <p class="sec-eyebrow">06 · Estados</p>
+    <h2 class="sec-title">Focus · Hover · Selected · Disabled</h2>
+    <p class="sec-sub">Cuatro estados aplicados a fila de tabla y a botón. Specs precisas para que cada componente nuevo herede sin ambigüedad.</p>
+
+    <div class="card-tight" style="margin-bottom:var(--space-4)">
+      <div style="padding:var(--space-4) var(--space-5);border-bottom:1px solid var(--n-150);background:var(--n-50)">
+        <h4 style="margin:0">Filas de tabla · cuatro estados</h4>
+      </div>
+      <table class="tbl">
+        <thead><tr><th style="width:100px">N° OS</th><th>Cliente · equipo</th><th style="width:160px">Estado</th><th style="width:100px;text-align:right">SLA</th></tr></thead>
+        <tbody>
+          <tr class="tr-default"><td class="sku">OS-2845</td><td><strong style="font-weight:500">Industrial XYZ · Atlas Copco GA-22</strong> <span style="color:var(--n-500);font-size:12px">— default</span></td><td><span class="pill p-progress"><span class="dot"></span>En reparación</span></td><td class="qty">02d 04h</td></tr>
+          <tr class="tr-hover"><td class="sku">OS-2844</td><td><strong style="font-weight:500">Metalúrgica del Cauca · Kaeser SX-7</strong> <span style="color:var(--n-500);font-size:12px">— hover (n-50)</span></td><td><span class="pill p-info"><span class="dot"></span>Diagnóstico</span></td><td class="qty">06h 12m</td></tr>
+          <tr class="tr-selected"><td class="sku">OS-2841</td><td><strong style="font-weight:500">Cervecería Andina · Ingersoll R5</strong> <span style="color:var(--n-500);font-size:12px">— selected (primary-50 + border-left primary-600)</span></td><td><span class="pill p-warn"><span class="dot"></span>Esperando repuesto</span></td><td class="qty">04d 18h</td></tr>
+          <tr class="tr-focus"><td class="sku">OS-2839</td><td><strong style="font-weight:500">Maderera Pacífico · Sullair LS-25</strong> <span style="color:var(--n-500);font-size:12px">— focus (ring primary-300 / 2px / offset 2px)</span></td><td><span class="pill p-success"><span class="dot"></span>Completada</span></td><td class="qty">— ayer</td></tr>
+          <tr style="opacity:.55;background:var(--n-25)"><td class="sku" style="color:var(--n-300)">OS-2700</td><td style="color:var(--n-300)"><strong style="font-weight:500">Archivada · ya no editable</strong> <span style="font-size:12px">— disabled</span></td><td><span class="pill p-neutral"><span class="dot"></span>Cerrada</span></td><td class="qty" style="color:var(--n-300)">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h4>Botones · cuatro estados</h4>
+      <div style="display:flex;gap:var(--space-4);align-items:center;flex-wrap:wrap">
+        <button class="btn btn-primary">+ Nueva OS <span style="opacity:.6;font-family:'IBM Plex Mono';font-size:11px">default</span></button>
+        <button class="btn btn-primary" style="background:var(--p-700)">+ Nueva OS <span style="opacity:.7;font-family:'IBM Plex Mono';font-size:11px">hover</span></button>
+        <button class="btn btn-primary is-focus">+ Nueva OS <span style="opacity:.7;font-family:'IBM Plex Mono';font-size:11px">focus</span></button>
+        <button class="btn btn-disabled">+ Nueva OS <span style="font-family:'IBM Plex Mono';font-size:11px">disabled</span></button>
+      </div>
+      <div style="margin-top:var(--space-4);font-family:'IBM Plex Mono';font-size:11px;color:var(--n-500);line-height:1.6">
+        <strong>Specs:</strong> focus = ring 2 px primary-300, offset 2 px, sin cambio de bg.
+        Hover = oscurece bg al paso 700 sobre el 600 base.
+        Disabled = bg n-50, text n-300, border n-150, cursor not-allowed, sin hover.
+        Selected (en filas) = bg primary-50 + border-left 2 px primary-600 (inset shadow).
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 SPACING -->
+  <section class="section" id="s07">
+    <p class="sec-eyebrow">07 · Spacing</p>
+    <h2 class="sec-title">Escala formal · grilla 4 px</h2>
+    <p class="sec-sub">Nueve tokens, cero improvisación. Cada padding, gap y margin sale de aquí.</p>
+
+    <div class="card-tight">
+      <div style="padding:var(--space-4) var(--space-5);border-bottom:1px solid var(--n-150);background:var(--n-50)">
+        <div class="space-grid" style="font-family:'IBM Plex Mono';font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);font-weight:500">
+          <span>token</span><span>visual</span><span>uso</span>
+        </div>
+      </div>
+      <div style="padding:0 var(--space-5)">
+        <div class="space-grid space-row">
+          <span class="space-token">--space-1<br><span style="color:var(--n-500)">4 px</span></span>
+          <span><span class="space-bar" style="width:4px"></span></span>
+          <span class="space-use">Gap entre swatch y label en pill · gap entre dot e ícono</span>
+        </div>
+        <div class="space-grid space-row">
+          <span class="space-token">--space-2<br><span style="color:var(--n-500)">8 px</span></span>
+          <span><span class="space-bar" style="width:8px"></span></span>
+          <span class="space-use">Padding-Y de pill · gap ícono-label en botón</span>
+        </div>
+        <div class="space-grid space-row">
+          <span class="space-token">--space-3<br><span style="color:var(--n-500)">12 px</span></span>
+          <span><span class="space-bar" style="width:12px"></span></span>
+          <span class="space-use">Padding interno celda de tabla · gap entre badges en una fila</span>
+        </div>
+        <div class="space-grid space-row">
+          <span class="space-token">--space-4<br><span style="color:var(--n-500)">16 px</span></span>
+          <span><span class="space-bar" style="width:16px"></span></span>
+          <span class="space-use">Padding interno de inputs · gap entre filas no-consecutivas</span>
+        </div>
+        <div class="space-grid space-row">
+          <span class="space-token">--space-5<br><span style="color:var(--n-500)">20 px</span></span>
+          <span><span class="space-bar" style="width:20px"></span></span>
+          <span class="space-use">Padding interno de cards · gap entre dos cards adyacentes</span>
+        </div>
+        <div class="space-grid space-row">
+          <span class="space-token">--space-6<br><span style="color:var(--n-500)">24 px</span></span>
+          <span><span class="space-bar" style="width:24px"></span></span>
+          <span class="space-use">Padding interno de panel grande · gap entre bloques relacionados</span>
+        </div>
+        <div class="space-grid space-row">
+          <span class="space-token">--space-8<br><span style="color:var(--n-500)">32 px</span></span>
+          <span><span class="space-bar" style="width:32px"></span></span>
+          <span class="space-use">Padding-X de página en tablet · gap entre subsecciones</span>
+        </div>
+        <div class="space-grid space-row">
+          <span class="space-token">--space-10<br><span style="color:var(--n-500)">40 px</span></span>
+          <span><span class="space-bar" style="width:40px"></span></span>
+          <span class="space-use">Padding-X de página en desktop · gap entre secciones de Cockpit</span>
+        </div>
+        <div class="space-grid space-row" style="border-bottom:none">
+          <span class="space-token">--space-12<br><span style="color:var(--n-500)">48 px</span></span>
+          <span><span class="space-bar" style="width:48px"></span></span>
+          <span class="space-use">Padding-Y de página · separador mayor entre secciones de doc largo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:var(--space-4)">
+      <h4>Densidad por contexto</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-5);font-size:13px;line-height:1.55">
+        <div>
+          <div style="font-family:'IBM Plex Mono';font-size:11px;color:var(--p-600);font-weight:600;margin-bottom:6px">COMPACT</div>
+          Filas de tabla densas, cockpits multi-tabla.<br>
+          <code class="tk">padding-Y = space-2 (8 px)</code><br>
+          <code class="tk">font 13 px</code>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono';font-size:11px;color:var(--p-600);font-weight:600;margin-bottom:6px">COMFORTABLE</div>
+          Default · listas de inventario y OS estándar.<br>
+          <code class="tk">padding-Y = space-3 (12 px)</code><br>
+          <code class="tk">font 14 px</code>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono';font-size:11px;color:var(--p-600);font-weight:600;margin-bottom:6px">TOUCH</div>
+          Pantallas operativas · móvil bodega.<br>
+          <code class="tk">padding-Y = space-5 (20 px)</code><br>
+          <code class="tk">font 15 px · hit ≥ 44 px</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 DARK MODE -->
+  <section class="section" id="s08">
+    <p class="sec-eyebrow">08 · Dark mode</p>
+    <h2 class="sec-title">Sistema invertido · misma rampa</h2>
+    <p class="sec-sub">Surface hierarchy: <code class="tk">n-975</code> base · <code class="tk">n-950</code> surfaces · <code class="tk">n-900</code> elevadas · <code class="tk">n-800</code> borders. Pills con alpha 14/35 + dot 400 + text 200/300. Primary-500 como CTA. Focus ring primary-200 (8.2:1 contra n-975).</p>
+
+    <!-- demo estado se siente dark -->
+    <div class="dark-block" style="margin-bottom:var(--space-4)">
+      <h4>Demo · "estado se siente" · OS en dark</h4>
+      <div class="dark-tbl-wrap">
+        <div class="dark-row"><span class="dark-id">OS-2845</span><span class="dark-title">Cambio de aceite + filtros · Atlas Copco GA-22</span><span><span class="pill-d pd-progress"><span class="dot"></span>En reparación</span></span><span class="dark-meta">02d 04h</span></div>
+        <div class="dark-row"><span class="dark-id">OS-2844</span><span class="dark-title">Diagnóstico falla térmica · Kaeser SX-7</span><span><span class="pill-d pd-info"><span class="dot"></span>Diagnóstico</span></span><span class="dark-meta">06h 12m</span></div>
+        <div class="dark-row"><span class="dark-id">OS-2841</span><span class="dark-title">Reemplazo válvula admisión · Ingersoll R5</span><span><span class="pill-d pd-warn"><span class="dot"></span>Esperando repuesto</span></span><span class="dark-meta">04d 18h</span></div>
+        <div class="dark-row"><span class="dark-id">OS-2839</span><span class="dark-title">Mantenimiento preventivo 2.000h</span><span><span class="pill-d pd-success"><span class="dot"></span>Completada</span></span><span class="dark-meta">— ayer</span></div>
+        <div class="dark-row"><span class="dark-id">OS-2832</span><span class="dark-title">Reparación urgente compresor línea 3</span><span><span class="pill-d pd-danger"><span class="dot"></span>Vencida</span></span><span class="dark-meta">+1d 02h</span></div>
+        <div class="dark-row"><span class="dark-id">OS-2811</span><span class="dark-title">Cambio bandas · Sullair LS-25</span><span><span class="pill-d pd-neutral"><span class="dot"></span>Entregada</span></span><span class="dark-meta">12 abr</span></div>
+      </div>
+    </div>
+
+    <!-- categorías dark -->
+    <div class="dark-block" style="margin-bottom:var(--space-4)">
+      <h4>Demo · categorías sobre n-975</h4>
+      <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;margin-bottom:var(--space-5)">
+        <span class="catd catd-cmp"><span class="sw"></span> Compresores</span>
+        <span class="catd catd-rpt"><span class="sw"></span> Repuestos</span>
+        <span class="catd catd-hrm"><span class="sw"></span> Herramientas</span>
+        <span class="catd catd-lbr"><span class="sw"></span> Lubricantes</span>
+        <span class="catd catd-acc"><span class="sw"></span> Accesorios</span>
+      </div>
+      <table class="tbl-d">
+        <thead><tr><th style="width:160px">SKU</th><th>Producto</th><th style="width:160px">Familia</th><th style="width:80px;text-align:right">Stock</th></tr></thead>
+        <tbody>
+          <tr><td class="sku">CMP-A2H-220</td><td>Compresor pistón 2HP · 220V</td><td><span class="catd catd-cmp"><span class="sw"></span> Compresores</span></td><td class="qty">14</td></tr>
+          <tr><td class="sku">RPT-FS-12</td><td>Filtro succión 1/2"</td><td><span class="catd catd-rpt"><span class="sw"></span> Repuestos</span></td><td class="qty">238</td></tr>
+          <tr><td class="sku">HRM-LT-150</td><td>Llave torque 1/2" 30-150 N·m</td><td><span class="catd catd-hrm"><span class="sw"></span> Herramientas</span></td><td class="qty">06</td></tr>
+          <tr><td class="sku">LBR-ISO46-20</td><td>Aceite ISO-VG 46 · 20L</td><td><span class="catd catd-lbr"><span class="sw"></span> Lubricantes</span></td><td class="qty">42</td></tr>
+          <tr><td class="sku">ACC-MNG-08</td><td>Manguera 8mm presión</td><td><span class="catd catd-acc"><span class="sw"></span> Accesorios</span></td><td class="qty">120</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- focus en dark -->
+    <div class="dark-block">
+      <h4>Demo · fila en focus + botón en focus · ring primary-200</h4>
+      <div style="background:var(--n-950);border:1px solid var(--n-800);border-radius:10px;overflow:hidden;margin-bottom:var(--space-4)">
+        <div class="row-d-demo" style="background:rgba(255,255,255,.02)"><span style="font-family:'IBM Plex Mono';font-size:12px;color:var(--n-300)">OS-2845</span><span style="font-size:13px;font-weight:500">Atlas Copco GA-22 · cambio aceite + filtros <span style="color:var(--n-300);font-weight:400">— hover</span></span><span class="pill-d pd-progress"><span class="dot"></span>En reparación</span><span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-300);text-align:right">02d 04h</span></div>
+        <div class="row-d-demo focus"><span style="font-family:'IBM Plex Mono';font-size:12px;color:var(--n-300)">OS-2844</span><span style="font-size:13px;font-weight:500">Kaeser SX-7 · diagnóstico falla térmica <span style="color:var(--n-300);font-weight:400">— focus</span></span><span class="pill-d pd-info"><span class="dot"></span>Diagnóstico</span><span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-300);text-align:right">06h 12m</span></div>
+        <div class="row-d-demo"><span style="font-family:'IBM Plex Mono';font-size:12px;color:var(--n-300)">OS-2841</span><span style="font-size:13px;font-weight:500">Ingersoll R5 · reemplazo válvula admisión <span style="color:var(--n-300);font-weight:400">— default</span></span><span class="pill-d pd-info"><span class="dot"></span>Diagnóstico</span><span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-300);text-align:right">04d 18h</span></div>
+      </div>
+      <div style="display:flex;gap:var(--space-4);flex-wrap:wrap;align-items:center">
+        <button class="btn-d-primary">+ Nueva OS <span style="opacity:.6;font-family:'IBM Plex Mono';font-size:11px">default</span></button>
+        <button class="btn-d-primary is-focus">+ Nueva OS <span style="opacity:.7;font-family:'IBM Plex Mono';font-size:11px">focus · ring p-200</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 VERIFICACIÓN -->
+  <section class="section" id="s09">
+    <p class="sec-eyebrow">09 · Verificación</p>
+    <h2 class="sec-title">Pares críticos · convivencia validada</h2>
+    <p class="sec-sub">Dos pares se cruzan en pantalla con frecuencia. Ambos validados — no requieren ajuste.</p>
+
+    <!-- TRIO AZULES -->
+    <div class="card" style="margin-bottom:var(--space-4)">
+      <h4>Los tres azules · Royal CTA · Info · Indigo Steel</h4>
+      <div class="trio">
+        <div class="trio-cell">
+          <div class="trio-swatch" style="background:#2D3CE5"></div>
+          <p class="trio-name">Royal · primary-600</p>
+          <p class="trio-hex">#2D3CE5 · HSL(234°, 79%, 54%)</p>
+          <p class="trio-use"><strong>CTA + marca.</strong> Más saturado y vibrante. Único de los tres con peso de "acción".</p>
+        </div>
+        <div class="trio-cell">
+          <div class="trio-swatch" style="background:#2E90FA"></div>
+          <p class="trio-name">Info · semantic-info-500</p>
+          <p class="trio-hex">#2E90FA · HSL(210°, 96%, 58%)</p>
+          <p class="trio-use"><strong>Estado informativo.</strong> Más claro, hue cyan-blue. Solo aparece dentro de pills.</p>
+        </div>
+        <div class="trio-cell">
+          <div class="trio-swatch" style="background:#4456C2"></div>
+          <p class="trio-name">Indigo Steel · category-cmp-500</p>
+          <p class="trio-hex">#4456C2 · HSL(232°, 51%, 51%)</p>
+          <p class="trio-use"><strong>Categoría Compresores.</strong> Misma familia que royal pero menos saturado — lee como "azul industrial".</p>
+        </div>
+      </div>
+      <p style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-500);margin:var(--space-3) 0 0;line-height:1.6">
+        Diferenciación: hue ≈ 24° entre Royal/Info, saturación ≈ 28 pts entre Royal/Indigo. Coexisten sin colisión.
+      </p>
+    </div>
+
+    <!-- WARN VS DANGER -->
+    <div class="card">
+      <h4>Warning ámbar vs Danger coral</h4>
+      <div class="vs">
+        <div style="background:#FFFAEB;border-right:1px solid var(--n-150)">
+          <div style="font-family:'IBM Plex Mono';font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#B54708;margin-bottom:var(--space-3);font-weight:500">Warning · ámbar 500 · #F79009</div>
+          <div class="vs-card" style="border:1px solid #FEDF89">
+            <div class="vs-head"><span class="vs-id">OS-2841</span><span class="pill p-warn"><span class="dot"></span>Esperando repuesto</span></div>
+            <div class="vs-title">Reemplazo válvula admisión · Ingersoll R5</div>
+          </div>
+          <div class="vs-card" style="border:1px solid #FEDF89">
+            <div class="vs-head"><span class="vs-id">OS-2828</span><span class="pill p-warn"><span class="dot"></span>Stock bajo</span></div>
+            <div class="vs-title">Reparación urgente sistema neumático</div>
+          </div>
+        </div>
+        <div style="background:#FEF3F2">
+          <div style="font-family:'IBM Plex Mono';font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#B42318;margin-bottom:var(--space-3);font-weight:500">Danger · coral 500 · #F04438</div>
+          <div class="vs-card" style="border:1px solid #FECDCA">
+            <div class="vs-head"><span class="vs-id">OS-2832</span><span class="pill p-danger"><span class="dot"></span>Vencida</span></div>
+            <div class="vs-title">Reparación urgente compresor línea 3</div>
+          </div>
+          <div class="vs-card" style="border:1px solid #FECDCA">
+            <div class="vs-head"><span class="vs-id">OS-2790</span><span class="pill p-danger"><span class="dot"></span>Anulada</span></div>
+            <div class="vs-title">Mantenimiento bomba auxiliar</div>
+          </div>
+        </div>
+      </div>
+      <p style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-500);margin:var(--space-3) 0 0;line-height:1.6">
+        ámbar 500 ≈ HSL(33°, 95%, 50%) · coral 500 ≈ HSL(4°, 86%, 58%) · ΔE2000 ≈ 38 (umbral seguro >15). Distinguibles incluso bajo tritanopia.
+      </p>
+    </div>
+  </section>
+
+  <!-- DECISIONES CERRADAS -->
+  <section class="section" id="closed">
+    <p class="sec-eyebrow">Cierre</p>
+    <h2 class="sec-title">Decisiones cerradas · v1.0 final</h2>
+    <p class="sec-sub">Esta es la versión vigente. v1, v2 y v3 quedan archivados.</p>
+
+    <div class="closed">
+      <div class="closed-row"><div class="check-dot">✓</div><div class="closed-text"><strong>Tipografía:</strong> IBM Plex Sans + IBM Plex Mono · regla mono = identificadores, cantidades, códigos, ubicaciones, fechas, dinero, medidas.</div></div>
+      <div class="closed-row"><div class="check-dot">✓</div><div class="closed-text"><strong>Neutros:</strong> cool gray azulado · 14 stops · n-25 fondo light, n-975 fondo dark.</div></div>
+      <div class="closed-row"><div class="check-dot">✓</div><div class="closed-text"><strong>Primary:</strong> Royal <code class="tk">#2D3CE5</code> en paso 600 como CTA canónico. Uno por pantalla.</div></div>
+      <div class="closed-row"><div class="check-dot">✓</div><div class="closed-text"><strong>Estados semánticos:</strong> 6 rampas · success / warning / danger / info / in-progress / neutral · pill = bg 50 / border 200 / text 700 / dot 500.</div></div>
+      <div class="closed-row"><div class="check-dot">✓</div><div class="closed-text"><strong>Categorías:</strong> Compresores Indigo Steel <code class="tk">#4456C2</code> · Repuestos teal <code class="tk">#159F8A</code> · Herramientas púrpura <code class="tk">#7244D5</code> · Lubricantes ámbar dorado <code class="tk">#C68420</code> · Accesorios rosa <code class="tk">#D24E8E</code>. Token canónico siempre paso 500.</div></div>
+      <div class="closed-row"><div class="check-dot">✓</div><div class="closed-text"><strong>Estados de componente:</strong> focus ring 2 px primary-300 light / primary-200 dark · hover bg n-50 · selected bg primary-50 + border-left primary-600 · disabled bg n-50 / text n-300 / border n-150.</div></div>
+      <div class="closed-row"><div class="check-dot">✓</div><div class="closed-text"><strong>Spacing:</strong> escala 4 px · tokens 1/2/3/4/5/6/8/10/12 · densidad compact / comfortable / touch.</div></div>
+      <div class="closed-row"><div class="check-dot">✓</div><div class="closed-text"><strong>Dark mode:</strong> n-975 base · n-950 surfaces · n-800 borders · pills alpha 14/35 + dot 400 + text 200/300 · primary-500 CTA.</div></div>
+      <div class="closed-row"><div class="check-dot">✓</div><div class="closed-text"><strong>Pares verificados:</strong> tres azules (royal/info/indigo) sin colisión · warning ámbar vs danger coral con ΔE2000 ≈ 38.</div></div>
+      <div class="closed-row"><div class="check-dot">✓</div><div class="closed-text"><strong>v1, v2, v3 archivados.</strong> Toda referencia futura usa este documento.</div></div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>OS · Kanban · Desktop Light</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  :root{
+    --n-0:#FFFFFF;--n-25:#FBFBFC;--n-50:#F7F8FA;--n-75:#F2F4F7;--n-100:#EEF1F5;
+    --n-150:#E4E7EC;--n-200:#D0D5DD;--n-300:#98A2B3;--n-500:#667085;
+    --n-700:#475467;--n-800:#344054;--n-900:#1D2939;--n-950:#101828;
+    --p-50:#F0F2FF;--p-100:#E0E5FF;--p-200:#C2CCFF;--p-300:#94A3FF;
+    --p-500:#4B5BF5;--p-600:#2D3CE5;--p-700:#2531C8;
+    --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;
+    --space-6:24px;--space-8:32px;--space-10:40px;--space-12:48px;
+    --r-card:12px;--r-md:6px;--r-sm:4px;
+  }
+  html,body{margin:0;padding:0;background:var(--n-25);color:var(--n-950);
+    font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased}
+
+  /* HEADER */
+  .page{padding:var(--space-8) var(--space-10) var(--space-12)}
+  .ph-row{display:flex;align-items:flex-end;justify-content:space-between;
+    margin-bottom:var(--space-6);gap:var(--space-6)}
+  .ph-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);
+    letter-spacing:.06em;text-transform:uppercase;margin:0 0 var(--space-2)}
+  .ph-meta span+span::before{content:" · ";margin:0 6px;color:var(--n-200)}
+  h1.ph-title{font-weight:600;font-size:22px;letter-spacing:-0.018em;margin:0 0 4px;color:var(--n-950)}
+  .ph-sub{font-size:13px;color:var(--n-500);margin:0}
+  .ph-sub b{font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--n-700)}
+
+  .ph-actions{display:flex;align-items:center;gap:var(--space-3)}
+  .seg{display:inline-flex;height:36px;padding:3px;background:var(--n-100);
+    border-radius:var(--r-md);border:1px solid var(--n-150)}
+  .seg button{height:28px;padding:0 14px;border:none;background:transparent;cursor:pointer;
+    font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:500;color:var(--n-500);
+    border-radius:4px;display:inline-flex;align-items:center;gap:6px}
+  .seg button.active{background:#fff;color:var(--n-950);
+    box-shadow:0 1px 2px rgba(16,24,40,.06),0 0 0 1px var(--n-150)}
+  .seg svg{width:14px;height:14px}
+
+  .btn{height:36px;padding:0 var(--space-4);border-radius:var(--r-md);border:1px solid transparent;
+    font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:13px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px}
+  .btn-primary{background:var(--p-600);color:#fff}
+  .btn-primary:hover{background:var(--p-700)}
+  .btn-secondary{background:#fff;color:var(--n-700);border-color:var(--n-200)}
+  .btn-secondary:hover{background:var(--n-50)}
+  .btn svg{width:14px;height:14px}
+
+  /* KANBAN */
+  .kanban{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--space-3)}
+  .col{background:var(--n-50);border:1px solid var(--n-150);border-radius:var(--r-card);
+    display:flex;flex-direction:column;min-height:680px;overflow:hidden}
+  .col-head{padding:var(--space-3) var(--space-3);display:flex;align-items:center;
+    justify-content:space-between;border-bottom:1px solid var(--n-150);background:#fff;
+    position:sticky;top:0;z-index:1}
+  .col-name{display:flex;align-items:center;gap:8px;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--n-500)}
+  .col-dot{width:8px;height:8px;border-radius:999px}
+  .col-count{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:500;color:var(--n-700);
+    background:var(--n-100);padding:2px 8px;border-radius:999px;line-height:1.4}
+  .col-body{display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-3)}
+
+  /* CARD */
+  .card{background:var(--n-0);border:1px solid var(--n-150);border-radius:var(--r-md);
+    border-top-width:2px;padding:var(--space-3);display:flex;flex-direction:column;
+    gap:var(--space-2);cursor:grab;transition:box-shadow .12s ease, transform .12s ease}
+  .card:hover{box-shadow:0 2px 8px rgba(16,24,40,.06);transform:translateY(-1px)}
+  .card.t-neutral{border-top-color:var(--n-300)}
+  .card.t-info{border-top-color:#2E90FA}
+  .card.t-warn{border-top-color:#F79009}
+  .card.t-progress{border-top-color:#9A6FDF}
+  .card.t-success{border-top-color:#12B76A}
+  .card.t-danger{border-top-color:#F04438}
+  .card.delivered{opacity:.55}
+
+  .c-id{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-700);
+    letter-spacing:.04em;display:flex;justify-content:space-between;align-items:center}
+  .c-id .sla{color:var(--n-500)}
+  .c-client{font-size:13px;font-weight:500;color:var(--n-950);line-height:1.3;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .c-equipo{font-size:12px;color:var(--n-500);line-height:1.35;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* CATEGORY BADGE — small variant for cards */
+  .cat{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px 0 7px;
+    border-radius:4px;font-weight:500;font-size:11.5px;border:1px solid transparent;
+    align-self:flex-start;line-height:1}
+  .cat .sw{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+  .cat-cmp{background:#EEF2FF;color:#2A3478;border-color:#C7D0F2}.cat-cmp .sw{background:#4456C2}
+  .cat-rpt{background:#E8FAF6;color:#0E5F5A;border-color:#99E8DD}.cat-rpt .sw{background:#159F8A}
+  .cat-hrm{background:#F5F0FF;color:#5B21B6;border-color:#D9C2FF}.cat-hrm .sw{background:#7244D5}
+  .cat-lbr{background:#FEF3D6;color:#7A340B;border-color:#F8D58A}.cat-lbr .sw{background:#C68420}
+  .cat-acc{background:#FEEEF4;color:#9B226B;border-color:#FBC8DD}.cat-acc .sw{background:#D24E8E}
+
+  .c-foot{display:flex;align-items:center;gap:var(--space-2);margin-top:2px;
+    padding-top:var(--space-2);border-top:1px solid var(--n-100)}
+  .av{width:24px;height:24px;border-radius:999px;background:var(--n-100);color:var(--n-700);
+    font-family:'IBM Plex Sans',sans-serif;font-size:10.5px;font-weight:600;display:flex;
+    align-items:center;justify-content:center;flex-shrink:0;letter-spacing:0}
+  .c-tech{font-size:12px;color:var(--n-700);overflow:hidden;text-overflow:ellipsis;
+    white-space:nowrap;flex:1}
+  .c-time{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+    flex-shrink:0;letter-spacing:0}
+
+  /* PILL */
+  .pill{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;
+    border-radius:999px;font-weight:500;font-size:11.5px;border:1px solid transparent;
+    align-self:flex-start;line-height:1}
+  .pill .dot{width:6px;height:6px;border-radius:999px}
+  .p-info{background:#EFF8FF;color:#175CD3;border-color:#B2DDFF}.p-info .dot{background:#2E90FA}
+  .p-warn{background:#FFFAEB;color:#B54708;border-color:#FEDF89}.p-warn .dot{background:#F79009}
+  .p-progress{background:#F4EBFF;color:#6941C6;border-color:#D9C2FF}.p-progress .dot{background:#9A6FDF}
+  .p-success{background:#ECFDF3;color:#027A48;border-color:#A6F4C5}.p-success .dot{background:#12B76A}
+  .p-danger{background:#FEF3F2;color:#B42318;border-color:#FECDCA}.p-danger .dot{background:#F04438;animation:pulse 2s infinite}
+  .p-neutral{background:var(--n-100);color:var(--n-700);border-color:var(--n-200)}.p-neutral .dot{background:var(--n-300)}
+
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+
+  /* EMPTY */
+  .empty{padding:var(--space-5);text-align:center;color:var(--n-300);font-size:12px;
+    border:1px dashed var(--n-200);border-radius:var(--r-md);background:#fff;
+    display:flex;flex-direction:column;align-items:center;gap:var(--space-2)}
+  .empty svg{width:20px;height:20px;color:var(--n-200)}
+
+  /* SKELETON */
+  .skeleton-card{background:#fff;border:1px solid var(--n-150);border-top:2px solid var(--n-200);
+    border-radius:var(--r-md);padding:var(--space-3);display:flex;flex-direction:column;gap:var(--space-2)}
+  .sk{background:var(--n-100);border-radius:3px;animation:shimmer 1.4s infinite linear;
+    background:linear-gradient(90deg,var(--n-100) 0%, var(--n-50) 50%, var(--n-100) 100%);
+    background-size:200% 100%}
+  @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+  /* SECTIONS */
+  .sec-divider{margin:var(--space-12) 0 var(--space-6);display:flex;align-items:center;gap:var(--space-3)}
+  .sec-divider .lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);
+    letter-spacing:.1em;text-transform:uppercase;font-weight:500}
+  .sec-divider .ln{flex:1;height:1px;background:var(--n-150)}
+
+  /* CHROME PREVIEW */
+  .chrome{display:grid;grid-template-columns:240px 1fr;border:1px solid var(--n-200);
+    border-radius:var(--r-card);overflow:hidden;background:#fff}
+  .chrome-side{background:var(--n-950);color:#fff;padding:var(--space-5) var(--space-3)}
+  .chrome-brand{display:flex;align-items:center;gap:var(--space-2);padding:0 var(--space-3) var(--space-5);
+    border-bottom:1px solid var(--n-800);margin-bottom:var(--space-4)}
+  .chrome-logo{width:28px;height:28px;border-radius:6px;background:var(--p-500);
+    color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .chrome-brandname{font-size:13px;font-weight:600;letter-spacing:-0.01em}
+  .chrome-brandsub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--n-300);letter-spacing:.06em}
+  .chrome-section{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--n-500);padding:var(--space-2) var(--space-3) var(--space-1);font-weight:500}
+  .chrome-link{display:flex;align-items:center;gap:10px;padding:8px var(--space-3);border-radius:5px;
+    color:#D0D5DD;font-size:13px;cursor:pointer;margin-bottom:1px}
+  .chrome-link:hover{background:rgba(255,255,255,.04)}
+  .chrome-link.active{background:rgba(75,91,245,.16);color:#fff;font-weight:500}
+  .chrome-link.active::before{content:"";width:3px;height:14px;background:var(--p-500);
+    border-radius:2px;margin-right:-3px;margin-left:-3px}
+  .chrome-link svg{width:14px;height:14px;flex-shrink:0;opacity:.7}
+  .chrome-main{background:var(--n-25);max-height:760px;overflow:hidden;position:relative}
+  .chrome-main-inner{padding:var(--space-5) var(--space-6);transform-origin:top left}
+
+  /* FOOT NOTES */
+  .check-card{background:#fff;border:1px solid var(--n-150);border-radius:var(--r-card);overflow:hidden;
+    margin-top:var(--space-6)}
+  .check-row{display:grid;grid-template-columns:24px 1fr;gap:var(--space-3);padding:var(--space-4) var(--space-5);
+    border-bottom:1px solid var(--n-100);align-items:start}
+  .check-row:last-child{border-bottom:none}
+  .check-dot{width:18px;height:18px;border-radius:999px;background:#12B76A;display:flex;
+    align-items:center;justify-content:center;color:#fff;font-size:10px;margin-top:2px}
+  .check-text{font-size:13px;color:var(--n-800);line-height:1.55}
+  .check-text strong{color:var(--n-950);font-weight:600}
+  .check-text code{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--n-700);
+    background:var(--n-50);padding:1px 6px;border-radius:3px;border:1px solid var(--n-150)}
+
+  /* OVERDUE BAR */
+  .overdue-banner{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);
+    background:#FEF3F2;border:1px solid #FECDCA;border-radius:var(--r-md);margin-bottom:var(--space-4);
+    font-size:13px;color:#B42318}
+  .overdue-banner b{font-weight:600}
+  .overdue-banner svg{width:16px;height:16px;flex-shrink:0}
+
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <p class="ph-meta"><span>Compresores del Valle</span><span>Operaciones · Taller</span><span>Vista admin</span></p>
+  <div class="ph-row">
+    <div>
+      <h1 class="ph-title">Órdenes de servicio</h1>
+      <p class="ph-sub"><b>14</b> abiertas · <b>6</b> técnicos disponibles · <b>2</b> vencidas</p>
+    </div>
+    <div class="ph-actions">
+      <button class="btn btn-secondary">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h10M5 9h6M7 12h2"/></svg>
+        Filtros
+      </button>
+      <div class="seg">
+        <button class="active">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="4" height="12" rx="1"/><rect x="7" y="2" width="4" height="8" rx="1"/><rect x="12" y="2" width="2" height="6" rx="1"/></svg>
+          Tablero
+        </button>
+        <button>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h10M3 8h10M3 12h10"/></svg>
+          Lista
+        </button>
+      </div>
+      <button class="btn btn-primary">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v10M3 8h10"/></svg>
+        Nueva OS
+      </button>
+    </div>
+  </div>
+
+  <!-- OVERDUE BANNER -->
+  <div class="overdue-banner">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 10.5v.5"/></svg>
+    <span><b>2 órdenes vencidas</b> requieren atención · OS-2832 (+1d 02h) y OS-2810 (+8h)</span>
+  </div>
+
+  <!-- KANBAN -->
+  <div class="kanban">
+
+    <!-- COL 1 · RECIBIDA -->
+    <div class="col">
+      <div class="col-head">
+        <div class="col-name"><span class="col-dot" style="background:#98A2B3"></span>Recibida</div>
+        <span class="col-count">2</span>
+      </div>
+      <div class="col-body">
+        <div class="card t-neutral">
+          <div class="c-id"><span>OS-2851</span><span class="sla">Hoy 09:14</span></div>
+          <div class="c-client">Industrial Pacífico S.A.</div>
+          <div class="c-equipo">Atlas Copco GA-22 · 2018</div>
+          <span class="cat cat-cmp"><span class="sw"></span>Compresores</span>
+          <div class="c-foot">
+            <span class="av" style="background:#EEF1F5;color:#475467">SR</span>
+            <span class="c-tech">Sin asignar</span>
+            <span class="c-time">02h</span>
+          </div>
+        </div>
+        <div class="card t-neutral">
+          <div class="c-id"><span>OS-2850</span><span class="sla">Hoy 08:42</span></div>
+          <div class="c-client">Cervecería Andina Ltda.</div>
+          <div class="c-equipo">Filtros + bandas · varios</div>
+          <span class="cat cat-rpt"><span class="sw"></span>Repuestos</span>
+          <div class="c-foot">
+            <span class="av" style="background:#EEF1F5;color:#475467">SR</span>
+            <span class="c-tech">Sin asignar</span>
+            <span class="c-time">02h 30m</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL 2 · DIAGNÓSTICO -->
+    <div class="col">
+      <div class="col-head">
+        <div class="col-name"><span class="col-dot" style="background:#2E90FA"></span>En diagnóstico</div>
+        <span class="col-count">3</span>
+      </div>
+      <div class="col-body">
+        <div class="card t-info">
+          <div class="c-id"><span>OS-2848</span><span class="sla">06h 12m</span></div>
+          <div class="c-client">Metalúrgica del Cauca</div>
+          <div class="c-equipo">Kaeser SX-7 · 2020</div>
+          <span class="cat cat-cmp"><span class="sw"></span>Compresores</span>
+          <div class="c-foot">
+            <span class="av" style="background:#EFF8FF;color:#175CD3">CR</span>
+            <span class="c-tech">Carlos R.</span>
+            <span class="c-time">06h</span>
+          </div>
+        </div>
+        <div class="card t-info">
+          <div class="c-id"><span>OS-2847</span><span class="sla">04h 22m</span></div>
+          <div class="c-client">Maderera Pacífico</div>
+          <div class="c-equipo">Sullair LS-25 · 2017</div>
+          <span class="cat cat-cmp"><span class="sw"></span>Compresores</span>
+          <div class="c-foot">
+            <span class="av" style="background:#FEF0C7;color:#93370D">DM</span>
+            <span class="c-tech">Diego M.</span>
+            <span class="c-time">04h</span>
+          </div>
+        </div>
+        <div class="card t-info">
+          <div class="c-id"><span>OS-2846</span><span class="sla">02h 08m</span></div>
+          <div class="c-client">Tecnoindustrial Valle</div>
+          <div class="c-equipo">Llave torque eléctrica</div>
+          <span class="cat cat-hrm"><span class="sw"></span>Herramientas</span>
+          <div class="c-foot">
+            <span class="av" style="background:#F4EBFF;color:#6941C6">JL</span>
+            <span class="c-tech">Juan L.</span>
+            <span class="c-time">02h</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL 3 · ESPERANDO REPUESTOS -->
+    <div class="col">
+      <div class="col-head">
+        <div class="col-name"><span class="col-dot" style="background:#F79009"></span>Esperando repuestos</div>
+        <span class="col-count">3</span>
+      </div>
+      <div class="col-body">
+        <div class="card t-warn">
+          <div class="c-id"><span>OS-2841</span><span class="sla">04d 18h</span></div>
+          <div class="c-client">Cervecería Andina</div>
+          <div class="c-equipo">Ingersoll Rand R5 · 2019</div>
+          <span class="cat cat-cmp"><span class="sw"></span>Compresores</span>
+          <div class="c-foot">
+            <span class="av" style="background:#FFFAEB;color:#B54708">MA</span>
+            <span class="c-tech">María A.</span>
+            <span class="c-time">04d</span>
+          </div>
+        </div>
+        <div class="card t-warn">
+          <div class="c-id"><span>OS-2837</span><span class="sla">02d 06h</span></div>
+          <div class="c-client">Lácteos del Norte</div>
+          <div class="c-equipo">Aceite ISO-VG 46 (espera)</div>
+          <span class="cat cat-lbr"><span class="sw"></span>Lubricantes</span>
+          <div class="c-foot">
+            <span class="av" style="background:#FEF3D6;color:#7A340B">RV</span>
+            <span class="c-tech">Ricardo V.</span>
+            <span class="c-time">02d</span>
+          </div>
+        </div>
+        <div class="card t-warn">
+          <div class="c-id"><span>OS-2835</span><span class="sla">01d 14h</span></div>
+          <div class="c-client">Plásticos Cali</div>
+          <div class="c-equipo">Manguera 8mm + acoples</div>
+          <span class="cat cat-acc"><span class="sw"></span>Accesorios</span>
+          <div class="c-foot">
+            <span class="av" style="background:#FEEEF4;color:#9B226B">SP</span>
+            <span class="c-tech">Sandra P.</span>
+            <span class="c-time">01d</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL 4 · EN REPARACIÓN -->
+    <div class="col">
+      <div class="col-head">
+        <div class="col-name"><span class="col-dot" style="background:#9A6FDF"></span>En reparación</div>
+        <span class="col-count">3</span>
+      </div>
+      <div class="col-body">
+        <!-- VENCIDA -->
+        <div class="card t-danger">
+          <div class="c-id"><span>OS-2832</span><span><span class="pill p-danger"><span class="dot"></span>Vencida +1d 02h</span></span></div>
+          <div class="c-client">Industrial XYZ</div>
+          <div class="c-equipo">Compresor línea 3 (urgente)</div>
+          <span class="cat cat-cmp"><span class="sw"></span>Compresores</span>
+          <div class="c-foot">
+            <span class="av" style="background:#FEF3F2;color:#B42318">CR</span>
+            <span class="c-tech">Carlos R.</span>
+            <span class="c-time">+1d 02h</span>
+          </div>
+        </div>
+        <div class="card t-progress">
+          <div class="c-id"><span>OS-2845</span><span class="sla">02d 04h</span></div>
+          <div class="c-client">Industrial XYZ</div>
+          <div class="c-equipo">Atlas Copco GA-22 · cambio aceite</div>
+          <span class="cat cat-cmp"><span class="sw"></span>Compresores</span>
+          <div class="c-foot">
+            <span class="av" style="background:#F4EBFF;color:#6941C6">DM</span>
+            <span class="c-tech">Diego M.</span>
+            <span class="c-time">02d</span>
+          </div>
+        </div>
+        <div class="card t-progress">
+          <div class="c-id"><span>OS-2843</span><span class="sla">18h 40m</span></div>
+          <div class="c-client">Concretera del Sur</div>
+          <div class="c-equipo">Válvula admisión · reemplazo</div>
+          <span class="cat cat-rpt"><span class="sw"></span>Repuestos</span>
+          <div class="c-foot">
+            <span class="av" style="background:#F4EBFF;color:#6941C6">JL</span>
+            <span class="c-tech">Juan L.</span>
+            <span class="c-time">18h</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL 5 · COMPLETADA -->
+    <div class="col">
+      <div class="col-head">
+        <div class="col-name"><span class="col-dot" style="background:#12B76A"></span>Completada</div>
+        <span class="col-count">0</span>
+      </div>
+      <div class="col-body">
+        <div class="empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 13l4 4L19 7"/></svg>
+          <span>Sin completadas hoy</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--n-300)">02 may 2026</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL 6 · ENTREGADA -->
+    <div class="col">
+      <div class="col-head">
+        <div class="col-name"><span class="col-dot" style="background:#98A2B3"></span>Entregada</div>
+        <span class="col-count">3</span>
+      </div>
+      <div class="col-body">
+        <div class="card t-neutral delivered">
+          <div class="c-id"><span>OS-2820</span><span class="sla">Ayer 17:22</span></div>
+          <div class="c-client">Maderera Pacífico</div>
+          <div class="c-equipo">Sullair LS-25 · prevent.</div>
+          <span class="cat cat-cmp"><span class="sw"></span>Compresores</span>
+          <div class="c-foot">
+            <span class="av" style="background:#EEF1F5;color:#475467">MA</span>
+            <span class="c-tech">María A.</span>
+            <span class="c-time">— ayer</span>
+          </div>
+        </div>
+        <div class="card t-neutral delivered">
+          <div class="c-id"><span>OS-2818</span><span class="sla">Ayer 14:08</span></div>
+          <div class="c-client">Plásticos Cali</div>
+          <div class="c-equipo">Cambio bandas + filtros</div>
+          <span class="cat cat-rpt"><span class="sw"></span>Repuestos</span>
+          <div class="c-foot">
+            <span class="av" style="background:#EEF1F5;color:#475467">RV</span>
+            <span class="c-tech">Ricardo V.</span>
+            <span class="c-time">— ayer</span>
+          </div>
+        </div>
+        <div class="card t-neutral delivered">
+          <div class="c-id"><span>OS-2811</span><span class="sla">12 abr</span></div>
+          <div class="c-client">Tecnoindustrial Valle</div>
+          <div class="c-equipo">Llave torque · calibrac.</div>
+          <span class="cat cat-hrm"><span class="sw"></span>Herramientas</span>
+          <div class="c-foot">
+            <span class="av" style="background:#EEF1F5;color:#475467">SP</span>
+            <span class="c-tech">Sandra P.</span>
+            <span class="c-time">— 12 abr</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- VALIDACIÓN: TRES AZULES -->
+  <div class="check-card">
+    <div class="check-row">
+      <div class="check-dot">✓</div>
+      <div class="check-text"><strong>Royal CTA #2D3CE5</strong> presente en el botón "+ Nueva OS" arriba a la derecha — único, vibrante, diferenciado.</div>
+    </div>
+    <div class="check-row">
+      <div class="check-dot">✓</div>
+      <div class="check-text"><strong>Info #2E90FA</strong> aparece en el dot de la columna "En diagnóstico" y en el border-top de sus 3 tarjetas — más claro y cyan, lee como estado, no como acción.</div>
+    </div>
+    <div class="check-row">
+      <div class="check-dot">✓</div>
+      <div class="check-text"><strong>Indigo Steel #4456C2</strong> aparece como swatch en los <code>cat-cmp</code> de las 6 tarjetas con equipo de la familia Compresores — más opaco, lee como categoría/etiqueta de equipo, no compite con el royal ni con info.</div>
+    </div>
+    <div class="check-row">
+      <div class="check-dot">✓</div>
+      <div class="check-text"><strong>6 estados con colores diferenciables</strong> · gris (recibida) · azul info (diagnóstico) · ámbar (esperando) · ciruela (reparación) · verde (completada) · gris atenuado (entregada). Cada uno con dot en col-head + border-top en card.</div>
+    </div>
+    <div class="check-row">
+      <div class="check-dot">✓</div>
+      <div class="check-text"><strong>Vencida</strong> tratada como caso especial — border-top coral, pill p-danger con dot pulsante, banner ámbar arriba de la pantalla resumiendo cuántas hay.</div>
+    </div>
+    <div class="check-row">
+      <div class="check-dot">✓</div>
+      <div class="check-text"><strong>Empty state</strong> en columna Completada · check icon + "Sin completadas hoy" + fecha en mono.</div>
+    </div>
+  </div>
+
+  <!-- SKELETON -->
+  <div class="sec-divider"><span class="lbl">Skeleton loader · estado de carga</span><span class="ln"></span></div>
+  <div class="kanban">
+    <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:var(--n-200)"></span><span class="sk" style="display:inline-block;width:60px;height:10px"></span></div></div>
+      <div class="col-body">
+        <div class="skeleton-card"><span class="sk" style="width:50%;height:10px"></span><span class="sk" style="width:80%;height:14px"></span><span class="sk" style="width:60%;height:11px"></span><span class="sk" style="width:35%;height:18px;border-radius:4px"></span><div style="display:flex;gap:8px;margin-top:6px"><span class="sk" style="width:24px;height:24px;border-radius:999px"></span><span class="sk" style="width:50%;height:11px"></span></div></div>
+        <div class="skeleton-card"><span class="sk" style="width:45%;height:10px"></span><span class="sk" style="width:75%;height:14px"></span><span class="sk" style="width:55%;height:11px"></span><span class="sk" style="width:30%;height:18px;border-radius:4px"></span><div style="display:flex;gap:8px;margin-top:6px"><span class="sk" style="width:24px;height:24px;border-radius:999px"></span><span class="sk" style="width:55%;height:11px"></span></div></div>
+      </div>
+    </div>
+    <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:var(--n-200)"></span><span class="sk" style="display:inline-block;width:80px;height:10px"></span></div></div>
+      <div class="col-body">
+        <div class="skeleton-card"><span class="sk" style="width:40%;height:10px"></span><span class="sk" style="width:85%;height:14px"></span><span class="sk" style="width:60%;height:11px"></span><span class="sk" style="width:40%;height:18px;border-radius:4px"></span><div style="display:flex;gap:8px;margin-top:6px"><span class="sk" style="width:24px;height:24px;border-radius:999px"></span><span class="sk" style="width:60%;height:11px"></span></div></div>
+      </div>
+    </div>
+    <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:var(--n-200)"></span><span class="sk" style="display:inline-block;width:90px;height:10px"></span></div></div>
+      <div class="col-body">
+        <div class="skeleton-card"><span class="sk" style="width:50%;height:10px"></span><span class="sk" style="width:75%;height:14px"></span><span class="sk" style="width:65%;height:11px"></span><span class="sk" style="width:35%;height:18px;border-radius:4px"></span><div style="display:flex;gap:8px;margin-top:6px"><span class="sk" style="width:24px;height:24px;border-radius:999px"></span><span class="sk" style="width:50%;height:11px"></span></div></div>
+        <div class="skeleton-card"><span class="sk" style="width:55%;height:10px"></span><span class="sk" style="width:70%;height:14px"></span><span class="sk" style="width:50%;height:11px"></span><span class="sk" style="width:45%;height:18px;border-radius:4px"></span><div style="display:flex;gap:8px;margin-top:6px"><span class="sk" style="width:24px;height:24px;border-radius:999px"></span><span class="sk" style="width:55%;height:11px"></span></div></div>
+      </div>
+    </div>
+    <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:var(--n-200)"></span><span class="sk" style="display:inline-block;width:80px;height:10px"></span></div></div>
+      <div class="col-body">
+        <div class="skeleton-card"><span class="sk" style="width:50%;height:10px"></span><span class="sk" style="width:80%;height:14px"></span><span class="sk" style="width:60%;height:11px"></span><span class="sk" style="width:40%;height:18px;border-radius:4px"></span><div style="display:flex;gap:8px;margin-top:6px"><span class="sk" style="width:24px;height:24px;border-radius:999px"></span><span class="sk" style="width:55%;height:11px"></span></div></div>
+      </div>
+    </div>
+    <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:var(--n-200)"></span><span class="sk" style="display:inline-block;width:70px;height:10px"></span></div></div><div class="col-body"></div></div>
+    <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:var(--n-200)"></span><span class="sk" style="display:inline-block;width:70px;height:10px"></span></div></div><div class="col-body"></div></div>
+  </div>
+
+  <!-- CHROME PREVIEW -->
+  <div class="sec-divider"><span class="lbl">Bonus · pantalla dentro del chrome real (sidebar 240 px)</span><span class="ln"></span></div>
+  <div class="chrome">
+    <aside class="chrome-side">
+      <div class="chrome-brand">
+        <div class="chrome-logo">C</div>
+        <div>
+          <div class="chrome-brandname">Compresores Valle</div>
+          <div class="chrome-brandsub">WH-01 · Cali</div>
+        </div>
+      </div>
+      <div class="chrome-section">Operación</div>
+      <div class="chrome-link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg>Cockpit</div>
+      <div class="chrome-link active"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v3H3zM3 7h10v3H3zM3 11h6v3H3z"/></svg>Órdenes de servicio</div>
+      <div class="chrome-link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5l6-3 6 3v6l-6 3-6-3z"/></svg>Inventario</div>
+      <div class="chrome-link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="13" r="1.5"/><circle cx="12" cy="13" r="1.5"/><path d="M2 3h2l2 8h8"/></svg>Ventas</div>
+      <div class="chrome-link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l5-4 5 4v6H3z"/></svg>Compras</div>
+      <div class="chrome-link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l5-5M13 8L8 3M3 8l5 5M13 8l-5 5"/></svg>Traslados</div>
+      <div class="chrome-section">Admin</div>
+      <div class="chrome-link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.5 2-4 5-4s5 1.5 5 4"/></svg>Usuarios</div>
+      <div class="chrome-link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v10H3z"/><path d="M6 6h4M6 9h4"/></svg>Reportes</div>
+    </aside>
+    <main class="chrome-main">
+      <div class="chrome-main-inner">
+        <div class="ph-row" style="margin-bottom:var(--space-4)">
+          <div>
+            <h1 class="ph-title" style="font-size:18px">Órdenes de servicio</h1>
+            <p class="ph-sub" style="font-size:12px"><b>14</b> abiertas · <b>6</b> técnicos · <b>2</b> vencidas</p>
+          </div>
+          <div class="ph-actions">
+            <div class="seg" style="height:30px"><button class="active" style="height:22px;font-size:11px">Tablero</button><button style="height:22px;font-size:11px">Lista</button></div>
+            <button class="btn btn-primary" style="height:30px;font-size:12px;padding:0 12px">+ Nueva OS</button>
+          </div>
+        </div>
+        <div class="kanban" style="grid-template-columns:repeat(6,1fr);gap:8px">
+          <!-- Mini columns -->
+          <div class="col" style="min-height:auto"><div class="col-head"><div class="col-name" style="font-size:10px"><span class="col-dot" style="background:#98A2B3"></span>Recibida</div><span class="col-count" style="font-size:10px;padding:1px 6px">2</span></div><div class="col-body" style="padding:8px;gap:6px">
+            <div class="card t-neutral" style="padding:8px;gap:4px"><div class="c-id" style="font-size:10px"><span>OS-2851</span><span class="sla">02h</span></div><div class="c-client" style="font-size:11.5px">Industrial Pacífico</div><div class="c-equipo" style="font-size:10.5px">Atlas Copco GA-22</div><span class="cat cat-cmp" style="height:18px;font-size:10px;padding:0 6px"><span class="sw" style="width:6px;height:6px"></span>Compresores</span></div>
+          </div></div>
+          <div class="col" style="min-height:auto"><div class="col-head"><div class="col-name" style="font-size:10px"><span class="col-dot" style="background:#2E90FA"></span>Diagnóstico</div><span class="col-count" style="font-size:10px;padding:1px 6px">3</span></div><div class="col-body" style="padding:8px;gap:6px">
+            <div class="card t-info" style="padding:8px;gap:4px"><div class="c-id" style="font-size:10px"><span>OS-2848</span><span class="sla">06h</span></div><div class="c-client" style="font-size:11.5px">Metalúrgica del Cauca</div><div class="c-equipo" style="font-size:10.5px">Kaeser SX-7</div><span class="cat cat-cmp" style="height:18px;font-size:10px;padding:0 6px"><span class="sw" style="width:6px;height:6px"></span>Compresores</span></div>
+            <div class="card t-info" style="padding:8px;gap:4px"><div class="c-id" style="font-size:10px"><span>OS-2847</span><span class="sla">04h</span></div><div class="c-client" style="font-size:11.5px">Maderera Pacífico</div><div class="c-equipo" style="font-size:10.5px">Sullair LS-25</div><span class="cat cat-cmp" style="height:18px;font-size:10px;padding:0 6px"><span class="sw" style="width:6px;height:6px"></span>Compresores</span></div>
+          </div></div>
+          <div class="col" style="min-height:auto"><div class="col-head"><div class="col-name" style="font-size:10px"><span class="col-dot" style="background:#F79009"></span>Repuestos</div><span class="col-count" style="font-size:10px;padding:1px 6px">3</span></div><div class="col-body" style="padding:8px;gap:6px">
+            <div class="card t-warn" style="padding:8px;gap:4px"><div class="c-id" style="font-size:10px"><span>OS-2841</span><span class="sla">04d</span></div><div class="c-client" style="font-size:11.5px">Cervecería Andina</div><div class="c-equipo" style="font-size:10.5px">Ingersoll R5</div><span class="cat cat-cmp" style="height:18px;font-size:10px;padding:0 6px"><span class="sw" style="width:6px;height:6px"></span>Compresores</span></div>
+          </div></div>
+          <div class="col" style="min-height:auto"><div class="col-head"><div class="col-name" style="font-size:10px"><span class="col-dot" style="background:#9A6FDF"></span>Reparación</div><span class="col-count" style="font-size:10px;padding:1px 6px">3</span></div><div class="col-body" style="padding:8px;gap:6px">
+            <div class="card t-danger" style="padding:8px;gap:4px"><div class="c-id" style="font-size:10px"><span>OS-2832</span><span class="pill p-danger" style="height:16px;font-size:9.5px;padding:0 6px"><span class="dot" style="width:5px;height:5px"></span>+1d 02h</span></div><div class="c-client" style="font-size:11.5px">Industrial XYZ</div><div class="c-equipo" style="font-size:10.5px">Línea 3</div></div>
+            <div class="card t-progress" style="padding:8px;gap:4px"><div class="c-id" style="font-size:10px"><span>OS-2845</span><span class="sla">02d</span></div><div class="c-client" style="font-size:11.5px">Industrial XYZ</div><div class="c-equipo" style="font-size:10.5px">Atlas Copco GA-22</div></div>
+          </div></div>
+          <div class="col" style="min-height:auto"><div class="col-head"><div class="col-name" style="font-size:10px"><span class="col-dot" style="background:#12B76A"></span>Completada</div><span class="col-count" style="font-size:10px;padding:1px 6px">0</span></div><div class="col-body" style="padding:8px"><div class="empty" style="padding:12px;font-size:10px">Sin completadas hoy</div></div></div>
+          <div class="col" style="min-height:auto"><div class="col-head"><div class="col-name" style="font-size:10px"><span class="col-dot" style="background:#98A2B3"></span>Entregada</div><span class="col-count" style="font-size:10px;padding:1px 6px">3</span></div><div class="col-body" style="padding:8px;gap:6px">
+            <div class="card t-neutral delivered" style="padding:8px;gap:4px"><div class="c-id" style="font-size:10px"><span>OS-2820</span><span class="sla">ayer</span></div><div class="c-client" style="font-size:11.5px">Maderera Pacífico</div></div>
+          </div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+</div>
+</body>
+</html>

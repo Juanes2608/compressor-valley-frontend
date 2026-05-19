@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Calibración · Headers · CHV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Geist', system-ui, sans-serif;
+    background: #F7F7F8;
+    color: #0A0A0A;
+    padding: 48px 32px 96px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .doc-h1 {
+    font-family: 'Geist', sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+  }
+  .doc-sub {
+    font-size: 14px;
+    color: #6B7280;
+    margin: 0 0 40px;
+  }
+  .direction {
+    margin-bottom: 64px;
+  }
+  .dir-title {
+    font-family: 'Geist', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6B7280;
+    margin: 0 0 6px;
+  }
+  .dir-name {
+    font-family: 'Geist', sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    margin: 0 0 4px;
+  }
+  .dir-desc {
+    font-size: 14px;
+    color: #4B5563;
+    margin: 0 0 20px;
+    max-width: 720px;
+    line-height: 1.55;
+  }
+
+  /* ==================================================
+     DIRECCIÓN A — "Editorial Tech" (Linear-leaning)
+     ================================================== */
+  .a-header {
+    --bg: #FFFFFF;
+    --bg-sidebar: #FAFAFA;
+    --border: #E8E8EA;
+    --border-strong: #D4D4D8;
+    --fg: #0A0A0A;
+    --fg-secondary: #525252;
+    --fg-tertiary: #A1A1AA;
+    --primary: #5E6AD2;
+    --primary-hover: #4D58C3;
+    --bg-hover: #F4F4F5;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    height: 120px;
+    font-family: 'Geist', sans-serif;
+  }
+  .a-sidebar {
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 16px;
+  }
+  .a-logo {
+    width: 24px; height: 24px;
+    background: var(--fg);
+    border-radius: var(--radius-sm);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px;
+    letter-spacing: -0.02em;
+  }
+  .a-brand {
+    font-weight: 600; font-size: 13px; letter-spacing: -0.01em;
+  }
+  .a-shortcut {
+    margin-left: auto;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fg-tertiary);
+    background: #fff;
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+  }
+  .a-content {
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 24px;
+  }
+  .a-titles { flex: 1; min-width: 0; }
+  .a-title {
+    font-family: 'Geist', sans-serif;
+    font-weight: 600; font-size: 18px;
+    letter-spacing: -0.015em;
+    color: var(--fg);
+    margin: 0 0 2px;
+  }
+  .a-subtitle {
+    font-size: 13px; color: var(--fg-secondary);
+    margin: 0;
+  }
+  .a-search {
+    width: 280px;
+    height: 32px;
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 10px;
+    color: var(--fg-tertiary);
+    font-size: 13px;
+  }
+  .a-search .k {
+    margin-left: auto;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    background: #F4F4F5;
+    border: 1px solid var(--border);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--fg-secondary);
+  }
+  .a-btn {
+    height: 32px;
+    padding: 0 12px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: var(--radius-md);
+    border: none;
+    font-family: 'Geist', sans-serif;
+    font-weight: 500; font-size: 13px;
+    display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    cursor: pointer;
+  }
+  .a-avatar {
+    width: 28px; height: 28px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #818CF8, #5E6AD2);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 11px;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px var(--border-strong);
+  }
+
+  /* ==================================================
+     DIRECCIÓN B — "Industrial Mono" (Vercel-leaning, more technical)
+     ================================================== */
+  .b-header {
+    --bg: #FFFFFF;
+    --bg-sidebar: #0A0A0A;
+    --border: #EAEAEA;
+    --fg: #000000;
+    --fg-secondary: #666666;
+    --fg-tertiary: #999999;
+    --primary: #0070F3;
+    --bg-hover: #F2F2F2;
+    --radius-sm: 4px;
+    --radius-md: 5px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 248px 1fr;
+    height: 124px;
+    font-family: 'Geist', sans-serif;
+  }
+  .b-sidebar {
+    background: var(--bg-sidebar);
+    color: #fff;
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 18px;
+  }
+  .b-logo {
+    width: 26px; height: 26px;
+    background: #fff;
+    color: #000;
+    border-radius: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Geist Mono', monospace;
+    font-weight: 700; font-size: 11px;
+    letter-spacing: 0;
+  }
+  .b-brand {
+    font-family: 'Geist Mono', monospace;
+    font-weight: 600; font-size: 12px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .b-content {
+    display: flex; align-items: center; gap: 14px;
+    padding: 0 22px;
+    border-bottom: 1px solid var(--border);
+    height: 100%;
+  }
+  .b-titles { flex: 1; min-width: 0; }
+  .b-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fg-tertiary);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0 0 2px;
+  }
+  .b-title {
+    font-family: 'Geist', sans-serif;
+    font-weight: 500; font-size: 19px;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    margin: 0;
+  }
+  .b-search {
+    width: 300px;
+    height: 34px;
+    background: #FAFAFA;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 10px;
+    color: var(--fg-tertiary);
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+  }
+  .b-search .k {
+    margin-left: auto;
+    font-size: 11px;
+    background: #fff;
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--fg-secondary);
+  }
+  .b-btn {
+    height: 34px;
+    padding: 0 14px;
+    background: #000;
+    color: #fff;
+    border-radius: var(--radius-md);
+    border: none;
+    font-family: 'Geist', sans-serif;
+    font-weight: 500; font-size: 13px;
+    display: flex; align-items: center; gap: 6px;
+    cursor: pointer;
+  }
+  .b-avatar {
+    width: 30px; height: 30px;
+    background: #F2F2F2;
+    color: var(--fg);
+    border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Geist Mono', monospace;
+    font-weight: 600; font-size: 11px;
+    border: 1px solid var(--border);
+  }
+
+  /* ==================================================
+     DIRECCIÓN C — "Workshop Cool" (Stripe/Attio-leaning, cool gray)
+     ================================================== */
+  .c-header {
+    --bg: #FBFBFC;
+    --bg-card: #FFFFFF;
+    --bg-sidebar: #F2F4F7;
+    --border: #E4E7EC;
+    --border-strong: #D0D5DD;
+    --fg: #101828;
+    --fg-secondary: #475467;
+    --fg-tertiary: #98A2B3;
+    --primary: #2D3CE5;
+    --bg-hover: #EEF1F5;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 256px 1fr;
+    height: 128px;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+  .c-sidebar {
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 16px;
+  }
+  .c-logo {
+    width: 28px; height: 28px;
+    background: var(--fg);
+    color: #fff;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px;
+    letter-spacing: -0.02em;
+  }
+  .c-brand-block { display: flex; flex-direction: column; line-height: 1.1; }
+  .c-brand {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600; font-size: 13px;
+    color: var(--fg);
+  }
+  .c-brand-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--fg-tertiary);
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+  }
+  .c-content {
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 24px;
+  }
+  .c-titles { flex: 1; min-width: 0; }
+  .c-breadcrumb {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--fg-tertiary);
+    margin: 0 0 4px;
+  }
+  .c-breadcrumb .crumb-current { color: var(--fg-secondary); font-weight: 500; }
+  .c-title {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600; font-size: 20px;
+    letter-spacing: -0.015em;
+    color: var(--fg);
+    margin: 0 0 1px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .c-status-dot {
+    width: 8px; height: 8px;
+    border-radius: 999px;
+    background: #12B76A;
+    box-shadow: 0 0 0 3px rgba(18,183,106,.12);
+  }
+  .c-subtitle {
+    font-size: 13px; color: var(--fg-secondary);
+    margin: 0;
+  }
+  .c-search {
+    width: 320px;
+    height: 36px;
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 12px;
+    color: var(--fg-tertiary);
+    font-size: 13px;
+  }
+  .c-search .k {
+    margin-left: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--fg-secondary);
+  }
+  .c-btn {
+    height: 36px;
+    padding: 0 14px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: var(--radius-md);
+    border: none;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 500; font-size: 13px;
+    display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 1px 2px rgba(45,60,229,.18);
+    cursor: pointer;
+  }
+  .c-avatar {
+    width: 32px; height: 32px;
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    color: var(--fg);
+    border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600; font-size: 12px;
+  }
+
+  /* ==================================================
+     Spec panel
+     ================================================== */
+  .spec {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr 0.8fr;
+    gap: 16px;
+    padding: 18px 20px;
+    background: #fff;
+    border: 1px solid #E8E8EA;
+    border-radius: 8px;
+  }
+  .spec-block {
+    border-right: 1px solid #F1F1F3;
+    padding-right: 16px;
+  }
+  .spec-block:last-child { border-right: none; }
+  .spec-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #71717A;
+    margin: 0 0 8px;
+    font-weight: 500;
+  }
+  .spec-row {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: #18181B;
+  }
+  .spec-key {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: #71717A;
+    width: 60px;
+    flex-shrink: 0;
+  }
+  .swatch {
+    width: 14px; height: 14px;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,0.08);
+    flex-shrink: 0;
+  }
+  .swatch-row {
+    display: flex; gap: 4px;
+    margin-top: 4px;
+  }
+  .sw-lg {
+    width: 24px; height: 24px;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .radius-demo {
+    display: inline-block;
+    width: 28px; height: 18px;
+    background: #E4E4E7;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1 class="doc-h1">Calibración previa · Header del módulo</h1>
+  <p class="doc-sub">Tres direcciones distintas, todas dentro del mood Linear / Vercel / Stripe / Attio. Geist + Geist Mono como base accesible. Ejemplo: módulo "Órdenes de servicio" — botón primario "+ Nueva OS".</p>
+
+  <!-- DIRECCIÓN A -->
+  <div class="direction">
+    <p class="dir-title">Dirección A</p>
+    <h2 class="dir-name">Editorial Tech</h2>
+    <p class="dir-desc">Linear-leaning. Sidebar gris muy frío, fondo blanco puro, una sola tipografía sans con jerarquía por peso y tamaño. Color de marca índigo profundo (Linear-style) reservado al CTA. Avatar con leve gradiente del propio primario — único uso decorativo permitido. Densidad media, radios chicos pero cómodos.</p>
+
+    <div class="a-header">
+      <div class="a-sidebar">
+        <div class="a-logo">C</div>
+        <div class="a-brand">Compresores del Valle</div>
+        <span class="a-shortcut">⌘ K</span>
+      </div>
+      <div class="a-content">
+        <div class="a-titles">
+          <h3 class="a-title">Órdenes de servicio</h3>
+          <p class="a-subtitle">12 abiertas · 3 esperando repuesto · 1 vencida</p>
+        </div>
+        <div class="a-search">
+          <span>Buscar OS, cliente, equipo…</span>
+          <span class="k">⌘ K</span>
+        </div>
+        <button class="a-btn"><span style="font-size:14px;line-height:1">+</span> Nueva OS</button>
+        <div class="a-avatar">AM</div>
+      </div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-block">
+        <p class="spec-label">Tipografías</p>
+        <div class="spec-row"><span class="spec-key">display</span> <span style="font-family:'Geist';font-weight:600;letter-spacing:-0.015em">Geist 600</span></div>
+        <div class="spec-row"><span class="spec-key">body</span> <span style="font-family:'Geist'">Geist 400/500</span></div>
+        <div class="spec-row"><span class="spec-key">mono</span> <span style="font-family:'Geist Mono'">Geist Mono</span></div>
+        <div class="spec-row"><span class="spec-key">scale</span> 11/12/13/14/18/22</div>
+      </div>
+      <div class="spec-block">
+        <p class="spec-label">Neutros base</p>
+        <div class="swatch-row">
+          <div class="sw-lg" style="background:#FFFFFF" title="bg #FFFFFF"></div>
+          <div class="sw-lg" style="background:#FAFAFA" title="sidebar #FAFAFA"></div>
+          <div class="sw-lg" style="background:#F4F4F5" title="hover #F4F4F5"></div>
+          <div class="sw-lg" style="background:#E8E8EA" title="border #E8E8EA"></div>
+          <div class="sw-lg" style="background:#A1A1AA" title="text-3 #A1A1AA"></div>
+          <div class="sw-lg" style="background:#525252" title="text-2 #525252"></div>
+          <div class="sw-lg" style="background:#0A0A0A" title="text-1 #0A0A0A"></div>
+        </div>
+        <div class="spec-row" style="margin-top:8px"><span class="spec-key">primary</span> <div class="swatch" style="background:#5E6AD2"></div> #5E6AD2</div>
+      </div>
+      <div class="spec-block">
+        <p class="spec-label">Semánticos</p>
+        <div class="spec-row"><div class="swatch" style="background:#16A34A"></div> #16A34A · success</div>
+        <div class="spec-row"><div class="swatch" style="background:#D97706"></div> #D97706 · warning</div>
+        <div class="spec-row"><div class="swatch" style="background:#DC2626"></div> #DC2626 · danger</div>
+        <div class="spec-row"><div class="swatch" style="background:#2563EB"></div> #2563EB · info</div>
+        <div class="spec-row"><div class="swatch" style="background:#7C3AED"></div> #7C3AED · in-progress</div>
+        <div class="spec-row"><div class="swatch" style="background:#71717A"></div> #71717A · neutral</div>
+      </div>
+      <div class="spec-block" style="border-right:none">
+        <p class="spec-label">Radios</p>
+        <div class="spec-row"><span class="radius-demo" style="border-radius:4px"></span> 4 · keys, badges</div>
+        <div class="spec-row"><span class="radius-demo" style="border-radius:6px"></span> 6 · inputs, btn</div>
+        <div class="spec-row"><span class="radius-demo" style="border-radius:8px"></span> 8 · cards, sheets</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIRECCIÓN B -->
+  <div class="direction">
+    <p class="dir-title">Dirección B</p>
+    <h2 class="dir-name">Industrial Mono</h2>
+    <p class="dir-desc">Vercel-leaning, más técnica. Sidebar negro puro con marca en mono uppercase. Header blanco con un eyebrow en mono que ubica al usuario en la jerarquía. Buscador con tipografía mono — refuerza que la app maneja códigos. CTA negro (no marca azul) — el azul queda reservado a estados informativos. Mayor contraste, menor cromatismo.</p>
+
+    <div class="b-header">
+      <div class="b-sidebar">
+        <div class="b-logo">CHV</div>
+        <div class="b-brand">Compresores del Valle</div>
+      </div>
+      <div class="b-content">
+        <div class="b-titles">
+          <p class="b-eyebrow">Taller / Servicio</p>
+          <h3 class="b-title">Órdenes de servicio</h3>
+        </div>
+        <div class="b-search">
+          <span>buscar_os, cliente, equipo</span>
+          <span class="k">⌘ K</span>
+        </div>
+        <button class="b-btn"><span style="font-size:14px;line-height:1">+</span> Nueva OS</button>
+        <div class="b-avatar">AM</div>
+      </div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-block">
+        <p class="spec-label">Tipografías</p>
+        <div class="spec-row"><span class="spec-key">display</span> <span style="font-family:'Geist';font-weight:500;letter-spacing:-0.02em">Geist 500</span></div>
+        <div class="spec-row"><span class="spec-key">body</span> <span style="font-family:'Geist'">Geist 400/500</span></div>
+        <div class="spec-row"><span class="spec-key">mono</span> <span style="font-family:'Geist Mono';text-transform:uppercase;font-size:11px;letter-spacing:.04em">GEIST MONO</span></div>
+        <div class="spec-row"><span class="spec-key">scale</span> 10/11/12/13/19</div>
+      </div>
+      <div class="spec-block">
+        <p class="spec-label">Neutros base</p>
+        <div class="swatch-row">
+          <div class="sw-lg" style="background:#FFFFFF"></div>
+          <div class="sw-lg" style="background:#FAFAFA"></div>
+          <div class="sw-lg" style="background:#F2F2F2"></div>
+          <div class="sw-lg" style="background:#EAEAEA"></div>
+          <div class="sw-lg" style="background:#999999"></div>
+          <div class="sw-lg" style="background:#666666"></div>
+          <div class="sw-lg" style="background:#000000"></div>
+        </div>
+        <div class="spec-row" style="margin-top:8px"><span class="spec-key">primary</span> <div class="swatch" style="background:#000000"></div> #000000 (CTA)</div>
+        <div class="spec-row"><span class="spec-key">accent</span> <div class="swatch" style="background:#0070F3"></div> #0070F3 (info)</div>
+      </div>
+      <div class="spec-block">
+        <p class="spec-label">Semánticos</p>
+        <div class="spec-row"><div class="swatch" style="background:#0F8F4F"></div> #0F8F4F · success</div>
+        <div class="spec-row"><div class="swatch" style="background:#B45309"></div> #B45309 · warning</div>
+        <div class="spec-row"><div class="swatch" style="background:#C2261C"></div> #C2261C · danger</div>
+        <div class="spec-row"><div class="swatch" style="background:#0070F3"></div> #0070F3 · info</div>
+        <div class="spec-row"><div class="swatch" style="background:#6D28D9"></div> #6D28D9 · in-progress</div>
+        <div class="spec-row"><div class="swatch" style="background:#666666"></div> #666666 · neutral</div>
+      </div>
+      <div class="spec-block" style="border-right:none">
+        <p class="spec-label">Radios</p>
+        <div class="spec-row"><span class="radius-demo" style="border-radius:0px"></span> 0 · logo, chips</div>
+        <div class="spec-row"><span class="radius-demo" style="border-radius:4px"></span> 4 · badges, keys</div>
+        <div class="spec-row"><span class="radius-demo" style="border-radius:5px"></span> 5 · inputs, btn</div>
+        <div class="spec-row"><span class="radius-demo" style="border-radius:6px"></span> 6 · cards</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIRECCIÓN C -->
+  <div class="direction">
+    <p class="dir-title">Dirección C</p>
+    <h2 class="dir-name">Workshop Cool</h2>
+    <p class="dir-desc">Stripe + Attio. IBM Plex Sans + IBM Plex Mono — ligeramente más humana que Geist sin perder lo técnico. Neutros fríos azulados (no negros puros). Breadcrumb visible en el header — útil cuando hay mucha jerarquía. Status dot junto al título cuando aplica. Radios de 12 en cards, 6 en componentes — más confortable. CTA azul royal con sombra muy sutil.</p>
+
+    <div class="c-header">
+      <div class="c-sidebar">
+        <div class="c-logo">C</div>
+        <div class="c-brand-block">
+          <span class="c-brand">CHV S.A.S.</span>
+          <span class="c-brand-meta">WH01 · BODEGA CENTRAL</span>
+        </div>
+      </div>
+      <div class="c-content">
+        <div class="c-titles">
+          <div class="c-breadcrumb">
+            <span>Taller</span>
+            <span>›</span>
+            <span class="crumb-current">Órdenes de servicio</span>
+          </div>
+          <h3 class="c-title"><span class="c-status-dot"></span> Órdenes de servicio</h3>
+          <p class="c-subtitle">12 abiertas · 3 esperando repuesto · 1 vencida</p>
+        </div>
+        <div class="c-search">
+          <span>Buscar OS, cliente, equipo…</span>
+          <span class="k">⌘ K</span>
+        </div>
+        <button class="c-btn"><span style="font-size:14px;line-height:1">+</span> Nueva OS</button>
+        <div class="c-avatar">AM</div>
+      </div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-block">
+        <p class="spec-label">Tipografías</p>
+        <div class="spec-row"><span class="spec-key">display</span> <span style="font-family:'IBM Plex Sans';font-weight:600;letter-spacing:-0.015em">IBM Plex Sans 600</span></div>
+        <div class="spec-row"><span class="spec-key">body</span> <span style="font-family:'IBM Plex Sans'">IBM Plex Sans 400/500</span></div>
+        <div class="spec-row"><span class="spec-key">mono</span> <span style="font-family:'IBM Plex Mono'">IBM Plex Mono</span></div>
+        <div class="spec-row"><span class="spec-key">scale</span> 10/12/13/14/20</div>
+      </div>
+      <div class="spec-block">
+        <p class="spec-label">Neutros base (fríos)</p>
+        <div class="swatch-row">
+          <div class="sw-lg" style="background:#FBFBFC"></div>
+          <div class="sw-lg" style="background:#F2F4F7"></div>
+          <div class="sw-lg" style="background:#EEF1F5"></div>
+          <div class="sw-lg" style="background:#E4E7EC"></div>
+          <div class="sw-lg" style="background:#98A2B3"></div>
+          <div class="sw-lg" style="background:#475467"></div>
+          <div class="sw-lg" style="background:#101828"></div>
+        </div>
+        <div class="spec-row" style="margin-top:8px"><span class="spec-key">primary</span> <div class="swatch" style="background:#2D3CE5"></div> #2D3CE5</div>
+      </div>
+      <div class="spec-block">
+        <p class="spec-label">Semánticos</p>
+        <div class="spec-row"><div class="swatch" style="background:#12B76A"></div> #12B76A · success</div>
+        <div class="spec-row"><div class="swatch" style="background:#DC6803"></div> #DC6803 · warning</div>
+        <div class="spec-row"><div class="swatch" style="background:#D92D20"></div> #D92D20 · danger</div>
+        <div class="spec-row"><div class="swatch" style="background:#175CD3"></div> #175CD3 · info</div>
+        <div class="spec-row"><div class="swatch" style="background:#6938EF"></div> #6938EF · in-progress</div>
+        <div class="spec-row"><div class="swatch" style="background:#667085"></div> #667085 · neutral</div>
+      </div>
+      <div class="spec-block" style="border-right:none">
+        <p class="spec-label">Radios</p>
+        <div class="spec-row"><span class="radius-demo" style="border-radius:4px"></span> 4 · badges</div>
+        <div class="spec-row"><span class="radius-demo" style="border-radius:6px"></span> 6 · inputs, btn</div>
+        <div class="spec-row"><span class="radius-demo" style="border-radius:8px"></span> 8 · sheets</div>
+        <div class="spec-row"><span class="radius-demo" style="border-radius:12px"></span> 12 · cards</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

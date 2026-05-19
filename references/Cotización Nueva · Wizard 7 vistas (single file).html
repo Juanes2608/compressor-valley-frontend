@@ -1,0 +1,1263 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cotización Nueva · Wizard · 7 vistas (single file)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --n-0:#FFFFFF; --n-25:#FBFBFC; --n-50:#F5F6F8; --n-75:#EFF1F4;
+  --n-100:#E6E8ED; --n-150:#DADCE3; --n-200:#C7CAD3; --n-300:#A2A6B3;
+  --n-400:#7E8290; --n-500:#5C6070; --n-700:#383C4A; --n-800:#262936;
+  --n-900:#181A24; --n-950:#0E1018; --n-975:#070912;
+  --p-50:#EEF0FE; --p-100:#DCE0FE; --p-200:#B7BFFC; --p-300:#8B96F9;
+  --p-400:#5F6DF1; --p-500:#3D4DE8; --p-600:#2D3CE5; --p-700:#2330C0;
+  --succ-50:#E8F7EE; --succ-100:#CCEDD8; --succ-200:#9FDDB5; --succ-500:#2DA75A; --succ-600:#1F8A48; --succ-700:#176B38;
+  --warn-50:#FEF4DC; --warn-100:#FCE7B0; --warn-200:#F8D079; --warn-500:#C98A0F; --warn-600:#A6720B; --warn-700:#7E5708;
+  --dang-50:#FCE9E7; --dang-100:#F9CFCB; --dang-200:#F1A39B; --dang-500:#C53A2C; --dang-600:#A52E22; --dang-700:#7E2419;
+  --info-50:#E5F0FE; --info-100:#C8DFFC; --info-200:#9AC4F8; --info-500:#2E84E0; --info-600:#246EC0; --info-700:#1B5499;
+  --purp-50:#F1EBFA; --purp-200:#C5AAE5; --purp-500:#7B3FBF; --purp-700:#48226F;
+  --r-card:10px; --r-md:8px; --r-pill:999px;
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:20px; --s-6:24px; --s-7:32px;
+  --ff-sans:"IBM Plex Sans",system-ui,sans-serif;
+  --ff-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+.dark{
+  --n-0:#0E1018; --n-25:#10131C; --n-50:#141823; --n-75:#181C28;
+  --n-100:#1F2330; --n-150:#262B3A; --n-200:#2F3447; --n-300:#525A72;
+  --n-400:#6F778F; --n-500:#8E96AD; --n-700:#B7BCCB; --n-800:#D2D5DF;
+  --n-900:#E6E8ED; --n-950:#F1F2F6; --n-975:#FBFBFC;
+  --p-50:#1A1F4D; --p-100:#222961; --p-200:#2C3681; --p-300:#3D49A6;
+  --p-500:#7180E2; --p-600:#8A98EE; --p-700:#A8B3F2;
+  --succ-50:#0E2A1A; --succ-200:#1C5234; --succ-500:#3FB672; --succ-700:#86DBA8;
+  --warn-50:#2C1F08; --warn-200:#5A4012; --warn-500:#D49A2A; --warn-700:#F0CC7E;
+  --dang-50:#2C0F0B; --dang-200:#5C211B; --dang-500:#D75144; --dang-700:#EE9388;
+  --info-50:#0F1F36; --info-200:#1D406F; --info-500:#4D9AEC; --info-700:#9CC8F4;
+}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{font-family:var(--ff-sans);background:#0B0E16;color:var(--n-700);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.mono{font-family:var(--ff-mono);font-feature-settings:"tnum","ss01"}
+.caps{text-transform:uppercase;letter-spacing:.06em}
+
+.doc-head{padding:48px 56px 24px;color:#E6E8ED;max-width:1700px;margin:0 auto}
+.doc-eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#7E8290;margin-bottom:8px}
+.doc-title{font-size:30px;font-weight:500;letter-spacing:-.02em;margin:0 0 8px;color:#FBFBFC}
+.doc-sub{font-size:14px;color:#A2A6B3;max-width:820px;line-height:1.55}
+.frames{display:flex;flex-direction:column;gap:48px;padding:24px 56px 96px;max-width:1700px;margin:0 auto}
+.frame-wrap{display:flex;flex-direction:column;gap:10px}
+.frame-label{display:flex;align-items:center;gap:10px;color:#A2A6B3;font-family:var(--ff-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.lbl-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:#2D3CE5;color:#fff;font-size:11px;font-weight:600}
+.lbl-num.alt{background:#7E5708}
+.lbl-mode{margin-left:auto;font-size:10px;color:#5C6070}
+.frame{background:var(--n-25);border-radius:14px;overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.04),0 24px 48px rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06)}
+.frame .frame-inner{overflow-x:auto;overflow-y:hidden}
+
+/* SHELL */
+.shell{display:flex;background:var(--n-25);min-width:1280px}
+.shell.tab{min-width:900px}
+.sidebar{width:240px;flex-shrink:0;background:var(--n-975);color:#E6E8ED;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.04)}
+.sb-brand{padding:18px 18px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.05)}
+.sb-logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#2D3CE5,#4456C2);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--ff-mono);font-size:13px;font-weight:600}
+.sb-co{display:flex;flex-direction:column;line-height:1.15}
+.sb-co-name{font-size:13px;font-weight:600;color:#fff}
+.sb-co-meta{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;color:#7E8290;text-transform:uppercase}
+.sb-section{padding:14px 0 4px}
+.sb-sect-label{padding:0 18px 6px;font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#5C6070}
+.sb-item{display:flex;align-items:center;gap:10px;padding:8px 18px;color:#C7CAD3;font-size:13px;cursor:pointer;border-left:2px solid transparent;text-decoration:none}
+.sb-item:hover{background:rgba(255,255,255,.025);color:#fff}
+.sb-item.active{background:rgba(45,60,229,.16);color:#fff;border-left-color:#3D4DE8;font-weight:500}
+.sb-ico{width:16px;height:16px;flex-shrink:0;opacity:.85}
+.sb-ico svg{width:16px;height:16px}
+.sb-count{margin-left:auto;font-family:var(--ff-mono);font-size:11px;color:#7E8290;background:rgba(255,255,255,.05);padding:1px 7px;border-radius:999px;min-width:22px;text-align:center}
+.sb-item.active .sb-count{color:#B7BFFC;background:rgba(45,60,229,.2)}
+.sb-foot{margin-top:auto;padding:14px 18px;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:10px}
+.sb-avatar{width:30px;height:30px;border-radius:999px;background:linear-gradient(135deg,#3645A8,#5F6DF1);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.sb-user{display:flex;flex-direction:column;line-height:1.2;flex:1}
+.sb-user-name{font-size:12px;color:#fff;font-weight:500}
+.sb-user-role{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;color:#7E8290;text-transform:uppercase}
+.sb-rail{width:56px;flex-shrink:0;background:var(--n-975);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:4px;border-right:1px solid rgba(255,255,255,.04)}
+.sb-rail-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#2D3CE5,#4456C2);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--ff-mono);font-size:13px;font-weight:600;margin-bottom:8px}
+.sb-rail-item{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#A2A6B3;cursor:pointer;position:relative}
+.sb-rail-item:hover{background:rgba(255,255,255,.04);color:#fff}
+.sb-rail-item.active{background:rgba(45,60,229,.18);color:#fff}
+.sb-rail-item.active::before{content:"";position:absolute;left:-12px;width:2px;height:20px;background:#3D4DE8;border-radius:0 2px 2px 0}
+.sb-rail-divider{width:24px;height:1px;background:rgba(255,255,255,.06);margin:6px 0}
+.sb-rail-badge{position:absolute;top:4px;right:4px;background:#2D3CE5;color:#fff;font-size:9px;font-weight:600;padding:1px 4px;border-radius:6px;font-family:var(--ff-mono);min-width:14px;text-align:center;line-height:1}
+
+.main{flex:1;display:flex;flex-direction:column;background:var(--n-25);min-width:0}
+.topbar{height:56px;background:var(--n-0);border-bottom:1px solid var(--n-100);display:flex;align-items:center;padding:0 24px;gap:16px;flex-shrink:0}
+.crumb{display:flex;align-items:center;gap:6px;font-family:var(--ff-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--n-400)}
+.crumb b{color:var(--n-700);font-weight:500}
+.crumb .sep{opacity:.5}
+.tb-search{flex:1;max-width:420px;background:var(--n-50);border:1px solid var(--n-100);border-radius:8px;height:32px;display:flex;align-items:center;padding:0 10px;gap:8px;color:var(--n-400);font-size:12px}
+.tb-search .kbd{margin-left:auto;font-family:var(--ff-mono);font-size:10px;background:var(--n-0);border:1px solid var(--n-100);padding:1px 5px;border-radius:4px;color:var(--n-500)}
+.tb-spacer{flex:1}
+.tb-sede{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--n-700);padding:6px 10px;border-radius:8px;border:1px solid var(--n-100);background:var(--n-0)}
+.tb-sede .dot{width:6px;height:6px;border-radius:999px;background:#2DA75A}
+.tb-icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--n-100);background:var(--n-0);display:flex;align-items:center;justify-content:center;color:var(--n-500)}
+.tb-avatar{width:32px;height:32px;border-radius:999px;background:linear-gradient(135deg,#2D3CE5,#4456C2);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
+
+/* WIZARD HEADER */
+.wiz{padding:20px 28px 60px;display:flex;flex-direction:column;gap:18px}
+.wiz-back{display:inline-flex;align-items:center;gap:6px;color:var(--n-500);font-size:12px;font-weight:500;background:transparent;border:none;cursor:pointer;padding:4px 0;width:fit-content;font-family:var(--ff-sans)}
+.wiz-back:hover{color:var(--n-950)}
+.wiz-back svg{width:14px;height:14px}
+.wiz-head{display:flex;align-items:flex-start;gap:24px;padding-bottom:14px;border-bottom:1px solid var(--n-100)}
+.wiz-titles{flex:1;min-width:0}
+.wiz-eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-300);margin-bottom:4px}
+.wiz-title{font-size:24px;font-weight:500;color:var(--n-950);letter-spacing:-.01em;margin:0 0 6px}
+.wiz-sub{font-size:13px;color:var(--n-500);display:flex;align-items:center;gap:10px}
+.wiz-sub .pdot{width:7px;height:7px;border-radius:999px;background:var(--warn-500);animation:pulse 1.6s ease-in-out infinite}
+.wiz-actions{display:flex;align-items:center;gap:10px}
+.btn-out{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border:1px solid var(--n-150);background:var(--n-0);color:var(--n-700);font-size:13px;font-weight:500;border-radius:8px;cursor:pointer;font-family:var(--ff-sans)}
+.btn-out svg{width:14px;height:14px}
+.btn-out:hover{background:var(--n-25);border-color:var(--n-200)}
+.btn-ghost{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;background:transparent;color:var(--n-500);font-size:13px;font-weight:500;border:none;border-radius:8px;cursor:pointer;font-family:var(--ff-sans)}
+.btn-ghost:hover{background:var(--n-50);color:var(--n-700)}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:36px;padding:0 14px;background:var(--p-600);color:#fff;font-size:13px;font-weight:500;border:none;border-radius:8px;cursor:pointer;font-family:var(--ff-sans)}
+.btn-primary:hover{background:var(--p-700)}
+.btn-primary svg{width:14px;height:14px}
+
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,138,15,.5)}50%{box-shadow:0 0 0 5px rgba(201,138,15,0)}}
+
+/* STEPPER */
+.stepper{display:flex;align-items:flex-start;background:var(--n-0);border:1px solid var(--n-100);border-radius:10px;padding:18px 28px 14px;position:sticky;top:0;z-index:5}
+.step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;min-width:90px}
+.step-dot{width:28px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-family:var(--ff-mono);font-size:12px;font-weight:500;border:2px solid;flex-shrink:0}
+.step.done .step-dot{background:var(--succ-600);border-color:var(--succ-600);color:#fff}
+.step.active .step-dot{background:var(--p-600);border-color:var(--p-600);color:#fff}
+.step.todo .step-dot{background:var(--n-0);border-color:var(--n-150);color:var(--n-300)}
+.step-dot svg{width:14px;height:14px}
+.step-lbl{font-size:12px;color:var(--n-500);font-weight:400;white-space:nowrap}
+.step.active .step-lbl{color:var(--n-950);font-weight:500}
+.step.done .step-lbl{color:var(--n-700)}
+.step-line{flex:1;height:2px;background:var(--n-150);margin-top:14px;border-radius:2px;min-width:32px}
+.step-line.done{background:var(--succ-500)}
+
+/* LAYOUT WIZARD */
+.wiz-grid{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:flex-start}
+.wiz-grid.tab{grid-template-columns:1fr 280px;gap:18px}
+
+.wiz-card{background:var(--n-0);border:1px solid var(--n-100);border-radius:10px;padding:24px}
+.wiz-card-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.wiz-card-head .wc-eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-300);margin-bottom:4px}
+.wiz-card-head .wc-title{font-size:18px;font-weight:500;color:var(--n-950);margin:0 0 4px;letter-spacing:-.005em}
+.wiz-card-head .wc-sub{font-size:12.5px;color:var(--n-500);max-width:600px}
+
+/* CART */
+.cart{background:var(--n-0);border:1px solid var(--n-100);border-radius:10px;padding:18px;position:sticky;top:80px;display:flex;flex-direction:column;gap:12px}
+.cart-head{display:flex;align-items:flex-end;justify-content:space-between}
+.cart-eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-300)}
+.cart-count{font-size:12px;color:var(--n-500)}
+.cart-list{display:flex;flex-direction:column;border-top:1px solid var(--n-100)}
+.cart-item{display:grid;grid-template-columns:1fr auto;gap:4px 8px;padding:10px 0;border-bottom:1px solid var(--n-100);align-items:center}
+.cart-item:last-child{border-bottom:none}
+.cart-sku{font-family:var(--ff-mono);font-size:10.5px;color:var(--n-500);grid-column:1/2}
+.cart-name{font-size:12px;font-weight:500;color:var(--n-950);grid-column:1/2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;line-height:1.3}
+.cart-qty{font-family:var(--ff-mono);font-size:11px;color:var(--n-500);grid-column:2/3;grid-row:1/2;align-self:start}
+.cart-sub{font-family:var(--ff-mono);font-size:12px;font-weight:500;color:var(--n-950);grid-column:2/3;grid-row:2/3;text-align:right}
+.cart-empty{padding:24px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--n-500)}
+.cart-empty svg{width:24px;height:24px;color:var(--n-300)}
+.cart-empty span{font-size:12px}
+.cart-totals{padding-top:10px;border-top:1px dashed var(--n-150);display:flex;flex-direction:column;gap:6px}
+.cart-line{display:flex;justify-content:space-between;font-size:12px;color:var(--n-500)}
+.cart-line .v{font-family:var(--ff-mono);color:var(--n-700);font-weight:500}
+.cart-total-eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-300);margin-top:6px}
+.cart-total{font-family:var(--ff-mono);font-size:22px;font-weight:500;color:var(--n-950);letter-spacing:-.01em;line-height:1.1}
+.cart-foot{padding-top:6px}
+.cart-cta{width:100%;height:44px}
+.cart-cta:disabled{background:var(--n-100);color:var(--n-300);cursor:not-allowed}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1/-1}
+.flbl{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);font-weight:500}
+.flbl .req{color:var(--dang-500);margin-left:2px}
+.fhelp{font-size:11px;color:var(--n-500);margin-top:2px;line-height:1.4}
+.finput{height:44px;background:var(--n-0);border:1px solid var(--n-150);border-radius:8px;padding:0 14px;font-family:var(--ff-sans);font-size:14px;font-weight:500;color:var(--n-950);outline:none;width:100%}
+.finput:focus{border-color:var(--p-600);box-shadow:0 0 0 3px rgba(45,60,229,.18)}
+.finput::placeholder{color:var(--n-300);font-weight:400}
+.finput.mono{font-family:var(--ff-mono)}
+.finput-prefix{display:flex;height:44px;border:1px solid var(--n-150);border-radius:8px;overflow:hidden;background:var(--n-0)}
+.finput-prefix:focus-within{border-color:var(--p-600);box-shadow:0 0 0 3px rgba(45,60,229,.18)}
+.finput-prefix .pre{padding:0 12px;display:flex;align-items:center;background:var(--n-50);border-right:1px solid var(--n-150);font-family:var(--ff-mono);font-size:13px;color:var(--n-500);font-weight:500}
+.finput-prefix input{flex:1;border:none;outline:none;background:transparent;padding:0 14px;font-family:var(--ff-mono);font-size:14px;font-weight:500;color:var(--n-950)}
+.ftextarea{min-height:64px;resize:none;padding:12px 14px;background:var(--n-0);border:1px solid var(--n-150);border-radius:8px;font-family:var(--ff-sans);font-size:13.5px;color:var(--n-950);outline:none;width:100%;line-height:1.5}
+.ftextarea:focus{border-color:var(--p-600);box-shadow:0 0 0 3px rgba(45,60,229,.18)}
+.ftextarea.tall{min-height:88px}
+.finput-suffix{display:flex;align-items:center;height:44px;background:var(--n-0);border:1px solid var(--n-150);border-radius:8px;padding:0 14px;gap:10px}
+.finput-suffix:focus-within{border-color:var(--p-600);box-shadow:0 0 0 3px rgba(45,60,229,.18)}
+.finput-suffix input{flex:1;border:none;outline:none;background:transparent;font-family:var(--ff-mono);font-size:14px;font-weight:500;color:var(--n-950)}
+.finput-suffix .suf{font-family:var(--ff-mono);font-size:13px;color:var(--n-500);font-weight:500}
+
+.helper{display:flex;align-items:flex-start;gap:10px;background:var(--info-50);border:1px solid var(--info-100);border-radius:8px;padding:12px 14px;margin-top:14px;color:var(--info-700)}
+.helper svg{width:14px;height:14px;flex-shrink:0;margin-top:1px}
+.helper-body{font-size:12.5px;line-height:1.5}
+.helper-link{display:inline-block;font-size:12px;font-weight:500;color:var(--info-700);text-decoration:underline;text-underline-offset:3px;cursor:pointer;margin-top:6px;background:transparent;border:none;padding:0;font-family:var(--ff-sans)}
+
+/* ==== PASO 2 · PRODUCTOS ==== */
+.search-wrap{display:flex;gap:0;border-radius:10px;align-items:stretch;margin-bottom:16px}
+.search-prod{flex:1;display:flex;align-items:center;gap:12px;height:48px;background:var(--n-0);border:1px solid var(--n-150);border-right:none;border-radius:10px 0 0 10px;padding:0 16px}
+.search-prod:focus-within{border-color:var(--p-600);box-shadow:0 0 0 3px rgba(45,60,229,.18);z-index:1}
+.search-prod svg{width:18px;height:18px;color:var(--n-500);stroke-width:1.5;flex-shrink:0}
+.search-prod input{flex:1;border:none;outline:none;background:transparent;font-family:var(--ff-sans);font-size:14px;color:var(--n-950)}
+.search-prod input::placeholder{color:var(--n-300)}
+.btn-qr{display:inline-flex;align-items:center;gap:8px;height:48px;background:var(--p-600);color:#fff;font-size:13px;font-weight:500;border:none;padding:0 20px;border-radius:0 10px 10px 0;cursor:pointer;font-family:var(--ff-sans)}
+.btn-qr:hover{background:var(--p-700)}
+.btn-qr svg{width:18px;height:18px}
+
+/* tabla productos agregados */
+.prod-tbl{width:100%;border-collapse:collapse;border:1px solid var(--n-100);border-radius:10px;overflow:hidden}
+.prod-tbl thead th{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-400);font-weight:500;padding:10px 12px;text-align:left;background:var(--n-25);border-bottom:1px solid var(--n-100)}
+.prod-tbl thead th.r{text-align:right}
+.prod-tbl thead th.c{text-align:center}
+.prod-tbl tbody tr{border-bottom:1px solid var(--n-50);height:64px}
+.prod-tbl tbody tr:last-child{border-bottom:none}
+.prod-tbl td{padding:8px 12px;vertical-align:middle;font-size:13px;color:var(--n-700)}
+.p-sku{font-family:var(--ff-mono);font-size:12px;font-weight:500;color:var(--n-700)}
+.p-name{font-size:13px;font-weight:500;color:var(--n-950);line-height:1.3}
+.p-meta{font-size:11px;color:var(--n-500)}
+.cat-badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:500;border:1px solid;font-family:var(--ff-sans)}
+.cat-rep{background:#FFF1ED;color:#A04420;border-color:#FCD9C9}
+.cat-lub{background:#F4ECFE;color:#6132A6;border-color:#E1CFFA}
+.cat-srv{background:#E5F0FE;color:var(--info-700);border-color:#C8DFFC}
+.dark .cat-rep{background:rgba(252,170,128,.12);color:#FFB58A;border-color:rgba(252,170,128,.3)}
+.dark .cat-lub{background:rgba(193,143,247,.14);color:#D5B5FA;border-color:rgba(193,143,247,.3)}
+.dark .cat-srv{background:rgba(77,154,236,.14);color:#9CC8F4;border-color:rgba(77,154,236,.3)}
+
+/* stepper qty */
+.qty{display:flex;align-items:center;background:var(--n-0);border:1px solid var(--n-150);border-radius:7px;height:34px;width:104px;overflow:hidden}
+.qty button{width:30px;height:32px;border:none;background:transparent;color:var(--n-500);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qty button:hover{background:var(--n-50);color:var(--n-950)}
+.qty input{flex:1;border:none;outline:none;text-align:center;font-family:var(--ff-mono);font-size:14px;font-weight:500;color:var(--n-950);background:transparent;width:0;min-width:0}
+.qty.warn{border-color:var(--warn-300);background:var(--warn-50)}
+.qty.dang{border-color:var(--dang-300);background:var(--dang-50)}
+.qty-warn-msg{font-size:11px;color:var(--warn-700);margin-top:4px;display:flex;align-items:center;gap:4px}
+.qty-warn-msg svg{width:11px;height:11px}
+.qty-dang-msg{font-size:11px;color:var(--dang-700);margin-top:4px;display:flex;align-items:center;gap:4px}
+.price-edit{height:34px;width:100%;background:var(--n-0);border:1px solid var(--n-150);border-radius:7px;padding:0 10px;font-family:var(--ff-mono);font-size:13px;font-weight:500;color:var(--n-950);outline:none;text-align:right}
+.price-edit:focus{border-color:var(--p-600);box-shadow:0 0 0 2px rgba(45,60,229,.15)}
+.p-sub{font-family:var(--ff-mono);font-size:13px;font-weight:500;color:var(--n-950);text-align:right}
+.icon-btn{width:32px;height:32px;border-radius:6px;background:transparent;border:none;color:var(--n-400);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.icon-btn:hover{background:var(--dang-50);color:var(--dang-600)}
+.icon-btn svg{width:14px;height:14px}
+
+.btn-add-manual{display:inline-flex;align-items:center;gap:6px;margin-top:12px;height:36px;padding:0 14px;border:1px dashed var(--n-200);background:transparent;color:var(--n-700);font-size:12px;font-weight:500;border-radius:8px;cursor:pointer;font-family:var(--ff-sans)}
+.btn-add-manual:hover{border-color:var(--p-600);color:var(--p-700);background:var(--p-50)}
+.btn-add-manual svg{width:14px;height:14px}
+
+/* PASO 3 sub-secciones */
+.subsect{margin-top:14px;padding-top:14px;border-top:1px dashed var(--n-150)}
+.subsect:first-of-type{margin-top:0;padding-top:0;border-top:none}
+.subsect-head{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-300);font-weight:500;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.subsect-sub{font-size:12px;color:var(--n-500);margin-bottom:12px;line-height:1.5}
+.subsect-sub.mono-tag{display:flex;align-items:center;gap:6px}
+.subsect-sub svg{width:12px;height:12px;flex-shrink:0}
+
+.bank-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bank-card{position:relative;border:1px solid var(--n-150);border-radius:10px;padding:14px;background:var(--n-0);cursor:pointer;display:flex;flex-direction:column;gap:4px}
+.bank-card:hover{border-color:var(--n-200)}
+.bank-card.sel{border:2px solid var(--p-600);background:var(--p-50);padding:13px}
+.bank-check{position:absolute;top:12px;right:12px;width:18px;height:18px;border-radius:5px;border:1.5px solid var(--n-200);background:var(--n-0);display:flex;align-items:center;justify-content:center}
+.bank-card.sel .bank-check{background:var(--p-600);border-color:var(--p-600);color:#fff}
+.bank-check svg{width:12px;height:12px;color:#fff}
+.bank-card.sel:not(.sel) .bank-check svg{display:none}
+.bank-name{font-size:13px;font-weight:500;color:var(--n-950);padding-right:24px;line-height:1.3}
+.bank-num{font-family:var(--ff-mono);font-size:12px;color:var(--n-700)}
+.bank-type{font-size:11px;color:var(--n-500)}
+.bank-iva{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:10.5px;font-weight:500;font-family:var(--ff-sans);margin-top:6px;width:fit-content;border:1px solid}
+.bank-iva.con{background:var(--succ-50);color:var(--succ-700);border-color:var(--succ-200)}
+.bank-iva.sin{background:var(--n-50);color:var(--n-500);border-color:var(--n-150)}
+
+.readonly-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--n-700);padding:10px 0;border-bottom:1px solid var(--n-50)}
+.readonly-row:last-child{border-bottom:none}
+.readonly-row .lk{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-300);font-weight:500;width:160px;flex-shrink:0}
+.readonly-row .vl{font-weight:500;color:var(--n-950);display:flex;align-items:center;gap:8px}
+.readonly-row .vl svg{width:12px;height:12px;color:var(--n-300)}
+.readonly-row .vl .mini-av{width:24px;height:24px;border-radius:999px;background:linear-gradient(135deg,#3645A8,#5F6DF1);color:#fff;font-size:10px;font-weight:600;display:inline-flex;align-items:center;justify-content:center}
+
+.fixed-text{background:var(--n-50);border:1px solid var(--n-100);border-radius:8px;padding:14px}
+.fixed-text-eyebrow{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-300);font-weight:500;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.fixed-text-eyebrow svg{width:11px;height:11px}
+.fixed-text-body{font-size:12px;color:var(--n-700);line-height:1.55}
+
+/* PASO 4 · revisión */
+.review-block{background:var(--n-50);border:1px solid var(--n-100);border-radius:10px;padding:16px;margin-bottom:14px}
+.review-block-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.review-block-title{font-size:13.5px;font-weight:500;color:var(--n-950);display:flex;align-items:center;gap:8px}
+.review-block-title .num{font-family:var(--ff-mono);font-size:11px;color:var(--n-400);background:var(--n-0);padding:2px 8px;border-radius:999px;border:1px solid var(--n-100)}
+.btn-edit-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--p-700);background:transparent;border:none;cursor:pointer;font-family:var(--ff-sans);font-weight:500;padding:4px 8px;border-radius:6px}
+.btn-edit-link:hover{background:var(--p-50)}
+.btn-edit-link svg{width:11px;height:11px}
+.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+.review-grid .ri{display:flex;flex-direction:column}
+.review-grid .ri-lk{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-400);margin-bottom:2px}
+.review-grid .ri-vl{font-size:13px;color:var(--n-950);font-weight:500;line-height:1.35}
+
+.review-tbl{width:100%;border-collapse:collapse}
+.review-tbl thead th{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-400);font-weight:500;padding:8px 10px;text-align:left;border-bottom:1px solid var(--n-100)}
+.review-tbl thead th.r{text-align:right}
+.review-tbl tbody td{padding:9px 10px;font-size:12.5px;color:var(--n-700);border-bottom:1px solid var(--n-100)}
+.review-tbl tbody tr:last-child td{border-bottom:none}
+.review-tbl td.r{text-align:right;font-family:var(--ff-mono);font-weight:500;color:var(--n-950)}
+.review-foot{display:flex;flex-direction:column;gap:4px;margin-top:8px;padding-top:10px;border-top:1px dashed var(--n-150)}
+.review-foot .ln{display:flex;justify-content:space-between;font-size:12px;color:var(--n-500)}
+.review-foot .ln .v{font-family:var(--ff-mono);color:var(--n-700);font-weight:500}
+.review-foot .ln.tot{font-size:14px;color:var(--n-950);font-weight:500;margin-top:4px;padding-top:6px;border-top:1px solid var(--n-150)}
+.review-foot .ln.tot .v{font-size:18px}
+
+.gen-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-top:16px}
+.gen-card{padding:18px;border-radius:10px;border:1px solid;display:flex;flex-direction:column;gap:8px;cursor:pointer;background:var(--n-0)}
+.gen-card.primary{border:2px solid var(--p-600);background:var(--p-50);padding:17px}
+.gen-card-head{display:flex;align-items:center;gap:10px}
+.gen-card-head svg{width:18px;height:18px;color:var(--p-700)}
+.gen-card.secondary .gen-card-head svg{color:var(--n-500)}
+.gen-card-title{font-size:14px;font-weight:500;color:var(--n-950)}
+.gen-card.primary .gen-card-title{color:var(--p-700)}
+.gen-card-sub{font-size:12px;color:var(--n-500);line-height:1.5}
+
+/* MOBILE */
+.mobile-shell{width:390px;background:var(--n-25);position:relative;min-height:780px;display:flex;flex-direction:column}
+.m-status{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-family:var(--ff-mono);font-size:13px;font-weight:500;color:var(--n-950);background:var(--n-0)}
+.m-header{padding:12px 18px 10px;background:var(--n-0);border-bottom:1px solid var(--n-100);display:flex;align-items:center;gap:10px}
+.m-back{width:32px;height:32px;border-radius:8px;border:1px solid var(--n-150);background:var(--n-0);display:flex;align-items:center;justify-content:center;color:var(--n-500)}
+.m-back svg{width:14px;height:14px}
+.m-head-titles{flex:1;min-width:0}
+.m-eyebrow{font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-300)}
+.m-title{font-size:16px;font-weight:500;color:var(--n-950);line-height:1.2;letter-spacing:-.005em}
+.m-progress{padding:10px 18px;background:var(--n-0);display:flex;flex-direction:column;gap:6px;border-bottom:1px solid var(--n-100)}
+.m-progress-row{display:flex;justify-content:space-between;font-family:var(--ff-mono);font-size:11px;color:var(--n-500)}
+.m-progress-row b{color:var(--n-950);font-weight:500}
+.m-progress-bar{height:4px;background:var(--n-100);border-radius:2px;overflow:hidden}
+.m-progress-fill{height:100%;background:var(--p-600);width:50%;border-radius:2px}
+.m-content{flex:1;overflow-y:auto;padding:14px 18px 200px;display:flex;flex-direction:column;gap:14px}
+.m-search{display:flex;gap:0;align-items:stretch}
+.m-search-input{flex:1;display:flex;align-items:center;gap:10px;height:48px;background:var(--n-0);border:1px solid var(--n-150);border-right:none;border-radius:10px 0 0 10px;padding:0 14px}
+.m-search-input svg{width:16px;height:16px;color:var(--n-500);flex-shrink:0}
+.m-search-input input{flex:1;border:none;outline:none;background:transparent;font-size:14px;color:var(--n-950)}
+.m-btn-qr{width:56px;height:48px;background:var(--p-600);color:#fff;border:none;border-radius:0 10px 10px 0;display:flex;align-items:center;justify-content:center}
+.m-btn-qr svg{width:20px;height:20px}
+.m-prod-card{background:var(--n-0);border:1px solid var(--n-100);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
+.m-prod-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.m-prod-sku{font-family:var(--ff-mono);font-size:11px;color:var(--n-500)}
+.m-prod-name{font-size:14px;font-weight:500;color:var(--n-950);line-height:1.25}
+.m-prod-meta{font-size:11.5px;color:var(--n-500)}
+.m-prod-foot{display:flex;align-items:center;justify-content:space-between;margin-top:6px;padding-top:8px;border-top:1px dashed var(--n-100);gap:10px}
+.m-prod-price{font-family:var(--ff-mono);font-size:12px;color:var(--n-500)}
+.m-prod-sub{font-family:var(--ff-mono);font-size:14px;font-weight:500;color:var(--n-950)}
+.m-swipe-trash{position:absolute;right:0;top:0;bottom:0;width:48px;background:var(--dang-50);display:flex;align-items:center;justify-content:center;color:var(--dang-500);opacity:.4}
+.m-swipe-trash svg{width:14px;height:14px}
+
+/* mobile drawer cart sticky */
+.m-drawer{position:absolute;left:0;right:0;bottom:72px;background:var(--n-0);border-top:1px solid var(--n-100);padding:12px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:0 -4px 12px rgba(14,16,24,.06)}
+.m-drawer-handle{width:32px;height:4px;background:var(--n-200);border-radius:2px;position:absolute;top:6px;left:50%;transform:translateX(-50%)}
+.m-drawer-info{flex:1;display:flex;flex-direction:column;gap:2px}
+.m-drawer-tot{font-family:var(--ff-mono);font-size:18px;font-weight:500;color:var(--n-950);letter-spacing:-.01em;line-height:1}
+.m-drawer-cnt{font-size:11.5px;color:var(--n-500)}
+.m-drawer-cta{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;background:var(--p-600);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:var(--ff-sans)}
+.m-drawer-cta svg{width:13px;height:13px}
+
+.m-bottom{position:absolute;left:0;right:0;bottom:0;height:72px;background:var(--n-0);border-top:1px solid var(--n-100);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding-bottom:8px}
+.m-tab{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;color:var(--n-400);padding:10px 0 6px}
+.m-tab svg{width:20px;height:20px}
+.m-tab.active{color:var(--p-600)}
+
+/* SEARCH DROPDOWN (estado A) */
+.dd-results{position:relative;margin-top:-2px;background:var(--n-0);border:1px solid var(--n-150);border-radius:0 0 10px 10px;border-top:none;max-height:280px;overflow-y:auto}
+.dd-result{display:grid;grid-template-columns:120px 1fr 110px 130px 90px;gap:14px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--n-50);cursor:pointer}
+.dd-result:hover{background:var(--p-50)}
+.dd-result:last-child{border-bottom:none}
+.dd-sku{font-family:var(--ff-mono);font-size:11.5px;color:var(--n-500)}
+.dd-prod{display:flex;flex-direction:column;line-height:1.3;min-width:0}
+.dd-prod b{font-size:13px;color:var(--n-950);font-weight:500}
+.dd-prod span{font-size:11.5px;color:var(--n-500)}
+.dd-stock-pills{display:flex;gap:4px;flex-wrap:wrap}
+.dd-stock-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:6px;font-family:var(--ff-mono);font-size:10.5px;font-weight:500;border:1px solid}
+.dd-stock-pill.ok{background:var(--succ-50);color:var(--succ-700);border-color:var(--succ-200)}
+.dd-stock-pill.low{background:var(--warn-50);color:var(--warn-700);border-color:var(--warn-200)}
+.dd-stock-pill.out{background:var(--dang-50);color:var(--dang-700);border-color:var(--dang-200)}
+.dd-price{font-family:var(--ff-mono);font-size:13px;font-weight:500;color:var(--n-950);text-align:right}
+.dd-foot{padding:10px 16px;background:var(--n-25);border-top:1px solid var(--n-100);font-size:11.5px;color:var(--n-500);text-align:center;border-radius:0 0 10px 10px}
+
+/* MODAL */
+.modal-stage{background:rgba(14,16,24,.5);padding:32px 36px;display:flex;align-items:center;justify-content:center}
+.modal{background:var(--n-0);border-radius:14px;width:480px;max-width:100%;box-shadow:0 24px 48px rgba(14,16,24,.32);overflow:hidden;border:1px solid var(--n-100)}
+.modal.wide{width:520px}
+.modal-head{padding:20px 24px 14px;border-bottom:1px solid var(--n-100);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:16px;font-weight:500;color:var(--n-950);margin:0}
+.modal-close{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;color:var(--n-400);cursor:pointer}
+.modal-close:hover{background:var(--n-50)}
+.modal-close svg{width:14px;height:14px}
+.modal-body{padding:18px 24px;max-height:480px;overflow-y:auto}
+.modal-foot{padding:14px 24px;background:var(--n-25);border-top:1px solid var(--n-100);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.modal-foot-help{font-size:11px;color:var(--n-500);flex:1}
+.modal-foot-actions{display:flex;gap:10px}
+
+.recent-row{display:grid;grid-template-columns:1fr auto auto;gap:14px;padding:11px 12px;border-radius:8px;cursor:pointer;align-items:center;border-bottom:1px solid var(--n-50)}
+.recent-row:last-child{border-bottom:none}
+.recent-row:hover{background:var(--n-50)}
+.recent-name{font-size:13px;color:var(--n-950);font-weight:500;line-height:1.3}
+.recent-nit{font-family:var(--ff-mono);font-size:11px;color:var(--n-500)}
+.recent-date{font-family:var(--ff-mono);font-size:11px;color:var(--n-500);text-align:right}
+.recent-amt{font-family:var(--ff-mono);font-size:13px;color:var(--n-950);font-weight:500;text-align:right}
+
+/* radio */
+.radio-row{display:flex;gap:8px}
+.radio-pill{flex:1;padding:10px 14px;border:1px solid var(--n-150);border-radius:8px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--n-700);background:var(--n-0)}
+.radio-pill .rdot{width:14px;height:14px;border-radius:999px;border:1.5px solid var(--n-200);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.radio-pill.sel{border-color:var(--p-600);background:var(--p-50);color:var(--p-700);font-weight:500}
+.radio-pill.sel .rdot{border-color:var(--p-600);background:var(--n-0)}
+.radio-pill.sel .rdot::after{content:"";width:7px;height:7px;border-radius:999px;background:var(--p-600)}
+.toggle{display:flex;gap:8px}
+.toggle-pill{flex:1;padding:9px 12px;border:1px solid var(--n-150);border-radius:8px;text-align:center;font-size:13px;color:var(--n-500);cursor:pointer;background:var(--n-0)}
+.toggle-pill.sel{border-color:var(--p-600);background:var(--p-600);color:#fff;font-weight:500}
+
+/* checklist */
+.ck-card{background:var(--n-0);border:1px solid var(--n-100);border-radius:10px;padding:24px}
+.ck-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 28px;margin-top:14px}
+.ck-item{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--n-700);line-height:1.5;padding:6px 0}
+.ck-item .ck-dot{width:18px;height:18px;border-radius:5px;background:var(--succ-600);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.ck-item .ck-dot svg{width:11px;height:11px}
+.ck-item b{color:var(--n-950);font-weight:500}
+
+@media (prefers-reduced-motion:no-preference){
+  .frame{animation:rise .5s ease both}
+  .frame:nth-child(2){animation-delay:.05s}
+  .frame:nth-child(3){animation-delay:.1s}
+  .frame:nth-child(4){animation-delay:.15s}
+}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<header class="doc-head">
+  <div class="doc-eyebrow">Operaciones · Cotizaciones · Nueva (wizard 4 pasos)</div>
+  <h1 class="doc-title">Cotización Cot-1043 · Wizard de creación</h1>
+  <p class="doc-sub">Builder Wizard con sidebar de carrito constante. Cuatro pasos (Cliente · Productos · Ajustes F11 · Revisión). Pasos 1·3·4 en desktop light; paso 2 (el más complejo) replicado en tablet, mobile y dark. Cuatro estados especiales y checklist al pie.</p>
+</header>
+
+<div class="frames">
+
+
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">1</span>Desktop · 1280 px · light · Paso 1 — Cliente<span class="lbl-mode">stepper · form 2 col · cart vacío con CTA disabled</span></div>
+  <div class="frame"><div class="frame-inner"><div class="shell">
+        <aside class="sidebar">
+          <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+          <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+            <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/><path d="M3 9l9 6 9-6"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg></span>Productos</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+              <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9M19 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h5"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0118 0M3 12l3-3"/></svg></span>Devoluciones</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Taller</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.8-3.8a6 6 0 01-7.94 7.94l-6.91 6.91a2.121 2.121 0 01-3-3l6.91-6.91A6 6 0 0114.7 6.3z"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+          </nav>
+          <div class="sb-foot"><div class="sb-avatar">ML</div><div class="sb-user"><span class="sb-user-name">María L.</span><span class="sb-user-role">Vendedor · Cali</span></div></div>
+        </aside><div class="main">
+          <header class="topbar">
+            <div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span>COTIZACIONES</span><span class="sep">›</span><span style="color:var(--n-700)">NUEVA</span></div>
+            <div class="tb-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><span>Buscar global...</span><span class="kbd">⌘K</span></div>
+            <div class="tb-spacer"></div>
+            <div class="tb-sede"><span class="dot"></span>Cali · Bod. principal</div>
+            <button class="tb-icon-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg></button>
+            <div class="tb-avatar">ML</div>
+          </header>
+        <div class="wiz"><button class="wiz-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M14 8l-4 4 4 4"/><path d="M16 12H8"/></svg>Volver a Cotizaciones</button>
+            <div class="wiz-head">
+              <div class="wiz-titles">
+                <div class="wiz-eyebrow">Nueva cotización</div>
+                <h1 class="wiz-title">Cotización Cot-1043</h1>
+                <div class="wiz-sub">Borrador · creado hace 2 minutos</div>
+              </div>
+              <div class="wiz-actions">
+                <button class="btn-out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Guardar borrador</button>
+                <button class="btn-ghost">Cancelar</button>
+              </div>
+            </div><div class="stepper">
+<div class="step active"><div class="step-dot">1</div><div class="step-lbl">Cliente</div></div><div class="step-line "></div><div class="step todo"><div class="step-dot">2</div><div class="step-lbl">Productos</div></div><div class="step-line "></div><div class="step todo"><div class="step-dot">3</div><div class="step-lbl">Ajustes</div></div><div class="step-line "></div><div class="step todo"><div class="step-dot">4</div><div class="step-lbl">Revisión</div></div>
+</div>
+          <div class="wiz-grid"><div class="wiz-card">
+              <div class="wiz-card-head"><div><div class="wc-eyebrow">Paso 1 de 4</div><h2 class="wc-title">Datos del cliente</h2><p class="wc-sub">Sin módulo de clientes (decisión del cliente). Captura los datos como texto libre.</p></div></div>
+              <div class="form-grid">
+                <div class="field full"><label class="flbl">Cliente <span class="req">*</span></label><input class="finput" placeholder="Ej. Industrial XYZ S.A.S." value="Industrial XYZ S.A.S."></div>
+                <div class="field"><label class="flbl">NIT</label><input class="finput mono" placeholder="900.123.456-7" value="900.456.789-2"></div>
+                <div class="field"><label class="flbl">Teléfono <span class="req">*</span></label><div class="finput-prefix"><span class="pre">+57</span><input placeholder="318 442 5511" value="318 442 5511"></div></div>
+                <div class="field"><label class="flbl">Correo</label><input class="finput" type="email" placeholder="contacto@empresa.com" value="compras@industrialxyz.co"></div>
+                <div class="field"><label class="flbl">Contacto</label><input class="finput" placeholder="Nombre de la persona" value="Carlos Méndez"></div>
+                <div class="field"><label class="flbl">Cargo</label><input class="finput" placeholder="Ej. Jefe de mantenimiento" value="Jefe de Mantenimiento"></div>
+                <div class="field full"><label class="flbl">Dirección</label><textarea class="ftextarea" placeholder="Calle, ciudad, departamento">Calle 13 #62-50, Acopi-Yumbo, Valle del Cauca</textarea></div>
+                <div class="field full"><label class="flbl">Notas</label><textarea class="ftextarea tall" placeholder="Información operativa relevante: ej. horario de entrega preferido, contactos alternos.">Recibe mercancía L-V 7-11am. Contacto alterno: Andrea Ruiz · 315 442 9921 (almacén).</textarea></div>
+              </div>
+              <div class="helper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                <div>
+                  <div class="helper-body">¿Cliente recurrente? Comienza a escribir en el campo <b>CLIENTE</b> para ver coincidencias en cotizaciones recientes.</div>
+                  <button class="helper-link">Ver últimos 10 clientes</button>
+                </div>
+              </div>
+            </div><aside class="cart">
+            <div class="cart-head"><span class="cart-eyebrow">Resumen</span><span class="cart-count">Sin productos aún</span></div>
+            
+            <div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg><span>Agrega productos en el paso 2</span></div>
+            
+            <div class="cart-totals"><div class="cart-line"><span>Subtotal</span><span class="v">$ 0</span></div><div class="cart-line"><span>IVA (19%)</span><span class="v">$ 0</span></div><div class="cart-total-eyebrow">Total</div><div class="cart-total">$ 0</div></div>
+            <div class="cart-foot"><button class="btn-primary cart-cta" disabled>Continuar a productos<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+          </aside>
+          </div>
+        </div>
+      </div>
+    </div></div></div>
+</div>
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">2</span>Desktop · 1280 px · light · Paso 2 — Productos<span class="lbl-mode">paso más complejo · search 48 px + QR royal · 4 items en tabla + cart con total</span></div>
+  <div class="frame"><div class="frame-inner"><div class="shell">
+        <aside class="sidebar">
+          <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+          <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+            <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/><path d="M3 9l9 6 9-6"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg></span>Productos</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+              <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9M19 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h5"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0118 0M3 12l3-3"/></svg></span>Devoluciones</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Taller</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.8-3.8a6 6 0 01-7.94 7.94l-6.91 6.91a2.121 2.121 0 01-3-3l6.91-6.91A6 6 0 0114.7 6.3z"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+          </nav>
+          <div class="sb-foot"><div class="sb-avatar">ML</div><div class="sb-user"><span class="sb-user-name">María L.</span><span class="sb-user-role">Vendedor · Cali</span></div></div>
+        </aside><div class="main">
+          <header class="topbar">
+            <div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span>COTIZACIONES</span><span class="sep">›</span><span style="color:var(--n-700)">NUEVA</span></div>
+            <div class="tb-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><span>Buscar global...</span><span class="kbd">⌘K</span></div>
+            <div class="tb-spacer"></div>
+            <div class="tb-sede"><span class="dot"></span>Cali · Bod. principal</div>
+            <button class="tb-icon-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg></button>
+            <div class="tb-avatar">ML</div>
+          </header>
+        <div class="wiz"><button class="wiz-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M14 8l-4 4 4 4"/><path d="M16 12H8"/></svg>Volver a Cotizaciones</button>
+            <div class="wiz-head">
+              <div class="wiz-titles">
+                <div class="wiz-eyebrow">Nueva cotización</div>
+                <h1 class="wiz-title">Cotización Cot-1043</h1>
+                <div class="wiz-sub"><span class="pdot"></span>Borrador · creado hace 2 minutos</div>
+              </div>
+              <div class="wiz-actions">
+                <button class="btn-out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Guardar borrador</button>
+                <button class="btn-ghost">Cancelar</button>
+              </div>
+            </div><div class="stepper">
+<div class="step done"><div class="step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-lbl">Cliente</div></div><div class="step-line done"></div><div class="step active"><div class="step-dot">2</div><div class="step-lbl">Productos</div></div><div class="step-line "></div><div class="step todo"><div class="step-dot">3</div><div class="step-lbl">Ajustes</div></div><div class="step-line "></div><div class="step todo"><div class="step-dot">4</div><div class="step-lbl">Revisión</div></div>
+</div>
+          <div class="wiz-grid"><div class="wiz-card">
+              <div class="wiz-card-head"><div><div class="wc-eyebrow">Paso 2 de 4</div><h2 class="wc-title">Productos a cotizar</h2></div></div>
+              <div class="search-wrap">
+                <div class="search-prod"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><input placeholder="Buscar producto por nombre o SKU... o escanea QR"></div>
+                <button class="btn-qr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM18 18h3v3h-3z"/></svg>Escanear QR</button>
+              </div>
+              <table class="prod-tbl">
+                <thead><tr><th style="width:115px">SKU</th><th>Producto</th><th style="width:120px">Categoría</th><th class="c" style="width:130px">Cantidad</th><th class="r" style="width:120px">Precio unit</th><th class="r" style="width:130px">Subtotal</th><th style="width:44px"></th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><span class="p-sku">CMP-2210-A</span></td>
+                    <td><div class="p-name">Filtro de aire Atlas Copco GA-22</div><div class="p-meta">Atlas Copco · 1613-7409-00</div></td>
+                    <td><span class="cat-badge cat-rep">Repuestos</span></td>
+                    <td><div class="qty"><button>−</button><input value="3"><button>+</button></div></td>
+                    <td><input class="price-edit" value="$ 245.000"></td>
+                    <td><span class="p-sub">$ 735.000</span></td>
+                    <td><button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg></button></td>
+                  </tr>
+                  <tr>
+                    <td><span class="p-sku">CMP-2308-B</span></td>
+                    <td><div class="p-name">Aceite ISO VG-46 5L</div><div class="p-meta">Shell · Sintético compresor</div></td>
+                    <td><span class="cat-badge cat-lub">Lubricantes</span></td>
+                    <td><div class="qty"><button>−</button><input value="2"><button>+</button></div></td>
+                    <td><input class="price-edit" value="$ 142.000"></td>
+                    <td><span class="p-sub">$ 284.000</span></td>
+                    <td><button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg></button></td>
+                  </tr>
+                  <tr>
+                    <td><span class="p-sku">CMP-1985-C</span></td>
+                    <td><div class="p-name">Manguera de descarga 1/2" 3m</div><div class="p-meta">Genérica · Trenzada</div></td>
+                    <td><span class="cat-badge cat-rep">Repuestos</span></td>
+                    <td><div class="qty"><button>−</button><input value="1"><button>+</button></div></td>
+                    <td><input class="price-edit" value="$ 89.500"></td>
+                    <td><span class="p-sub">$ 89.500</span></td>
+                    <td><button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg></button></td>
+                  </tr>
+                  <tr>
+                    <td><span class="p-sku">LBS-0421-X</span></td>
+                    <td><div class="p-name">Servicio mantenimiento mayor</div><div class="p-meta">Labor · 4h técnico certificado</div></td>
+                    <td><span class="cat-badge cat-srv">Servicios</span></td>
+                    <td><div class="qty"><button>−</button><input value="1"><button>+</button></div></td>
+                    <td><input class="price-edit" value="$ 437.718"></td>
+                    <td><span class="p-sub">$ 437.718</span></td>
+                    <td><button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg></button></td>
+                  </tr>
+                </tbody>
+              </table>
+              <button class="btn-add-manual"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Agregar producto manual (sin SKU)</button>
+            </div><aside class="cart">
+            <div class="cart-head"><span class="cart-eyebrow">Resumen</span><span class="cart-count">4 productos</span></div>
+            
+            <div class="cart-list">
+              <div class="cart-item"><span class="cart-sku">CMP-2210-A</span><span class="cart-qty">×3</span><span class="cart-name">Filtro de aire Atlas Copco GA-22</span><span class="cart-sub">$ 735.000</span></div>
+              <div class="cart-item"><span class="cart-sku">CMP-2308-B</span><span class="cart-qty">×2</span><span class="cart-name">Aceite ISO VG-46 5L</span><span class="cart-sub">$ 284.000</span></div>
+              <div class="cart-item"><span class="cart-sku">CMP-1985-C</span><span class="cart-qty">×1</span><span class="cart-name">Manguera de descarga 1/2" 3m</span><span class="cart-sub">$ 89.500</span></div>
+              <div class="cart-item"><span class="cart-sku">LBS-0421-X</span><span class="cart-qty">×1</span><span class="cart-name">Servicio mantenimiento mayor</span><span class="cart-sub">$ 437.718</span></div>
+            </div>
+            
+            <div class="cart-totals"><div class="cart-line"><span>Subtotal</span><span class="v">$ 1.546.218</span></div><div class="cart-line"><span>IVA (19%)</span><span class="v">$ 293.781</span></div><div class="cart-total-eyebrow">Total</div><div class="cart-total">$ 1.840.000</div></div>
+            <div class="cart-foot"><button class="btn-primary cart-cta" >Continuar a ajustes<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+          </aside>
+          </div>
+        </div>
+      </div>
+    </div></div></div>
+</div>
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">3</span>Desktop · 1280 px · light · Paso 3 — Ajustes F11<span class="lbl-mode">IVA · validez · cuentas bancarias multi-selección · texto fijo locked</span></div>
+  <div class="frame"><div class="frame-inner"><div class="shell">
+        <aside class="sidebar">
+          <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+          <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+            <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/><path d="M3 9l9 6 9-6"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg></span>Productos</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+              <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9M19 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h5"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0118 0M3 12l3-3"/></svg></span>Devoluciones</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Taller</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.8-3.8a6 6 0 01-7.94 7.94l-6.91 6.91a2.121 2.121 0 01-3-3l6.91-6.91A6 6 0 0114.7 6.3z"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+          </nav>
+          <div class="sb-foot"><div class="sb-avatar">ML</div><div class="sb-user"><span class="sb-user-name">María L.</span><span class="sb-user-role">Vendedor · Cali</span></div></div>
+        </aside><div class="main">
+          <header class="topbar">
+            <div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span>COTIZACIONES</span><span class="sep">›</span><span style="color:var(--n-700)">NUEVA</span></div>
+            <div class="tb-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><span>Buscar global...</span><span class="kbd">⌘K</span></div>
+            <div class="tb-spacer"></div>
+            <div class="tb-sede"><span class="dot"></span>Cali · Bod. principal</div>
+            <button class="tb-icon-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg></button>
+            <div class="tb-avatar">ML</div>
+          </header>
+        <div class="wiz"><button class="wiz-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M14 8l-4 4 4 4"/><path d="M16 12H8"/></svg>Volver a Cotizaciones</button>
+            <div class="wiz-head">
+              <div class="wiz-titles">
+                <div class="wiz-eyebrow">Nueva cotización</div>
+                <h1 class="wiz-title">Cotización Cot-1043</h1>
+                <div class="wiz-sub"><span class="pdot"></span>Borrador · creado hace 2 minutos</div>
+              </div>
+              <div class="wiz-actions">
+                <button class="btn-out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Guardar borrador</button>
+                <button class="btn-ghost">Cancelar</button>
+              </div>
+            </div><div class="stepper">
+<div class="step done"><div class="step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-lbl">Cliente</div></div><div class="step-line done"></div><div class="step done"><div class="step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-lbl">Productos</div></div><div class="step-line done"></div><div class="step active"><div class="step-dot">3</div><div class="step-lbl">Ajustes</div></div><div class="step-line "></div><div class="step todo"><div class="step-dot">4</div><div class="step-lbl">Revisión</div></div>
+</div>
+          <div class="wiz-grid"><div class="wiz-card">
+              <div class="wiz-card-head"><div><div class="wc-eyebrow">Paso 3 de 4</div><h2 class="wc-title">Ajustes de la cotización</h2><p class="wc-sub">Configura los términos comerciales según el caso. Los valores predeterminados vienen de Configuración.</p></div></div>
+              <div class="subsect">
+                <div class="subsect-head">Términos comerciales</div>
+                <div class="form-grid">
+                  <div class="field"><label class="flbl">IVA</label><div class="finput-suffix"><input value="19"><span class="suf">%</span></div></div>
+                  <div class="field"><label class="flbl">Validez</label><div class="finput-suffix"><input value="15"><span class="suf">días hábiles</span></div></div>
+                  <div class="field full"><label class="flbl">Condiciones de pago</label><textarea class="ftextarea">50% anticipo, saldo contra entrega.</textarea></div>
+                  <div class="field full"><label class="flbl">Tiempo de entrega</label><textarea class="ftextarea">5 a 7 días hábiles después de aprobación de la cotización y recepción del anticipo.</textarea></div>
+                </div>
+              </div>
+              <div class="subsect">
+                <div class="subsect-head">Cuentas bancarias para pago</div>
+                <div class="subsect-sub">Selecciona qué cuentas bancarias aparecerán en el PDF de la cotización. Puedes elegir varias.</div>
+                <div class="bank-grid">
+                  <div class="bank-card sel"><div class="bank-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="bank-name">Bancolombia</div><div class="bank-num">123-4567890-1</div><div class="bank-type">Cta. Ahorros</div><span class="bank-iva con">Con IVA</span></div>
+                  <div class="bank-card sel"><div class="bank-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="bank-name">Davivienda</div><div class="bank-num">098-7654321</div><div class="bank-type">Cta. Corriente</div><span class="bank-iva con">Con IVA</span></div>
+                  <div class="bank-card"><div class="bank-check"></div><div class="bank-name">BBVA</div><div class="bank-num">567-8901234</div><div class="bank-type">Cta. Corriente</div><span class="bank-iva sin">Sin IVA</span></div>
+                  <div class="bank-card"><div class="bank-check"></div><div class="bank-name">Nequi / Daviplata</div><div class="bank-num">318-442-XX-XX</div><div class="bank-type">Cuenta digital</div><span class="bank-iva sin">Sin IVA</span></div>
+                </div>
+                <button class="btn-add-manual" style="margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Agregar nueva cuenta bancaria</button>
+              </div>
+              <div class="subsect">
+                <div class="subsect-head">Datos de la cotización</div>
+                <div class="readonly-row"><span class="lk">Cotizado por</span><span class="vl"><span class="mini-av">ML</span>María L. · Vendedor<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></div>
+                <div class="readonly-row"><span class="lk">Sede de origen</span><span class="vl"><span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:6px;background:var(--succ-50);color:var(--succ-700);font-family:var(--ff-mono);font-size:11px;border:1px solid var(--succ-200)"><span style="width:6px;height:6px;border-radius:999px;background:var(--succ-500)"></span>WH-01 Cali</span></span></div>
+                <div class="readonly-row"><span class="lk">Fecha de creación</span><span class="vl" style="font-family:var(--ff-mono);font-size:13px">19 abr 2026 · 14:23</span></div>
+              </div>
+              <div class="subsect">
+                <div class="subsect-head">Texto fijo de condiciones de entrega</div>
+                <div class="fixed-text">
+                  <div class="fixed-text-eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Texto fijo · aparece siempre</div>
+                  <div class="fixed-text-body">El cliente se compromete a recibir la mercancía en las condiciones físicas en que se entrega. Cualquier reclamo sobre defectos visibles debe realizarse al momento de la entrega. Las garantías aplican según política de fábrica del producto. Los precios incluyen embalaje estándar. Embalaje especial bajo cotización adicional.</div>
+                </div>
+              </div>
+            </div><aside class="cart">
+            <div class="cart-head"><span class="cart-eyebrow">Resumen</span><span class="cart-count">4 productos</span></div>
+            
+            <div class="cart-list">
+              <div class="cart-item"><span class="cart-sku">CMP-2210-A</span><span class="cart-qty">×3</span><span class="cart-name">Filtro de aire Atlas Copco GA-22</span><span class="cart-sub">$ 735.000</span></div>
+              <div class="cart-item"><span class="cart-sku">CMP-2308-B</span><span class="cart-qty">×2</span><span class="cart-name">Aceite ISO VG-46 5L</span><span class="cart-sub">$ 284.000</span></div>
+              <div class="cart-item"><span class="cart-sku">CMP-1985-C</span><span class="cart-qty">×1</span><span class="cart-name">Manguera de descarga 1/2" 3m</span><span class="cart-sub">$ 89.500</span></div>
+              <div class="cart-item"><span class="cart-sku">LBS-0421-X</span><span class="cart-qty">×1</span><span class="cart-name">Servicio mantenimiento mayor</span><span class="cart-sub">$ 437.718</span></div>
+            </div>
+            
+            <div class="cart-totals"><div class="cart-line"><span>Subtotal</span><span class="v">$ 1.546.218</span></div><div class="cart-line"><span>IVA (19%)</span><span class="v">$ 293.781</span></div><div class="cart-total-eyebrow">Total</div><div class="cart-total">$ 1.840.000</div></div>
+            <div class="cart-foot"><button class="btn-primary cart-cta" >Continuar a revisión<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+          </aside>
+          </div>
+        </div>
+      </div>
+    </div></div></div>
+</div>
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">4</span>Desktop · 1280 px · light · Paso 4 — Revisión y generar<span class="lbl-mode">3 bloques colapsables · CTA principal "Generar PDF" + secundario "Borrador"</span></div>
+  <div class="frame"><div class="frame-inner"><div class="shell">
+        <aside class="sidebar">
+          <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+          <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+            <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/><path d="M3 9l9 6 9-6"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg></span>Productos</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+              <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9M19 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h5"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0118 0M3 12l3-3"/></svg></span>Devoluciones</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Taller</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.8-3.8a6 6 0 01-7.94 7.94l-6.91 6.91a2.121 2.121 0 01-3-3l6.91-6.91A6 6 0 0114.7 6.3z"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+          </nav>
+          <div class="sb-foot"><div class="sb-avatar">ML</div><div class="sb-user"><span class="sb-user-name">María L.</span><span class="sb-user-role">Vendedor · Cali</span></div></div>
+        </aside><div class="main">
+          <header class="topbar">
+            <div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span>COTIZACIONES</span><span class="sep">›</span><span style="color:var(--n-700)">NUEVA</span></div>
+            <div class="tb-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><span>Buscar global...</span><span class="kbd">⌘K</span></div>
+            <div class="tb-spacer"></div>
+            <div class="tb-sede"><span class="dot"></span>Cali · Bod. principal</div>
+            <button class="tb-icon-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg></button>
+            <div class="tb-avatar">ML</div>
+          </header>
+        <div class="wiz"><button class="wiz-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M14 8l-4 4 4 4"/><path d="M16 12H8"/></svg>Volver a Cotizaciones</button>
+            <div class="wiz-head">
+              <div class="wiz-titles">
+                <div class="wiz-eyebrow">Nueva cotización</div>
+                <h1 class="wiz-title">Cotización Cot-1043</h1>
+                <div class="wiz-sub"><span class="pdot"></span>Borrador · creado hace 2 minutos</div>
+              </div>
+              <div class="wiz-actions">
+                <button class="btn-out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Guardar borrador</button>
+                <button class="btn-ghost">Cancelar</button>
+              </div>
+            </div><div class="stepper">
+<div class="step done"><div class="step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-lbl">Cliente</div></div><div class="step-line done"></div><div class="step done"><div class="step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-lbl">Productos</div></div><div class="step-line done"></div><div class="step done"><div class="step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-lbl">Ajustes</div></div><div class="step-line done"></div><div class="step active"><div class="step-dot">4</div><div class="step-lbl">Revisión</div></div>
+</div>
+          <div class="wiz-grid"><div class="wiz-card">
+              <div class="wiz-card-head"><div><div class="wc-eyebrow">Paso 4 de 4</div><h2 class="wc-title">Revisar y generar cotización</h2><p class="wc-sub">Verifica los datos antes de generar el PDF. Una vez generada, podrás re-emitir o duplicar pero no editar la versión actual.</p></div></div>
+
+              <div class="review-block">
+                <div class="review-block-head"><div class="review-block-title">Cliente <span class="num">Paso 1</span></div><button class="btn-edit-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4z"/></svg>Editar</button></div>
+                <div class="review-grid">
+                  <div class="ri"><span class="ri-lk">Cliente</span><span class="ri-vl">Industrial XYZ S.A.S.</span></div>
+                  <div class="ri"><span class="ri-lk">NIT</span><span class="ri-vl mono" style="font-family:var(--ff-mono);font-weight:500">900.456.789-2</span></div>
+                  <div class="ri"><span class="ri-lk">Teléfono</span><span class="ri-vl" style="font-family:var(--ff-mono)">+57 318 442 5511</span></div>
+                  <div class="ri"><span class="ri-lk">Correo</span><span class="ri-vl">compras@industrialxyz.co</span></div>
+                  <div class="ri"><span class="ri-lk">Contacto</span><span class="ri-vl">Carlos Méndez · Jefe Mantenimiento</span></div>
+                  <div class="ri"><span class="ri-lk">Dirección</span><span class="ri-vl">Calle 13 #62-50, Yumbo</span></div>
+                </div>
+              </div>
+
+              <div class="review-block">
+                <div class="review-block-head"><div class="review-block-title">Productos <span class="num">4 items</span></div><button class="btn-edit-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4z"/></svg>Editar</button></div>
+                <table class="review-tbl">
+                  <thead><tr><th style="width:110px">SKU</th><th>Producto</th><th class="r" style="width:60px">Cant</th><th class="r" style="width:110px">Precio unit</th><th class="r" style="width:120px">Subtotal</th></tr></thead>
+                  <tbody>
+                    <tr><td style="font-family:var(--ff-mono);color:var(--n-500)">CMP-2210-A</td><td>Filtro de aire Atlas Copco GA-22</td><td class="r">×3</td><td class="r">$ 245.000</td><td class="r">$ 735.000</td></tr>
+                    <tr><td style="font-family:var(--ff-mono);color:var(--n-500)">CMP-2308-B</td><td>Aceite ISO VG-46 5L</td><td class="r">×2</td><td class="r">$ 142.000</td><td class="r">$ 284.000</td></tr>
+                    <tr><td style="font-family:var(--ff-mono);color:var(--n-500)">CMP-1985-C</td><td>Manguera de descarga 1/2" 3m</td><td class="r">×1</td><td class="r">$ 89.500</td><td class="r">$ 89.500</td></tr>
+                    <tr><td style="font-family:var(--ff-mono);color:var(--n-500)">LBS-0421-X</td><td>Servicio mantenimiento mayor</td><td class="r">×1</td><td class="r">$ 437.718</td><td class="r">$ 437.718</td></tr>
+                  </tbody>
+                </table>
+                <div class="review-foot">
+                  <div class="ln"><span>Subtotal</span><span class="v">$ 1.546.218</span></div>
+                  <div class="ln"><span>IVA (19%)</span><span class="v">$ 293.781</span></div>
+                  <div class="ln tot"><span>Total</span><span class="v">$ 1.840.000</span></div>
+                </div>
+              </div>
+
+              <div class="review-block">
+                <div class="review-block-head"><div class="review-block-title">Ajustes <span class="num">F11</span></div><button class="btn-edit-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4z"/></svg>Editar</button></div>
+                <div class="review-grid">
+                  <div class="ri"><span class="ri-lk">Validez</span><span class="ri-vl">15 días hábiles</span></div>
+                  <div class="ri"><span class="ri-lk">IVA</span><span class="ri-vl">19%</span></div>
+                  <div class="ri"><span class="ri-lk">Condiciones de pago</span><span class="ri-vl">50% anticipo, saldo contra entrega</span></div>
+                  <div class="ri"><span class="ri-lk">Tiempo de entrega</span><span class="ri-vl">5 a 7 días hábiles</span></div>
+                  <div class="ri" style="grid-column:1/-1"><span class="ri-lk">Cuentas bancarias</span><span class="ri-vl">Bancolombia · Cta. Ahorros · 123-4567890-1 · Davivienda · Cta. Corriente · 098-7654321</span></div>
+                </div>
+              </div>
+
+              <div class="gen-grid">
+                <div class="gen-card primary">
+                  <div class="gen-card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13l-3 3-3-3"/><path d="M13 16V9"/></svg><span class="gen-card-title">Generar PDF y enviar al cliente</span></div>
+                  <div class="gen-card-sub">Genera el PDF, lo descarga, y te permite copiar el link de WhatsApp.</div>
+                </div>
+                <div class="gen-card secondary">
+                  <div class="gen-card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg><span class="gen-card-title">Solo guardar como Borrador</span></div>
+                  <div class="gen-card-sub">Puedes volver más tarde para terminar y enviar.</div>
+                </div>
+              </div>
+            </div><aside class="cart">
+            <div class="cart-head"><span class="cart-eyebrow">Resumen</span><span class="cart-count">4 productos</span></div>
+            
+            <div class="cart-list">
+              <div class="cart-item"><span class="cart-sku">CMP-2210-A</span><span class="cart-qty">×3</span><span class="cart-name">Filtro de aire Atlas Copco GA-22</span><span class="cart-sub">$ 735.000</span></div>
+              <div class="cart-item"><span class="cart-sku">CMP-2308-B</span><span class="cart-qty">×2</span><span class="cart-name">Aceite ISO VG-46 5L</span><span class="cart-sub">$ 284.000</span></div>
+              <div class="cart-item"><span class="cart-sku">CMP-1985-C</span><span class="cart-qty">×1</span><span class="cart-name">Manguera de descarga 1/2" 3m</span><span class="cart-sub">$ 89.500</span></div>
+              <div class="cart-item"><span class="cart-sku">LBS-0421-X</span><span class="cart-qty">×1</span><span class="cart-name">Servicio mantenimiento mayor</span><span class="cart-sub">$ 437.718</span></div>
+            </div>
+            
+            <div class="cart-totals"><div class="cart-line"><span>Subtotal</span><span class="v">$ 1.546.218</span></div><div class="cart-line"><span>IVA (19%)</span><span class="v">$ 293.781</span></div><div class="cart-total-eyebrow">Total</div><div class="cart-total">$ 1.840.000</div></div>
+            <div class="cart-foot"><button class="btn-primary cart-cta" >Generar cotización<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></button></div>
+          </aside>
+          </div>
+        </div>
+      </div>
+    </div></div></div>
+</div>
+
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">5</span>Tablet · 900 px · light · Paso 2 — Productos<span class="lbl-mode">rail 56 px · stepper compacto · cart 280 px · placeholder corto</span></div>
+  <div class="frame"><div class="frame-inner"><div class="shell tab" style="min-width:900px">
+        <aside class="sb-rail">
+          <div class="sb-rail-logo">CV</div>
+          <div class="sb-rail-divider"></div>
+          <div class="sb-rail-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/></svg><span class="sb-rail-badge">2.8k</span></div>
+          <div class="sb-rail-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/></svg></div>
+          <div class="sb-rail-divider"></div>
+          <div class="sb-rail-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></div>
+          <div class="sb-rail-item active"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9"/></svg><span class="sb-rail-badge">5</span></div>
+          <div class="sb-rail-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></div>
+          <div class="sb-rail-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0118 0"/></svg></div>
+          <div class="sb-rail-divider"></div>
+          <div class="sb-rail-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></div>
+          <div class="sb-rail-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg><span class="sb-rail-badge">3</span></div>
+          <div class="sb-rail-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="sb-rail-divider"></div>
+          <div class="sb-rail-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.8-3.8"/></svg><span class="sb-rail-badge">14</span></div>
+          <div class="sb-rail-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></div>
+          <div class="sb-rail-divider"></div>
+          <div class="sb-rail-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg><span class="sb-rail-badge">2</span></div>
+          <div style="margin-top:auto"><div class="sb-avatar" style="width:30px;height:30px">ML</div></div>
+        </aside><div class="main">
+        <header class="topbar" style="padding:0 16px"><div class="crumb"><b>OPS</b><span class="sep">›</span><span>NUEVA</span></div><div class="tb-spacer"></div><div class="tb-sede"><span class="dot"></span>Cali</div><div class="tb-avatar">ML</div></header>
+        <div class="wiz" style="padding:14px 18px 40px;gap:12px">
+          <button class="wiz-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M14 8l-4 4 4 4"/><path d="M16 12H8"/></svg>Volver</button>
+          <div class="wiz-head" style="padding-bottom:10px"><div class="wiz-titles"><div class="wiz-eyebrow">Nueva cotización</div><h1 class="wiz-title" style="font-size:20px">Cotización Cot-1043</h1><div class="wiz-sub"><span class="pdot"></span>Borrador · 2 min</div></div><div class="wiz-actions"><button class="btn-out" style="height:32px;padding:0 10px;font-size:12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/></svg>Guardar</button></div></div>
+          <div class="stepper" style="padding:14px 18px 10px"><div class="step done"><div class="step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-lbl">Cli</div></div><div class="step-line done"></div><div class="step active"><div class="step-dot">2</div><div class="step-lbl">Prod</div></div><div class="step-line"></div><div class="step todo"><div class="step-dot">3</div><div class="step-lbl">Aju</div></div><div class="step-line"></div><div class="step todo"><div class="step-dot">4</div><div class="step-lbl">Rev</div></div></div>
+          <div class="wiz-grid tab"><div class="wiz-card" style="padding:18px">
+              <div class="wiz-card-head"><div><div class="wc-eyebrow">Paso 2 de 4</div><h2 class="wc-title" style="font-size:17px">Productos a cotizar</h2></div></div>
+              <div class="search-wrap">
+                <div class="search-prod" style="height:44px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><input placeholder="Buscar producto o SKU..."></div>
+                <button class="btn-qr" style="height:44px;padding:0 16px;font-size:12.5px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3z"/></svg>QR</button>
+              </div>
+              <table class="prod-tbl">
+                <thead><tr><th style="width:96px;padding:8px 8px">SKU</th><th style="padding:8px 8px">Producto</th><th style="width:96px;padding:8px 8px">Cat.</th><th class="c" style="width:108px;padding:8px 8px">Cant</th><th class="r" style="width:96px;padding:8px 8px">Unit</th><th class="r" style="width:108px;padding:8px 8px">Subtotal</th><th style="width:36px"></th></tr></thead>
+                <tbody style="font-size:12.5px">
+                  <tr><td style="padding:6px 8px"><span class="p-sku">CMP-2210-A</span></td><td style="padding:6px 8px"><div class="p-name">Filtro Atlas Copco GA-22</div><div class="p-meta">1613-7409-00</div></td><td style="padding:6px 8px"><span class="cat-badge cat-rep">Repuestos</span></td><td style="padding:6px 8px"><div class="qty" style="width:90px;height:30px"><button>−</button><input value="3"><button>+</button></div></td><td style="padding:6px 8px"><input class="price-edit" value="$ 245.000" style="height:30px;font-size:12px"></td><td style="padding:6px 8px"><span class="p-sub">$ 735.000</span></td><td><button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg></button></td></tr>
+                  <tr><td style="padding:6px 8px"><span class="p-sku">CMP-2308-B</span></td><td style="padding:6px 8px"><div class="p-name">Aceite ISO VG-46 5L</div><div class="p-meta">Shell · Sintético</div></td><td style="padding:6px 8px"><span class="cat-badge cat-lub">Lubricantes</span></td><td style="padding:6px 8px"><div class="qty" style="width:90px;height:30px"><button>−</button><input value="2"><button>+</button></div></td><td style="padding:6px 8px"><input class="price-edit" value="$ 142.000" style="height:30px;font-size:12px"></td><td style="padding:6px 8px"><span class="p-sub">$ 284.000</span></td><td><button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg></button></td></tr>
+                  <tr><td style="padding:6px 8px"><span class="p-sku">CMP-1985-C</span></td><td style="padding:6px 8px"><div class="p-name">Manguera descarga 1/2"</div><div class="p-meta">Trenzada · 3m</div></td><td style="padding:6px 8px"><span class="cat-badge cat-rep">Repuestos</span></td><td style="padding:6px 8px"><div class="qty" style="width:90px;height:30px"><button>−</button><input value="1"><button>+</button></div></td><td style="padding:6px 8px"><input class="price-edit" value="$ 89.500" style="height:30px;font-size:12px"></td><td style="padding:6px 8px"><span class="p-sub">$ 89.500</span></td><td><button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg></button></td></tr>
+                  <tr><td style="padding:6px 8px"><span class="p-sku">LBS-0421-X</span></td><td style="padding:6px 8px"><div class="p-name">Mantenimiento mayor</div><div class="p-meta">Labor · 4h</div></td><td style="padding:6px 8px"><span class="cat-badge cat-srv">Servicios</span></td><td style="padding:6px 8px"><div class="qty" style="width:90px;height:30px"><button>−</button><input value="1"><button>+</button></div></td><td style="padding:6px 8px"><input class="price-edit" value="$ 437.718" style="height:30px;font-size:12px"></td><td style="padding:6px 8px"><span class="p-sub">$ 437.718</span></td><td><button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg></button></td></tr>
+                </tbody>
+              </table>
+              <button class="btn-add-manual"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Agregar manual</button>
+            </div><aside class="cart" style="padding:14px"><div class="cart-head"><span class="cart-eyebrow">Resumen</span><span class="cart-count">4 productos</span></div>
+            <div class="cart-list">
+              <div class="cart-item"><span class="cart-sku">CMP-2210-A</span><span class="cart-qty">×3</span><span class="cart-name">Filtro GA-22</span><span class="cart-sub">$ 735.000</span></div>
+              <div class="cart-item"><span class="cart-sku">CMP-2308-B</span><span class="cart-qty">×2</span><span class="cart-name">Aceite ISO VG-46</span><span class="cart-sub">$ 284.000</span></div>
+              <div class="cart-item"><span class="cart-sku">CMP-1985-C</span><span class="cart-qty">×1</span><span class="cart-name">Manguera 1/2"</span><span class="cart-sub">$ 89.500</span></div>
+              <div class="cart-item"><span class="cart-sku">LBS-0421-X</span><span class="cart-qty">×1</span><span class="cart-name">Mantenimiento</span><span class="cart-sub">$ 437.718</span></div>
+            </div>
+            <div class="cart-totals"><div class="cart-line"><span>Subtotal</span><span class="v">$ 1.546.218</span></div><div class="cart-line"><span>IVA (19%)</span><span class="v">$ 293.781</span></div><div class="cart-total-eyebrow">Total</div><div class="cart-total" style="font-size:20px">$ 1.840.000</div></div>
+            <div class="cart-foot"><button class="btn-primary cart-cta">Continuar a ajustes<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></aside>
+          </div>
+        </div>
+      </div>
+    </div></div></div>
+</div>
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">6</span>Mobile · 390 px · light · Paso 2 — Productos<span class="lbl-mode">progress bar · cards apiladas · drawer carrito sticky · QR icon-only</span></div>
+  <div class="frame" style="display:flex;justify-content:center;background:var(--n-25);padding:32px 0">
+    <div class="mobile-shell" style="border-radius:24px;overflow:hidden;box-shadow:0 8px 24px rgba(14,16,24,.18)">
+      <div class="m-status"><span>9:41</span><span style="font-family:var(--ff-mono);font-size:12px">87%</span></div>
+      <div class="m-header">
+        <button class="m-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M14 8l-4 4 4 4"/><path d="M16 12H8"/></svg></button>
+        <div class="m-head-titles"><div class="m-eyebrow">Nueva cotización</div><div class="m-title">Cot-1043</div></div>
+        <button class="tb-icon-btn" style="border:1px solid var(--n-150)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/></svg></button>
+      </div>
+      <div class="m-progress">
+        <div class="m-progress-row"><span><b>Paso 2 de 4</b> · Productos</span><span>50%</span></div>
+        <div class="m-progress-bar"><div class="m-progress-fill"></div></div>
+      </div>
+      <div class="m-content">
+        <div class="m-search"><div class="m-search-input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><input placeholder="Buscar SKU o producto..."></div><button class="m-btn-qr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3z"/></svg></button></div>
+        <div class="m-prod-card">
+          <div class="m-prod-head"><span class="m-prod-sku">CMP-2210-A</span><span class="cat-badge cat-rep">Repuestos</span></div>
+          <div class="m-prod-name">Filtro de aire Atlas Copco GA-22</div>
+          <div class="m-prod-meta">Atlas Copco · 1613-7409-00</div>
+          <div class="m-prod-foot"><div class="qty" style="width:96px;height:32px"><button>−</button><input value="3"><button>+</button></div><span class="m-prod-price">$ 245.000</span><span class="m-prod-sub">$ 735.000</span></div>
+          <div class="m-swipe-trash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg></div>
+        </div>
+        <div class="m-prod-card">
+          <div class="m-prod-head"><span class="m-prod-sku">CMP-2308-B</span><span class="cat-badge cat-lub">Lubricantes</span></div>
+          <div class="m-prod-name">Aceite ISO VG-46 5L</div>
+          <div class="m-prod-meta">Shell · Sintético compresor</div>
+          <div class="m-prod-foot"><div class="qty" style="width:96px;height:32px"><button>−</button><input value="2"><button>+</button></div><span class="m-prod-price">$ 142.000</span><span class="m-prod-sub">$ 284.000</span></div>
+        </div>
+        <div class="m-prod-card">
+          <div class="m-prod-head"><span class="m-prod-sku">CMP-1985-C</span><span class="cat-badge cat-rep">Repuestos</span></div>
+          <div class="m-prod-name">Manguera de descarga 1/2" 3m</div>
+          <div class="m-prod-meta">Genérica · Trenzada</div>
+          <div class="m-prod-foot"><div class="qty" style="width:96px;height:32px"><button>−</button><input value="1"><button>+</button></div><span class="m-prod-price">$ 89.500</span><span class="m-prod-sub">$ 89.500</span></div>
+        </div>
+        <div class="m-prod-card">
+          <div class="m-prod-head"><span class="m-prod-sku">LBS-0421-X</span><span class="cat-badge cat-srv">Servicios</span></div>
+          <div class="m-prod-name">Servicio mantenimiento mayor</div>
+          <div class="m-prod-meta">Labor · 4h técnico certificado</div>
+          <div class="m-prod-foot"><div class="qty" style="width:96px;height:32px"><button>−</button><input value="1"><button>+</button></div><span class="m-prod-price">$ 437.718</span><span class="m-prod-sub">$ 437.718</span></div>
+        </div>
+        <button class="btn-add-manual" style="align-self:stretch;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Agregar manual</button>
+      </div>
+      <div class="m-drawer">
+        <div class="m-drawer-handle"></div>
+        <div class="m-drawer-info"><div class="m-drawer-tot">$ 1.840.000</div><div class="m-drawer-cnt">4 productos · IVA 19%</div></div>
+        <button class="m-drawer-cta">Continuar<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      </div>
+      <nav class="m-bottom">
+        <div class="m-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>Inicio</div>
+        <div class="m-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9"/></svg>Cotizaciones</div>
+        <div class="m-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg>Ventas</div>
+        <div class="m-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>Buscar</div>
+        <div class="m-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</div>
+      </nav>
+    </div>
+  </div>
+</div>
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">7</span>Desktop · 1280 px · dark · Paso 2 — Productos<span class="lbl-mode">tokens dark · cart y tabla en surface n-950 · QR mantiene contraste</span></div>
+  <div class="frame"><div class="frame-inner"><div class="shell dark">
+        <aside class="sidebar">
+          <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+          <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+            <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/><path d="M3 9l9 6 9-6"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg></span>Productos</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+              <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9M19 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h5"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0118 0M3 12l3-3"/></svg></span>Devoluciones</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Taller</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.8-3.8a6 6 0 01-7.94 7.94l-6.91 6.91a2.121 2.121 0 01-3-3l6.91-6.91A6 6 0 0114.7 6.3z"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+            <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+              <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+          </nav>
+          <div class="sb-foot"><div class="sb-avatar">ML</div><div class="sb-user"><span class="sb-user-name">María L.</span><span class="sb-user-role">Vendedor · Cali</span></div></div>
+        </aside><div class="main">
+          <header class="topbar">
+            <div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span>COTIZACIONES</span><span class="sep">›</span><span style="color:var(--n-700)">NUEVA</span></div>
+            <div class="tb-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><span>Buscar global...</span><span class="kbd">⌘K</span></div>
+            <div class="tb-spacer"></div>
+            <div class="tb-sede"><span class="dot"></span>Cali · Bod. principal</div>
+            <button class="tb-icon-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg></button>
+            <div class="tb-avatar">ML</div>
+          </header>
+        <div class="wiz"><button class="wiz-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M14 8l-4 4 4 4"/><path d="M16 12H8"/></svg>Volver a Cotizaciones</button>
+            <div class="wiz-head">
+              <div class="wiz-titles">
+                <div class="wiz-eyebrow">Nueva cotización</div>
+                <h1 class="wiz-title">Cotización Cot-1043</h1>
+                <div class="wiz-sub"><span class="pdot"></span>Borrador · creado hace 2 minutos</div>
+              </div>
+              <div class="wiz-actions">
+                <button class="btn-out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Guardar borrador</button>
+                <button class="btn-ghost">Cancelar</button>
+              </div>
+            </div><div class="stepper">
+<div class="step done"><div class="step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-lbl">Cliente</div></div><div class="step-line done"></div><div class="step active"><div class="step-dot">2</div><div class="step-lbl">Productos</div></div><div class="step-line "></div><div class="step todo"><div class="step-dot">3</div><div class="step-lbl">Ajustes</div></div><div class="step-line "></div><div class="step todo"><div class="step-dot">4</div><div class="step-lbl">Revisión</div></div>
+</div>
+          <div class="wiz-grid"><div class="wiz-card">
+              <div class="wiz-card-head"><div><div class="wc-eyebrow">Paso 2 de 4</div><h2 class="wc-title">Productos a cotizar</h2></div></div>
+              <div class="search-wrap">
+                <div class="search-prod"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><input placeholder="Buscar producto por nombre o SKU... o escanea QR"></div>
+                <button class="btn-qr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM18 18h3v3h-3z"/></svg>Escanear QR</button>
+              </div>
+              <table class="prod-tbl">
+                <thead><tr><th style="width:115px">SKU</th><th>Producto</th><th style="width:120px">Categoría</th><th class="c" style="width:130px">Cantidad</th><th class="r" style="width:120px">Precio unit</th><th class="r" style="width:130px">Subtotal</th><th style="width:44px"></th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><span class="p-sku">CMP-2210-A</span></td>
+                    <td><div class="p-name">Filtro de aire Atlas Copco GA-22</div><div class="p-meta">Atlas Copco · 1613-7409-00</div></td>
+                    <td><span class="cat-badge cat-rep">Repuestos</span></td>
+                    <td><div class="qty"><button>−</button><input value="3"><button>+</button></div></td>
+                    <td><input class="price-edit" value="$ 245.000"></td>
+                    <td><span class="p-sub">$ 735.000</span></td>
+                    <td><button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg></button></td>
+                  </tr>
+                  <tr>
+                    <td><span class="p-sku">CMP-2308-B</span></td>
+                    <td><div class="p-name">Aceite ISO VG-46 5L</div><div class="p-meta">Shell · Sintético compresor</div></td>
+                    <td><span class="cat-badge cat-lub">Lubricantes</span></td>
+                    <td><div class="qty"><button>−</button><input value="2"><button>+</button></div></td>
+                    <td><input class="price-edit" value="$ 142.000"></td>
+                    <td><span class="p-sub">$ 284.000</span></td>
+                    <td><button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg></button></td>
+                  </tr>
+                  <tr>
+                    <td><span class="p-sku">CMP-1985-C</span></td>
+                    <td><div class="p-name">Manguera de descarga 1/2" 3m</div><div class="p-meta">Genérica · Trenzada</div></td>
+                    <td><span class="cat-badge cat-rep">Repuestos</span></td>
+                    <td><div class="qty"><button>−</button><input value="1"><button>+</button></div></td>
+                    <td><input class="price-edit" value="$ 89.500"></td>
+                    <td><span class="p-sub">$ 89.500</span></td>
+                    <td><button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg></button></td>
+                  </tr>
+                  <tr>
+                    <td><span class="p-sku">LBS-0421-X</span></td>
+                    <td><div class="p-name">Servicio mantenimiento mayor</div><div class="p-meta">Labor · 4h técnico certificado</div></td>
+                    <td><span class="cat-badge cat-srv">Servicios</span></td>
+                    <td><div class="qty"><button>−</button><input value="1"><button>+</button></div></td>
+                    <td><input class="price-edit" value="$ 437.718"></td>
+                    <td><span class="p-sub">$ 437.718</span></td>
+                    <td><button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg></button></td>
+                  </tr>
+                </tbody>
+              </table>
+              <button class="btn-add-manual"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Agregar producto manual (sin SKU)</button>
+            </div><aside class="cart">
+            <div class="cart-head"><span class="cart-eyebrow">Resumen</span><span class="cart-count">4 productos</span></div>
+            
+            <div class="cart-list">
+              <div class="cart-item"><span class="cart-sku">CMP-2210-A</span><span class="cart-qty">×3</span><span class="cart-name">Filtro de aire Atlas Copco GA-22</span><span class="cart-sub">$ 735.000</span></div>
+              <div class="cart-item"><span class="cart-sku">CMP-2308-B</span><span class="cart-qty">×2</span><span class="cart-name">Aceite ISO VG-46 5L</span><span class="cart-sub">$ 284.000</span></div>
+              <div class="cart-item"><span class="cart-sku">CMP-1985-C</span><span class="cart-qty">×1</span><span class="cart-name">Manguera de descarga 1/2" 3m</span><span class="cart-sub">$ 89.500</span></div>
+              <div class="cart-item"><span class="cart-sku">LBS-0421-X</span><span class="cart-qty">×1</span><span class="cart-name">Servicio mantenimiento mayor</span><span class="cart-sub">$ 437.718</span></div>
+            </div>
+            
+            <div class="cart-totals"><div class="cart-line"><span>Subtotal</span><span class="v">$ 1.546.218</span></div><div class="cart-line"><span>IVA (19%)</span><span class="v">$ 293.781</span></div><div class="cart-total-eyebrow">Total</div><div class="cart-total">$ 1.840.000</div></div>
+            <div class="cart-foot"><button class="btn-primary cart-cta" >Continuar a ajustes<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+          </aside>
+          </div>
+        </div>
+      </div>
+    </div></div></div>
+</div>
+
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">A</span>Estado · Modal "Generando PDF" en progreso<span class="lbl-mode">overlay scrim 60% · spinner royal · texto + barra indeterminada</span></div>
+  <div class="frame" style="display:flex;align-items:center;justify-content:center;background:rgba(14,16,24,.55);min-height:520px;padding:60px 0">
+    <div style="background:var(--n-0);border-radius:14px;padding:36px 44px;width:480px;box-shadow:0 24px 60px rgba(14,16,24,.30);text-align:center;border:1px solid var(--n-100)">
+      <div style="width:72px;height:72px;border-radius:50%;background:var(--royal-50);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;position:relative">
+        <svg style="position:absolute;inset:0;animation:spin 1.2s linear infinite" viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="32" stroke="var(--royal-200)" stroke-width="3"/><path d="M36 4 a32 32 0 0 1 32 32" stroke="var(--royal-500)" stroke-width="3" stroke-linecap="round"/></svg>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--royal-600)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+      </div>
+      <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--royal-700);font-weight:700;margin-bottom:8px">Generando cotización</div>
+      <h2 style="font-family:var(--ff-serif);font-size:22px;font-weight:600;letter-spacing:-.02em;margin:0 0 8px;color:var(--n-1000)">Creando PDF de Cot-1043</h2>
+      <p style="font-size:13px;color:var(--n-600);margin:0 0 22px;line-height:1.5">Compaginando productos, ajustes fiscales y datos bancarios. Esto toma unos segundos.</p>
+      <div style="height:4px;border-radius:2px;background:var(--n-100);overflow:hidden;position:relative"><div style="position:absolute;width:35%;height:100%;background:var(--royal-500);border-radius:2px;animation:slide 1.4s ease-in-out infinite"></div></div>
+      <div style="margin-top:18px;display:flex;justify-content:space-between;font-family:var(--ff-mono);font-size:11px;color:var(--n-500)"><span>3 de 4 pasos completados</span><span>~2s restantes</span></div>
+      <style>@keyframes spin{to{transform:rotate(360deg)}}@keyframes slide{0%{left:-35%}100%{left:100%}}</style>
+    </div>
+  </div>
+</div>
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">B</span>Estado · "PDF generado" éxito + opciones de envío<span class="lbl-mode">check verde · 3 acciones (descargar · WhatsApp · email) · link copiable</span></div>
+  <div class="frame" style="display:flex;align-items:center;justify-content:center;background:var(--n-25);min-height:560px;padding:48px 0">
+    <div style="background:var(--n-0);border-radius:14px;padding:34px 36px 28px;width:560px;box-shadow:0 12px 32px rgba(14,16,24,.10);border:1px solid var(--n-100)">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px">
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--succ-50);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--succ-200)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--succ-700)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--succ-700);font-weight:700;margin-bottom:3px">Cotización lista</div>
+          <h2 style="font-family:var(--ff-serif);font-size:21px;font-weight:600;letter-spacing:-.02em;margin:0;color:var(--n-1000)">Cot-1043 generada</h2>
+          <div style="font-size:12px;color:var(--n-600);margin-top:3px">Industrial XYZ S.A.S. · $ 1.840.000 · vence 4 may 2026</div>
+        </div>
+      </div>
+
+      <div style="background:var(--n-50);border:1px solid var(--n-100);border-radius:10px;padding:14px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--n-500)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+        <div style="flex:1;font-family:var(--ff-mono);font-size:12px;color:var(--n-700)">Cot-1043_IndustrialXYZ.pdf<span style="color:var(--n-400);margin-left:8px">218 KB</span></div>
+        <button style="height:30px;padding:0 12px;background:var(--n-0);border:1px solid var(--n-200);border-radius:6px;font-size:12px;font-weight:500;color:var(--n-800);display:inline-flex;align-items:center;gap:6px;cursor:pointer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>Vista previa</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px">
+        <button style="height:80px;border-radius:10px;background:var(--royal-500);color:#fff;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:600;font-family:inherit"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><path d="M12 15V3"/></svg>Descargar PDF</button>
+        <button style="height:80px;border-radius:10px;background:#25D366;color:#fff;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:600;font-family:inherit"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>Enviar WhatsApp</button>
+        <button style="height:80px;border-radius:10px;background:var(--n-0);color:var(--n-900);border:1px solid var(--n-200);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:600;font-family:inherit"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Enviar correo</button>
+      </div>
+
+      <div style="border-top:1px solid var(--n-100);padding-top:16px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--n-500);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:8px">Link público de descarga</div>
+        <div style="display:flex;align-items:stretch;gap:8px"><div style="flex:1;background:var(--n-50);border:1px solid var(--n-150);border-radius:8px;padding:8px 12px;font-family:var(--ff-mono);font-size:11.5px;color:var(--n-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">https://cv.app/cot/Cot-1043/4f7a92eb</div><button style="height:36px;padding:0 14px;background:var(--n-900);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button></div>
+      </div>
+
+      <div style="margin-top:22px;display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--n-100)">
+        <button style="background:none;border:none;color:var(--n-700);font-size:12.5px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Duplicar como nueva</button>
+        <button style="background:none;border:none;color:var(--royal-600);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit">Volver a cotizaciones →</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">C</span>Estado · Validación de campos requeridos · Paso 1<span class="lbl-mode">3 errores en danger · banner agregado · stepper detenido en 1</span></div>
+  <div class="frame" style="background:var(--n-25);padding:32px 40px;min-height:560px">
+    <div style="max-width:760px;margin:0 auto">
+      <div style="background:var(--dang-50);border:1px solid var(--dang-200);border-radius:10px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;margin-bottom:20px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dang-600)" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600;color:var(--dang-800);margin-bottom:4px">No se puede continuar al paso 2</div>
+          <div style="font-size:12.5px;color:var(--dang-700);line-height:1.5">Hay <b>3 campos requeridos</b> sin completar. Revísalos y vuelve a intentar.</div>
+        </div>
+        <button style="background:none;border:none;color:var(--dang-700);cursor:pointer;padding:2px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+
+      <div class="wiz-card" style="margin:0">
+        <div class="wiz-card-head"><div><div class="wc-eyebrow">Paso 1 de 4</div><h2 class="wc-title">Datos del cliente</h2></div></div>
+        <div class="form-grid">
+          <div class="field full"><label class="flbl">Cliente <span class="req">*</span></label><input class="finput" style="border-color:var(--dang-400);background:var(--dang-50);box-shadow:0 0 0 3px rgba(220,38,38,.08)" placeholder="Ej. Industrial XYZ S.A.S."><div style="display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11.5px;color:var(--dang-700);font-weight:500"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>El nombre del cliente es obligatorio</div></div>
+          <div class="field"><label class="flbl">NIT</label><input class="finput mono" placeholder="900.123.456-7" value="900.456.789-2"></div>
+          <div class="field"><label class="flbl">Teléfono <span class="req">*</span></label><div class="finput-prefix" style="border-color:var(--dang-400);background:var(--dang-50);box-shadow:0 0 0 3px rgba(220,38,38,.08)"><span class="pre">+57</span><input placeholder="318 442 5511"></div><div style="display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11.5px;color:var(--dang-700);font-weight:500"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Teléfono requerido para envío por WhatsApp</div></div>
+          <div class="field"><label class="flbl">Correo</label><input class="finput" style="border-color:var(--warn-400);background:var(--warn-50)" type="email" value="compras@@industrialxyz"><div style="display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11.5px;color:var(--warn-700);font-weight:500"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>Formato de correo inválido (revisar @)</div></div>
+          <div class="field"><label class="flbl">Contacto</label><input class="finput" placeholder="Nombre de la persona"></div>
+          <div class="field"><label class="flbl">Cargo</label><input class="finput" placeholder="Ej. Jefe de mantenimiento"></div>
+          <div class="field full"><label class="flbl">Dirección <span class="req">*</span></label><textarea class="ftextarea" style="border-color:var(--dang-400);background:var(--dang-50);box-shadow:0 0 0 3px rgba(220,38,38,.08)" placeholder="Calle, ciudad, departamento"></textarea><div style="display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11.5px;color:var(--dang-700);font-weight:500"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>La dirección es necesaria para el PDF</div></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:18px;border-top:1px solid var(--n-100);margin-top:6px">
+          <div style="font-size:11.5px;color:var(--dang-700);font-weight:600;display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:999px;background:var(--dang-500)"></span>3 errores · revisa los campos marcados</div>
+          <button style="height:38px;padding:0 16px;background:var(--n-200);color:var(--n-500);border:none;border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;cursor:not-allowed">Continuar a productos</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">D</span>Estado · Confirmación al salir sin guardar<span class="lbl-mode">modal centrado · 3 acciones (descartar danger · guardar borrador · cancelar)</span></div>
+  <div class="frame" style="display:flex;align-items:center;justify-content:center;background:rgba(14,16,24,.55);min-height:480px;padding:50px 0">
+    <div style="background:var(--n-0);border-radius:14px;width:480px;box-shadow:0 24px 60px rgba(14,16,24,.30);border:1px solid var(--n-100);overflow:hidden">
+      <div style="padding:28px 32px 8px">
+        <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--warn-50);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--warn-200)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warn-700)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <div style="flex:1"><div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--warn-700);font-weight:700;margin-bottom:4px">Tienes cambios sin guardar</div><h2 style="font-family:var(--ff-serif);font-size:20px;font-weight:600;letter-spacing:-.02em;margin:0;color:var(--n-1000)">¿Salir de la cotización?</h2></div>
+        </div>
+        <p style="font-size:13px;color:var(--n-600);margin:0 0 14px;line-height:1.55">Has avanzado al <b style="color:var(--n-900)">Paso 3 de 4</b>. Si sales ahora perderás el progreso, salvo que lo guardes como borrador.</p>
+        <div style="background:var(--n-50);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--n-700);display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between"><span>Cliente</span><span style="font-weight:500;color:var(--n-900)">Industrial XYZ S.A.S.</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Productos</span><span style="font-weight:500;color:var(--n-900)">4 items · $ 1.840.000</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Última edición</span><span style="font-weight:500;color:var(--n-900);font-family:var(--ff-mono);font-size:11.5px">hace 47 segundos</span></div>
+        </div>
+      </div>
+      <div style="background:var(--n-50);border-top:1px solid var(--n-100);padding:14px 32px;display:flex;justify-content:space-between;align-items:center;gap:10px">
+        <button style="height:38px;padding:0 14px;background:none;border:none;color:var(--dang-600);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit">Descartar cambios</button>
+        <div style="display:flex;gap:8px">
+          <button style="height:38px;padding:0 14px;background:var(--n-0);border:1px solid var(--n-200);border-radius:8px;font-size:12.5px;font-weight:500;color:var(--n-700);cursor:pointer;font-family:inherit">Cancelar</button>
+          <button style="height:38px;padding:0 14px;background:var(--royal-500);color:#fff;border:none;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/></svg>Guardar y salir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="frame-wrap" style="margin-bottom:80px">
+  <div class="frame-label"><span class="lbl-num">✓</span>Checklist Sprint · 24 verificaciones<span class="lbl-mode">requisitos del wizard · estados · responsive · accesibilidad</span></div>
+  <div class="frame" style="background:var(--n-0);padding:28px 32px">
+    <div style="max-width:1120px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px 32px">
+        <div>
+          <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--n-100)">Wizard · Paso 1 Cliente</div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Campos texto libre (sin módulo clientes)</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Cliente · Teléfono marcados como requeridos</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">NIT con formato monoespaciado</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Helper de cliente recurrente persistente</span></div>
+        </div>
+        <div>
+          <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--n-100)">Wizard · Paso 2 Productos</div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Búsqueda 48px alta + botón QR royal</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Categoría con badges (Repuestos/Lub/Servicios)</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Stepper de cantidad − / + funcional</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Precio editable inline</span></div>
+        </div>
+        <div>
+          <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--n-100)">Wizard · Paso 3 Ajustes</div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">IVA · Validez · Condiciones pago · Tiempo entrega</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Cuentas bancarias multi-selección</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Texto fijo locked (no editable)</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Cotizado por · Sede de origen readonly</span></div>
+        </div>
+        <div>
+          <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--n-100)">Wizard · Paso 4 Revisión</div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">3 bloques colapsables Cliente/Prod/Ajustes</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Botón "Editar" navega al paso correspondiente</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Generar PDF (primario) + Borrador (secundario)</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Aviso "no editable después de generar"</span></div>
+        </div>
+        <div>
+          <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--n-100)">Estados especiales</div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">A · Loader generando PDF</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">B · Éxito · 3 vías de envío (Descargar/WA/Email)</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">C · Validación con 3 errores marcados</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">D · Confirmación de salida sin guardar</span></div>
+        </div>
+        <div>
+          <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--n-100)">Cross-cutting</div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Sidebar canónica /ops · Cotizaciones activo</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Tablet 900 px · rail 56 px · stepper compacto</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Mobile 390 px · drawer carrito sticky · QR icon</span></div>
+          <div class="ck-item"><span class="ck-box ck-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="ck-lbl ">Dark mode · tokens n-950 · contraste mantenido</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

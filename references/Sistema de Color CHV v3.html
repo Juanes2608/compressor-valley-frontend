@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Sistema · v3 · Cierre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after { box-sizing: border-box; }
+  :root {
+    --n-0:#FFF; --n-25:#FBFBFC; --n-50:#F7F8FA; --n-75:#F2F4F7; --n-100:#EEF1F5;
+    --n-150:#E4E7EC; --n-200:#D0D5DD; --n-300:#98A2B3; --n-500:#667085;
+    --n-700:#475467; --n-800:#344054; --n-900:#1D2939; --n-950:#101828; --n-975:#0B1320;
+    --p-200:#C2CCFF; --p-300:#94A3FF; --p-500:#4B5BF5; --p-600:#2D3CE5;
+    --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px;
+    --space-6:24px; --space-8:32px; --space-10:40px; --space-12:48px;
+    --r-card:12px; --r-md:6px; --r-sm:4px;
+  }
+  html,body{margin:0;padding:0}
+  body{font-family:'IBM Plex Sans',sans-serif;background:var(--n-25);color:var(--n-950);
+    padding:var(--space-12) var(--space-10) 96px;-webkit-font-smoothing:antialiased}
+  .page{max-width:1320px;margin:0 auto}
+  .doc-h1{font-weight:600;font-size:28px;letter-spacing:-0.02em;margin:0 0 6px}
+  .doc-sub{font-size:14px;color:var(--n-500);margin:0 0 var(--space-2);max-width:760px;line-height:1.55}
+  .meta-row{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);
+    letter-spacing:.06em;text-transform:uppercase;margin:0 0 var(--space-10)}
+  .meta-row span+span::before{content:" · ";margin:0 6px;color:var(--n-200)}
+  .section{margin-bottom:var(--space-12)}
+  .sec-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--n-300);margin:0 0 6px;font-weight:500}
+  .sec-title{font-weight:600;font-size:20px;letter-spacing:-0.015em;margin:0 0 6px}
+  .sec-sub{font-size:13px;color:var(--n-500);margin:0 0 var(--space-5);max-width:760px;line-height:1.6}
+
+  /* DARK SURFACE */
+  .dark-surface{background:var(--n-975);border:1px solid var(--n-800);border-radius:var(--r-card);
+    padding:var(--space-6);color:var(--n-50)}
+  .dark-surface h4{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--n-300);margin:0 0 var(--space-4);font-weight:500}
+
+  /* CATEGORY BADGES — light */
+  .cat{display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 12px 0 10px;
+    border-radius:6px;font-weight:500;font-size:12.5px;border:1px solid transparent;
+    font-family:'IBM Plex Sans',sans-serif}
+  .cat .sw{width:10px;height:10px;border-radius:2px}
+  .cat-cmp{background:#EEF2FF;color:#2A3478;border-color:#C7D0F2}.cat-cmp .sw{background:#4456C2}
+  .cat-rpt{background:#E8FAF6;color:#0E5F5A;border-color:#99E8DD}.cat-rpt .sw{background:#159F8A}
+  .cat-hrm{background:#F5F0FF;color:#5B21B6;border-color:#D9C2FF}.cat-hrm .sw{background:#7244D5}
+  .cat-lbr{background:#FEF3D6;color:#7A340B;border-color:#F8D58A}.cat-lbr .sw{background:#C68420}
+  .cat-acc{background:#FEEEF4;color:#9B226B;border-color:#FBC8DD}.cat-acc .sw{background:#D24E8E}
+
+  /* CATEGORY — dark, with alpha 14% / 35% pattern */
+  .catd{display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 12px 0 10px;
+    border-radius:6px;font-weight:500;font-size:12.5px;border:1px solid transparent;
+    font-family:'IBM Plex Sans',sans-serif}
+  .catd .sw{width:10px;height:10px;border-radius:2px}
+  /* compresores indigo steel #4456C2 → text 200 #C7D0F2, dot 400 #7886D2 */
+  .catd-cmp{background:rgba(68,86,194,.14);color:#C7D0F2;border-color:rgba(68,86,194,.35)}
+  .catd-cmp .sw{background:#7886D2}
+  /* repuestos teal #159F8A → text 200 #99E8DD, dot 400 #2DBBA8 */
+  .catd-rpt{background:rgba(21,159,138,.14);color:#99E8DD;border-color:rgba(21,159,138,.35)}
+  .catd-rpt .sw{background:#2DBBA8}
+  /* herramientas púrpura #7244D5 → text 200 #D9C2FF, dot 400 #B692F6 */
+  .catd-hrm{background:rgba(114,68,213,.14);color:#D9C2FF;border-color:rgba(114,68,213,.35)}
+  .catd-hrm .sw{background:#B692F6}
+  /* lubricantes ámbar dorado #C68420 → text 200 #FCD888, dot 400 #F0B85A */
+  .catd-lbr{background:rgba(198,132,32,.14);color:#FCD888;border-color:rgba(198,132,32,.4)}
+  .catd-lbr .sw{background:#F0B85A}
+  /* accesorios rosa #D24E8E → text 200 #FBC8DD, dot 400 #E972A0 */
+  .catd-acc{background:rgba(210,78,142,.14);color:#FBC8DD;border-color:rgba(210,78,142,.35)}
+  .catd-acc .sw{background:#E972A0}
+
+  /* table dark */
+  .tbl-d{width:100%;border-collapse:collapse;font-size:13px;background:var(--n-950);
+    border:1px solid var(--n-800);border-radius:10px;overflow:hidden}
+  .tbl-d th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--n-300);font-weight:500;
+    padding:10px 12px;border-bottom:1px solid var(--n-800);background:rgba(255,255,255,.02)}
+  .tbl-d td{padding:12px;border-bottom:1px solid var(--n-800);vertical-align:middle;color:var(--n-50)}
+  .tbl-d tr:last-child td{border-bottom:none}
+  .tbl-d td.sku{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--n-300)}
+  .tbl-d td.qty{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;text-align:right;color:var(--n-50)}
+
+  /* spacing demo */
+  .space-grid{display:grid;grid-template-columns:80px 1fr 320px;gap:var(--space-3);align-items:center}
+  .space-bar{height:18px;background:#C7D0F2;border-radius:3px}
+  .space-token{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-700)}
+  .space-use{font-size:12.5px;color:var(--n-500)}
+  .space-row{display:contents}
+  .space-row > *{padding:var(--space-3) 0;border-bottom:1px solid var(--n-100)}
+
+  /* focus demo */
+  .btn-d{height:36px;padding:0 14px;border-radius:var(--r-md);border:1px solid transparent;
+    font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:13px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;background:var(--p-500);color:#fff}
+  .btn-d.focus{outline:2px solid var(--p-200);outline-offset:2px}
+  .row-d{display:grid;grid-template-columns:90px 1fr 140px 100px;align-items:center;gap:14px;
+    padding:12px 14px;border-bottom:1px solid var(--n-800)}
+  .row-d.focus{outline:2px solid var(--p-200);outline-offset:-2px;border-radius:6px}
+  .row-d:last-child{border-bottom:none}
+
+  .pill-d-info{background:rgba(46,144,250,.14);color:#84CAFF;border:1px solid rgba(46,144,250,.35);
+    height:24px;padding:0 10px;border-radius:999px;font-weight:500;font-size:12px;
+    display:inline-flex;align-items:center;gap:6px}
+  .pill-d-info .dot{width:6px;height:6px;border-radius:999px;background:#53B1FD}
+  .pill-d-progress{background:rgba(154,111,223,.14);color:#D6BBFB;border:1px solid rgba(154,111,223,.35);
+    height:24px;padding:0 10px;border-radius:999px;font-weight:500;font-size:12px;
+    display:inline-flex;align-items:center;gap:6px}
+  .pill-d-progress .dot{width:6px;height:6px;border-radius:999px;background:#B692F6}
+
+  .card{background:#fff;border:1px solid var(--n-150);border-radius:var(--r-card);padding:var(--space-5)}
+  .card h4{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--n-500);margin:0 0 14px;font-weight:500}
+
+  .siblings{display:flex;gap:var(--space-3);flex-wrap:wrap;padding:var(--space-5)}
+</style>
+</head>
+<body>
+<div class="page">
+  <p class="meta-row"><span>CHV · Workshop Cool</span><span>Sistema v3 · cierre</span><span>Categorías dark · spacing · focus dark</span></p>
+  <h1 class="doc-h1">Sistema cerrado · listo para pantallas</h1>
+  <p class="doc-sub">Tres adiciones finales: categorías en dark con patrón alpha 14/35, escala formal de spacing 4 px, focus ring de dark con primary-200 que pasa WCAG AA contra n-975.</p>
+
+  <!-- 1. CATEGORÍAS EN DARK -->
+  <section class="section">
+    <p class="sec-eyebrow">01 · Cierre dark</p>
+    <h2 class="sec-title">Categorías en dark mode</h2>
+    <p class="sec-sub">Mismo patrón que los semánticos: fill = color paso 500 al 14%, border al 35%, swatch sólido en paso 400, texto en paso 200. Validación: el ámbar dorado y el rosa mantienen identidad sin "ensuciarse" sobre el fondo n-975 azulado.</p>
+
+    <div class="dark-surface" style="margin-bottom:var(--space-4)">
+      <h4>Fila de badges sobre n-975</h4>
+      <div class="siblings" style="background:transparent;padding:0">
+        <span class="catd catd-cmp"><span class="sw"></span> Compresores</span>
+        <span class="catd catd-rpt"><span class="sw"></span> Repuestos</span>
+        <span class="catd catd-hrm"><span class="sw"></span> Herramientas</span>
+        <span class="catd catd-lbr"><span class="sw"></span> Lubricantes</span>
+        <span class="catd catd-acc"><span class="sw"></span> Accesorios</span>
+      </div>
+    </div>
+
+    <div class="dark-surface">
+      <h4>Tabla en dark · SKU · producto · familia · stock</h4>
+      <table class="tbl-d">
+        <thead><tr><th style="width:160px">SKU</th><th>Producto</th><th style="width:160px">Familia</th><th style="width:80px;text-align:right">Stock</th></tr></thead>
+        <tbody>
+          <tr><td class="sku">CMP-A2H-220</td><td>Compresor pistón 2HP · 220V</td><td><span class="catd catd-cmp"><span class="sw"></span> Compresores</span></td><td class="qty">14</td></tr>
+          <tr><td class="sku">RPT-FS-12</td><td>Filtro succión 1/2"</td><td><span class="catd catd-rpt"><span class="sw"></span> Repuestos</span></td><td class="qty">238</td></tr>
+          <tr><td class="sku">HRM-LT-150</td><td>Llave torque 1/2" 30-150 N·m</td><td><span class="catd catd-hrm"><span class="sw"></span> Herramientas</span></td><td class="qty">06</td></tr>
+          <tr><td class="sku">LBR-ISO46-20</td><td>Aceite ISO-VG 46 · 20L</td><td><span class="catd catd-lbr"><span class="sw"></span> Lubricantes</span></td><td class="qty">42</td></tr>
+          <tr><td class="sku">ACC-MNG-08</td><td>Manguera 8mm presión</td><td><span class="catd catd-acc"><span class="sw"></span> Accesorios</span></td><td class="qty">120</td></tr>
+        </tbody>
+      </table>
+      <p style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-300);margin:var(--space-4) 0 0;line-height:1.6">
+        ✓ Ámbar dorado y rosa mantienen identidad sin ensuciarse — el alpha bajo + texto claro evita "muddy" sobre dark.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. SPACING -->
+  <section class="section">
+    <p class="sec-eyebrow">02 · Espaciado</p>
+    <h2 class="sec-title">Escala formal · grilla 4 px</h2>
+    <p class="sec-sub">Nueve tokens. Nada de espacios libres en componentes — cada padding, gap o margin sale de aquí.</p>
+
+    <div class="card" style="padding:0">
+      <div style="padding:var(--space-4) var(--space-5);border-bottom:1px solid var(--n-150);background:var(--n-50)">
+        <div class="space-grid" style="font-family:'IBM Plex Mono';font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);font-weight:500">
+          <span>token</span><span>visual · uso</span><span>aplica en</span>
+        </div>
+      </div>
+      <div style="padding:0 var(--space-5)">
+        <div class="space-grid space-row">
+          <span class="space-token">--space-1<br><span style="color:var(--n-500)">4 px</span></span>
+          <span><span class="space-bar" style="display:inline-block;width:4px;vertical-align:middle"></span></span>
+          <span class="space-use">Gap entre swatch y label en pill · gap entre dot e ícono</span>
+        </div>
+        <div class="space-grid space-row">
+          <span class="space-token">--space-2<br><span style="color:var(--n-500)">8 px</span></span>
+          <span><span class="space-bar" style="display:inline-block;width:8px;vertical-align:middle"></span></span>
+          <span class="space-use">Padding-Y de pill · gap entre ícono y label en botón</span>
+        </div>
+        <div class="space-grid space-row">
+          <span class="space-token">--space-3<br><span style="color:var(--n-500)">12 px</span></span>
+          <span><span class="space-bar" style="display:inline-block;width:12px;vertical-align:middle"></span></span>
+          <span class="space-use">Padding interno celda de tabla · gap entre badges en una fila</span>
+        </div>
+        <div class="space-grid space-row">
+          <span class="space-token">--space-4<br><span style="color:var(--n-500)">16 px</span></span>
+          <span><span class="space-bar" style="display:inline-block;width:16px;vertical-align:middle"></span></span>
+          <span class="space-use">Padding interno de inputs · gap entre filas no-consecutivas</span>
+        </div>
+        <div class="space-grid space-row">
+          <span class="space-token">--space-5<br><span style="color:var(--n-500)">20 px</span></span>
+          <span><span class="space-bar" style="display:inline-block;width:20px;vertical-align:middle"></span></span>
+          <span class="space-use">Padding interno de cards · gap entre dos cards adyacentes</span>
+        </div>
+        <div class="space-grid space-row">
+          <span class="space-token">--space-6<br><span style="color:var(--n-500)">24 px</span></span>
+          <span><span class="space-bar" style="display:inline-block;width:24px;vertical-align:middle"></span></span>
+          <span class="space-use">Padding interno de panel grande · gap entre bloques relacionados</span>
+        </div>
+        <div class="space-grid space-row">
+          <span class="space-token">--space-8<br><span style="color:var(--n-500)">32 px</span></span>
+          <span><span class="space-bar" style="display:inline-block;width:32px;vertical-align:middle"></span></span>
+          <span class="space-use">Padding-X de página en tablet · gap entre subsecciones</span>
+        </div>
+        <div class="space-grid space-row">
+          <span class="space-token">--space-10<br><span style="color:var(--n-500)">40 px</span></span>
+          <span><span class="space-bar" style="display:inline-block;width:40px;vertical-align:middle"></span></span>
+          <span class="space-use">Padding-X de página en desktop · gap entre secciones de Cockpit</span>
+        </div>
+        <div class="space-grid space-row" style="border-bottom:none">
+          <span class="space-token">--space-12<br><span style="color:var(--n-500)">48 px</span></span>
+          <span><span class="space-bar" style="display:inline-block;width:48px;vertical-align:middle"></span></span>
+          <span class="space-use">Padding-Y de página · separador mayor entre secciones de doc largo</span>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-500);margin:var(--space-3) 0 0;line-height:1.6">
+      Densidad por contexto: filas de tabla compact = padding-Y space-2, comfortable = space-3, touch = space-5.
+    </p>
+  </section>
+
+  <!-- 3. FOCUS RING DARK -->
+  <section class="section">
+    <p class="sec-eyebrow">03 · Focus dark</p>
+    <h2 class="sec-title">Ring en dark · primary-200 #C2CCFF</h2>
+    <p class="sec-sub">primary-300 #94A3FF (ratio ≈ 5.8:1 sobre n-975) ya pasa AA, pero primary-200 #C2CCFF sube a ≈ 8.2:1 — más legible bajo luz cenital de bodega/taller. Token oficial de focus en dark = primary-200, mismo grosor 2 px, mismo offset 2 px.</p>
+
+    <div class="dark-surface">
+      <h4>Tabla · una fila en focus, una en hover</h4>
+      <div style="background:var(--n-950);border:1px solid var(--n-800);border-radius:10px;overflow:hidden">
+        <div class="row-d" style="background:rgba(255,255,255,.02)">
+          <span style="font-family:'IBM Plex Mono';font-size:12px;color:var(--n-300)">OS-2845</span>
+          <span style="font-size:13px;font-weight:500">Atlas Copco GA-22 · cambio aceite + filtros <span style="color:var(--n-300);font-weight:400">— hover</span></span>
+          <span class="pill-d-progress"><span class="dot"></span>En reparación</span>
+          <span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-300);text-align:right">02d 04h</span>
+        </div>
+        <div class="row-d focus">
+          <span style="font-family:'IBM Plex Mono';font-size:12px;color:var(--n-300)">OS-2844</span>
+          <span style="font-size:13px;font-weight:500">Kaeser SX-7 · diagnóstico falla térmica <span style="color:var(--n-300);font-weight:400">— focus (ring primary-200)</span></span>
+          <span class="pill-d-info"><span class="dot"></span>Diagnóstico</span>
+          <span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-300);text-align:right">06h 12m</span>
+        </div>
+        <div class="row-d">
+          <span style="font-family:'IBM Plex Mono';font-size:12px;color:var(--n-300)">OS-2841</span>
+          <span style="font-size:13px;font-weight:500">Ingersoll R5 · reemplazo válvula admisión <span style="color:var(--n-300);font-weight:400">— default</span></span>
+          <span class="pill-d-info"><span class="dot"></span>Diagnóstico</span>
+          <span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-300);text-align:right">04d 18h</span>
+        </div>
+      </div>
+
+      <div style="margin-top:var(--space-5);display:flex;gap:var(--space-4);flex-wrap:wrap;align-items:center">
+        <button class="btn-d">+ Nueva OS <span style="opacity:.6;font-family:'IBM Plex Mono';font-size:11px">default</span></button>
+        <button class="btn-d focus">+ Nueva OS <span style="opacity:.7;font-family:'IBM Plex Mono';font-size:11px">focus · ring primary-200</span></button>
+      </div>
+
+      <p style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-300);margin:var(--space-4) 0 0;line-height:1.6">
+        Resumen rings: light = primary-300 / dark = primary-200. Mismo grosor 2 px y offset 2 px en ambos modos.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="margin-bottom:0">
+    <p class="sec-eyebrow">Cierre</p>
+    <h2 class="sec-title">Sistema completo · listo para pantallas</h2>
+    <div class="card" style="padding:0">
+      <div style="padding:var(--space-4) var(--space-5);border-bottom:1px solid var(--n-100);display:flex;gap:12px">
+        <span style="width:7px;height:7px;border-radius:999px;background:#12B76A;margin-top:7px;flex-shrink:0"></span>
+        <span>Categorías dark validadas con patrón alpha 14/35 · ámbar dorado y rosa estables sobre n-975.</span>
+      </div>
+      <div style="padding:var(--space-4) var(--space-5);border-bottom:1px solid var(--n-100);display:flex;gap:12px">
+        <span style="width:7px;height:7px;border-radius:999px;background:#12B76A;margin-top:7px;flex-shrink:0"></span>
+        <span>Spacing scale formal: 4/8/12/16/20/24/32/40/48 con uso definido — fin de la improvisación.</span>
+      </div>
+      <div style="padding:var(--space-4) var(--space-5);display:flex;gap:12px">
+        <span style="width:7px;height:7px;border-radius:999px;background:#12B76A;margin-top:7px;flex-shrink:0"></span>
+        <span>Focus ring dark = primary-200 #C2CCFF · ratio ~8.2:1 contra n-975. Listo para validar coexistencia royal/info/indigo en la pantalla de OS Kanban.</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

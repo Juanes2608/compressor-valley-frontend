@@ -1,0 +1,382 @@
+/**
+ * tokens.css · Compresores del Valle S.A.S.
+ * Sistema de diseño canónico v1.0 final (mayo 2026)
+ *
+ * Este archivo contiene TODAS las variables CSS del sistema.
+ * El tailwind.config.ts mapea estos tokens a clases utility.
+ *
+ * NO modificar sin actualizar el Sistema canónico documentado.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* ─── NEUTROS ─── */
+  --n-0:   #FFFFFF;
+  --n-25:  #FBFBFC;
+  --n-50:  #F7F8FA;
+  --n-75:  #F2F4F7;
+  --n-100: #EEF1F5;
+  --n-150: #E4E7EC;
+  --n-200: #D0D5DD;
+  --n-300: #98A2B3;
+  --n-500: #667085;
+  --n-700: #475467;
+  --n-800: #344054;
+  --n-900: #1D2939;
+  --n-950: #101828;
+  --n-975: #0B1320;
+
+  /* ─── PRIMARY ROYAL ─── */
+  --p-50:  #F0F2FF;
+  --p-100: #E0E5FF;
+  --p-200: #C2CCFF;
+  --p-300: #94A3FF;
+  --p-400: #6B7BFF;
+  --p-500: #4B5BF5;
+  --p-600: #2D3CE5; /* ★ CTA canónico light */
+  --p-700: #2531C8;
+  --p-800: #1F2BA8;
+  --p-900: #1A2389;
+  --p-950: #11185C;
+
+  /* CTA royal por modo (acceso semántico) */
+  --p-cta: var(--p-600); /* en light */
+
+  /* ─── SEMÁNTICOS ─── */
+  --succ-50:  #ECFDF3;
+  --succ-100: #D1FADF;
+  --succ-500: #12B76A;
+  --succ-600: #039855;
+  --succ-700: #027A48;
+  --succ-900: #054F31;
+  --succ-border: #A6F4C5;
+
+  --warn-50:  #FFFAEB;
+  --warn-100: #FEF0C7;
+  --warn-500: #F79009;
+  --warn-600: #DC6803;
+  --warn-700: #B54708;
+  --warn-900: #7A2E0E;
+  --warn-border: #FEDF89;
+
+  --dang-50:  #FEF3F2;
+  --dang-100: #FEE4E2;
+  --dang-500: #F04438;
+  --dang-600: #D92D20;
+  --dang-700: #B42318;
+  --dang-900: #7A271A;
+  --dang-border: #FECDCA;
+
+  --info-50:  #EFF8FF;
+  --info-100: #D1E9FF;
+  --info-500: #2E90FA;
+  --info-600: #1570EF;
+  --info-700: #175CD3;
+  --info-900: #0B4A8F;
+  --info-border: #B2DDFF;
+
+  --prog-50:  #F4EBFF;
+  --prog-100: #E9D7FE;
+  --prog-500: #9A6FDF;
+  --prog-600: #7F56D9;
+  --prog-700: #6941C6;
+  --prog-900: #42307D;
+  --prog-border: #D9C2FF;
+
+  /* ─── CATEGORÍAS DE PRODUCTO ─── */
+  --cat-cmp:        #4456C2; /* Compresores · Indigo Steel */
+  --cat-cmp-bg:     #EEF2FF;
+  --cat-cmp-text:   #2A3478;
+  --cat-cmp-border: #C7D0F2;
+
+  --cat-rpt:        #159F8A; /* Repuestos · teal vivo */
+  --cat-rpt-bg:     #E8FAF6;
+  --cat-rpt-text:   #0E5F5A;
+  --cat-rpt-border: #99E8DD;
+
+  --cat-hrm:        #7244D5; /* Herramientas · púrpura */
+  --cat-hrm-bg:     #F5F0FF;
+  --cat-hrm-text:   #5B21B6;
+  --cat-hrm-border: #D9C2FF;
+
+  --cat-lbr:        #C68420; /* Lubricantes · ámbar dorado */
+  --cat-lbr-bg:     #FEF3D6;
+  --cat-lbr-text:   #7A340B;
+  --cat-lbr-border: #F8D58A;
+
+  --cat-acc:        #D24E8E; /* Accesorios · rosa */
+  --cat-acc-bg:     #FEEEF4;
+  --cat-acc-text:   #9B226B;
+  --cat-acc-border: #FBC8DD;
+
+  /* ─── SEDES ─── */
+  --sede-wh01: var(--succ-500); /* Cali · verde */
+  --sede-wh02: var(--info-500); /* Norte · azul */
+  --sede-wh03: var(--warn-500); /* Sur · ámbar */
+  --sede-wh04: var(--prog-500); /* Tuluá · púrpura */
+
+  /* ─── SPACING SCALE FORMAL ─── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* ─── RADIOS ─── */
+  --r-card: 12px;
+  --r-md:   6px;
+  --r-sm:   4px;
+
+  /* ─── FOCUS RING ─── */
+  --focus: var(--p-300);
+  --focus-shadow: 0 0 0 3px rgba(148, 163, 255, 0.4);
+
+  /* ─── SOMBRAS ─── */
+  --shadow-card: 0 1px 3px 0 rgba(16, 24, 40, 0.06), 0 1px 2px -1px rgba(16, 24, 40, 0.04);
+  --shadow-elevation: 0 4px 16px -4px rgba(16, 24, 40, 0.08);
+  --shadow-overlay: 0 24px 48px -12px rgba(16, 24, 40, 0.18);
+
+  /* ─── TIPOGRAFÍA ─── */
+  --sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --mono: 'IBM Plex Mono', 'Menlo', 'Monaco', monospace;
+
+  /* ─── SHADCN COMPATIBILIDAD (HSL aliases) ─── */
+  --background: 0 0% 100%;
+  --foreground: 224 33% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 224 33% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 224 33% 10%;
+  --primary: 234 78% 54%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 17% 96%;
+  --secondary-foreground: 220 25% 24%;
+  --muted: 220 17% 96%;
+  --muted-foreground: 220 13% 46%;
+  --accent: 234 78% 54%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 4 86% 58%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 234 100% 79%;
+  --radius: 12px;
+}
+
+.dark {
+  /* ─── NEUTROS INVERTIDOS ─── */
+  /* En dark, los tokens neutros se invierten semánticamente:
+     "n-0" sigue siendo "fondo más alto" pero ahora es oscuro.
+     "n-950" sigue siendo "más opuesto al fondo" pero ahora es claro.
+     Esto permite reutilizar reglas sin duplicar selectores. */
+  --n-0:   #0F1626;
+  --n-25:  #131A2B;
+  --n-50:  #1A2236;
+  --n-75:  #1F2A41;
+  --n-100: #25304A;
+  --n-150: #2D3955;
+  --n-200: #3B4866;
+  --n-300: #6A7896;
+  --n-500: #9AA5BE;
+  --n-700: #C5CCDB;
+  --n-800: #D6DBE6;
+  --n-900: #E5E8EF;
+  --n-950: #F2F4FB;
+  --n-975: #F7F9FF;
+
+  /* CTA royal en dark: paso 500 (más claro que p-600 para destacar sobre fondo oscuro) */
+  --p-cta: var(--p-500);
+
+  /* Focus ring en dark */
+  --focus: var(--p-200);
+  --focus-shadow: 0 0 0 3px rgba(194, 204, 255, 0.4);
+
+  /* Sombras en dark */
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --shadow-elevation: 0 4px 16px -4px rgba(0, 0, 0, 0.5);
+  --shadow-overlay: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+
+  /* shadcn aliases dark */
+  --background: 220 39% 7%;
+  --foreground: 220 17% 96%;
+  --card: 220 33% 10%;
+  --card-foreground: 220 17% 96%;
+  --popover: 220 33% 10%;
+  --popover-foreground: 220 17% 96%;
+  --primary: 234 89% 65%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 25% 24%;
+  --secondary-foreground: 220 17% 96%;
+  --muted: 220 25% 24%;
+  --muted-foreground: 220 8% 60%;
+  --accent: 234 89% 65%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 4 86% 58%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 25% 24%;
+  --input: 220 25% 24%;
+  --ring: 234 100% 88%;
+}
+
+/* ─── BASE ─── */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: var(--sans);
+  background: var(--n-25);
+  color: var(--n-900);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-mono {
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+}
+
+/* ─── PILLS SEMÁNTICAS (light) ─── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pill-success  { background: var(--succ-50); color: var(--succ-700); border-color: var(--succ-border); }
+.pill-warn     { background: var(--warn-50); color: var(--warn-700); border-color: var(--warn-border); }
+.pill-danger   { background: var(--dang-50); color: var(--dang-700); border-color: var(--dang-border); }
+.pill-info     { background: var(--info-50); color: var(--info-700); border-color: var(--info-border); }
+.pill-progress { background: var(--prog-50); color: var(--prog-700); border-color: var(--prog-border); }
+.pill-neutral  { background: var(--n-100); color: var(--n-700); border-color: var(--n-200); }
+
+.pill-success  .dot { background: var(--succ-500); }
+.pill-warn     .dot { background: var(--warn-500); }
+.pill-danger   .dot { background: var(--dang-500); }
+.pill-info     .dot { background: var(--info-500); }
+.pill-progress .dot { background: var(--prog-500); }
+.pill-neutral  .dot { background: var(--n-300); }
+
+/* ─── PILLS SEMÁNTICAS (dark con alpha) ─── */
+.dark .pill-success  { background: rgba(18, 183, 106, 0.12); color: #6CE9A6; border-color: rgba(18, 183, 106, 0.35); }
+.dark .pill-warn     { background: rgba(247, 144, 9, 0.12); color: #FEC84B; border-color: rgba(247, 144, 9, 0.35); }
+.dark .pill-danger   { background: rgba(240, 68, 56, 0.14); color: #FDA29B; border-color: rgba(240, 68, 56, 0.40); }
+.dark .pill-info     { background: rgba(46, 144, 250, 0.14); color: #84CAFF; border-color: rgba(46, 144, 250, 0.35); }
+.dark .pill-progress { background: rgba(154, 111, 223, 0.14); color: #D6BBFB; border-color: rgba(154, 111, 223, 0.35); }
+.dark .pill-neutral  { background: var(--n-50); color: var(--n-500); border-color: var(--n-100); }
+
+.dark .pill-success  .dot { background: #32D583; }
+.dark .pill-warn     .dot { background: #FDB022; }
+.dark .pill-danger   .dot { background: #F97066; }
+.dark .pill-info     .dot { background: #53B1FD; }
+.dark .pill-progress .dot { background: #B692F6; }
+
+/* ─── CATEGORÍAS DE PRODUCTO ─── */
+.cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 12px 0 10px;
+  border-radius: var(--r-md);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+.cat .sw {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.cat-cmp { background: var(--cat-cmp-bg); color: var(--cat-cmp-text); border-color: var(--cat-cmp-border); }
+.cat-rpt { background: var(--cat-rpt-bg); color: var(--cat-rpt-text); border-color: var(--cat-rpt-border); }
+.cat-hrm { background: var(--cat-hrm-bg); color: var(--cat-hrm-text); border-color: var(--cat-hrm-border); }
+.cat-lbr { background: var(--cat-lbr-bg); color: var(--cat-lbr-text); border-color: var(--cat-lbr-border); }
+.cat-acc { background: var(--cat-acc-bg); color: var(--cat-acc-text); border-color: var(--cat-acc-border); }
+
+.cat-cmp .sw { background: var(--cat-cmp); }
+.cat-rpt .sw { background: var(--cat-rpt); }
+.cat-hrm .sw { background: var(--cat-hrm); }
+.cat-lbr .sw { background: var(--cat-lbr); }
+.cat-acc .sw { background: var(--cat-acc); }
+
+/* ─── CATEGORÍAS DARK ─── */
+.dark .cat-cmp { background: rgba(68, 86, 194, 0.14); color: #C7D0F2; border-color: rgba(68, 86, 194, 0.35); }
+.dark .cat-rpt { background: rgba(21, 159, 138, 0.14); color: #99E8DD; border-color: rgba(21, 159, 138, 0.35); }
+.dark .cat-hrm { background: rgba(114, 68, 213, 0.14); color: #D9C2FF; border-color: rgba(114, 68, 213, 0.35); }
+.dark .cat-lbr { background: rgba(198, 132, 32, 0.14); color: #FCD888; border-color: rgba(198, 132, 32, 0.40); }
+.dark .cat-acc { background: rgba(210, 78, 142, 0.14); color: #FBC8DD; border-color: rgba(210, 78, 142, 0.35); }
+
+/* ─── DOT PULSANTE (estados con urgencia) ─── */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
+.dot-pulse {
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
+/* ─── FOCUS RING canónico ─── */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  box-shadow: var(--focus-shadow);
+}
+
+/* ─── LINK PILL (pills clickeables para IDs de documento) ─── */
+.link-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: var(--p-50);
+  color: var(--p-700);
+  border: 1px solid var(--p-100);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 150ms ease;
+}
+
+.link-pill:hover {
+  background: var(--p-100);
+}
+
+.dark .link-pill {
+  background: rgba(45, 60, 229, 0.16);
+  color: #C2CCFF;
+  border-color: rgba(45, 60, 229, 0.35);
+}
+
+.dark .link-pill:hover {
+  background: rgba(45, 60, 229, 0.25);
+}

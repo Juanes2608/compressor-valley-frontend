@@ -1,0 +1,1054 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recibos · Módulo F14 · 6 vistas + estados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --n-0:#FFFFFF; --n-25:#FBFBFC; --n-50:#F5F6F8; --n-75:#EFF1F4;
+  --n-100:#E6E8ED; --n-150:#DADCE3; --n-200:#C7CAD3; --n-300:#A2A6B3;
+  --n-400:#7E8290; --n-500:#5C6070; --n-700:#383C4A; --n-800:#262936;
+  --n-900:#181A24; --n-950:#0E1018; --n-975:#070912;
+  --p-50:#EEF0FE; --p-100:#DCE0FE; --p-200:#B7BFFC; --p-300:#8B96F9;
+  --p-500:#3D4DE8; --p-600:#2D3CE5; --p-700:#2330C0;
+  --succ-50:#E8F7EE; --succ-100:#CCEDD8; --succ-200:#9FDDB5; --succ-500:#2DA75A; --succ-600:#1F8A48; --succ-700:#176B38;
+  --warn-50:#FEF4DC; --warn-100:#FCE7B0; --warn-200:#F8D079; --warn-500:#C98A0F; --warn-600:#A6720B; --warn-700:#7E5708;
+  --dang-50:#FCE9E7; --dang-100:#F9CFCB; --dang-200:#F1A39B; --dang-500:#C53A2C; --dang-600:#A52E22; --dang-700:#7E2419;
+  --info-50:#E5F0FE; --info-100:#C8DFFC; --info-200:#9AC4F8; --info-500:#2E84E0; --info-600:#246EC0; --info-700:#1B5499;
+  --ff-sans:"IBM Plex Sans",system-ui,sans-serif;
+  --ff-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+.dark{
+  --n-0:#0E1018; --n-25:#10131C; --n-50:#141823; --n-75:#181C28;
+  --n-100:#1F2330; --n-150:#262B3A; --n-200:#2F3447; --n-300:#525A72;
+  --n-400:#6F778F; --n-500:#8E96AD; --n-700:#B7BCCB; --n-800:#D2D5DF;
+  --n-900:#E6E8ED; --n-950:#F1F2F6; --n-975:#FBFBFC;
+  --p-50:#1A1F4D; --p-200:#2C3681; --p-500:#7180E2; --p-600:#8A98EE; --p-700:#A8B3F2;
+  --succ-50:#0E2A1A; --succ-200:#1C5234; --succ-500:#3FB672; --succ-700:#86DBA8;
+  --warn-50:#2C1F08; --warn-200:#5A4012; --warn-500:#D49A2A; --warn-700:#F0CC7E;
+  --dang-50:#2C0F0B; --dang-200:#5C211B; --dang-500:#D75144; --dang-700:#EE9388;
+  --info-50:#0F1F36; --info-200:#1D406F; --info-500:#4D9AEC; --info-700:#9CC8F4;
+}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{font-family:var(--ff-sans);background:#0B0E16;color:var(--n-700);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.mono{font-family:var(--ff-mono);font-feature-settings:"tnum","ss01"}
+.doc-head{padding:48px 56px 24px;color:#E6E8ED;max-width:1700px;margin:0 auto}
+.doc-eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#7E8290;margin-bottom:8px}
+.doc-title{font-size:30px;font-weight:500;letter-spacing:-.02em;margin:0 0 8px;color:#FBFBFC}
+.doc-sub{font-size:14px;color:#A2A6B3;max-width:880px;line-height:1.55}
+.frames{display:flex;flex-direction:column;gap:48px;padding:24px 56px 96px;max-width:1700px;margin:0 auto}
+.frame-wrap{display:flex;flex-direction:column;gap:10px}
+.frame-label{display:flex;align-items:center;gap:10px;color:#A2A6B3;font-family:var(--ff-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.lbl-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:#2D3CE5;color:#fff;font-size:11px;font-weight:600}
+.lbl-num.alt{background:#7E5708}
+.lbl-mode{margin-left:auto;font-size:10px;color:#5C6070}
+.frame{background:var(--n-25);border-radius:14px;overflow:hidden;box-shadow:0 24px 48px rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06)}
+.frame .frame-inner{overflow-x:auto;overflow-y:hidden;position:relative}
+
+.shell{display:flex;background:var(--n-25);min-width:1280px}
+.sidebar{width:240px;flex-shrink:0;background:var(--n-975);color:#E6E8ED;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.04)}
+.sb-brand{padding:18px 18px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.05)}
+.sb-logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#2D3CE5,#4456C2);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--ff-mono);font-size:13px;font-weight:600}
+.sb-co{display:flex;flex-direction:column;line-height:1.15}
+.sb-co-name{font-size:13px;font-weight:600;color:#fff}
+.sb-co-meta{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;color:#7E8290;text-transform:uppercase}
+.sb-section{padding:14px 0 4px}
+.sb-sect-label{padding:0 18px 6px;font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#5C6070}
+.sb-item{display:flex;align-items:center;gap:10px;padding:8px 18px;color:#C7CAD3;font-size:13px;cursor:pointer;border-left:2px solid transparent;text-decoration:none}
+.sb-item:hover{background:rgba(255,255,255,.025);color:#fff}
+.sb-item.active{background:rgba(45,60,229,.16);color:#fff;border-left-color:#3D4DE8;font-weight:500}
+.sb-ico{width:16px;height:16px;flex-shrink:0;opacity:.85}.sb-ico svg{width:16px;height:16px}
+.sb-count{margin-left:auto;font-family:var(--ff-mono);font-size:11px;color:#7E8290;background:rgba(255,255,255,.05);padding:1px 7px;border-radius:999px;min-width:22px;text-align:center}
+.sb-item.active .sb-count{color:#B7BFFC;background:rgba(45,60,229,.2)}
+.sb-foot{margin-top:auto;padding:14px 18px;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:10px}
+.sb-avatar{width:30px;height:30px;border-radius:999px;background:linear-gradient(135deg,#3645A8,#5F6DF1);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.sb-user{display:flex;flex-direction:column;line-height:1.2;flex:1}
+.sb-user-name{font-size:12px;color:#fff;font-weight:500}
+.sb-user-role{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;color:#7E8290;text-transform:uppercase}
+.main{flex:1;display:flex;flex-direction:column;background:var(--n-25);min-width:0;position:relative}
+.topbar{height:56px;background:var(--n-0);border-bottom:1px solid var(--n-100);display:flex;align-items:center;padding:0 24px;gap:16px;flex-shrink:0}
+.crumb{display:flex;align-items:center;gap:6px;font-family:var(--ff-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--n-400)}
+.crumb b{color:var(--n-700);font-weight:500}.crumb .sep{opacity:.5}
+.tb-search{flex:1;max-width:420px;background:var(--n-50);border:1px solid var(--n-100);border-radius:8px;height:32px;display:flex;align-items:center;padding:0 10px;gap:8px;color:var(--n-400);font-size:12px}
+.tb-search .kbd{margin-left:auto;font-family:var(--ff-mono);font-size:10px;background:var(--n-0);border:1px solid var(--n-100);padding:1px 5px;border-radius:4px;color:var(--n-500)}
+.tb-spacer{flex:1}
+.tb-sede{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--n-700);padding:6px 10px;border-radius:8px;border:1px solid var(--n-100);background:var(--n-0)}
+.tb-sede .dot{width:6px;height:6px;border-radius:999px;background:#2DA75A}
+.tb-icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--n-100);background:var(--n-0);display:flex;align-items:center;justify-content:center;color:var(--n-500)}
+.tb-avatar{width:32px;height:32px;border-radius:999px;background:linear-gradient(135deg,#2D3CE5,#4456C2);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
+
+.page{padding:22px 28px 60px;display:flex;flex-direction:column;gap:16px}
+.ph{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding-bottom:14px;border-bottom:1px solid var(--n-100);flex-wrap:wrap}
+.ph-l{display:flex;flex-direction:column;gap:4px;min-width:0}
+.ph-title{font-size:22px;font-weight:600;color:var(--n-950);letter-spacing:-.01em;margin:0}
+.ph-sub{font-size:13px;color:var(--n-500);font-weight:400}
+.ph-sub b{font-family:var(--ff-mono);font-weight:500;color:var(--n-700)}
+.ph-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tabs{display:flex;align-items:center;gap:2px;background:var(--n-100);padding:3px;border-radius:8px}
+.tab{padding:6px 12px;border-radius:6px;font-size:12.5px;color:var(--n-500);font-weight:500;cursor:pointer}
+.tab.active{background:var(--n-0);color:var(--n-950);box-shadow:0 1px 2px rgba(14,16,24,.06)}
+.btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;border:1px solid transparent;background:transparent;color:var(--n-700)}
+.btn svg{width:14px;height:14px}
+.btn.primary{background:var(--p-600);color:#fff;border-color:var(--p-600)}
+.btn.out{background:var(--n-0);border-color:var(--n-150);color:var(--n-700)}
+.btn.dang{color:var(--dang-600);border-color:var(--dang-200);background:var(--n-0)}
+.btn.ghost{background:transparent;color:var(--n-500)}
+.searchbar{display:flex;align-items:center;gap:10px;background:var(--n-0);border:1px solid var(--n-150);border-radius:8px;height:40px;padding:0 12px;color:var(--n-400)}
+.searchbar svg{width:16px;height:16px;color:var(--n-400)}
+.searchbar input{flex:1;border:none;outline:none;background:transparent;font-family:inherit;font-size:13.5px;color:var(--n-700)}
+.searchbar input::placeholder{color:var(--n-400)}
+.searchbar .kbd{font-family:var(--ff-mono);font-size:10.5px;background:var(--n-50);border:1px solid var(--n-100);padding:1px 6px;border-radius:4px;color:var(--n-500)}
+
+.card{background:var(--n-0);border:1px solid var(--n-150);border-radius:10px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead th{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-400);font-weight:500;padding:11px 12px;text-align:left;background:var(--n-25);border-bottom:1px solid var(--n-150)}
+thead th.r{text-align:right}
+tbody td{padding:11px 12px;border-bottom:1px solid var(--n-75);font-size:13px;color:var(--n-700);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--n-25)}
+.row-num{font-family:var(--ff-mono);font-size:12.5px;font-weight:500;color:var(--n-950)}
+.row-date{font-family:var(--ff-mono);font-size:11.5px;color:var(--n-500)}
+.row-cli{font-size:13px;font-weight:500;color:var(--n-950);line-height:1.3}
+.row-cli .sub{font-size:11.5px;color:var(--n-500);font-family:var(--ff-mono);font-weight:400}
+.row-prod{font-size:12.5px;color:var(--n-700);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row-vendor{display:flex;align-items:center;gap:8px}
+.row-vendor .av{width:24px;height:24px;border-radius:999px;color:#fff;font-size:10px;font-weight:600;display:inline-flex;align-items:center;justify-content:center}
+.av-ml{background:linear-gradient(135deg,#3D4DE8,#1F2BC2)}
+.av-am{background:linear-gradient(135deg,#C98A0F,#7E5708)}
+.av-cr{background:linear-gradient(135deg,#2DA75A,#176B38)}
+.av-sa{background:linear-gradient(135deg,#7B3FBF,#48226F)}
+.row-total{font-family:var(--ff-mono);font-size:13.5px;font-weight:500;color:var(--n-950);text-align:right}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:500;border:1px solid;line-height:1.35;white-space:nowrap}
+.pill .dot{width:5px;height:5px;border-radius:999px}
+.pill.neut{background:var(--n-50);color:var(--n-700);border-color:var(--n-150)}.pill.neut .dot{background:var(--n-400)}
+.pill.info{background:var(--info-50);color:var(--info-700);border-color:var(--info-200)}.pill.info .dot{background:var(--info-500)}
+.pill.prog{background:var(--p-50);color:var(--p-700);border-color:var(--p-200)}.pill.prog .dot{background:var(--p-500)}
+.pill.succ{background:var(--succ-50);color:var(--succ-700);border-color:var(--succ-200)}.pill.succ .dot{background:var(--succ-500)}
+.pill.warn{background:var(--warn-50);color:var(--warn-700);border-color:var(--warn-200)}.pill.warn .dot{background:var(--warn-500)}
+.pill.dang{background:var(--dang-50);color:var(--dang-700);border-color:var(--dang-200)}.pill.dang .dot{background:var(--dang-500)}
+.link-pill{display:inline-flex;align-items:center;padding:3px 8px;border-radius:6px;font-family:var(--ff-mono);font-size:11.5px;font-weight:500;border:1px solid;cursor:pointer;margin-right:4px}
+.link-pill.cot{background:var(--p-50);color:var(--p-700);border-color:var(--p-200)}
+.link-pill.ot{background:var(--info-50);color:var(--info-700);border-color:var(--info-200)}
+.link-pill.v{background:var(--succ-50);color:var(--succ-700);border-color:var(--succ-200)}
+.no-link{font-family:var(--ff-mono);font-size:12px;color:var(--n-300)}
+.row-cycle{background:linear-gradient(90deg,var(--p-50) 0%,var(--n-0) 30%)!important}
+.row-cycle .row-num{color:var(--p-700)}
+.tr-foot{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--n-25);border-top:1px solid var(--n-100);font-size:12px;color:var(--n-500)}
+
+/* Banner consecutivo warn */
+.consec-banner{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--warn-50);border:1px solid var(--warn-200);border-radius:8px;color:var(--warn-700)}
+.consec-banner svg{width:16px;height:16px;color:var(--warn-600);flex-shrink:0}
+.consec-banner .b{flex:1;font-size:12.5px;line-height:1.5}
+.consec-banner .b b{font-family:var(--ff-mono);font-weight:500}
+.consec-banner button{background:transparent;border:none;color:var(--warn-700);font-weight:500;font-size:12px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-family:inherit}
+
+/* Side panel sheet (vista 2 y 3) */
+.sheet-wrap{position:relative;min-height:780px}
+.sheet-bg{position:absolute;inset:0;background:rgba(14,16,24,.35);z-index:2}
+.sheet{position:absolute;top:0;right:0;bottom:0;width:520px;background:var(--n-0);border-left:1px solid var(--n-150);z-index:3;display:flex;flex-direction:column;box-shadow:-12px 0 40px rgba(14,16,24,.16)}
+.sheet-h{padding:18px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--n-100)}
+.sheet-h .l h2{margin:0;font-size:17px;font-weight:600;color:var(--n-950);letter-spacing:-.005em}
+.sheet-h .l .eb{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-300);margin-bottom:3px}
+.sheet-x{width:30px;height:30px;border-radius:8px;background:var(--n-50);border:1px solid var(--n-100);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--n-500)}
+.sheet-x svg{width:14px;height:14px}
+.sheet-body{flex:1;overflow-y:auto;padding:18px 22px;display:flex;flex-direction:column;gap:14px}
+.sheet-foot{padding:14px 22px;display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--n-100);background:var(--n-25)}
+
+.banner{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:8px;background:var(--info-50);border:1px solid var(--info-200);color:var(--info-700)}
+.banner svg{width:14px;height:14px;color:var(--info-500);flex-shrink:0;margin-top:2px}
+.banner .b{flex:1;font-size:12px;line-height:1.5}
+.banner .b b{font-family:var(--ff-mono);font-weight:500;color:var(--info-700)}
+.banner-link{font-size:12px;font-weight:500;color:var(--info-700);background:transparent;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-family:inherit;padding:0;margin-top:2px}
+
+/* Search results inline (cotización) */
+.cot-search{display:flex;align-items:center;gap:10px;height:44px;border:1px solid var(--n-150);border-radius:8px;padding:0 14px;background:var(--n-0)}
+.cot-search svg{width:16px;height:16px;color:var(--n-400)}
+.cot-search input{flex:1;border:none;outline:none;background:transparent;font-family:inherit;font-size:13.5px;color:var(--n-700)}
+.cot-results{display:flex;flex-direction:column;gap:6px}
+.cot-result{display:flex;align-items:center;gap:14px;padding:11px 14px;border:1px solid var(--n-150);border-radius:10px;background:var(--n-0);cursor:pointer}
+.cot-result:hover{border-color:var(--n-300)}
+.cot-result.sel{border-color:var(--p-600);background:var(--p-50);border-width:2px;padding:10px 13px}
+.cot-result .cnum{font-family:var(--ff-mono);font-size:13px;font-weight:500;color:var(--n-950);flex-shrink:0}
+.cot-result .ccli{font-size:13px;color:var(--n-950);font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cot-result .cmeta{font-family:var(--ff-mono);font-size:11px;color:var(--n-500)}
+.cot-result .ctot{font-family:var(--ff-mono);font-size:13px;font-weight:500;color:var(--n-950)}
+.cot-result .csel{font-size:11px;font-weight:600;color:var(--p-700);background:var(--p-100);padding:3px 9px;border-radius:6px;display:inline-flex;align-items:center;gap:4px}
+.cot-result .csel svg{width:11px;height:11px}
+.cot-result .cbtn{font-size:12px;font-weight:500;color:var(--p-700);background:transparent;border:1px solid var(--p-200);border-radius:6px;padding:5px 11px;cursor:pointer;font-family:inherit}
+
+.divider-eb{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-300);font-weight:500;margin-top:6px}
+
+.form-grid{display:flex;flex-direction:column;gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+.flbl{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);font-weight:500;display:flex;align-items:center;gap:6px}
+.flbl .lock{display:inline-flex;align-items:center;gap:3px;font-size:9.5px;color:var(--n-400);background:var(--n-50);padding:1px 6px;border-radius:4px;border:1px solid var(--n-100);text-transform:none;letter-spacing:.02em;font-weight:500}
+.flbl .lock svg{width:9px;height:9px}
+.flbl .req{color:var(--dang-500);margin-left:2px}
+.flbl .auto{display:inline-flex;align-items:center;gap:3px;font-size:9.5px;color:var(--info-700);background:var(--info-50);padding:1px 6px;border-radius:4px;border:1px solid var(--info-100);text-transform:none;letter-spacing:.02em;font-weight:500}
+.finput{height:40px;background:var(--n-0);border:1px solid var(--n-150);border-radius:8px;padding:0 12px;font-family:var(--ff-mono);font-size:13px;font-weight:500;color:var(--n-950);outline:none;width:100%}
+.finput.sans{font-family:var(--ff-sans);font-weight:400}
+.finput.locked{background:var(--n-50);color:var(--n-700)}
+.finput.big{height:48px;font-size:16px;font-weight:500}
+.fprefix{display:flex;align-items:stretch;background:var(--n-0);border:1px solid var(--n-150);border-radius:8px;overflow:hidden}
+.fprefix .pre{display:flex;align-items:center;padding:0 12px;background:var(--n-50);border-right:1px solid var(--n-150);font-family:var(--ff-mono);font-size:14px;font-weight:500;color:var(--n-500)}
+.fprefix input{flex:1;height:48px;border:none;outline:none;background:transparent;padding:0 12px;font-family:var(--ff-mono);font-size:16px;font-weight:500;color:var(--n-950)}
+.ftextarea{min-height:56px;padding:9px 12px;background:var(--n-0);border:1px solid var(--n-150);border-radius:8px;font-family:var(--ff-sans);font-size:13px;color:var(--n-950);outline:none;line-height:1.5;resize:none}
+.fselect{height:40px;background:var(--n-0);border:1px solid var(--n-150);border-radius:8px;padding:0 36px 0 12px;font-family:var(--ff-sans);font-size:13px;color:var(--n-950);outline:none;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237E8290' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 12px center}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.suggest-tag{display:inline-flex;align-items:center;gap:4px;padding:1px 7px;border-radius:4px;background:var(--info-50);color:var(--info-700);font-size:10px;font-weight:500;border:1px solid var(--info-100);margin-left:6px;text-transform:none;letter-spacing:.02em;font-family:var(--ff-sans)}
+.suggest-tag svg{width:9px;height:9px}
+
+/* Detail */
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--n-500);font-size:12.5px;font-weight:500;background:transparent;border:none;cursor:pointer;width:fit-content;font-family:inherit}
+.back-btn svg{width:14px;height:14px}
+.det-head{display:flex;align-items:flex-start;gap:20px;padding-bottom:14px;border-bottom:1px solid var(--n-100)}
+.det-l{flex:1}
+.det-eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--n-300);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.det-eyebrow .consec{display:inline-flex;align-items:center;gap:3px;color:var(--n-500);background:var(--n-50);padding:2px 6px;border-radius:4px;border:1px solid var(--n-100);font-size:9.5px;letter-spacing:.04em;text-transform:none;font-weight:500}
+.det-eyebrow .consec svg{width:9px;height:9px}
+.det-num{font-family:var(--ff-mono);font-size:28px;font-weight:500;color:var(--n-950);letter-spacing:-.01em;line-height:1.05;margin-bottom:8px}
+.det-cli{font-size:22px;font-weight:500;color:var(--n-950);letter-spacing:-.01em;margin-bottom:5px}
+.det-sub{font-size:13px;color:var(--n-500)}
+.det-r{display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.det-tot-wrap{text-align:right}
+.det-tot-lbl{font-family:var(--ff-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--n-300)}
+.det-tot{font-family:var(--ff-mono);font-size:22px;font-weight:500;color:var(--n-950);line-height:1.1}
+.actions-row{display:flex;gap:8px;flex-wrap:wrap;padding:12px 14px;background:var(--n-50);border-radius:10px;border:1px solid var(--n-150)}
+.det-layout{display:grid;grid-template-columns:520px 1fr;gap:20px;align-items:flex-start}
+.iblock{background:var(--n-0);border:1px solid var(--n-150);border-radius:10px;padding:18px}
+.iblock.info-tint{background:linear-gradient(180deg,var(--info-50),var(--n-0) 60%);border-color:var(--info-100)}
+.ib-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ib-ico{width:26px;height:26px;border-radius:6px;background:var(--n-50);color:var(--n-700);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ib-ico svg{width:14px;height:14px}
+.ib-ico.info{background:var(--info-50);color:var(--info-700)}
+.ib-ico.succ{background:var(--succ-50);color:var(--succ-700)}
+.ib-title{font-size:13.5px;font-weight:500;color:var(--n-950)}
+.ib-aux{margin-left:auto;font-family:var(--ff-mono);font-size:11.5px;color:var(--n-500)}
+.cli-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.cli-grid .full{grid-column:1/-1}
+.cli-grid .lk{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-300);margin-bottom:2px;font-weight:500}
+.cli-grid .vl{font-size:13px;color:var(--n-950);font-weight:500}
+.cli-grid .vl.mono{font-family:var(--ff-mono)}
+.vinc-link-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px}
+.vinc-link{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;background:var(--n-0);border:1px solid var(--n-150);border-radius:8px;cursor:pointer}
+.vinc-link:hover{border-color:var(--p-300)}
+.vinc-link .vlk{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-300);font-weight:500}
+.vinc-link .vpill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:6px;font-family:var(--ff-mono);font-size:12px;font-weight:500;border:1px solid}
+.vinc-link.cot .vpill{background:var(--p-50);color:var(--p-700);border-color:var(--p-200)}
+.vinc-link.ot .vpill{background:var(--info-50);color:var(--info-700);border-color:var(--info-200)}
+.vinc-link.v .vpill{background:var(--succ-50);color:var(--succ-700);border-color:var(--succ-200)}
+.vinc-link .vst{font-size:10.5px;color:var(--n-500)}
+.timeline{display:flex;flex-direction:column;padding-left:6px}
+.tl-row{display:grid;grid-template-columns:14px 1fr auto;gap:12px;padding:8px 0;position:relative;align-items:flex-start}
+.tl-row:not(:last-child)::before{content:"";position:absolute;left:6px;top:18px;bottom:-4px;width:1px;background:var(--n-150)}
+.tl-dot{width:13px;height:13px;border-radius:999px;border:2.5px solid var(--n-0);box-shadow:0 0 0 1px var(--n-150);background:var(--n-300);margin-top:3px}
+.tl-dot.info{background:var(--info-500)}.tl-dot.succ{background:var(--succ-500)}.tl-dot.neut{background:var(--n-300)}
+.tl-act{font-size:13px;font-weight:500;color:var(--n-950)}
+.tl-meta{font-family:var(--ff-mono);font-size:11px;color:var(--n-500);margin-top:1px}
+.tl-time{font-family:var(--ff-mono);font-size:11px;color:var(--n-500);text-align:right}
+
+/* PDF preview */
+.rec-wrap{background:var(--n-0);border:1px solid var(--n-150);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;position:sticky;top:80px}
+.rec-head{padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--n-150)}
+.rec-eyebrow{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-300)}
+.rec-title{font-size:13px;font-weight:500;color:var(--n-950);margin-top:2px}
+.rec-stage{background:var(--n-50);padding:24px;display:flex;justify-content:center;overflow:auto}
+.rec{width:520px;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.08);padding:34px 30px;color:#222;font-family:var(--ff-sans);font-size:10px;line-height:1.5;border-radius:2px}
+.rec-h{display:grid;grid-template-columns:1fr 1fr;align-items:flex-start;gap:18px;padding-bottom:14px;border-bottom:1px solid #DADCE3;margin-bottom:14px}
+.rec-h .lo-sq{width:38px;height:38px;background:#0E1018;color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--ff-mono);font-size:11px;font-weight:700;border-radius:4px;margin-bottom:5px}
+.rec-h .lo-tag{font-family:var(--ff-mono);font-size:7px;letter-spacing:.1em;color:#5C6070;text-transform:uppercase}
+.rec-co{text-align:right;font-size:8.5px;color:#383C4A;font-family:var(--ff-mono);line-height:1.45}
+.rec-co b{font-family:var(--ff-sans);font-size:10px;font-weight:600;color:#181A24;display:block;margin-bottom:1px}
+.rec-title-row{text-align:center;padding:12px 0;border-bottom:1px solid #DADCE3;margin-bottom:14px}
+.rec-tm{font-size:18px;font-weight:600;letter-spacing:.06em;color:#0E1018}
+.rec-tn{font-family:var(--ff-mono);font-size:13px;font-weight:500;color:#383C4A;margin-top:4px}
+.rec-tt{display:inline-block;margin-top:6px;padding:2px 8px;border-radius:999px;background:#E8F7EE;color:#176B38;font-family:var(--ff-mono);font-size:8px;letter-spacing:.08em;border:1px solid #9FDDB5;font-weight:600}
+.rec-cli-row{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;padding-bottom:12px;border-bottom:1px solid #DADCE3;margin-bottom:12px}
+.rec-eb{font-family:var(--ff-mono);font-size:7.5px;letter-spacing:.1em;color:#7E8290;text-transform:uppercase;font-weight:600;margin-bottom:3px}
+.rec-cn{font-size:10.5px;font-weight:500;color:#0E1018}
+.rec-ml{font-family:var(--ff-mono);font-size:9px;color:#383C4A;margin-top:2px}
+.rec-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px}
+.rec-mv{font-family:var(--ff-mono);font-size:9.5px;color:#0E1018;font-weight:500}
+.rec-tbl{width:100%;border-collapse:collapse;margin-bottom:12px}
+.rec-tbl thead th{background:#F5F6F8;padding:5px 6px;font-family:var(--ff-mono);font-size:7.5px;letter-spacing:.06em;text-transform:uppercase;color:#383C4A;font-weight:600;text-align:left;border-bottom:1px solid #C7CAD3}
+.rec-tbl thead th.r{text-align:right}
+.rec-tbl tbody td{padding:6px 6px;font-size:9px;color:#181A24;border-bottom:.5px solid #DADCE3}
+.rec-tbl tbody td.mono{font-family:var(--ff-mono)}
+.rec-tbl tbody td.r{text-align:right;font-family:var(--ff-mono);font-weight:500}
+.rec-totals{display:flex;justify-content:flex-end;margin-bottom:14px}
+.rec-tt-tbl{width:200px;font-size:9px}
+.rec-tt-tbl tr td{padding:2px 0}
+.rec-tt-tbl tr td:first-child{color:#383C4A}
+.rec-tt-tbl tr td:last-child{font-family:var(--ff-mono);text-align:right;color:#0E1018}
+.rec-tt-tbl tr.tot{border-top:1px solid #383C4A}
+.rec-tt-tbl tr.tot td{padding-top:6px;font-size:10.5px;font-weight:600}
+.rec-tt-tbl tr.tot td:last-child{font-size:12px;font-weight:700}
+.rec-pay{padding:8px 10px;background:#F5F6F8;border-radius:4px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:9px}
+.rec-pay-l{color:#383C4A;font-family:var(--ff-mono);text-transform:uppercase;letter-spacing:.08em;font-size:7.5px;font-weight:600}
+.rec-pay-r{font-family:var(--ff-mono);font-weight:500;color:#0E1018}
+.rec-footer{margin-top:12px;padding-top:10px;border-top:1px solid #DADCE3;font-size:7.5px;color:#5C6070;line-height:1.5}
+.rec-stamp{font-family:var(--ff-mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:#7E8290;text-align:center;margin-top:8px;font-weight:600}
+
+/* MOBILE */
+.mob-shell{width:390px;min-height:780px;background:var(--n-25);display:flex;flex-direction:column;position:relative}
+.m-status{height:38px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-family:var(--ff-mono);font-size:12.5px;font-weight:500;color:var(--n-950);background:var(--n-0)}
+.m-top{padding:12px 18px;background:var(--n-0);border-bottom:1px solid var(--n-100);display:flex;flex-direction:column;gap:8px}
+.m-title{font-size:20px;font-weight:600;color:var(--n-950);letter-spacing:-.01em}
+.m-sub{font-size:12px;color:var(--n-500)}
+.m-sub b{font-family:var(--ff-mono);font-weight:500;color:var(--n-700)}
+.m-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.m-tabs::-webkit-scrollbar{display:none}
+.m-tab-pill{flex-shrink:0;padding:5px 11px;border-radius:999px;font-size:12px;background:var(--n-100);color:var(--n-700);font-weight:500;cursor:pointer}
+.m-tab-pill.active{background:var(--n-900);color:var(--n-0)}
+.m-list{flex:1;padding:14px;display:flex;flex-direction:column;gap:10px;padding-bottom:120px;overflow-y:auto}
+.m-card{background:var(--n-0);border:1px solid var(--n-100);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.m-card.cycle{border-color:var(--p-200);background:linear-gradient(180deg,var(--p-50),var(--n-0))}
+.m-card-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.m-card-num{font-family:var(--ff-mono);font-size:12.5px;font-weight:500;color:var(--n-950)}
+.m-card-cli{font-size:14.5px;font-weight:500;color:var(--n-950);line-height:1.25}
+.m-card-prod{font-size:12px;color:var(--n-500);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.m-card-foot{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px dashed var(--n-100);margin-top:4px}
+.m-card-meth{font-size:11.5px;color:var(--n-500)}
+.m-card-tot{font-family:var(--ff-mono);font-size:14px;font-weight:500;color:var(--n-950)}
+.m-fab{position:absolute;right:18px;bottom:88px;width:56px;height:56px;border-radius:999px;background:var(--p-600);color:#fff;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(45,60,229,.4)}
+.m-fab svg{width:24px;height:24px}
+.m-bot{position:absolute;left:0;right:0;bottom:0;height:72px;background:var(--n-0);border-top:1px solid var(--n-100);display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:8px}
+.m-bot-t{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--n-400);font-size:10.5px;padding-top:8px}
+.m-bot-t svg{width:20px;height:20px}
+.m-bot-t.active{color:var(--p-600)}
+
+/* MODAL */
+.modal-stage{background:rgba(14,16,24,.5);padding:32px;display:flex;align-items:center;justify-content:center;min-height:560px}
+.modal{background:var(--n-0);border-radius:14px;width:520px;border:1px solid var(--n-100);box-shadow:0 24px 60px rgba(0,0,0,.3);overflow:hidden}
+.modal.wide{width:600px}
+.modal-head{padding:18px 22px 14px;display:flex;gap:14px;align-items:flex-start;border-bottom:1px solid var(--n-100)}
+.modal-ico{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.modal-ico.dang{background:var(--dang-50);color:var(--dang-600)}
+.modal-ico.info{background:var(--info-50);color:var(--info-600)}
+.modal-ico svg{width:20px;height:20px}
+.modal-title{font-size:16px;font-weight:500;color:var(--n-950);margin:0}
+.modal-sub{font-size:12.5px;color:var(--n-500);margin-top:4px;line-height:1.5}
+.modal-body{padding:16px 22px;display:flex;flex-direction:column;gap:12px}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--n-100);background:var(--n-25);display:flex;justify-content:flex-end;gap:8px}
+.modal-note{background:var(--info-50);border-radius:8px;padding:10px 12px;font-size:11.5px;color:var(--info-700);line-height:1.5;display:flex;gap:8px;border:1px solid var(--info-100)}
+.modal-note svg{width:13px;height:13px;flex-shrink:0;margin-top:2px}
+
+/* Consolidación tabla */
+.consolid{background:var(--n-50);border-radius:8px;overflow:hidden;border:1px solid var(--n-100)}
+.consolid table{width:100%;border-collapse:collapse}
+.consolid th{background:transparent;font-family:var(--ff-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);padding:8px 12px;text-align:left;font-weight:500}
+.consolid td{padding:8px 12px;border-top:1px solid var(--n-100);font-size:12px;color:var(--n-700)}
+.consolid td.r{text-align:right;font-family:var(--ff-mono);font-weight:500;color:var(--n-950)}
+.consolid .new-row td{background:var(--p-50);color:var(--p-700);font-weight:500}
+.consolid .new-row td.r{color:var(--p-700)}
+.consolid .total-row td{background:var(--succ-50);font-weight:600;color:var(--succ-700);border-top:2px solid var(--succ-200)}
+.consolid .total-row td.r{color:var(--succ-700);font-size:14px}
+
+/* CHECKLIST */
+.ck-card{background:var(--n-0);border:1px solid var(--n-100);border-radius:10px;padding:24px 28px}
+.ck-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 32px}
+.ck-item{display:flex;gap:10px;align-items:flex-start;padding:6px 0;font-size:13px;color:var(--n-700);line-height:1.5}
+.ck-dot{width:18px;height:18px;border-radius:5px;background:var(--succ-600);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.ck-dot svg{width:11px;height:11px}
+.ck-item b{color:var(--n-950);font-weight:500}
+
+@media (prefers-reduced-motion:no-preference){
+  .frame{animation:rise .5s ease both}
+  .frame:nth-child(2){animation-delay:.05s}
+  .frame:nth-child(3){animation-delay:.1s}
+}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<header class="doc-head">
+  <div class="doc-eyebrow">Operaciones · Recibos · Módulo F14</div>
+  <h1 class="doc-title">Recibos · Lista + Nuevo (cotización + manual) + Detalle Rec-1284</h1>
+  <p class="doc-sub">Fase 5.2. Cuatro pantallas en un archivo. Rec-1284 cierra el ciclo Cot-1042 → V-2847 → Rec-1284 → OT-2845. Sidebar canónica /ops con Recibos activo. Distinción clara entre abonos (viven en OT) y recibos (documento de pago consolidado).</p>
+</header>
+
+<div class="frames">
+
+<!-- ============ VISTA 1 · DESKTOP LIGHT · LISTA ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">1</span>Desktop · 1280 px · light · LISTA<span class="lbl-mode">Rec-1284 destacada como cierre del ciclo · doble vinculación Cot-1042 + V-2847</span></div>
+  <div class="frame"><div class="frame-inner"><div class="shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+      <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+        <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/><path d="M3 9l9 6 9-6"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/></svg></span>Productos</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9M19 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h5"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+          <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0118 0M3 12l3-3"/></svg></span>Devoluciones</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Taller</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.8-3.8a6 6 0 01-7.94 7.94l-6.91 6.91a2.121 2.121 0 01-3-3l6.91-6.91A6 6 0 0114.7 6.3z"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+      </nav>
+      <div class="sb-foot"><div class="sb-avatar">ML</div><div class="sb-user"><span class="sb-user-name">María L.</span><span class="sb-user-role">Vendedor · Cali</span></div></div>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span style="color:var(--n-700)">RECIBOS</span></div>
+        <div class="tb-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><span>Buscar global...</span><span class="kbd">⌘K</span></div>
+        <div class="tb-spacer"></div>
+        <div class="tb-sede"><span class="dot"></span>Cali · Bod. principal</div>
+        <button class="tb-icon-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg></button>
+        <div class="tb-avatar">ML</div>
+      </header>
+      <div class="page">
+        <div class="ph">
+          <div class="ph-l"><h1 class="ph-title">Recibos</h1><div class="ph-sub"><b>284</b> este mes · <b>$124.6M</b> cobrado · <b>14</b> emitidos hoy</div></div>
+          <div class="ph-r">
+            <div class="tabs">
+              <div class="tab active">Todos</div>
+              <div class="tab">Por cotización</div>
+              <div class="tab">Manual</div>
+              <div class="tab">Vinculados a OT</div>
+            </div>
+            <button class="btn primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>Nuevo recibo</button>
+          </div>
+        </div>
+        <div class="searchbar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><input placeholder="Buscar recibo por número, cliente o cotización..."><span class="kbd">⌘K</span></div>
+
+        <div class="card">
+          <table>
+            <thead><tr>
+              <th style="width:90px">#</th><th style="width:110px">Fecha</th><th style="width:200px">Cliente</th><th>Concepto</th>
+              <th style="width:130px">Tipo</th><th style="width:160px">Origen</th>
+              <th class="r" style="width:110px">Total</th><th style="width:120px">Emitido por</th><th style="width:90px">Estado</th>
+            </tr></thead>
+            <tbody>
+              <tr class="row-cycle">
+                <td><span class="row-num">Rec-1284</span></td>
+                <td><span class="row-date">Hoy 14:25</span></td>
+                <td><div class="row-cli">Industrial XYZ S.A.S.<div class="sub">+57 318 442 5512</div></div></td>
+                <td><div class="row-prod">Pago V-2847 · 4 productos</div></td>
+                <td><span class="pill info"><span class="dot"></span>Por cotización</span></td>
+                <td><span class="link-pill cot">Cot-1042</span><span class="link-pill v">V-2847</span></td>
+                <td class="row-total">$ 1.840.000</td>
+                <td><div class="row-vendor"><span class="av av-ml">ML</span>María L.</div></td>
+                <td><span class="pill succ"><span class="dot"></span>Activo</span></td>
+              </tr>
+              <tr>
+                <td><span class="row-num">Rec-1283</span></td>
+                <td><span class="row-date">Hoy 11:18</span></td>
+                <td><div class="row-cli">Constructora del Valle<div class="sub">+57 312 778 2210</div></div></td>
+                <td><div class="row-prod">Pago V-2846 · Bandas industriales</div></td>
+                <td><span class="pill info"><span class="dot"></span>Por cotización</span></td>
+                <td><span class="link-pill v">V-2846</span></td>
+                <td class="row-total">$ 450.300</td>
+                <td><div class="row-vendor"><span class="av av-am">AM</span>Andrés M.</div></td>
+                <td><span class="pill succ"><span class="dot"></span>Activo</span></td>
+              </tr>
+              <tr>
+                <td><span class="row-num">Rec-1282</span></td>
+                <td><span class="row-date">Ayer 16:42</span></td>
+                <td><div class="row-cli">Refinadora Pacífico<div class="sub">+57 313 718 0044</div></div></td>
+                <td><div class="row-prod">Pago V-2845 · Válvula de seguridad</div></td>
+                <td><span class="pill info"><span class="dot"></span>Por cotización</span></td>
+                <td><span class="link-pill v">V-2845</span></td>
+                <td class="row-total">$ 356.000</td>
+                <td><div class="row-vendor"><span class="av av-ml">ML</span>María L.</div></td>
+                <td><span class="pill succ"><span class="dot"></span>Activo</span></td>
+              </tr>
+              <tr>
+                <td><span class="row-num">Rec-1281</span></td>
+                <td><span class="row-date">Ayer 14:22</span></td>
+                <td><div class="row-cli">Petrocali S.A.S.<div class="sub">+57 315 778 8801</div></div></td>
+                <td><div class="row-prod">Abono parcial OT-2843 · mantenimiento mayor</div></td>
+                <td><span class="pill prog"><span class="dot"></span>Vinculado a OT</span></td>
+                <td><span class="link-pill ot">OT-2843</span></td>
+                <td class="row-total">$ 620.500</td>
+                <td><div class="row-vendor"><span class="av av-cr">CR</span>Carlos R.</div></td>
+                <td><span class="pill succ"><span class="dot"></span>Activo</span></td>
+              </tr>
+              <tr>
+                <td><span class="row-num">Rec-1280</span></td>
+                <td><span class="row-date">17 abr</span></td>
+                <td><div class="row-cli">Embotelladora Norte<div class="sub">+57 316 226 5510</div></div></td>
+                <td><div class="row-prod">Pago V-2843 · Lubricantes 50L</div></td>
+                <td><span class="pill info"><span class="dot"></span>Por cotización</span></td>
+                <td><span class="link-pill v">V-2843</span></td>
+                <td class="row-total">$ 782.000</td>
+                <td><div class="row-vendor"><span class="av av-am">AM</span>Andrés M.</div></td>
+                <td><span class="pill succ"><span class="dot"></span>Activo</span></td>
+              </tr>
+              <tr>
+                <td><span class="row-num">Rec-1279</span></td>
+                <td><span class="row-date">16 abr</span></td>
+                <td><div class="row-cli">Compañía Lácteos Cali<div class="sub">+57 314 502 ··</div></div></td>
+                <td><div class="row-prod">Adelanto compra · sin venta asociada</div></td>
+                <td><span class="pill neut"><span class="dot"></span>Manual</span></td>
+                <td><span class="no-link">—</span></td>
+                <td class="row-total">$ 445.300</td>
+                <td><div class="row-vendor"><span class="av av-ml">ML</span>María L.</div></td>
+                <td><span class="pill succ"><span class="dot"></span>Activo</span></td>
+              </tr>
+              <tr>
+                <td><span class="row-num">Rec-1278</span></td>
+                <td><span class="row-date">15 abr</span></td>
+                <td><div class="row-cli">Tecnologías del Sur<div class="sub">+57 311 446 0078</div></div></td>
+                <td><div class="row-prod">Pago V-2841 · Compresor portátil</div></td>
+                <td><span class="pill info"><span class="dot"></span>Por cotización</span></td>
+                <td><span class="link-pill v">V-2841</span></td>
+                <td class="row-total" style="color:var(--n-400);text-decoration:line-through">$ 3.450.000</td>
+                <td><div class="row-vendor"><span class="av av-cr">CR</span>Carlos R.</div></td>
+                <td><span class="pill dang"><span class="dot"></span>Anulado</span></td>
+              </tr>
+              <tr>
+                <td><span class="row-num">Rec-1277</span></td>
+                <td><span class="row-date">14 abr</span></td>
+                <td><div class="row-cli">Manufacturas Andes<div class="sub">+57 318 558 1100</div></div></td>
+                <td><div class="row-prod">Anticipo OT-2839 · plásticos del Sur</div></td>
+                <td><span class="pill prog"><span class="dot"></span>Vinculado a OT</span></td>
+                <td><span class="link-pill ot">OT-2839</span></td>
+                <td class="row-total">$ 1.215.000</td>
+                <td><div class="row-vendor"><span class="av av-am">AM</span>Andrés M.</div></td>
+                <td><span class="pill succ"><span class="dot"></span>Activo</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="tr-foot"><span>Mostrando <b style="font-family:var(--ff-mono);color:var(--n-950)">8</b> de <b style="font-family:var(--ff-mono);color:var(--n-950)">284</b> recibos del mes</span><span style="font-family:var(--ff-mono)">Consecutivo activo · Rec-1284</span></div>
+        </div>
+      </div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- ============ VISTA 2 · NUEVO DESDE COTIZACIÓN ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">2</span>Desktop · 1280 px · light · NUEVO RECIBO DESDE COTIZACIÓN<span class="lbl-mode">sheet 520 px · Cot-1042 seleccionada · banner consolidación abonos · OT sugerida automáticamente</span></div>
+  <div class="frame"><div class="frame-inner"><div class="shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+      <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+        <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/></svg></span>Productos</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+          <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0118 0"/></svg></span>Devoluciones</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Taller</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.8-3.8"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+      </nav>
+      <div class="sb-foot"><div class="sb-avatar">ML</div><div class="sb-user"><span class="sb-user-name">María L.</span><span class="sb-user-role">Vendedor · Cali</span></div></div>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span>RECIBOS</span><span class="sep">›</span><span style="color:var(--n-700)">NUEVO</span></div>
+        <div class="tb-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/></svg><span>Buscar global...</span><span class="kbd">⌘K</span></div>
+        <div class="tb-spacer"></div>
+        <div class="tb-sede"><span class="dot"></span>Cali</div>
+        <div class="tb-avatar">ML</div>
+      </header>
+      <div class="sheet-wrap">
+        <div style="padding:22px 28px;display:flex;flex-direction:column;gap:14px;opacity:.5;filter:blur(.5px)">
+          <div class="ph"><div class="ph-l"><h1 class="ph-title">Recibos</h1><div class="ph-sub"><b>284</b> este mes · <b>$124.6M</b></div></div></div>
+          <div class="card" style="min-height:280px"></div>
+        </div>
+        <div class="sheet-bg"></div>
+        <aside class="sheet">
+          <header class="sheet-h">
+            <div class="l"><div class="eb">Nuevo · Paso 1 de 1</div><h2>Recibo desde cotización</h2></div>
+            <button class="sheet-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </header>
+          <div class="sheet-body">
+            <div class="field">
+              <label class="flbl">Cotización aprobada<span class="req">*</span></label>
+              <div class="cot-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><input placeholder="Buscar por número o cliente..." value="Cot-1042"></div>
+            </div>
+            <div class="cot-results">
+              <div class="cot-result sel">
+                <span class="cnum">Cot-1042</span>
+                <div style="flex:1;min-width:0"><div class="ccli">Industrial XYZ S.A.S.</div><div class="cmeta">Aprobada · 19 abr 2026</div></div>
+                <div class="ctot">$ 1.840.000</div>
+                <span class="csel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Seleccionada</span>
+              </div>
+              <div class="cot-result">
+                <span class="cnum">Cot-1038</span>
+                <div style="flex:1;min-width:0"><div class="ccli">Compañía Lácteos Cali</div><div class="cmeta">Aprobada · 16 abr 2026</div></div>
+                <div class="ctot">$ 445.300</div>
+                <button class="cbtn">Seleccionar</button>
+              </div>
+              <div class="cot-result">
+                <span class="cnum">Cot-1035</span>
+                <div style="flex:1;min-width:0"><div class="ccli">Refinadora Pacífico</div><div class="cmeta">Aprobada · 12 abr 2026</div></div>
+                <div class="ctot">$ 356.000</div>
+                <button class="cbtn">Seleccionar</button>
+              </div>
+            </div>
+
+            <div class="banner">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              <div class="b"><b>OT-2845</b> tiene <b>1 abono previo</b> registrado por <b>$500.000</b>. Este recibo se consolida con los abonos previos. <strong style="color:var(--info-700)">Saldo después del recibo: $0.</strong><br><button class="banner-link" style="margin-top:4px">Ver consolidación detallada</button></div>
+            </div>
+
+            <div class="divider-eb">Datos pre-cargados de Cot-1042</div>
+            <div class="form-grid">
+              <div class="field"><label class="flbl">Cliente<span class="lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Bloqueado</span></label><input class="finput sans locked" value="Industrial XYZ S.A.S." readonly></div>
+              <div class="field-row">
+                <div class="field"><label class="flbl">Monto<span class="lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/></svg>Bloqueado</span></label><div class="fprefix" style="height:40px"><span class="pre" style="font-size:13px">$</span><input value="1.840.000" readonly style="height:38px;font-size:14px;color:var(--n-700);background:var(--n-50)"></div></div>
+                <div class="field"><label class="flbl">Consecutivo<span class="auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Auto BD</span></label><input class="finput locked" value="Rec-1284" readonly></div>
+              </div>
+              <div class="field"><label class="flbl">Concepto<span class="req">*</span></label><textarea class="ftextarea">Pago Cot-1042 · 4 productos (Filtro GA-22, Aceite ISO, Manguera 1/2", Mantenimiento mayor)</textarea></div>
+              <div class="field-row">
+                <div class="field"><label class="flbl">Método de pago<span class="req">*</span></label><select class="fselect"><option>Transferencia</option><option>Efectivo</option><option>Tarjeta</option><option>Mixto</option></select></div>
+                <div class="field"><label class="flbl">Referencia</label><input class="finput" placeholder="Voucher / Transf." value="9384712"></div>
+              </div>
+              <div class="field"><label class="flbl">Vincular a OT<span class="suggest-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15 8.5 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 9 8.5 12 2"/></svg>Sugerida automáticamente</span></label><select class="fselect"><option>OT-2845 · Mantenimiento Atlas Copco GA-22</option><option>Sin vincular</option></select></div>
+            </div>
+          </div>
+          <footer class="sheet-foot">
+            <button class="btn ghost">Cancelar</button>
+            <button class="btn primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Generar recibo</button>
+          </footer>
+        </aside>
+      </div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- ============ VISTA 3 · NUEVO MANUAL ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">3</span>Desktop · 1280 px · light · NUEVO RECIBO MANUAL<span class="lbl-mode">sheet 520 px · form vacío sin pre-llenado · consecutivo Rec-1285 auto</span></div>
+  <div class="frame"><div class="frame-inner"><div class="shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+      <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+        <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/></svg></span>Productos</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+          <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0118 0"/></svg></span>Devoluciones</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Taller</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.8-3.8"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+      </nav>
+      <div class="sb-foot"><div class="sb-avatar">ML</div><div class="sb-user"><span class="sb-user-name">María L.</span><span class="sb-user-role">Vendedor · Cali</span></div></div>
+    </aside>
+    <div class="main">
+      <header class="topbar"><div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span>RECIBOS</span><span class="sep">›</span><span style="color:var(--n-700)">MANUAL</span></div><div class="tb-spacer"></div><div class="tb-sede"><span class="dot"></span>Cali</div><div class="tb-avatar">ML</div></header>
+      <div class="sheet-wrap">
+        <div style="padding:22px 28px;opacity:.5;filter:blur(.5px)"><div class="card" style="min-height:380px"></div></div>
+        <div class="sheet-bg"></div>
+        <aside class="sheet">
+          <header class="sheet-h">
+            <div class="l"><div class="eb">Nuevo · Manual</div><h2>Recibo manual</h2></div>
+            <button class="sheet-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </header>
+          <div class="sheet-body">
+            <div class="banner" style="background:var(--n-50);border-color:var(--n-100);color:var(--n-700)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--n-500)"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              <div class="b" style="color:var(--n-700)">Recibo manual: para anticipos, pagos sin venta asociada o ajustes contables. Si el pago corresponde a una cotización o venta existente, usa <b style="color:var(--p-700);font-family:var(--ff-mono)">"Desde cotización"</b> para reciclar datos.</div>
+            </div>
+            <div class="form-grid">
+              <div class="field"><label class="flbl">Consecutivo<span class="auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Auto BD</span></label><input class="finput locked" value="Rec-1285" readonly></div>
+              <div class="field"><label class="flbl">Cliente<span class="req">*</span></label><input class="finput sans" placeholder="Razón social o nombre..."></div>
+              <div class="field-row">
+                <div class="field"><label class="flbl">Teléfono<span class="req">*</span></label><input class="finput" placeholder="+57 ___ ___ ____"></div>
+                <div class="field"><label class="flbl">NIT</label><input class="finput" placeholder="900.123.456-7"></div>
+              </div>
+              <div class="field"><label class="flbl">Concepto<span class="req">*</span></label><textarea class="ftextarea" placeholder="Describe el concepto del pago..."></textarea></div>
+              <div class="field"><label class="flbl">Monto<span class="req">*</span></label><div class="fprefix"><span class="pre">$</span><input placeholder="0"></div></div>
+              <div class="field-row">
+                <div class="field"><label class="flbl">Método de pago<span class="req">*</span></label><select class="fselect"><option>Selecciona…</option><option>Efectivo</option><option>Transferencia</option><option>Tarjeta</option><option>Mixto</option></select></div>
+                <div class="field"><label class="flbl">Referencia</label><input class="finput" placeholder="Voucher / Transf."></div>
+              </div>
+              <div class="divider-eb">Vinculaciones opcionales</div>
+              <div class="field"><label class="flbl">Vincular a OT</label><select class="fselect"><option>Sin vincular</option><option>OT-2845 · Industrial XYZ</option><option>OT-2843 · Petrocali</option></select></div>
+              <div class="field"><label class="flbl">Vincular a cotización</label><select class="fselect"><option>Sin vincular</option><option>Cot-1042 · Industrial XYZ</option></select></div>
+            </div>
+          </div>
+          <footer class="sheet-foot">
+            <button class="btn ghost">Cancelar</button>
+            <button class="btn primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Generar recibo</button>
+          </footer>
+        </aside>
+      </div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- ============ VISTA 4 · DETALLE Rec-1284 ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">4</span>Desktop · 1280 px · light · DETALLE Rec-1284<span class="lbl-mode">banner cotización origen · 3 vinculaciones cruzadas · preview PDF · 4 acciones</span></div>
+  <div class="frame"><div class="frame-inner"><div class="shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+      <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+        <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/></svg></span>Productos</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+          <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0118 0"/></svg></span>Devoluciones</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Taller</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.8-3.8"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+      </nav>
+      <div class="sb-foot"><div class="sb-avatar">ML</div><div class="sb-user"><span class="sb-user-name">María L.</span><span class="sb-user-role">Vendedor · Cali</span></div></div>
+    </aside>
+    <div class="main">
+      <header class="topbar"><div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span>RECIBOS</span><span class="sep">›</span><span style="color:var(--n-700)">REC-1284</span></div><div class="tb-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/></svg><span>Buscar global...</span><span class="kbd">⌘K</span></div><div class="tb-spacer"></div><div class="tb-sede"><span class="dot"></span>Cali</div><div class="tb-avatar">ML</div></header>
+      <div class="page">
+        <button class="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M14 8l-4 4 4 4"/><path d="M16 12H8"/></svg>Volver a Recibos</button>
+
+        <div class="banner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div class="b">Este recibo fue generado desde <b>Cot-1042</b>. Datos del cliente y concepto pre-cargados de la cotización. <button class="banner-link" style="margin:0 0 0 4px;text-decoration:underline">Ver Cot-1042</button></div>
+        </div>
+
+        <div class="det-head">
+          <div class="det-l">
+            <div class="det-eyebrow">Recibo de pago<span class="consec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Consecutivo auto BD</span></div>
+            <div class="det-num">Rec-1284</div>
+            <div class="det-cli">Industrial XYZ S.A.S.</div>
+            <div class="det-sub">Emitido el <b style="color:var(--n-700);font-family:var(--ff-mono);font-weight:500">15 may 2026 · 14:25</b> · Por María L.</div>
+          </div>
+          <div class="det-r">
+            <span class="pill succ" style="font-size:13px;padding:6px 14px"><span class="dot" style="width:7px;height:7px"></span>Activo</span>
+            <div class="det-tot-wrap"><div class="det-tot-lbl">Total</div><div class="det-tot">$ 1.840.000</div></div>
+          </div>
+        </div>
+
+        <div class="actions-row">
+          <button class="btn dang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Anular recibo</button>
+          <button class="btn out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Descargar PDF</button>
+          <button class="btn out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></svg>Compartir WhatsApp</button>
+          <button class="btn out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Reimprimir</button>
+        </div>
+
+        <div class="det-layout">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="iblock">
+              <div class="ib-head"><div class="ib-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div><div class="ib-title">Cliente</div></div>
+              <div class="cli-grid">
+                <div class="full"><div class="lk">Razón social</div><div class="vl">Industrial XYZ S.A.S.</div></div>
+                <div><div class="lk">NIT</div><div class="vl mono">800.123.456-7</div></div>
+                <div><div class="lk">Tel</div><div class="vl mono">+57 318 442 5512</div></div>
+                <div><div class="lk">Contacto</div><div class="vl">Sandra Pérez</div></div>
+                <div><div class="lk">Cargo</div><div class="vl" style="font-size:12px;color:var(--n-500);font-weight:400">Jefe Mantenimiento</div></div>
+              </div>
+            </div>
+
+            <div class="iblock">
+              <div class="ib-head"><div class="ib-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div><div class="ib-title">Concepto y monto</div></div>
+              <div class="cli-grid">
+                <div class="full"><div class="lk">Concepto</div><div class="vl" style="font-weight:400;font-size:13px;line-height:1.5">Pago Cot-1042 · 4 productos (Filtro de aire GA-22, Aceite ISO VG-46, Manguera descarga 1/2", Mantenimiento mayor)</div></div>
+                <div><div class="lk">Total</div><div class="vl mono" style="font-size:18px">$ 1.840.000</div></div>
+                <div><div class="lk">Tipo</div><div class="vl"><span class="pill info" style="font-size:11px"><span class="dot"></span>Por cotización</span></div></div>
+              </div>
+            </div>
+
+            <div class="iblock">
+              <div class="ib-head"><div class="ib-ico succ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div><div class="ib-title">Pago</div><div class="ib-aux">Transferencia</div></div>
+              <div class="cli-grid">
+                <div><div class="lk">Método</div><div class="vl"><span class="pill info" style="font-size:11px"><span class="dot"></span>Transferencia</span></div></div>
+                <div><div class="lk">Referencia</div><div class="vl mono">9384712</div></div>
+                <div class="full"><div class="lk">Cuenta destino</div><div class="vl mono" style="font-weight:400;font-size:12.5px;color:var(--n-700)">Bancolombia · Cta. Ahorros 123-4567890-1</div></div>
+              </div>
+            </div>
+
+            <div class="iblock info-tint">
+              <div class="ib-head"><div class="ib-ico info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></div><div class="ib-title">Vinculaciones del ciclo comercial</div></div>
+              <div class="vinc-link-grid">
+                <div class="vinc-link cot"><span class="vlk">Cotización origen</span><span class="vpill">Cot-1042</span><span class="vst">Aprobada · 19 abr</span></div>
+                <div class="vinc-link v"><span class="vlk">Venta</span><span class="vpill">V-2847</span><span class="vst">Completada</span></div>
+                <div class="vinc-link ot"><span class="vlk">OT vinculada</span><span class="vpill">OT-2845</span><span class="vst">En proceso · saldo $0</span></div>
+              </div>
+              <div style="margin-top:10px;font-size:11.5px;color:var(--info-700);line-height:1.5">El abono de $500.000 previamente registrado en <b style="font-family:var(--ff-mono);font-weight:500">OT-2845</b> queda consolidado dentro de este recibo. Saldo después del recibo: <b style="font-family:var(--ff-mono);font-weight:500">$0</b>.</div>
+            </div>
+
+            <div class="iblock">
+              <div class="ib-head"><div class="ib-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="ib-title">Historial</div></div>
+              <div class="timeline">
+                <div class="tl-row"><span class="tl-dot info"></span><div><div class="tl-act">Recibo generado desde Cot-1042</div><div class="tl-meta">María L. · datos pre-cargados</div></div><span class="tl-time">15 may 14:23</span></div>
+                <div class="tl-row"><span class="tl-dot succ"></span><div><div class="tl-act">Consecutivo Rec-1284 asignado por BD</div><div class="tl-meta">Auto · sin saltos</div></div><span class="tl-time">15 may 14:24</span></div>
+                <div class="tl-row"><span class="tl-dot succ"></span><div><div class="tl-act">Abonos previos consolidados</div><div class="tl-meta">OT-2845 · $500.000 → $0 saldo</div></div><span class="tl-time">15 may 14:25</span></div>
+                <div class="tl-row"><span class="tl-dot succ"></span><div><div class="tl-act">Recibo activo · PDF generado</div><div class="tl-meta">Enviado a compras@industrialxyz.co</div></div><span class="tl-time">15 may 14:25</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rec-wrap">
+            <header class="rec-head"><div><div class="rec-eyebrow">Preview del PDF</div><div class="rec-title">Rec-1284 · Recibo de pago</div></div></header>
+            <div class="rec-stage">
+              <div class="rec">
+                <div class="rec-h">
+                  <div><div class="lo-sq">CHV</div><div class="lo-tag">Compresores del Valle</div></div>
+                  <div class="rec-co"><b>COMPRESORES DEL VALLE S.A.S.</b>NIT 900.456.789-2<div>Cra 5 #12-45, Cali</div>Tel +57 (2) 444 5566</div>
+                </div>
+                <div class="rec-title-row">
+                  <div class="rec-tm">RECIBO DE PAGO</div>
+                  <div class="rec-tn">Rec-1284</div>
+                  <span class="rec-tt">PAGO RECIBIDO</span>
+                </div>
+                <div class="rec-cli-row">
+                  <div>
+                    <div class="rec-eb">Cliente</div>
+                    <div class="rec-cn">Industrial XYZ S.A.S.</div>
+                    <div class="rec-ml">NIT 800.123.456-7</div>
+                    <div class="rec-ml" style="font-family:var(--ff-sans)">Calle 13 #62-50, Yumbo</div>
+                  </div>
+                  <div class="rec-meta">
+                    <div><div class="rec-eb">Fecha emisión</div><div class="rec-mv">15 MAY 2026</div></div>
+                    <div><div class="rec-eb">Cotización</div><div class="rec-mv">COT-1042</div></div>
+                    <div><div class="rec-eb">Venta</div><div class="rec-mv">V-2847</div></div>
+                    <div><div class="rec-eb">OT vinculada</div><div class="rec-mv">OT-2845</div></div>
+                  </div>
+                </div>
+                <table class="rec-tbl">
+                  <thead><tr><th>Concepto</th><th class="r" style="width:90px">Monto</th></tr></thead>
+                  <tbody>
+                    <tr><td>Pago Cot-1042 · 4 productos<br><span style="color:#7E8290;font-size:8px">Filtro GA-22, Aceite ISO, Manguera 1/2", Mantenimiento</span></td><td class="r">$1.840.000</td></tr>
+                  </tbody>
+                </table>
+                <div class="rec-totals">
+                  <table class="rec-tt-tbl">
+                    <tr><td>Abono previo OT-2845</td><td>$500.000</td></tr>
+                    <tr><td>Pago este recibo</td><td>$1.340.000</td></tr>
+                    <tr class="tot"><td>TOTAL CONSOLIDADO</td><td>$1.840.000</td></tr>
+                  </table>
+                </div>
+                <div class="rec-pay">
+                  <span class="rec-pay-l">Método de pago</span>
+                  <span class="rec-pay-r">Transferencia · Bancolombia · Ref. 9384712</span>
+                </div>
+                <div class="rec-footer">Este recibo certifica el pago consolidado por los conceptos detallados. Conserve para garantías y devoluciones. Documento emitido bajo Régimen común · Resolución DIAN N° 18764000023824. Recibido por María L., vendedor autorizado.</div>
+                <div class="rec-stamp">Rec-1284 · Cot-1042 · V-2847 · OT-2845 · 15 MAY 2026 14:25</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- ============ VISTA 5 · MOBILE LIGHT LISTA ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">5</span>Mobile · 390 px · light · LISTA<span class="lbl-mode">cards apiladas · FAB nuevo recibo · Rec-1284 destacada</span></div>
+  <div class="frame" style="display:flex;justify-content:center;background:var(--n-25);padding:32px 0">
+    <div class="mob-shell" style="border-radius:24px;overflow:hidden;box-shadow:0 8px 24px rgba(14,16,24,.18)">
+      <div class="m-status"><span>9:41</span><span style="font-family:var(--ff-mono);font-size:12px">87%</span></div>
+      <div class="m-top">
+        <div class="m-title">Recibos</div>
+        <div class="m-sub"><b>284</b> mes · <b>$124.6M</b> · <b>14</b> hoy</div>
+        <div class="m-tabs"><span class="m-tab-pill active">Todos</span><span class="m-tab-pill">Por cotización</span><span class="m-tab-pill">Manual</span><span class="m-tab-pill">Vinc. OT</span></div>
+      </div>
+      <div class="m-list">
+        <div class="m-card cycle"><div class="m-card-h"><span class="m-card-num">Rec-1284</span><span class="pill succ"><span class="dot"></span>Activo</span></div><div class="m-card-cli">Industrial XYZ S.A.S.</div><div class="m-card-prod">Pago V-2847 · 4 productos</div><div style="display:flex;gap:4px;margin-top:4px"><span class="link-pill cot" style="font-size:10px;padding:2px 7px">Cot-1042</span><span class="link-pill v" style="font-size:10px;padding:2px 7px">V-2847</span></div><div class="m-card-foot"><span class="m-card-meth">Hoy 14:25 · Transferencia</span><span class="m-card-tot">$ 1.840.000</span></div></div>
+        <div class="m-card"><div class="m-card-h"><span class="m-card-num">Rec-1283</span><span class="pill succ"><span class="dot"></span>Activo</span></div><div class="m-card-cli">Constructora del Valle</div><div class="m-card-prod">Pago V-2846 · Bandas</div><div class="m-card-foot"><span class="m-card-meth">Hoy 11:18 · Efectivo</span><span class="m-card-tot">$ 450.300</span></div></div>
+        <div class="m-card"><div class="m-card-h"><span class="m-card-num">Rec-1282</span><span class="pill succ"><span class="dot"></span>Activo</span></div><div class="m-card-cli">Refinadora Pacífico</div><div class="m-card-prod">Pago V-2845 · Válvula</div><div class="m-card-foot"><span class="m-card-meth">Ayer 16:42 · Mixto</span><span class="m-card-tot">$ 356.000</span></div></div>
+        <div class="m-card"><div class="m-card-h"><span class="m-card-num">Rec-1281</span><span class="pill prog"><span class="dot"></span>Vinc. OT</span></div><div class="m-card-cli">Petrocali S.A.S.</div><div class="m-card-prod">Abono parcial OT-2843</div><div class="m-card-foot"><span class="m-card-meth">Ayer 14:22 · Transf.</span><span class="m-card-tot">$ 620.500</span></div></div>
+        <div class="m-card"><div class="m-card-h"><span class="m-card-num">Rec-1280</span><span class="pill succ"><span class="dot"></span>Activo</span></div><div class="m-card-cli">Embotelladora Norte</div><div class="m-card-prod">Pago V-2843 · Lubricantes</div><div class="m-card-foot"><span class="m-card-meth">17 abr · Tarjeta</span><span class="m-card-tot">$ 782.000</span></div></div>
+        <div class="m-card"><div class="m-card-h"><span class="m-card-num">Rec-1279</span><span class="pill neut"><span class="dot"></span>Manual</span></div><div class="m-card-cli">Compañía Lácteos Cali</div><div class="m-card-prod">Adelanto compra</div><div class="m-card-foot"><span class="m-card-meth">16 abr · Transf.</span><span class="m-card-tot">$ 445.300</span></div></div>
+      </div>
+      <button class="m-fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button>
+      <nav class="m-bot">
+        <div class="m-bot-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>Inicio</div>
+        <div class="m-bot-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg>Ventas</div>
+        <div class="m-bot-t active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg>Recibos</div>
+        <div class="m-bot-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/></svg>Buscar</div>
+        <div class="m-bot-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VISTA 6 · DESKTOP DARK LISTA ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">6</span>Desktop · 1280 px · dark · LISTA<span class="lbl-mode">réplica con tokens dark</span></div>
+  <div class="frame"><div class="frame-inner dark"><div class="shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+      <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+        <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/></svg></span>Productos</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+          <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0118 0"/></svg></span>Devoluciones</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Taller</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.8-3.8"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+      </nav>
+      <div class="sb-foot"><div class="sb-avatar">ML</div><div class="sb-user"><span class="sb-user-name">María L.</span><span class="sb-user-role">Vendedor · Cali</span></div></div>
+    </aside>
+    <div class="main">
+      <header class="topbar"><div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span style="color:var(--n-700)">RECIBOS</span></div><div class="tb-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/></svg><span>Buscar global...</span><span class="kbd">⌘K</span></div><div class="tb-spacer"></div><div class="tb-sede"><span class="dot"></span>Cali</div><div class="tb-avatar">ML</div></header>
+      <div class="page">
+        <div class="ph"><div class="ph-l"><h1 class="ph-title">Recibos</h1><div class="ph-sub"><b>284</b> este mes · <b>$124.6M</b> cobrado · <b>14</b> emitidos hoy</div></div><div class="ph-r"><div class="tabs"><div class="tab active">Todos</div><div class="tab">Por cotización</div><div class="tab">Manual</div><div class="tab">Vinc. OT</div></div><button class="btn primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>Nuevo recibo</button></div></div>
+        <div class="searchbar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/></svg><input placeholder="Buscar recibo..."></div>
+        <div class="card">
+          <table>
+            <thead><tr><th style="width:90px">#</th><th style="width:110px">Fecha</th><th style="width:200px">Cliente</th><th>Concepto</th><th style="width:130px">Tipo</th><th style="width:160px">Origen</th><th class="r" style="width:110px">Total</th><th style="width:120px">Emitido por</th><th style="width:90px">Estado</th></tr></thead>
+            <tbody>
+              <tr class="row-cycle"><td><span class="row-num">Rec-1284</span></td><td><span class="row-date">Hoy 14:25</span></td><td><div class="row-cli">Industrial XYZ S.A.S.<div class="sub">+57 318 442 5512</div></div></td><td><div class="row-prod">Pago V-2847 · 4 productos</div></td><td><span class="pill info"><span class="dot"></span>Por cotización</span></td><td><span class="link-pill cot">Cot-1042</span><span class="link-pill v">V-2847</span></td><td class="row-total">$ 1.840.000</td><td><div class="row-vendor"><span class="av av-ml">ML</span>María L.</div></td><td><span class="pill succ"><span class="dot"></span>Activo</span></td></tr>
+              <tr><td><span class="row-num">Rec-1283</span></td><td><span class="row-date">Hoy 11:18</span></td><td><div class="row-cli">Constructora del Valle<div class="sub">+57 312 778 ··</div></div></td><td><div class="row-prod">Pago V-2846 · Bandas</div></td><td><span class="pill info"><span class="dot"></span>Por cotización</span></td><td><span class="link-pill v">V-2846</span></td><td class="row-total">$ 450.300</td><td><div class="row-vendor"><span class="av av-am">AM</span>Andrés M.</div></td><td><span class="pill succ"><span class="dot"></span>Activo</span></td></tr>
+              <tr><td><span class="row-num">Rec-1282</span></td><td><span class="row-date">Ayer 16:42</span></td><td><div class="row-cli">Refinadora Pacífico<div class="sub">+57 313 718 ··</div></div></td><td><div class="row-prod">Pago V-2845 · Válvula</div></td><td><span class="pill info"><span class="dot"></span>Por cotización</span></td><td><span class="link-pill v">V-2845</span></td><td class="row-total">$ 356.000</td><td><div class="row-vendor"><span class="av av-ml">ML</span>María L.</div></td><td><span class="pill succ"><span class="dot"></span>Activo</span></td></tr>
+              <tr><td><span class="row-num">Rec-1281</span></td><td><span class="row-date">Ayer 14:22</span></td><td><div class="row-cli">Petrocali S.A.S.<div class="sub">+57 315 778 ··</div></div></td><td><div class="row-prod">Abono parcial OT-2843</div></td><td><span class="pill prog"><span class="dot"></span>Vinc. OT</span></td><td><span class="link-pill ot">OT-2843</span></td><td class="row-total">$ 620.500</td><td><div class="row-vendor"><span class="av av-cr">CR</span>Carlos R.</div></td><td><span class="pill succ"><span class="dot"></span>Activo</span></td></tr>
+              <tr><td><span class="row-num">Rec-1280</span></td><td><span class="row-date">17 abr</span></td><td><div class="row-cli">Embotelladora Norte<div class="sub">+57 316 226 ··</div></div></td><td><div class="row-prod">Pago V-2843 · Lubricantes</div></td><td><span class="pill info"><span class="dot"></span>Por cotización</span></td><td><span class="link-pill v">V-2843</span></td><td class="row-total">$ 782.000</td><td><div class="row-vendor"><span class="av av-am">AM</span>Andrés M.</div></td><td><span class="pill succ"><span class="dot"></span>Activo</span></td></tr>
+              <tr><td><span class="row-num">Rec-1279</span></td><td><span class="row-date">16 abr</span></td><td><div class="row-cli">Lácteos Cali<div class="sub">+57 314 502 ··</div></div></td><td><div class="row-prod">Adelanto compra</div></td><td><span class="pill neut"><span class="dot"></span>Manual</span></td><td><span class="no-link">—</span></td><td class="row-total">$ 445.300</td><td><div class="row-vendor"><span class="av av-ml">ML</span>María L.</div></td><td><span class="pill succ"><span class="dot"></span>Activo</span></td></tr>
+              <tr><td><span class="row-num">Rec-1278</span></td><td><span class="row-date">15 abr</span></td><td><div class="row-cli">Tecnologías del Sur<div class="sub">+57 311 446 ··</div></div></td><td><div class="row-prod">Pago V-2841 · Compresor</div></td><td><span class="pill info"><span class="dot"></span>Por cotización</span></td><td><span class="link-pill v">V-2841</span></td><td class="row-total" style="color:var(--n-400);text-decoration:line-through">$ 3.450.000</td><td><div class="row-vendor"><span class="av av-cr">CR</span>Carlos R.</div></td><td><span class="pill dang"><span class="dot"></span>Anulado</span></td></tr>
+              <tr><td><span class="row-num">Rec-1277</span></td><td><span class="row-date">14 abr</span></td><td><div class="row-cli">Manufacturas Andes<div class="sub">+57 318 558 ··</div></div></td><td><div class="row-prod">Anticipo OT-2839</div></td><td><span class="pill prog"><span class="dot"></span>Vinc. OT</span></td><td><span class="link-pill ot">OT-2839</span></td><td class="row-total">$ 1.215.000</td><td><div class="row-vendor"><span class="av av-am">AM</span>Andrés M.</div></td><td><span class="pill succ"><span class="dot"></span>Activo</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- ============ ESTADOS ESPECIALES ============ -->
+
+<!-- A · Modal anular -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num alt">A</span>Modal · Anular recibo Rec-1284<span class="lbl-mode">motivo obligatorio · nota informativa sobre abonos en OT separados</span></div>
+  <div class="frame"><div class="frame-inner"><div class="modal-stage">
+    <div class="modal">
+      <header class="modal-head">
+        <div class="modal-ico dang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
+        <div style="flex:1"><h3 class="modal-title">Anular recibo Rec-1284</h3><div class="modal-sub">El recibo dejará de ser válido como comprobante de pago. <b style="color:var(--dang-700)">No se puede deshacer.</b></div></div>
+      </header>
+      <div class="modal-body">
+        <div class="field"><label class="flbl">Motivo de anulación<span class="req">*</span></label><textarea class="ftextarea" placeholder="Describe la razón..." style="min-height:80px"></textarea></div>
+        <div class="modal-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div>Anular este recibo <b>no afecta los abonos consolidados en la OT-2845</b> (esos quedan registrados en la OT y mantienen el saldo histórico). Solo se invalida este documento de pago consolidado.</div>
+        </div>
+      </div>
+      <footer class="modal-foot">
+        <button class="btn ghost">Cancelar</button>
+        <button class="btn" style="background:var(--dang-600);color:#fff;border-color:var(--dang-600)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg>Anular recibo</button>
+      </footer>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- B · Modal consolidación -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num alt">B</span>Modal · Consolidación de abonos previos<span class="lbl-mode">tabla con abonos previos + nuevo recibo + saldo restante</span></div>
+  <div class="frame"><div class="frame-inner"><div class="modal-stage" style="min-height:640px">
+    <div class="modal wide">
+      <header class="modal-head">
+        <div class="modal-ico info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></div>
+        <div style="flex:1"><h3 class="modal-title">Consolidar abonos de OT-2845</h3><div class="modal-sub">Este nuevo recibo consolidará los abonos previos registrados en la OT. Verifica los montos antes de confirmar.</div></div>
+      </header>
+      <div class="modal-body">
+        <div class="consolid">
+          <table>
+            <thead><tr><th>Tipo</th><th>Fecha</th><th>Referencia</th><th class="r">Monto</th></tr></thead>
+            <tbody>
+              <tr><td>Abono previo</td><td style="font-family:var(--ff-mono)">20 abr 09:45</td><td style="font-family:var(--ff-mono)">Ref. 8472</td><td class="r">$ 500.000</td></tr>
+              <tr class="new-row"><td><b>Nuevo recibo (Rec-1284)</b></td><td style="font-family:var(--ff-mono)">15 may 14:25</td><td style="font-family:var(--ff-mono)">Ref. 9384712</td><td class="r">$ 1.340.000</td></tr>
+              <tr class="total-row"><td colspan="3">Total consolidado · Saldo OT-2845 después</td><td class="r">$ 1.840.000 · <b>$0</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div>Los abonos previos siguen registrados en la OT-2845 (auditoría histórica). Este recibo los unifica como un único comprobante consolidado para el cliente.</div>
+        </div>
+      </div>
+      <footer class="modal-foot">
+        <button class="btn ghost">Volver al form</button>
+        <button class="btn primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Confirmar consolidación</button>
+      </footer>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- C · Banner cotización origen (aislado) -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num alt">C</span>Banner · Cotización origen<span class="lbl-mode">info-50 · pre-cargado de Cot-1042 · link directo</span></div>
+  <div class="frame"><div class="frame-inner"><div style="background:var(--n-25);padding:32px;display:flex;justify-content:center">
+    <div style="width:780px">
+      <div class="banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <div class="b">Este recibo fue generado desde <b>Cot-1042</b>. Datos del cliente y concepto pre-cargados de la cotización. La cotización original mantiene su validez y puede consultarse en cualquier momento.<br><button class="banner-link" style="margin-top:6px">Ver Cot-1042 →</button></div>
+      </div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- D · Validación consecutivo -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num alt">D</span>Banner · Validación de consecutivo<span class="lbl-mode">salto detectado · link a Auditoría · warn-50</span></div>
+  <div class="frame"><div class="frame-inner"><div style="background:var(--n-25);padding:32px;display:flex;justify-content:center">
+    <div style="width:780px">
+      <div class="consec-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div class="b">El consecutivo de recibos tiene un salto entre <b>Rec-1280</b> y <b>Rec-1282</b>. Posible recibo no sincronizado con BD. Verifica en el módulo de Auditoría antes de continuar emitiendo.</div>
+        <button>Abrir Auditoría →</button>
+      </div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- ============ CHECKLIST ============ -->
+<div class="frame-wrap" style="margin-bottom:80px">
+  <div class="frame-label"><span class="lbl-num" style="background:#2DA75A">✓</span>Validación · 5 puntos críticos</div>
+  <div class="ck-card">
+    <div class="ck-grid">
+      <div class="ck-item"><div class="ck-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div><b>Sidebar canónica con "Recibos" activo.</b> 12 módulos idénticos a Foundation · contadores intactos · Recibos como item 5 dentro de Operación comercial.</div></div>
+      <div class="ck-item"><div class="ck-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div><b>Coherencia bidireccional del ciclo.</b> Rec-1284 ↔ Cot-1042 ↔ V-2847 ↔ OT-2845. Doble pill en columna ORIGEN · bloque Vinculaciones del detalle con 3 pills clickeables y nota informativa.</div></div>
+      <div class="ck-item"><div class="ck-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div><b>Distinción abonos vs recibos clara.</b> Estado A modal anular incluye nota explícita: "anular no afecta abonos consolidados en OT". Banner del detalle refuerza misma lógica con saldo $0.</div></div>
+      <div class="ck-item"><div class="ck-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div><b>Atajo cotización vs manual.</b> Sheet "desde cotización" pre-llena con campos locked (Cliente, Monto) y sugiere OT automáticamente. Sheet "manual" tiene nota inicial sugiriendo usar el atajo cuando aplique.</div></div>
+      <div class="ck-item"><div class="ck-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div><b>Consecutivo automático visible.</b> Mono peso 500 con badge "Auto BD" info-50 en ambos forms y en el eyebrow del detalle. No editable. Estado D muestra validación cuando hay saltos.</div></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

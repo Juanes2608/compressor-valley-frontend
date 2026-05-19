@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cockpit v2 · 7 vistas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --n-0:#FFFFFF;--n-25:#FBFBFC;--n-50:#F7F8FA;--n-75:#F2F4F7;--n-100:#EEF1F5;
+  --n-150:#E4E7EC;--n-200:#D0D5DD;--n-300:#98A2B3;--n-400:#7A8290;--n-500:#667085;
+  --n-700:#475467;--n-800:#344054;--n-900:#1D2939;--n-950:#101828;--n-975:#0B1320;
+  --p-50:#F0F2FF;--p-100:#E0E5FF;--p-200:#C2CCFF;--p-300:#94A3FF;--p-500:#4B5BF5;
+  --p-600:#2D3CE5;--p-700:#2531C8;
+  --info:#2E90FA;--info-d:#175CD3;--info-bg:#EFF8FF;--info-bd:#B2DDFF;
+  --warn-50:#FFFAEB;--warn-500:#F79009;--warn-700:#B54708;
+  --succ-50:#ECFDF3;--succ-500:#12B76A;--succ-700:#027A48;
+  --dang-50:#FEF3F2;--dang-500:#F04438;--dang-700:#B42318;
+}
+html,body{margin:0;padding:0;background:#F5F6F8;color:var(--n-950);
+  font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:'IBM Plex Mono',monospace}
+.page-wrap{max-width:1480px;margin:0 auto;padding:48px 32px}
+.doc-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+  letter-spacing:.1em;text-transform:uppercase;margin:0 0 8px}
+.doc-title{font-size:32px;font-weight:600;letter-spacing:-0.02em;margin:0 0 8px}
+.doc-sub{font-size:15px;color:var(--n-500);margin:0;max-width:820px;line-height:1.55}
+.doc-sub code{font-family:'IBM Plex Mono',monospace;font-size:12px;background:#fff;padding:1px 6px;border-radius:3px;border:1px solid var(--n-150);color:var(--n-700)}
+.section-divider{margin:80px 0 48px;display:flex;align-items:center;gap:16px}
+.section-divider .ln{flex:1;height:1px;background:var(--n-200)}
+.section-divider .lbl{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--n-700);font-weight:500}
+.frame-wrap{margin-bottom:64px}
+.frame-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);letter-spacing:.1em;text-transform:uppercase;margin:0 0 12px;font-weight:500;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.frame-label .lbl-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:5px;background:var(--info-d);color:#fff;font-size:11px}
+.frame-label .lbl-px{margin-left:auto;color:var(--n-300);font-weight:400}
+.frame-desc{font-size:13px;color:var(--n-500);margin:0 0 16px;max-width:820px;line-height:1.55}
+.frame-desc b{color:var(--n-700);font-weight:500}
+.frame{border:1px solid var(--n-200);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 12px 40px -16px rgba(16,24,40,.18);overflow-x:auto}
+.frame.dk{border-color:#1F2937}
+.vp-desktop{width:1280px;margin:0 auto}
+.vp-tablet{width:900px;margin:0 auto}
+.vp-mobile{padding:32px 16px;background:#E4E7EC;display:flex;justify-content:center}
+.vp-mobile.dk{background:#0F1115}
+
+.shell{display:grid;background:var(--n-25)}
+.shell.sh-desktop{grid-template-columns:240px 1fr;min-height:1000px}
+.shell.sh-tablet{grid-template-columns:56px 1fr;min-height:760px}
+.shell.dk{background:var(--n-975)}
+
+/* Sidebar admin */
+.side{background:var(--n-975);color:#fff;padding:16px 12px 20px;display:flex;flex-direction:column;gap:1px;border-right:1px solid var(--p-600)}
+.side.rail{padding:14px 8px}
+.side.rail .link{justify-content:center;padding:10px 0;width:40px;margin:1px auto;position:relative}
+.side.rail .link .lk-cnt{display:none}
+.side.rail .brand{padding:0 0 12px;justify-content:center;border-bottom:1px solid var(--n-800);margin-bottom:10px}
+.side.rail .sec{display:none}
+.side.rail .ad-flag{display:none}
+.shell.dk .side{background:#070C18}
+.brand{display:flex;align-items:center;gap:10px;padding:6px 8px 16px;border-bottom:1px solid var(--n-800);margin-bottom:8px;cursor:pointer;border-radius:6px}
+.logo{width:30px;height:30px;border-radius:7px;background:var(--info-d);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;letter-spacing:-0.02em}
+.bn{font-size:13px;font-weight:600;line-height:1.2}
+.bs{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--n-300);letter-spacing:.04em;display:flex;align-items:center;gap:5px}
+.bs .dot-s{width:5px;height:5px;border-radius:999px;background:var(--succ-500)}
+.brand-chev{margin-left:auto;color:var(--n-500)}
+.brand-chev svg{width:12px;height:12px}
+.ad-flag{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--info);padding:8px 8px 6px}
+.ad-flag .pulse{width:6px;height:6px;border-radius:999px;background:var(--info);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.sec{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-500);padding:14px 12px 6px;font-weight:500}
+.link{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:5px;color:var(--n-300);font-size:13px;cursor:pointer;position:relative;line-height:1}
+.link:hover{background:var(--n-900);color:#fff}
+.link svg{width:16px;height:16px;flex-shrink:0;color:var(--n-500);stroke-width:1.5}
+.link.on{background:rgba(46,144,250,.14);color:#fff;font-weight:500}
+.link.on svg{color:#7CC4FD}
+.link.on::before{content:"";position:absolute;left:-3px;top:8px;bottom:8px;width:3px;background:var(--info);border-radius:2px}
+.side.rail .link.on::before{left:0}
+.lk-cnt{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);background:rgba(255,255,255,.08);padding:1px 6px;border-radius:3px;font-weight:500;line-height:1.4}
+.link.on .lk-cnt{background:rgba(255,255,255,.14);color:#fff}
+
+/* Main */
+.main{background:var(--n-25);overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.dk .main{background:var(--n-975)}
+
+/* Header */
+.tophead{height:56px;background:#fff;border-bottom:1px solid var(--n-150);display:flex;align-items:center;padding:0 24px;gap:16px}
+.dk .tophead{background:var(--n-950);border-color:var(--n-800)}
+.th-left{display:flex;flex-direction:column;gap:2px;min-width:0}
+.th-crumb{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);letter-spacing:.06em;text-transform:uppercase}
+.th-crumb .sep{margin:0 6px;color:var(--n-300)}
+.th-mod{font-size:14px;font-weight:500;color:var(--n-950)}
+.dk .th-mod{color:#fff}.dk .th-crumb{color:var(--n-400)}
+.th-search{flex:0 1 320px;height:36px;border:1px solid var(--n-150);background:var(--n-50);border-radius:6px;display:flex;align-items:center;padding:0 12px;gap:10px;color:var(--n-500);margin:0 auto;cursor:pointer}
+.th-search input{flex:1;border:none;outline:none;background:transparent;font-family:inherit;font-size:13px;color:var(--n-500);pointer-events:none}
+.th-search svg{width:14px;height:14px;flex-shrink:0;stroke:var(--n-500)}
+.kbd{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--n-500);border:1px solid var(--n-200);padding:2px 6px;border-radius:3px;background:#fff;font-weight:500}
+.dk .th-search{background:var(--n-900);border-color:var(--n-800);color:var(--n-300)}
+.dk .kbd{background:var(--n-950);border-color:var(--n-800);color:var(--n-300)}
+.th-right{display:flex;align-items:center;gap:10px;margin-left:auto}
+.site-chip{display:flex;align-items:center;gap:6px;height:30px;padding:0 10px;border:1px solid var(--n-150);background:var(--n-50);border-radius:6px;font-size:12px;color:var(--n-700);font-weight:500}
+.site-chip .dot-s{width:6px;height:6px;border-radius:999px;background:var(--succ-500)}
+.site-chip .nm{font-family:'IBM Plex Mono',monospace;font-size:11px}
+.dk .site-chip{background:var(--n-900);border-color:var(--n-800);color:var(--n-200)}
+.th-btn{height:32px;padding:0 12px;border-radius:6px;border:1px solid;background:transparent;font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.th-btn svg{width:14px;height:14px;stroke-width:1.5}
+.th-btn-back{color:var(--n-700);border-color:var(--n-200);background:#fff}
+.dk .th-btn-back{background:var(--n-900);color:var(--n-200);border-color:var(--n-800)}
+.th-icon{width:32px;height:32px;border:1px solid var(--n-150);background:var(--n-50);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--n-700);position:relative}
+.th-icon svg{width:14px;height:14px;stroke-width:1.5}
+.th-icon .badge{position:absolute;top:-3px;right:-3px;background:var(--dang-500);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;width:14px;height:14px;border-radius:999px;display:flex;align-items:center;justify-content:center;line-height:1}
+.dk .th-icon{background:var(--n-900);border-color:var(--n-800);color:var(--n-200)}
+.th-avatar{width:32px;height:32px;border-radius:999px;background:linear-gradient(135deg,#3D4ACC,#7244D5);color:#fff;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid var(--n-100)}
+.dk .th-avatar{border-color:var(--n-800)}
+
+/* Content */
+.content{flex:1;padding:24px 28px 32px;display:flex;flex-direction:column;gap:24px}
+.content.tablet{padding:20px;gap:18px}
+.content-head{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.ph-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px}
+.ph-title{font-weight:600;font-size:24px;letter-spacing:-0.018em;margin:0;color:var(--n-950)}
+.dk .ph-title{color:#fff}.dk .ph-meta{color:var(--n-500)}
+.ch-right{display:flex;align-items:center;gap:8px}
+.seg{display:inline-flex;background:var(--n-50);border:1px solid var(--n-150);border-radius:7px;padding:2px;gap:1px}
+.seg button{background:transparent;border:none;font-family:inherit;font-size:12px;color:var(--n-500);padding:5px 11px;border-radius:5px;cursor:pointer;font-weight:500}
+.seg button.on{background:#fff;color:var(--n-950);box-shadow:0 1px 2px rgba(16,24,40,.06);font-weight:600}
+.dk .seg{background:var(--n-900);border-color:var(--n-800)}
+.dk .seg button{color:var(--n-300)}
+.dk .seg button.on{background:var(--n-950);color:#fff}
+.export-btn{height:32px;padding:0 12px;border-radius:6px;border:1px solid var(--n-200);background:#fff;color:var(--n-700);font-family:inherit;font-weight:500;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.export-btn svg{width:13px;height:13px;stroke-width:1.5}
+.dk .export-btn{background:var(--n-900);color:var(--n-200);border-color:var(--n-800)}
+
+/* KPI strip */
+.kpi-strip-wrap{position:relative}
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--n-150);padding:6px 0 18px}
+.dk .kpi-strip{border-color:var(--n-800)}
+.kpi-cell{padding:6px 28px 0 0;display:flex;flex-direction:column;gap:6px;border-right:1px dashed var(--n-150)}
+.kpi-cell:last-child{border-right:none;padding-right:0}
+.kpi-cell:not(:first-child){padding-left:28px}
+.dk .kpi-cell{border-color:var(--n-800)}
+.kpi-lbl{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);font-weight:500}
+.kpi-num{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;letter-spacing:-0.02em;color:var(--n-950);line-height:1.1}
+.dk .kpi-num{color:#fff}
+.kpi-num .cur{font-size:14px;color:var(--n-400);margin-right:2px;font-weight:500}
+.dk .kpi-num .cur{color:var(--n-500)}
+.kpi-sub{font-size:11.5px;color:var(--n-500);line-height:1.4;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.kpi-sub .dt{display:inline-flex;align-items:center;gap:3px}
+.kpi-sub .dt::before{content:"";width:5px;height:5px;border-radius:999px;background:currentColor;display:inline-block;margin-right:1px}
+.kpi-sub .dt.prod{color:var(--p-600)}
+.kpi-sub .dt.serv{color:var(--info-d)}
+.kpi-sub .dt.bg{color:var(--n-700)}
+.kpi-sub .dt.dev{color:var(--warn-700)}
+.kpi-sub .dt.abi{color:var(--info-d)}
+.kpi-sub .dt.proc{color:var(--p-600)}
+.kpi-sub .dt.esp{color:var(--n-500)}
+.kpi-sep{color:var(--n-300)}
+.kpi-delta{font-size:11.5px;font-weight:500;display:inline-flex;align-items:center;gap:3px}
+.kpi-delta.up{color:var(--succ-700)}
+.kpi-delta.dn{color:var(--dang-700)}
+.kpi-delta::before{font-family:'IBM Plex Mono',monospace;font-weight:600}
+.kpi-delta.up::before{content:"▲";font-size:9px}
+.kpi-delta.dn::before{content:"▼";font-size:9px}
+.kpi-period{position:absolute;right:0;top:-32px;display:flex;gap:8px;align-items:center}
+
+/* Spark */
+.spark{height:24px;display:flex;align-items:flex-end;gap:2px;margin-top:2px}
+.spark svg{width:100%;height:100%}
+
+/* Two-column attention + chart */
+.dual{display:grid;grid-template-columns:1.05fr 1fr;gap:18px}
+.dual.tab{grid-template-columns:1fr}
+
+/* Attention card */
+.att-card{border:1px solid var(--n-150);border-radius:10px;background:#fff;overflow:hidden}
+.dk .att-card{background:var(--n-950);border-color:var(--n-800)}
+.att-head{padding:14px 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--n-100)}
+.dk .att-head{border-color:var(--n-800)}
+.att-h-l{display:flex;align-items:center;gap:10px}
+.att-h-icon{width:26px;height:26px;border-radius:6px;background:var(--dang-50);color:var(--dang-700);display:flex;align-items:center;justify-content:center}
+.att-h-icon svg{width:14px;height:14px;stroke-width:1.5}
+.att-h-title{font-size:13.5px;font-weight:600;color:var(--n-950)}
+.dk .att-h-title{color:#fff}
+.att-count{font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--dang-50);color:var(--dang-700);padding:1px 7px;border-radius:3px;font-weight:600;border:1px solid #FECDCA}
+.att-row{padding:11px 18px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border-bottom:1px solid var(--n-100);font-size:12.5px}
+.dk .att-row{border-color:var(--n-800)}
+.att-row:last-of-type{border-bottom:none}
+.att-row .pri{width:8px;height:8px;border-radius:999px}
+.att-row .pri.danger{background:var(--dang-500)}
+.att-row .pri.warn{background:var(--warn-500)}
+.att-row .pri.info{background:var(--info)}
+.att-l{display:flex;flex-direction:column;gap:2px;min-width:0}
+.att-l .t{color:var(--n-950);font-weight:500;line-height:1.3}
+.dk .att-l .t{color:#fff}
+.att-l .s{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--n-500);letter-spacing:.04em}
+.att-act{font-family:'IBM Plex Sans',sans-serif;font-size:11.5px;font-weight:500;color:var(--p-600);background:transparent;border:1px solid var(--n-200);padding:4px 9px;border-radius:5px;cursor:pointer;line-height:1.2;background:#fff}
+.dk .att-act{background:var(--n-950);border-color:var(--n-800);color:var(--p-300)}
+.att-act:hover{background:var(--p-50);border-color:var(--p-200)}
+.att-foot{padding:11px 18px;background:var(--n-50);border-top:1px solid var(--n-100);display:flex;align-items:center;justify-content:space-between;font-size:12px}
+.dk .att-foot{background:rgba(255,255,255,.02);border-color:var(--n-800)}
+.att-foot a{color:var(--p-600);font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.att-foot .meta{color:var(--n-500);font-family:'IBM Plex Mono',monospace;font-size:10.5px}
+
+/* Strategic blocks 2x2 */
+.strat-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.strat-grid.tab{grid-template-columns:1fr}
+.sb{border:1px solid var(--n-150);border-radius:10px;background:#fff;overflow:hidden;display:flex;flex-direction:column}
+.dk .sb{background:var(--n-950);border-color:var(--n-800)}
+.sb-head{padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between}
+.sb-h-l{display:flex;align-items:center;gap:10px;min-width:0}
+.sb-h-icon{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center}
+.sb-h-icon svg{width:13px;height:13px;stroke-width:1.5}
+.sb-h-icon.warn{background:var(--warn-50);color:var(--warn-700)}
+.sb-h-icon.info{background:var(--info-bg);color:var(--info-d)}
+.sb-h-icon.neut{background:var(--n-100);color:var(--n-700)}
+.sb-h-title{font-size:13px;font-weight:600;color:var(--n-950)}
+.dk .sb-h-title{color:#fff}
+.sb-h-r{display:flex;align-items:center;gap:8px}
+.sb-badge{font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;padding:1px 6px;border-radius:3px;line-height:1.4}
+.sb-badge.warn{background:var(--warn-50);color:var(--warn-700);border:1px solid #FEDF89}
+.sb-badge.info{background:var(--info-bg);color:var(--info-d);border:1px solid var(--info-bd)}
+.sb-list{flex:1;display:flex;flex-direction:column}
+.sb-item{padding:9px 18px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border-top:1px solid var(--n-100)}
+.dk .sb-item{border-color:var(--n-800)}
+.sb-key{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-700);font-weight:500;background:var(--n-50);padding:2px 6px;border-radius:3px;border:1px solid var(--n-150);line-height:1.4;align-self:start;margin-top:1px}
+.dk .sb-key{background:var(--n-900);border-color:var(--n-800);color:var(--n-200)}
+.sb-key.k-warn{background:var(--warn-50);color:var(--warn-700);border-color:#FEDF89}
+.sb-key.k-info{background:var(--info-bg);color:var(--info-d);border-color:var(--info-bd)}
+.sb-mid{display:flex;flex-direction:column;gap:2px;min-width:0}
+.sb-mid .t{font-size:12.5px;color:var(--n-950);font-weight:500;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dk .sb-mid .t{color:#fff}
+.sb-mid .s{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--n-500);letter-spacing:.04em;line-height:1.4}
+.sb-right{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-700);text-align:right;font-weight:500;line-height:1.3;white-space:nowrap}
+.dk .sb-right{color:var(--n-200)}
+.sb-right .em{font-weight:600}
+.sb-right .em.warn{color:var(--warn-700)}
+.sb-right .em.dang{color:var(--dang-700)}
+.sb-right .sm{font-size:10px;color:var(--n-500);font-weight:400}
+.sb-foot{padding:11px 18px;background:var(--n-50);border-top:1px solid var(--n-100);font-size:12px}
+.dk .sb-foot{background:rgba(255,255,255,.02);border-color:var(--n-800)}
+.sb-foot a{color:var(--p-600);font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+
+/* Activity timeline */
+.tl{padding:6px 18px 0;display:flex;flex-direction:column}
+.tl-row{display:grid;grid-template-columns:18px 1fr auto;gap:10px;padding:9px 0;position:relative;border-top:1px solid var(--n-100)}
+.dk .tl-row{border-color:var(--n-800)}
+.tl-row:first-child{border-top:none}
+.tl-dot{width:8px;height:8px;border-radius:999px;margin-top:6px;margin-left:5px;background:var(--n-300);position:relative;z-index:1}
+.tl-dot.s{background:var(--succ-500)}
+.tl-dot.i{background:var(--info)}
+.tl-dot.w{background:var(--warn-500)}
+.tl-dot.p{background:var(--p-500)}
+.tl-mid{display:flex;flex-direction:column;gap:1px}
+.tl-mid .t{font-size:12.5px;color:var(--n-950);line-height:1.3}
+.tl-mid .t b{font-weight:600}
+.dk .tl-mid .t{color:#fff}
+.tl-mid .s{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--n-500);letter-spacing:.04em}
+.tl-time{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--n-500);align-self:start;margin-top:5px}
+
+/* Detailed chart */
+.chart-card{border:1px solid var(--n-150);border-radius:10px;background:#fff;padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px;min-height:340px}
+.chart-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.chart-t{font-size:13px;font-weight:600;color:var(--n-950)}
+.chart-meta{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--n-500);margin-top:3px;letter-spacing:.04em}
+.chart-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--n-500)}
+.chart-legend .lg{display:inline-flex;align-items:center;gap:5px}
+.chart-legend .lg::before{content:"";width:8px;height:8px;border-radius:999px;background:var(--n-300)}
+.chart-legend .lg.tot::before{background:var(--n-900)}
+.chart-legend .lg.prod::before{background:var(--p-500)}
+.chart-legend .lg.serv::before{background:var(--info)}
+.chart-svg{flex:1;width:100%}
+
+/* Bottom split */
+.bot-split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.tab-block{border:1px solid var(--n-150);border-radius:10px;background:#fff;overflow:hidden}
+.tab-block .tb-head{padding:13px 18px;border-bottom:1px solid var(--n-100);display:flex;align-items:center;justify-content:space-between}
+.tab-block .tb-title{font-size:13px;font-weight:600;color:var(--n-950)}
+.tab-row{padding:9px 18px;display:grid;grid-template-columns:14px 1fr auto;gap:12px;align-items:center;border-bottom:1px solid var(--n-100);font-size:12.5px}
+.tab-row:last-child{border-bottom:none}
+.tab-rank{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--n-400);font-weight:500}
+.tab-l{display:flex;flex-direction:column;gap:1px;min-width:0}
+.tab-l .t{color:var(--n-950);font-weight:500;line-height:1.3}
+.tab-l .s{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--n-500)}
+.tab-r{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-700);font-weight:500;text-align:right}
+.tab-r .em{font-size:12px;color:var(--n-950);font-weight:600;display:block}
+.bar-row{padding:11px 18px;display:grid;grid-template-columns:80px 1fr 90px;gap:12px;align-items:center;font-size:12px;border-bottom:1px solid var(--n-100)}
+.bar-row:last-child{border-bottom:none}
+.bar-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-700);font-weight:500}
+.bar-track{height:8px;background:var(--n-75);border-radius:999px;overflow:hidden}
+.bar-fill{height:100%;background:var(--p-500);border-radius:999px}
+.bar-val{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-700);font-weight:500;text-align:right}
+
+/* Mobile */
+.mob{width:390px;background:var(--n-25);min-height:780px;display:flex;flex-direction:column;position:relative;border:1px solid var(--n-200);border-radius:24px;overflow:hidden;box-shadow:0 20px 60px -20px rgba(16,24,40,.2)}
+.mob.dk{background:var(--n-975);border-color:var(--n-800)}
+.mob-top{height:48px;background:var(--n-975);color:#fff;border-bottom:1px solid var(--p-600);display:flex;align-items:center;padding:0 8px;gap:4px}
+.mob.dk .mob-top{background:#070C18}
+.mob-icon{width:40px;height:40px;border-radius:8px;border:none;background:transparent;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative}
+.mob-icon svg{width:20px;height:20px;stroke-width:1.5}
+.mob-title{flex:1;text-align:center;font-size:13.5px;font-weight:600;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px}
+.mob-title .pulse{width:6px;height:6px;border-radius:999px;background:var(--info);animation:pulse 2s infinite}
+.mob-body{flex:1;padding:18px 14px 28px;display:flex;flex-direction:column;gap:14px;background:var(--n-25)}
+.mob.dk .mob-body{background:var(--n-975)}
+.mob-h{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.mob-h h1{margin:0;font-size:18px;font-weight:600;letter-spacing:-0.015em}
+.mob.dk .mob-h h1{color:#fff}
+.mob-period{display:flex;gap:4px;background:#fff;border:1px solid var(--n-150);border-radius:7px;padding:2px}
+.mob.dk .mob-period{background:var(--n-900);border-color:var(--n-800)}
+.mob-period button{background:transparent;border:none;font-family:inherit;font-size:11px;color:var(--n-500);padding:4px 9px;border-radius:5px;cursor:pointer;font-weight:500}
+.mob-period button.on{background:var(--n-50);color:var(--n-950);font-weight:600}
+.mob.dk .mob-period button.on{background:var(--n-950);color:#fff}
+.mob-kpis{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--n-150);border-bottom:1px solid var(--n-150)}
+.mob.dk .mob-kpis{border-color:var(--n-800)}
+.mob-kpi{padding:11px 12px;border-right:1px solid var(--n-150);border-bottom:1px solid var(--n-150)}
+.mob.dk .mob-kpi{border-color:var(--n-800)}
+.mob-kpi:nth-child(2n){border-right:none}.mob-kpi:nth-last-child(-n+2){border-bottom:none}
+.mob-kpi .lbl{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);font-weight:500}
+.mob-kpi .num{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:var(--n-950);margin-top:3px;letter-spacing:-0.02em;line-height:1.1}
+.mob.dk .mob-kpi .num{color:#fff}
+.mob-kpi .sub{font-size:10.5px;color:var(--n-500);margin-top:2px;line-height:1.3}
+.mob-kpi .delta{font-size:10.5px;font-weight:500;margin-top:2px;display:inline-flex;align-items:center;gap:3px}
+.mob-kpi .delta.up{color:var(--succ-700)}
+.mob-kpi .delta.up::before{content:"▲";font-size:8px}
+
+/* Validation */
+.check-card{background:#fff;border:1px solid var(--n-150);border-radius:12px;overflow:hidden;margin-top:24px}
+.check-row{display:grid;grid-template-columns:24px 1fr;gap:12px;padding:16px 20px;border-bottom:1px solid var(--n-100);align-items:start}
+.check-row:last-child{border-bottom:none}
+.check-dot{width:18px;height:18px;border-radius:999px;background:#12B76A;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;margin-top:2px}
+.check-text{font-size:13px;color:var(--n-800);line-height:1.55}
+.check-text strong{color:var(--n-950);font-weight:600}
+.check-text code{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--n-700);background:var(--n-50);padding:1px 6px;border-radius:3px;border:1px solid var(--n-150)}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div style="margin-bottom:48px">
+    <p class="doc-eyebrow">CHV · Sistema canónico v1.0 · Pantalla 6 · Cockpit v2</p>
+    <h1 class="doc-title">Cockpit v2 · Dashboard del shell <code>/admin</code></h1>
+    <p class="doc-sub">Sidebar canónica del shell <code>/admin</code> (n-975 + filete royal + active <code>info-500</code>). KPIs F15 con desglose Productos/Servicios y selector de periodo. Bloque "Atención requerida" como teaser de Alertas. Grilla 2×2 de bloques estratégicos: Productos en alerta, OTs en proceso, Cotizaciones por vencer y Actividad reciente.</p>
+  </div>
+
+  <!-- ============== VISTA 1 DESKTOP LIGHT COMPACTO ============== -->
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">1</span><span>Desktop light · Modo Compacto · sidebar /admin · KPIs F15</span><span class="lbl-px">1280 px</span></div>
+    <p class="frame-desc">Sidebar n-975 con Dashboard activo (border-left <code>info-500</code> + bg <code>info/14</code>). KPIs sin tarjeta con sub-desglose 11.5 px y selector de periodo segmented arriba. Grilla 2×2 con bloques estratégicos. Bloque "Atención requerida" sobre el chart como teaser hacia el módulo Alertas.</p>
+    <div class="frame">
+      <div class="vp-desktop">
+        <div class="shell sh-desktop">
+          <aside class="side">
+            <div class="brand">
+              <div class="logo">C</div>
+              <div style="flex:1"><div class="bn">Compresores Valle</div><div class="bs"><span class="dot-s"></span>WH-01 · Cali</div></div>
+              <span class="brand-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 6l3 3 3-3M5 10l3-3 3 3"/></svg></span>
+            </div>
+            <div class="ad-flag"><span class="pulse"></span>Panel administrativo</div>
+            <div class="sec">Visión general</div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><rect x="2" y="2" width="5" height="6" rx="1"/><rect x="9" y="2" width="5" height="3" rx="1"/><rect x="2" y="10" width="5" height="4" rx="1"/><rect x="9" y="7" width="5" height="7" rx="1"/></svg><span>Dashboard</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span>Alertas</span><span class="lk-cnt">8</span></div>
+            <div class="sec">Análisis y reportes</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M8 8L13 5M8 8L8 2"/></svg><span>Análisis ABC</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M2 12l4-4 3 3 5-5"/><path d="M10 6h4v4"/></svg><span>Top 10</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 8a5 5 0 019-3M13 8a5 5 0 01-9 3"/><path d="M9 5h3V2M7 11H4v3"/></svg><span>Reorden</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 2h7l3 3v9a2 2 0 01-2 2H6a2 2 0 01-2-2V2z"/><path d="M11 2v3h3M7 7h4M7 10h4"/></svg><span>Auditoría</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M5 8.5l2 2 4-4"/></svg><span>Cierres</span></div>
+            <div class="sec">Operación administrativa</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><rect x="3" y="3" width="10" height="11" rx="1"/><path d="M6 1.5h4v2H6zM5 7h6M5 9.5h6"/></svg><span>Conteo cíclico</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M14 8h-2M3 8H1"/></svg><span>Configuración</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="2.2"/><path d="M2 13c0-2.5 1.8-3.8 4-3.8s4 1.3 4 3.8"/></svg><span>Usuarios</span></div>
+          </aside>
+          <main class="main">
+            <header class="tophead">
+              <div class="th-left"><div class="th-crumb">Admin <span class="sep">/</span> Visión general</div><div class="th-mod">Dashboard</div></div>
+              <div class="th-search"><svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input placeholder="Buscar en todo · Cmd+K" disabled /><span class="kbd">⌘K</span></div>
+              <div class="th-right">
+                <div class="site-chip"><span class="dot-s"></span><span class="nm">WH-01 · Cali</span></div>
+                <button class="th-btn th-btn-back"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M9.5 5L6.5 8l3 3M6.5 8H11"/></svg>Volver a Operaciones</button>
+                <button class="th-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span class="badge">8</span></button>
+                <div class="th-avatar">MR</div>
+              </div>
+            </header>
+            <div class="content">
+              <div class="content-head">
+                <div><p class="ph-meta">Admin · Visión general · 24 oct, 09:42</p><h1 class="ph-title">Dashboard</h1></div>
+                <div class="ch-right">
+                  <div class="seg" role="tablist"><button class="on">Compacto</button><button>Detallado</button></div>
+                  <button class="export-btn"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><path d="M7 1v8m-3-3l3 3 3-3M2 11h10v2H2z"/></svg>Exportar</button>
+                </div>
+              </div>
+
+              <!-- KPI strip with period selector -->
+              <div class="kpi-strip-wrap">
+                <div class="kpi-period">
+                  <span class="mono" style="font-size:10.5px;color:var(--n-500);letter-spacing:.06em;text-transform:uppercase;font-weight:500">Periodo</span>
+                  <div class="seg"><button class="on">Hoy</button><button>Semana</button><button>Mes</button><button>Año</button></div>
+                </div>
+                <div class="kpi-strip">
+                  <div class="kpi-cell">
+                    <div class="kpi-lbl">Ingresos del día</div>
+                    <div class="kpi-num"><span class="cur">$</span>4.847.200</div>
+                    <div class="kpi-sub"><span class="dt prod">Productos $3.124k</span><span class="kpi-sep">·</span><span class="dt serv">Servicios $1.723k</span></div>
+                  </div>
+                  <div class="kpi-cell">
+                    <div class="kpi-lbl">Egresos del día</div>
+                    <div class="kpi-num"><span class="cur">$</span>1.236.500</div>
+                    <div class="kpi-sub"><span class="dt bg">Compras $1.058k</span><span class="kpi-sep">·</span><span class="dt dev">Devoluciones $178k</span></div>
+                  </div>
+                  <div class="kpi-cell">
+                    <div class="kpi-lbl">Ventas vs día anterior</div>
+                    <div class="kpi-num">+12,4%</div>
+                    <div class="kpi-sub"><span class="kpi-delta up">$534k vs ayer</span></div>
+                  </div>
+                  <div class="kpi-cell">
+                    <div class="kpi-lbl">OTs activas</div>
+                    <div class="kpi-num">14</div>
+                    <div class="kpi-sub"><span class="dt abi">5 abiertas</span><span class="kpi-sep">·</span><span class="dt proc">7 en proceso</span><span class="kpi-sep">·</span><span class="dt esp">2 esperando</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Atención requerida (full width) -->
+              <div class="att-card">
+                <div class="att-head">
+                  <div class="att-h-l">
+                    <div class="att-h-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><path d="M7 1l6 11H1z"/><path d="M7 5v3M7 10v.5" stroke-width="2"/></svg></div>
+                    <div class="att-h-title">Atención requerida</div>
+                    <span class="att-count">3 urgentes</span>
+                  </div>
+                  <span class="mono" style="font-size:10.5px;color:var(--n-500);letter-spacing:.06em">Top 3 de 8 alertas</span>
+                </div>
+                <div class="att-row">
+                  <span class="pri danger"></span>
+                  <div class="att-l"><div class="t">Compra OC-0184 requiere aprobación · $4.230.000</div><div class="s">SULLAIR S.A. · pendiente desde hace 2 días</div></div>
+                  <button class="att-act">Aprobar</button>
+                </div>
+                <div class="att-row">
+                  <span class="pri danger"></span>
+                  <div class="att-l"><div class="t">Préstamo de herramienta vencido · Llave torquímetro #T-042</div><div class="s">Técnico Carlos M. · vencía hace 3 días</div></div>
+                  <button class="att-act">Recordar</button>
+                </div>
+                <div class="att-row">
+                  <span class="pri warn"></span>
+                  <div class="att-l"><div class="t">SKU-4220-V Válvula Ingersoll bajo mínimo crítico · WH-02</div><div class="s">Stock 3 · mínimo 12 · reorden sugerido 24 unidades</div></div>
+                  <button class="att-act">Crear OC</button>
+                </div>
+                <div class="att-foot">
+                  <span class="meta">Las 5 restantes son de prioridad media</span>
+                  <a href="#">Ver todas las alertas (8) <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h6m0 0L6 3m3 3L6 9"/></svg></a>
+                </div>
+              </div>
+
+              <!-- Strategic 2x2 -->
+              <div class="strat-grid">
+                <!-- Block 1: Productos en alerta -->
+                <div class="sb">
+                  <div class="sb-head">
+                    <div class="sb-h-l"><div class="sb-h-icon warn"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor"><path d="M2 4l4.5-2.5L11 4v5L6.5 11.5 2 9z"/><path d="M2 4l4.5 2.5M11 4L6.5 6.5M6.5 6.5V11.5"/></svg></div><div class="sb-h-title">Productos en alerta</div></div>
+                    <div class="sb-h-r"><span class="sb-badge warn">12</span></div>
+                  </div>
+                  <div class="sb-list">
+                    <div class="sb-item"><span class="sb-key k-warn">CMP-1410-S</span><div class="sb-mid"><div class="t">Compresor Sullair LS-110</div><div class="s">WH-02 PEREIRA · cat-cmp</div></div><div class="sb-right"><span class="em dang">0</span> / 2 mín. <div class="sm">agotado</div></div></div>
+                    <div class="sb-item"><span class="sb-key k-warn">SKU-4220-V</span><div class="sb-mid"><div class="t">Válvula Ingersoll 3/4"</div><div class="s">WH-02 PEREIRA · cat-rpt</div></div><div class="sb-right"><span class="em warn">3</span> / 12 mín. <div class="sm">crítico</div></div></div>
+                    <div class="sb-item"><span class="sb-key k-warn">RPT-0830-K</span><div class="sb-mid"><div class="t">Kit reparación Kaeser SX-7</div><div class="s">WH-01 CALI · cat-rpt</div></div><div class="sb-right"><span class="em warn">2</span> / 8 mín. <div class="sm">crítico</div></div></div>
+                  </div>
+                  <div class="sb-foot"><a href="#">Ver módulo Reorden <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h6m0 0L6 3m3 3L6 9"/></svg></a></div>
+                </div>
+
+                <!-- Block 2: OTs en proceso -->
+                <div class="sb">
+                  <div class="sb-head">
+                    <div class="sb-h-l"><div class="sb-h-icon info"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor"><path d="M9 3a2 2 0 00-2.7 2.5l-3.5 3.5a1.1 1.1 0 101.6 1.6l3.5-3.5A2 2 0 0010.5 4l-1.2 1.2L8 4l1.2-1.2z"/></svg></div><div class="sb-h-title">OTs en proceso</div></div>
+                    <div class="sb-h-r"><span class="sb-badge info">6</span></div>
+                  </div>
+                  <div class="sb-list">
+                    <div class="sb-item"><span class="sb-key k-info">OT-2845</span><div class="sb-mid"><div class="t">Mantto. Kaeser SX-7 · Industrias Norte</div><div class="s">Téc. Carlos M. · diagnóstico</div></div><div class="sb-right"><span class="em dang">5d</span><div class="sm">vencida</div></div></div>
+                    <div class="sb-item"><span class="sb-key k-info">OT-2851</span><div class="sb-mid"><div class="t">Cambio cabezal · Compresores SAS</div><div class="s">Téc. Andrés P. · reparación</div></div><div class="sb-right"><span class="em warn">2d</span><div class="sm">en plazo</div></div></div>
+                    <div class="sb-item"><span class="sb-key k-info">OT-2858</span><div class="sb-mid"><div class="t">Diagnóstico Sullair LS-110 · Petrocali</div><div class="s">Téc. María R. · ingreso</div></div><div class="sb-right"><span class="em">8h</span><div class="sm">hoy</div></div></div>
+                  </div>
+                  <div class="sb-foot"><a href="#">Ver Órdenes de Trabajo <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h6m0 0L6 3m3 3L6 9"/></svg></a></div>
+                </div>
+
+                <!-- Block 3: Cotizaciones próximas a vencer -->
+                <div class="sb">
+                  <div class="sb-head">
+                    <div class="sb-h-l"><div class="sb-h-icon warn"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor"><path d="M2.5 1.5h6l3 3v7h-9z"/><path d="M8.5 1.5v3h3M4.5 7h5M4.5 9h4"/></svg></div><div class="sb-h-title">Cotizaciones por vencer</div></div>
+                    <div class="sb-h-r"><span class="sb-badge warn">5</span></div>
+                  </div>
+                  <div class="sb-list">
+                    <div class="sb-item"><span class="sb-key k-warn">COT-1124</span><div class="sb-mid"><div class="t">Industrias Norte S.A.</div><div class="s">3 SKUs · vendedor M. Restrepo</div></div><div class="sb-right"><span class="em">$8.420k</span><div class="sm em warn">2d</div></div></div>
+                    <div class="sb-item"><span class="sb-key k-warn">COT-1127</span><div class="sb-mid"><div class="t">Petrocali Logística</div><div class="s">7 SKUs · vendedor A. Pinto</div></div><div class="sb-right"><span class="em">$15.080k</span><div class="sm em warn">3d</div></div></div>
+                    <div class="sb-item"><span class="sb-key k-warn">COT-1130</span><div class="sb-mid"><div class="t">Compresores SAS</div><div class="s">2 SKUs · vendedor C. Mejía</div></div><div class="sb-right"><span class="em">$3.250k</span><div class="sm em warn">5d</div></div></div>
+                  </div>
+                  <div class="sb-foot"><a href="#">Ver Cotizaciones <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h6m0 0L6 3m3 3L6 9"/></svg></a></div>
+                </div>
+
+                <!-- Block 4: Actividad reciente -->
+                <div class="sb">
+                  <div class="sb-head">
+                    <div class="sb-h-l"><div class="sb-h-icon neut"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v3l2 1.5"/></svg></div><div class="sb-h-title">Actividad reciente</div></div>
+                  </div>
+                  <div class="tl">
+                    <div class="tl-row"><div class="tl-dot s"></div><div class="tl-mid"><div class="t"><b>Venta VT-0247</b> · $1.860.000 · Industrias Norte</div><div class="s">M. Restrepo · WH-01</div></div><div class="tl-time">09:34</div></div>
+                    <div class="tl-row"><div class="tl-dot i"></div><div class="tl-mid"><div class="t"><b>OT-2858 abierta</b> · Diagnóstico Sullair</div><div class="s">Recepción · WH-01</div></div><div class="tl-time">09:18</div></div>
+                    <div class="tl-row"><div class="tl-dot p"></div><div class="tl-mid"><div class="t"><b>Traspaso TR-0091</b> recibido · 4 SKUs</div><div class="s">WH-02 → WH-01</div></div><div class="tl-time">08:52</div></div>
+                    <div class="tl-row"><div class="tl-dot w"></div><div class="tl-mid"><div class="t"><b>Compra OC-0184</b> ingresada · $4.230.000</div><div class="s">SULLAIR S.A. · espera aprobación</div></div><div class="tl-time">08:30</div></div>
+                  </div>
+                  <div class="sb-foot" style="margin-top:auto"><a href="#">Ver Auditoría <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h6m0 0L6 3m3 3L6 9"/></svg></a></div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== VISTA 2 TABLET LIGHT ============== -->
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">2</span><span>Tablet light · Modo Compacto · rail 56 px · grilla colapsa a 1 columna</span><span class="lbl-px">900 px</span></div>
+    <p class="frame-desc">Rail mantiene filete royal. KPIs siguen 4 columnas pero más compactos. La grilla 2×2 colapsa a una sola columna en orden visual.</p>
+    <div class="frame">
+      <div class="vp-tablet">
+        <div class="shell sh-tablet">
+          <aside class="side rail">
+            <div class="brand"><div class="logo">C</div></div>
+            <div class="link on"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="6" height="7" rx="1"/><rect x="10" y="2" width="6" height="3" rx="1"/><rect x="2" y="11" width="6" height="5" rx="1"/><rect x="10" y="7" width="6" height="9" rx="1"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 8a4 4 0 018 0v3l1 2H4l1-2zM7 14a2 2 0 004 0"/></svg></div>
+            <div style="height:8px"></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M9 9L15 6M9 9L9 2"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 13l4-4 3 3 6-6"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9a6 6 0 0110-3"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2h8l3 3v10a2 2 0 01-2 2H6a2 2 0 01-2-2V2z"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M5.5 9.5L8 12l4.5-4.5"/></svg></div>
+            <div style="height:8px"></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="12" height="13" rx="1"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="2.5"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6.5" cy="7" r="2.5"/></svg></div>
+          </aside>
+          <main class="main">
+            <header class="tophead" style="padding:0 16px">
+              <div class="th-left"><div class="th-crumb">Admin</div><div class="th-mod" style="font-size:13px">Dashboard</div></div>
+              <div class="th-search" style="flex:0 1 220px"><svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input placeholder="Buscar · ⌘K" disabled /><span class="kbd">⌘K</span></div>
+              <div class="th-right" style="gap:6px">
+                <button class="th-btn th-btn-back" style="padding:0 8px"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M9.5 5L6.5 8l3 3M6.5 8H11"/></svg>Volver</button>
+                <button class="th-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span class="badge">8</span></button>
+                <div class="th-avatar" style="width:30px;height:30px">MR</div>
+              </div>
+            </header>
+            <div class="content tablet">
+              <div class="content-head"><div><p class="ph-meta">Admin · Visión general</p><h1 class="ph-title" style="font-size:20px">Dashboard</h1></div><div class="ch-right"><div class="seg"><button class="on">Compacto</button><button>Detallado</button></div></div></div>
+              <div class="kpi-strip-wrap">
+                <div class="kpi-period"><div class="seg"><button class="on">Hoy</button><button>Sem</button><button>Mes</button><button>Año</button></div></div>
+                <div class="kpi-strip" style="grid-template-columns:repeat(2,1fr);row-gap:18px">
+                  <div class="kpi-cell"><div class="kpi-lbl">Ingresos del día</div><div class="kpi-num"><span class="cur">$</span>4.847k</div><div class="kpi-sub"><span class="dt prod">Prod $3.124k</span><span class="kpi-sep">·</span><span class="dt serv">Serv $1.723k</span></div></div>
+                  <div class="kpi-cell" style="border-right:none"><div class="kpi-lbl">Egresos del día</div><div class="kpi-num"><span class="cur">$</span>1.236k</div><div class="kpi-sub"><span class="dt bg">Comp $1.058k</span><span class="kpi-sep">·</span><span class="dt dev">Dev $178k</span></div></div>
+                  <div class="kpi-cell" style="border-top:1px dashed var(--n-150);padding-top:14px"><div class="kpi-lbl">Vs ayer</div><div class="kpi-num">+12,4%</div><div class="kpi-sub"><span class="kpi-delta up">$534k</span></div></div>
+                  <div class="kpi-cell" style="border-right:none;border-top:1px dashed var(--n-150);padding-top:14px"><div class="kpi-lbl">OTs activas</div><div class="kpi-num">14</div><div class="kpi-sub"><span class="dt abi">5 abi</span><span class="kpi-sep">·</span><span class="dt proc">7 proc</span><span class="kpi-sep">·</span><span class="dt esp">2 esp</span></div></div>
+                </div>
+              </div>
+              <div class="att-card">
+                <div class="att-head"><div class="att-h-l"><div class="att-h-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><path d="M7 1l6 11H1z"/><path d="M7 5v3M7 10v.5" stroke-width="2"/></svg></div><div class="att-h-title">Atención requerida</div><span class="att-count">3 urgentes</span></div></div>
+                <div class="att-row"><span class="pri danger"></span><div class="att-l"><div class="t">OC-0184 requiere aprobación · $4.230k</div><div class="s">SULLAIR S.A. · 2 días</div></div><button class="att-act">Aprobar</button></div>
+                <div class="att-row"><span class="pri warn"></span><div class="att-l"><div class="t">SKU-4220-V bajo mínimo · WH-02</div><div class="s">Stock 3 · mín 12</div></div><button class="att-act">Crear OC</button></div>
+                <div class="att-foot"><span class="meta">2 más</span><a href="#">Ver alertas (8) →</a></div>
+              </div>
+              <div class="strat-grid tab">
+                <div class="sb">
+                  <div class="sb-head"><div class="sb-h-l"><div class="sb-h-icon warn"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor"><path d="M2 4l4.5-2.5L11 4v5L6.5 11.5 2 9z"/></svg></div><div class="sb-h-title">Productos en alerta</div></div><div class="sb-h-r"><span class="sb-badge warn">12</span></div></div>
+                  <div class="sb-list">
+                    <div class="sb-item"><span class="sb-key k-warn">CMP-1410-S</span><div class="sb-mid"><div class="t">Compresor Sullair LS-110</div><div class="s">WH-02</div></div><div class="sb-right"><span class="em dang">0</span>/2<div class="sm">agotado</div></div></div>
+                    <div class="sb-item"><span class="sb-key k-warn">SKU-4220-V</span><div class="sb-mid"><div class="t">Válvula Ingersoll 3/4"</div><div class="s">WH-02</div></div><div class="sb-right"><span class="em warn">3</span>/12<div class="sm">crítico</div></div></div>
+                  </div>
+                  <div class="sb-foot"><a href="#">Ver Reorden →</a></div>
+                </div>
+                <div class="sb">
+                  <div class="sb-head"><div class="sb-h-l"><div class="sb-h-icon info"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor"><path d="M9 3a2 2 0 00-2.7 2.5l-3.5 3.5a1.1 1.1 0 101.6 1.6l3.5-3.5"/></svg></div><div class="sb-h-title">OTs en proceso</div></div><div class="sb-h-r"><span class="sb-badge info">6</span></div></div>
+                  <div class="sb-list">
+                    <div class="sb-item"><span class="sb-key k-info">OT-2845</span><div class="sb-mid"><div class="t">Kaeser SX-7 · Ind. Norte</div><div class="s">Carlos M.</div></div><div class="sb-right"><span class="em dang">5d</span></div></div>
+                    <div class="sb-item"><span class="sb-key k-info">OT-2851</span><div class="sb-mid"><div class="t">Cambio cabezal · Compresores SAS</div><div class="s">Andrés P.</div></div><div class="sb-right"><span class="em warn">2d</span></div></div>
+                  </div>
+                  <div class="sb-foot"><a href="#">Ver OTs →</a></div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== VISTA 3 MOBILE LIGHT ============== -->
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">3</span><span>Mobile light · header admin · KPIs 2×2 · bloques apilados</span><span class="lbl-px">390 px</span></div>
+    <p class="frame-desc">Header n-975 con dot pulsante info. KPIs en grid 2×2 con divisores 1 px, sub-textos miniaturizados. Atención requerida apilado al inicio. Bloques estratégicos en columna.</p>
+    <div class="vp-mobile">
+      <div class="mob">
+        <header class="mob-top"><button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="mob-title"><span class="pulse"></span>Dashboard</div><button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 10a6 6 0 0112 0v4l1.5 3h-15L6 14zM10 20a2 2 0 004 0"/></svg><span class="badge" style="position:absolute;top:6px;right:6px;background:var(--dang-500);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;width:14px;height:14px;border-radius:999px;display:flex;align-items:center;justify-content:center;line-height:1">8</span></button></header>
+        <div class="mob-body">
+          <div class="mob-h"><h1>Dashboard</h1><div class="mob-period"><button class="on">Hoy</button><button>Sem</button><button>Mes</button></div></div>
+          <div class="mob-kpis">
+            <div class="mob-kpi"><div class="lbl">Ingresos</div><div class="num">$4.847k</div><div class="sub">Prod $3.1M · Serv $1.7M</div></div>
+            <div class="mob-kpi"><div class="lbl">Egresos</div><div class="num">$1.236k</div><div class="sub">Comp $1.0M · Dev $178k</div></div>
+            <div class="mob-kpi"><div class="lbl">Vs ayer</div><div class="num">+12,4%</div><div class="delta up">$534k</div></div>
+            <div class="mob-kpi"><div class="lbl">OTs activas</div><div class="num">14</div><div class="sub">5 abi · 7 proc · 2 esp</div></div>
+          </div>
+          <div class="att-card">
+            <div class="att-head"><div class="att-h-l"><div class="att-h-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><path d="M7 1l6 11H1z"/><path d="M7 5v3M7 10v.5" stroke-width="2"/></svg></div><div class="att-h-title">Atención</div><span class="att-count">3</span></div></div>
+            <div class="att-row" style="grid-template-columns:auto 1fr;padding:10px 14px"><span class="pri danger"></span><div class="att-l"><div class="t" style="font-size:12px">OC-0184 aprobación · $4.230k</div><div class="s">2 días</div></div></div>
+            <div class="att-row" style="grid-template-columns:auto 1fr;padding:10px 14px"><span class="pri danger"></span><div class="att-l"><div class="t" style="font-size:12px">Préstamo T-042 vencido</div><div class="s">3 días</div></div></div>
+            <div class="att-foot"><span class="meta">5 más</span><a href="#">Ver (8) →</a></div>
+          </div>
+          <div class="sb">
+            <div class="sb-head"><div class="sb-h-l"><div class="sb-h-icon warn"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor"><path d="M2 4l4.5-2.5L11 4v5L6.5 11.5 2 9z"/></svg></div><div class="sb-h-title">Productos en alerta</div></div><span class="sb-badge warn">12</span></div>
+            <div class="sb-list">
+              <div class="sb-item" style="padding:9px 14px"><span class="sb-key k-warn">CMP-1410-S</span><div class="sb-mid"><div class="t" style="font-size:12px">Compresor Sullair</div><div class="s">WH-02</div></div><div class="sb-right"><span class="em dang">0/2</span></div></div>
+              <div class="sb-item" style="padding:9px 14px"><span class="sb-key k-warn">SKU-4220-V</span><div class="sb-mid"><div class="t" style="font-size:12px">Válvula Ingersoll</div><div class="s">WH-02</div></div><div class="sb-right"><span class="em warn">3/12</span></div></div>
+            </div>
+            <div class="sb-foot"><a href="#">Ver Reorden →</a></div>
+          </div>
+          <div class="sb">
+            <div class="sb-head"><div class="sb-h-l"><div class="sb-h-icon info"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor"><path d="M9 3a2 2 0 00-2.7 2.5l-3.5 3.5a1.1 1.1 0 101.6 1.6l3.5-3.5"/></svg></div><div class="sb-h-title">OTs en proceso</div></div><span class="sb-badge info">6</span></div>
+            <div class="sb-list">
+              <div class="sb-item" style="padding:9px 14px"><span class="sb-key k-info">OT-2845</span><div class="sb-mid"><div class="t" style="font-size:12px">Kaeser · Ind. Norte</div><div class="s">Carlos M.</div></div><div class="sb-right"><span class="em dang">5d</span></div></div>
+            </div>
+            <div class="sb-foot"><a href="#">Ver OTs →</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== VISTA 4 DESKTOP DARK ============== -->
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">4</span><span>Desktop dark · Compacto · sidebar /admin más oscura</span><span class="lbl-px">1280 px</span></div>
+    <div class="frame dk">
+      <div class="vp-desktop">
+        <div class="shell sh-desktop dk">
+          <aside class="side">
+            <div class="brand"><div class="logo">C</div><div style="flex:1"><div class="bn">Compresores Valle</div><div class="bs"><span class="dot-s"></span>WH-01 · Cali</div></div><span class="brand-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 6l3 3 3-3M5 10l3-3 3 3"/></svg></span></div>
+            <div class="ad-flag"><span class="pulse"></span>Panel administrativo</div>
+            <div class="sec">Visión general</div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><rect x="2" y="2" width="5" height="6" rx="1"/><rect x="9" y="2" width="5" height="3" rx="1"/><rect x="2" y="10" width="5" height="4" rx="1"/><rect x="9" y="7" width="5" height="7" rx="1"/></svg><span>Dashboard</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span>Alertas</span><span class="lk-cnt">8</span></div>
+            <div class="sec">Análisis y reportes</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/></svg><span>Análisis ABC</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M2 12l4-4 3 3 5-5"/></svg><span>Top 10</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 8a5 5 0 019-3"/></svg><span>Reorden</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 2h7l3 3v9a2 2 0 01-2 2H6a2 2 0 01-2-2V2z"/></svg><span>Auditoría</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/></svg><span>Cierres</span></div>
+            <div class="sec">Operación administrativa</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><rect x="3" y="3" width="10" height="11" rx="1"/></svg><span>Conteo cíclico</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="2"/></svg><span>Configuración</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="2.2"/></svg><span>Usuarios</span></div>
+          </aside>
+          <main class="main">
+            <header class="tophead">
+              <div class="th-left"><div class="th-crumb">Admin / Visión general</div><div class="th-mod">Dashboard</div></div>
+              <div class="th-search"><svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input placeholder="Buscar · ⌘K" disabled /><span class="kbd">⌘K</span></div>
+              <div class="th-right">
+                <div class="site-chip"><span class="dot-s"></span><span class="nm">WH-01</span></div>
+                <button class="th-btn th-btn-back"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M9.5 5L6.5 8l3 3M6.5 8H11"/></svg>Volver a Operaciones</button>
+                <button class="th-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span class="badge">8</span></button>
+                <div class="th-avatar">MR</div>
+              </div>
+            </header>
+            <div class="content">
+              <div class="content-head"><div><p class="ph-meta">Admin · 24 oct</p><h1 class="ph-title">Dashboard</h1></div><div class="ch-right"><div class="seg"><button class="on">Compacto</button><button>Detallado</button></div></div></div>
+              <div class="kpi-strip-wrap">
+                <div class="kpi-period"><div class="seg"><button class="on">Hoy</button><button>Semana</button><button>Mes</button><button>Año</button></div></div>
+                <div class="kpi-strip">
+                  <div class="kpi-cell"><div class="kpi-lbl">Ingresos del día</div><div class="kpi-num"><span class="cur">$</span>4.847.200</div><div class="kpi-sub"><span class="dt prod" style="color:#94A3FF">Productos $3.124k</span><span class="kpi-sep">·</span><span class="dt serv" style="color:#7CC4FD">Servicios $1.723k</span></div></div>
+                  <div class="kpi-cell"><div class="kpi-lbl">Egresos del día</div><div class="kpi-num"><span class="cur">$</span>1.236.500</div><div class="kpi-sub"><span class="dt bg" style="color:var(--n-300)">Compras $1.058k</span><span class="kpi-sep">·</span><span class="dt dev" style="color:#FDB022">Devoluciones $178k</span></div></div>
+                  <div class="kpi-cell"><div class="kpi-lbl">Vs ayer</div><div class="kpi-num">+12,4%</div><div class="kpi-sub"><span class="kpi-delta up" style="color:#32D583">$534k vs ayer</span></div></div>
+                  <div class="kpi-cell"><div class="kpi-lbl">OTs activas</div><div class="kpi-num">14</div><div class="kpi-sub"><span class="dt abi" style="color:#7CC4FD">5 abiertas</span><span class="kpi-sep">·</span><span class="dt proc" style="color:#94A3FF">7 en proceso</span><span class="kpi-sep">·</span><span class="dt esp" style="color:var(--n-400)">2 esperando</span></div></div>
+                </div>
+              </div>
+              <div class="att-card">
+                <div class="att-head"><div class="att-h-l"><div class="att-h-icon" style="background:rgba(240,68,56,.15);color:#FDA29B"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><path d="M7 1l6 11H1z"/><path d="M7 5v3M7 10v.5" stroke-width="2"/></svg></div><div class="att-h-title">Atención requerida</div><span class="att-count" style="background:rgba(240,68,56,.15);color:#FDA29B;border-color:rgba(240,68,56,.4)">3 urgentes</span></div></div>
+                <div class="att-row"><span class="pri danger"></span><div class="att-l"><div class="t">Compra OC-0184 requiere aprobación · $4.230.000</div><div class="s">SULLAIR S.A. · 2 días</div></div><button class="att-act">Aprobar</button></div>
+                <div class="att-row"><span class="pri danger"></span><div class="att-l"><div class="t">Préstamo T-042 vencido · llave torquímetro</div><div class="s">Carlos M. · 3 días</div></div><button class="att-act">Recordar</button></div>
+                <div class="att-row"><span class="pri warn"></span><div class="att-l"><div class="t">SKU-4220-V bajo mínimo crítico · WH-02</div><div class="s">Stock 3 · mín 12</div></div><button class="att-act">Crear OC</button></div>
+                <div class="att-foot"><span class="meta">5 más</span><a href="#" style="color:#94A3FF">Ver alertas (8) →</a></div>
+              </div>
+              <div class="strat-grid">
+                <div class="sb">
+                  <div class="sb-head"><div class="sb-h-l"><div class="sb-h-icon warn" style="background:rgba(247,144,9,.15);color:#FDB022"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor"><path d="M2 4l4.5-2.5L11 4v5L6.5 11.5 2 9z"/></svg></div><div class="sb-h-title">Productos en alerta</div></div><span class="sb-badge warn" style="background:rgba(247,144,9,.15);color:#FDB022;border-color:rgba(247,144,9,.4)">12</span></div>
+                  <div class="sb-list">
+                    <div class="sb-item"><span class="sb-key k-warn" style="background:rgba(247,144,9,.15);color:#FDB022;border-color:rgba(247,144,9,.4)">CMP-1410-S</span><div class="sb-mid"><div class="t">Compresor Sullair LS-110</div><div class="s">WH-02 · cat-cmp</div></div><div class="sb-right"><span class="em dang" style="color:#FDA29B">0</span> / 2 mín. <div class="sm">agotado</div></div></div>
+                    <div class="sb-item"><span class="sb-key k-warn" style="background:rgba(247,144,9,.15);color:#FDB022;border-color:rgba(247,144,9,.4)">SKU-4220-V</span><div class="sb-mid"><div class="t">Válvula Ingersoll 3/4"</div><div class="s">WH-02 · cat-rpt</div></div><div class="sb-right"><span class="em warn" style="color:#FDB022">3</span> / 12 <div class="sm">crítico</div></div></div>
+                    <div class="sb-item"><span class="sb-key k-warn" style="background:rgba(247,144,9,.15);color:#FDB022;border-color:rgba(247,144,9,.4)">RPT-0830-K</span><div class="sb-mid"><div class="t">Kit Kaeser SX-7</div><div class="s">WH-01</div></div><div class="sb-right"><span class="em warn" style="color:#FDB022">2</span> / 8 <div class="sm">crítico</div></div></div>
+                  </div>
+                  <div class="sb-foot"><a href="#" style="color:#94A3FF">Ver Reorden →</a></div>
+                </div>
+                <div class="sb">
+                  <div class="sb-head"><div class="sb-h-l"><div class="sb-h-icon info" style="background:rgba(46,144,250,.15);color:#7CC4FD"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor"><path d="M9 3a2 2 0 00-2.7 2.5l-3.5 3.5a1.1 1.1 0 101.6 1.6l3.5-3.5"/></svg></div><div class="sb-h-title">OTs en proceso</div></div><span class="sb-badge info" style="background:rgba(46,144,250,.15);color:#7CC4FD;border-color:rgba(46,144,250,.4)">6</span></div>
+                  <div class="sb-list">
+                    <div class="sb-item"><span class="sb-key k-info" style="background:rgba(46,144,250,.15);color:#7CC4FD;border-color:rgba(46,144,250,.4)">OT-2845</span><div class="sb-mid"><div class="t">Kaeser SX-7 · Ind. Norte</div><div class="s">Carlos M. · diagnóstico</div></div><div class="sb-right"><span class="em dang" style="color:#FDA29B">5d</span><div class="sm">vencida</div></div></div>
+                    <div class="sb-item"><span class="sb-key k-info" style="background:rgba(46,144,250,.15);color:#7CC4FD;border-color:rgba(46,144,250,.4)">OT-2851</span><div class="sb-mid"><div class="t">Cabezal · Compresores SAS</div><div class="s">Andrés P.</div></div><div class="sb-right"><span class="em warn" style="color:#FDB022">2d</span></div></div>
+                    <div class="sb-item"><span class="sb-key k-info" style="background:rgba(46,144,250,.15);color:#7CC4FD;border-color:rgba(46,144,250,.4)">OT-2858</span><div class="sb-mid"><div class="t">Diag. Sullair · Petrocali</div><div class="s">María R.</div></div><div class="sb-right"><span class="em">8h</span><div class="sm">hoy</div></div></div>
+                  </div>
+                  <div class="sb-foot"><a href="#" style="color:#94A3FF">Ver OTs →</a></div>
+                </div>
+                <div class="sb">
+                  <div class="sb-head"><div class="sb-h-l"><div class="sb-h-icon warn" style="background:rgba(247,144,9,.15);color:#FDB022"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor"><path d="M2.5 1.5h6l3 3v7h-9z"/></svg></div><div class="sb-h-title">Cotizaciones por vencer</div></div><span class="sb-badge warn" style="background:rgba(247,144,9,.15);color:#FDB022;border-color:rgba(247,144,9,.4)">5</span></div>
+                  <div class="sb-list">
+                    <div class="sb-item"><span class="sb-key k-warn" style="background:rgba(247,144,9,.15);color:#FDB022;border-color:rgba(247,144,9,.4)">COT-1124</span><div class="sb-mid"><div class="t">Industrias Norte S.A.</div><div class="s">3 SKUs · M. Restrepo</div></div><div class="sb-right"><span class="em">$8.420k</span><div class="sm em warn" style="color:#FDB022">2d</div></div></div>
+                    <div class="sb-item"><span class="sb-key k-warn" style="background:rgba(247,144,9,.15);color:#FDB022;border-color:rgba(247,144,9,.4)">COT-1127</span><div class="sb-mid"><div class="t">Petrocali Logística</div><div class="s">7 SKUs · A. Pinto</div></div><div class="sb-right"><span class="em">$15.080k</span><div class="sm em warn" style="color:#FDB022">3d</div></div></div>
+                    <div class="sb-item"><span class="sb-key k-warn" style="background:rgba(247,144,9,.15);color:#FDB022;border-color:rgba(247,144,9,.4)">COT-1130</span><div class="sb-mid"><div class="t">Compresores SAS</div><div class="s">2 SKUs · C. Mejía</div></div><div class="sb-right"><span class="em">$3.250k</span><div class="sm em warn" style="color:#FDB022">5d</div></div></div>
+                  </div>
+                  <div class="sb-foot"><a href="#" style="color:#94A3FF">Ver Cotizaciones →</a></div>
+                </div>
+                <div class="sb">
+                  <div class="sb-head"><div class="sb-h-l"><div class="sb-h-icon neut" style="background:rgba(255,255,255,.06);color:var(--n-300)"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v3l2 1.5"/></svg></div><div class="sb-h-title">Actividad reciente</div></div></div>
+                  <div class="tl">
+                    <div class="tl-row"><div class="tl-dot s"></div><div class="tl-mid"><div class="t"><b>Venta VT-0247</b> · $1.860k · Ind. Norte</div><div class="s">M. Restrepo · WH-01</div></div><div class="tl-time">09:34</div></div>
+                    <div class="tl-row"><div class="tl-dot i"></div><div class="tl-mid"><div class="t"><b>OT-2858 abierta</b> · Diag. Sullair</div><div class="s">Recepción · WH-01</div></div><div class="tl-time">09:18</div></div>
+                    <div class="tl-row"><div class="tl-dot p"></div><div class="tl-mid"><div class="t"><b>Traspaso TR-0091</b> recibido</div><div class="s">WH-02 → WH-01</div></div><div class="tl-time">08:52</div></div>
+                    <div class="tl-row"><div class="tl-dot w"></div><div class="tl-mid"><div class="t"><b>Compra OC-0184</b> · $4.230k</div><div class="s">SULLAIR S.A.</div></div><div class="tl-time">08:30</div></div>
+                  </div>
+                  <div class="sb-foot"><a href="#" style="color:#94A3FF">Ver Auditoría →</a></div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 5 TABLET DARK (compacta) -->
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">5</span><span>Tablet dark · Compacto</span><span class="lbl-px">900 px</span></div>
+    <div class="frame dk">
+      <div class="vp-tablet">
+        <div class="shell sh-tablet dk">
+          <aside class="side rail">
+            <div class="brand"><div class="logo">C</div></div>
+            <div class="link on"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="6" height="7" rx="1"/><rect x="10" y="2" width="6" height="3" rx="1"/><rect x="2" y="11" width="6" height="5" rx="1"/><rect x="10" y="7" width="6" height="9" rx="1"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 8a4 4 0 018 0v3l1 2H4l1-2z"/></svg></div>
+            <div style="height:8px"></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 13l4-4 3 3 6-6"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9a6 6 0 0110-3"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2h8l3 3v10a2 2 0 01-2 2H6a2 2 0 01-2-2V2z"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/></svg></div>
+            <div style="height:8px"></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="12" height="13" rx="1"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="2.5"/></svg></div>
+          </aside>
+          <main class="main">
+            <header class="tophead" style="padding:0 16px">
+              <div class="th-left"><div class="th-crumb">Admin</div><div class="th-mod" style="font-size:13px">Dashboard</div></div>
+              <div class="th-search" style="flex:0 1 220px"><svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input placeholder="⌘K" disabled /><span class="kbd">⌘K</span></div>
+              <div class="th-right" style="gap:6px"><button class="th-btn th-btn-back" style="padding:0 8px"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M9.5 5L6.5 8l3 3M6.5 8H11"/></svg>Volver</button><button class="th-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span class="badge">8</span></button><div class="th-avatar" style="width:30px;height:30px">MR</div></div>
+            </header>
+            <div class="content tablet">
+              <div class="content-head"><div><p class="ph-meta">Admin</p><h1 class="ph-title" style="font-size:20px">Dashboard</h1></div><div class="ch-right"><div class="seg"><button class="on">Compacto</button><button>Detallado</button></div></div></div>
+              <div class="kpi-strip-wrap">
+                <div class="kpi-period"><div class="seg"><button class="on">Hoy</button><button>Sem</button><button>Mes</button><button>Año</button></div></div>
+                <div class="kpi-strip" style="grid-template-columns:repeat(2,1fr);row-gap:18px">
+                  <div class="kpi-cell"><div class="kpi-lbl">Ingresos</div><div class="kpi-num"><span class="cur">$</span>4.847k</div><div class="kpi-sub"><span class="dt prod" style="color:#94A3FF">Prod $3.1M</span><span class="kpi-sep">·</span><span class="dt serv" style="color:#7CC4FD">Serv $1.7M</span></div></div>
+                  <div class="kpi-cell" style="border-right:none"><div class="kpi-lbl">Egresos</div><div class="kpi-num"><span class="cur">$</span>1.236k</div><div class="kpi-sub"><span class="dt bg" style="color:var(--n-300)">Comp $1.0M</span></div></div>
+                  <div class="kpi-cell" style="border-top:1px dashed var(--n-800);padding-top:14px"><div class="kpi-lbl">Vs ayer</div><div class="kpi-num">+12,4%</div><div class="kpi-sub"><span class="kpi-delta up" style="color:#32D583">$534k</span></div></div>
+                  <div class="kpi-cell" style="border-right:none;border-top:1px dashed var(--n-800);padding-top:14px"><div class="kpi-lbl">OTs activas</div><div class="kpi-num">14</div><div class="kpi-sub" style="font-size:10.5px">5 abi · 7 proc · 2 esp</div></div>
+                </div>
+              </div>
+              <div class="att-card">
+                <div class="att-head"><div class="att-h-l"><div class="att-h-icon" style="background:rgba(240,68,56,.15);color:#FDA29B"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><path d="M7 1l6 11H1z"/></svg></div><div class="att-h-title">Atención requerida</div><span class="att-count" style="background:rgba(240,68,56,.15);color:#FDA29B;border-color:rgba(240,68,56,.4)">3</span></div></div>
+                <div class="att-row"><span class="pri danger"></span><div class="att-l"><div class="t">OC-0184 aprobación · $4.230k</div><div class="s">2d</div></div><button class="att-act">Aprobar</button></div>
+                <div class="att-foot"><a href="#" style="color:#94A3FF">Ver alertas (8) →</a></div>
+              </div>
+              <div class="strat-grid tab">
+                <div class="sb">
+                  <div class="sb-head"><div class="sb-h-l"><div class="sb-h-icon warn" style="background:rgba(247,144,9,.15);color:#FDB022"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor"><path d="M2 4l4.5-2.5L11 4v5L6.5 11.5 2 9z"/></svg></div><div class="sb-h-title">Productos en alerta</div></div><span class="sb-badge warn" style="background:rgba(247,144,9,.15);color:#FDB022;border-color:rgba(247,144,9,.4)">12</span></div>
+                  <div class="sb-list"><div class="sb-item"><span class="sb-key k-warn" style="background:rgba(247,144,9,.15);color:#FDB022;border-color:rgba(247,144,9,.4)">CMP-1410-S</span><div class="sb-mid"><div class="t">Sullair LS-110</div><div class="s">WH-02</div></div><div class="sb-right"><span class="em dang" style="color:#FDA29B">0/2</span></div></div></div>
+                  <div class="sb-foot"><a href="#" style="color:#94A3FF">Reorden →</a></div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 6 MOBILE DARK -->
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">6</span><span>Mobile dark · header admin n-975</span><span class="lbl-px">390 px</span></div>
+    <div class="vp-mobile dk">
+      <div class="mob dk">
+        <header class="mob-top"><button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="mob-title"><span class="pulse"></span>Dashboard</div><button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 10a6 6 0 0112 0v4l1.5 3h-15L6 14zM10 20a2 2 0 004 0"/></svg><span style="position:absolute;top:6px;right:6px;background:var(--dang-500);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;width:14px;height:14px;border-radius:999px;display:flex;align-items:center;justify-content:center;line-height:1">8</span></button></header>
+        <div class="mob-body">
+          <div class="mob-h"><h1>Dashboard</h1><div class="mob-period"><button class="on">Hoy</button><button>Sem</button><button>Mes</button></div></div>
+          <div class="mob-kpis">
+            <div class="mob-kpi"><div class="lbl">Ingresos</div><div class="num">$4.847k</div><div class="sub" style="color:var(--n-400)">Prod $3.1M · Serv $1.7M</div></div>
+            <div class="mob-kpi"><div class="lbl">Egresos</div><div class="num">$1.236k</div><div class="sub" style="color:var(--n-400)">Comp $1.0M · Dev $178k</div></div>
+            <div class="mob-kpi"><div class="lbl">Vs ayer</div><div class="num">+12,4%</div><div class="delta up" style="color:#32D583">$534k</div></div>
+            <div class="mob-kpi"><div class="lbl">OTs activas</div><div class="num">14</div><div class="sub" style="color:var(--n-400)">5 abi · 7 proc · 2 esp</div></div>
+          </div>
+          <div class="att-card">
+            <div class="att-head"><div class="att-h-l"><div class="att-h-icon" style="background:rgba(240,68,56,.15);color:#FDA29B"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><path d="M7 1l6 11H1z"/></svg></div><div class="att-h-title">Atención</div><span class="att-count" style="background:rgba(240,68,56,.15);color:#FDA29B;border-color:rgba(240,68,56,.4)">3</span></div></div>
+            <div class="att-row" style="grid-template-columns:auto 1fr;padding:10px 14px"><span class="pri danger"></span><div class="att-l"><div class="t" style="font-size:12px">OC-0184 aprobación</div><div class="s">$4.230k · 2d</div></div></div>
+            <div class="att-foot"><a href="#" style="color:#94A3FF">Ver (8) →</a></div>
+          </div>
+          <div class="sb">
+            <div class="sb-head"><div class="sb-h-l"><div class="sb-h-icon info" style="background:rgba(46,144,250,.15);color:#7CC4FD"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor"><path d="M9 3a2 2 0 00-2.7 2.5l-3.5 3.5a1.1 1.1 0 101.6 1.6l3.5-3.5"/></svg></div><div class="sb-h-title">OTs en proceso</div></div><span class="sb-badge info" style="background:rgba(46,144,250,.15);color:#7CC4FD;border-color:rgba(46,144,250,.4)">6</span></div>
+            <div class="sb-list"><div class="sb-item" style="padding:9px 14px"><span class="sb-key k-info" style="background:rgba(46,144,250,.15);color:#7CC4FD;border-color:rgba(46,144,250,.4)">OT-2845</span><div class="sb-mid"><div class="t" style="font-size:12px">Kaeser · Ind. Norte</div><div class="s">Carlos M.</div></div><div class="sb-right"><span class="em dang" style="color:#FDA29B">5d</span></div></div></div>
+            <div class="sb-foot"><a href="#" style="color:#94A3FF">Ver OTs →</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== VISTA 7 DETALLADO ============== -->
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">7</span><span>Desktop light · Modo Detallado · sparklines + chart 30 días Prod/Serv/Total + bottom split</span><span class="lbl-px">1280 px</span></div>
+    <p class="frame-desc">KPIs estiran sparklines de 60×20 px debajo del número. Chart de 30 días con toggle Productos/Servicios/Total reforzando el desglose F15. Bloques inferiores Top productos del día / Ventas por sede.</p>
+    <div class="frame">
+      <div class="vp-desktop">
+        <div class="shell sh-desktop">
+          <aside class="side">
+            <div class="brand"><div class="logo">C</div><div style="flex:1"><div class="bn">Compresores Valle</div><div class="bs"><span class="dot-s"></span>WH-01 · Cali</div></div></div>
+            <div class="ad-flag"><span class="pulse"></span>Panel administrativo</div>
+            <div class="sec">Visión general</div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><rect x="2" y="2" width="5" height="6" rx="1"/><rect x="9" y="2" width="5" height="3" rx="1"/><rect x="2" y="10" width="5" height="4" rx="1"/><rect x="9" y="7" width="5" height="7" rx="1"/></svg><span>Dashboard</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span>Alertas</span><span class="lk-cnt">8</span></div>
+            <div class="sec">Análisis y reportes</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/></svg><span>Análisis ABC</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M2 12l4-4 3 3 5-5"/></svg><span>Top 10</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 8a5 5 0 019-3"/></svg><span>Reorden</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 2h7l3 3v9a2 2 0 01-2 2H6a2 2 0 01-2-2V2z"/></svg><span>Auditoría</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/></svg><span>Cierres</span></div>
+            <div class="sec">Operación administrativa</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><rect x="3" y="3" width="10" height="11" rx="1"/></svg><span>Conteo cíclico</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="2"/></svg><span>Configuración</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="2.2"/></svg><span>Usuarios</span></div>
+          </aside>
+          <main class="main">
+            <header class="tophead">
+              <div class="th-left"><div class="th-crumb">Admin / Visión general</div><div class="th-mod">Dashboard</div></div>
+              <div class="th-search"><svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input placeholder="Buscar · Cmd+K" disabled /><span class="kbd">⌘K</span></div>
+              <div class="th-right">
+                <div class="site-chip"><span class="dot-s"></span><span class="nm">WH-01 · Cali</span></div>
+                <button class="th-btn th-btn-back"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M9.5 5L6.5 8l3 3M6.5 8H11"/></svg>Volver a Operaciones</button>
+                <button class="th-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span class="badge">8</span></button>
+                <div class="th-avatar">MR</div>
+              </div>
+            </header>
+            <div class="content">
+              <div class="content-head"><div><p class="ph-meta">Admin · Visión general · 24 oct, 09:42</p><h1 class="ph-title">Dashboard</h1></div><div class="ch-right"><div class="seg"><button>Compacto</button><button class="on">Detallado</button></div><button class="export-btn"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><path d="M7 1v8m-3-3l3 3 3-3M2 11h10v2H2z"/></svg>Exportar</button></div></div>
+              <div class="kpi-strip-wrap">
+                <div class="kpi-period"><div class="seg"><button class="on">Hoy</button><button>Semana</button><button>Mes</button><button>Año</button></div></div>
+                <div class="kpi-strip">
+                  <div class="kpi-cell"><div class="kpi-lbl">Ingresos del día</div><div class="kpi-num"><span class="cur">$</span>4.847.200</div><div class="kpi-sub"><span class="dt prod">Productos $3.124k</span><span class="kpi-sep">·</span><span class="dt serv">Servicios $1.723k</span></div>
+                    <div class="spark"><svg viewBox="0 0 60 20" preserveAspectRatio="none"><polyline points="0,14 6,12 12,15 18,10 24,11 30,8 36,9 42,6 48,7 54,4 60,5" fill="none" stroke="#12B76A" stroke-width="1.5"/></svg></div>
+                  </div>
+                  <div class="kpi-cell"><div class="kpi-lbl">Egresos del día</div><div class="kpi-num"><span class="cur">$</span>1.236.500</div><div class="kpi-sub"><span class="dt bg">Compras $1.058k</span><span class="kpi-sep">·</span><span class="dt dev">Devoluciones $178k</span></div>
+                    <div class="spark"><svg viewBox="0 0 60 20" preserveAspectRatio="none"><polyline points="0,8 6,9 12,7 18,11 24,9 30,12 36,8 42,10 48,7 54,9 60,8" fill="none" stroke="#7A8290" stroke-width="1.5"/></svg></div>
+                  </div>
+                  <div class="kpi-cell"><div class="kpi-lbl">Vs ayer</div><div class="kpi-num">+12,4%</div><div class="kpi-sub"><span class="kpi-delta up">$534k vs ayer</span></div>
+                    <div class="spark"><svg viewBox="0 0 60 20" preserveAspectRatio="none"><polyline points="0,15 6,13 12,14 18,11 24,12 30,9 36,10 42,7 48,8 54,5 60,3" fill="none" stroke="#2D3CE5" stroke-width="1.5"/></svg></div>
+                  </div>
+                  <div class="kpi-cell"><div class="kpi-lbl">OTs activas</div><div class="kpi-num">14</div><div class="kpi-sub"><span class="dt abi">5 abi</span><span class="kpi-sep">·</span><span class="dt proc">7 proc</span><span class="kpi-sep">·</span><span class="dt esp">2 esp</span></div>
+                    <div class="spark"><svg viewBox="0 0 60 20" preserveAspectRatio="none"><polyline points="0,12 6,11 12,13 18,10 24,11 30,8 36,9 42,11 48,10 54,9 60,8" fill="none" stroke="#175CD3" stroke-width="1.5"/></svg></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Chart 30 días -->
+              <div class="chart-card">
+                <div class="chart-h">
+                  <div><div class="chart-t">Ventas · últimos 30 días</div><div class="chart-meta">25 sep — 24 oct · WH-01 Cali</div></div>
+                  <div class="ch-right">
+                    <div class="seg"><button>Productos</button><button>Servicios</button><button class="on">Total</button></div>
+                    <div class="chart-legend"><span class="lg tot">Total</span><span class="lg prod">Productos</span><span class="lg serv">Servicios</span></div>
+                  </div>
+                </div>
+                <svg class="chart-svg" viewBox="0 0 1180 220" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="gtot" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1D2939" stop-opacity="0.18"/><stop offset="1" stop-color="#1D2939" stop-opacity="0"/></linearGradient>
+                    <linearGradient id="gprod" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#4B5BF5" stop-opacity="0.14"/><stop offset="1" stop-color="#4B5BF5" stop-opacity="0"/></linearGradient>
+                  </defs>
+                  <g stroke="#EEF1F5" stroke-width="1"><line x1="0" y1="40" x2="1180" y2="40"/><line x1="0" y1="100" x2="1180" y2="100"/><line x1="0" y1="160" x2="1180" y2="160"/></g>
+                  <g font-family="IBM Plex Mono" font-size="10" fill="#98A2B3"><text x="6" y="36">$6M</text><text x="6" y="96">$4M</text><text x="6" y="156">$2M</text></g>
+                  <!-- Total area -->
+                  <path d="M40 130 L80 118 L120 124 L160 110 L200 116 L240 96 L280 102 L320 88 L360 94 L400 78 L440 82 L480 70 L520 76 L560 60 L600 66 L640 54 L680 58 L720 48 L760 56 L800 44 L840 50 L880 38 L920 44 L960 32 L1000 38 L1040 28 L1080 34 L1120 24 L1140 30 L1140 200 L40 200 Z" fill="url(#gtot)"/>
+                  <polyline points="40,130 80,118 120,124 160,110 200,116 240,96 280,102 320,88 360,94 400,78 440,82 480,70 520,76 560,60 600,66 640,54 680,58 720,48 760,56 800,44 840,50 880,38 920,44 960,32 1000,38 1040,28 1080,34 1120,24 1140,30" fill="none" stroke="#1D2939" stroke-width="2"/>
+                  <!-- Productos -->
+                  <polyline points="40,150 80,140 120,144 160,134 200,138 240,124 280,128 320,118 360,122 400,110 440,114 480,104 520,108 560,96 600,100 640,90 680,94 720,86 760,92 800,80 840,86 880,76 920,80 960,70 1000,74 1040,66 1080,70 1120,62 1140,66" fill="none" stroke="#4B5BF5" stroke-width="1.5" stroke-dasharray="0"/>
+                  <!-- Servicios -->
+                  <polyline points="40,180 80,176 120,178 160,170 200,174 240,166 280,170 320,160 360,164 400,154 440,158 480,148 520,152 560,140 600,144 640,134 680,138 720,128 760,134 800,124 840,130 880,120 920,124 960,114 1000,118 1040,108 1080,112 1120,102 1140,108" fill="none" stroke="#2E90FA" stroke-width="1.5"/>
+                  <!-- Last point markers -->
+                  <circle cx="1140" cy="30" r="3.5" fill="#1D2939"/><circle cx="1140" cy="66" r="3" fill="#4B5BF5"/><circle cx="1140" cy="108" r="3" fill="#2E90FA"/>
+                  <g font-family="IBM Plex Mono" font-size="10" fill="#98A2B3"><text x="40" y="215">25 sep</text><text x="380" y="215">2 oct</text><text x="720" y="215">10 oct</text><text x="1060" y="215">24 oct</text></g>
+                </svg>
+              </div>
+
+              <!-- Bottom split -->
+              <div class="bot-split">
+                <div class="tab-block">
+                  <div class="tb-head"><div class="tb-title">Top productos · hoy</div><span class="mono" style="font-size:10.5px;color:var(--n-500);letter-spacing:.06em">por unidades</span></div>
+                  <div class="tab-row"><span class="tab-rank">01</span><div class="tab-l"><div class="t">Filtro de aire GA-22</div><div class="s">SKU-4521-A · cat-rpt</div></div><div class="tab-r"><span class="em">42 u</span>$1.260k</div></div>
+                  <div class="tab-row"><span class="tab-rank">02</span><div class="tab-l"><div class="t">Aceite Atlas Copco 5L</div><div class="s">LBR-2210-AC · cat-lbr</div></div><div class="tab-r"><span class="em">38 u</span>$684k</div></div>
+                  <div class="tab-row"><span class="tab-rank">03</span><div class="tab-l"><div class="t">Manguera neumática 1/2"</div><div class="s">ACC-3308-M · cat-acc</div></div><div class="tab-r"><span class="em">24 u</span>$432k</div></div>
+                  <div class="tab-row"><span class="tab-rank">04</span><div class="tab-l"><div class="t">Filtro separador GA-30</div><div class="s">SKU-4530-S · cat-rpt</div></div><div class="tab-r"><span class="em">18 u</span>$540k</div></div>
+                  <div class="tab-row"><span class="tab-rank">05</span><div class="tab-l"><div class="t">Kit empaques universal</div><div class="s">RPT-0712-K · cat-rpt</div></div><div class="tab-r"><span class="em">14 u</span>$280k</div></div>
+                </div>
+                <div class="tab-block">
+                  <div class="tb-head"><div class="tb-title">Ventas por sede · hoy</div><span class="mono" style="font-size:10.5px;color:var(--n-500);letter-spacing:.06em">$ totales</span></div>
+                  <div class="bar-row"><span class="bar-lbl">WH-01 Cali</span><div class="bar-track"><div class="bar-fill" style="width:78%"></div></div><span class="bar-val">$2.180k</span></div>
+                  <div class="bar-row"><span class="bar-lbl">WH-02 Pereira</span><div class="bar-track"><div class="bar-fill" style="width:54%;background:var(--info)"></div></div><span class="bar-val">$1.508k</span></div>
+                  <div class="bar-row"><span class="bar-lbl">WH-03 Buga</span><div class="bar-track"><div class="bar-fill" style="width:32%;background:var(--p-300)"></div></div><span class="bar-val">$894k</span></div>
+                  <div class="bar-row"><span class="bar-lbl">WH-04 Tuluá</span><div class="bar-track"><div class="bar-fill" style="width:9%;background:var(--n-300)"></div></div><span class="bar-val">$265k</span></div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VALIDATION -->
+  <div style="margin-top:80px">
+    <div class="frame-label"><span class="lbl-num" style="background:var(--succ-500)">✓</span><span>Validación · 4 puntos críticos</span></div>
+    <div class="check-card">
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Sidebar /admin distinguible</strong> — fondo <code>n-975</code> (más oscura que <code>n-950</code> de /ops), filete royal 1 px borde derecho, header textual "PANEL ADMINISTRATIVO" con dot pulsante info, logo en <code>info-d</code>, active state Dashboard en <code>info-500</code>. Cinco señales redundantes garantizan reconocimiento instantáneo del shell incluso en periferia visual.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>KPIs F15 sin saturar</strong> — número mono 22 px protagonista, sub-textos en sans 11.5 px con dots de color (<code>p-600</code> productos / <code>info-d</code> servicios / <code>n-700</code> compras / <code>warn-700</code> devoluciones). Periodo segmented arriba a la derecha (Hoy/Semana/Mes/Año), no compite con el dato. Jerarquía intacta: dato → desglose → contexto.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>"Atención requerida" como teaser</strong> — header con icono triangular alerta + count "3 urgentes" + meta "Top 3 de 8 alertas". Footer con "Las 5 restantes son de prioridad media" + link explícito "Ver todas las alertas (8)" como destino claro al módulo Alertas. CTAs por item (Aprobar/Recordar/Crear OC) son shortcuts, no reemplazo del módulo.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Grilla 2×2 estratégica, no genérica</strong> — cada bloque responde a una pregunta operativa: ¿qué necesito reabastecer? (Productos en alerta → Reorden), ¿quién está trabajando en qué? (OTs en proceso), ¿qué oportunidades comerciales se me escapan? (Cotizaciones por vencer), ¿qué pasó hoy en mi operación? (Actividad reciente). Cada bloque cierra con un link al módulo profundo correspondiente.</div></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

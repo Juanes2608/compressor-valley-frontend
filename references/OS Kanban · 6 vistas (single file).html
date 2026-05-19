@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>OS · Kanban · 6 vistas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --n-0:#FFFFFF;--n-25:#FBFBFC;--n-50:#F7F8FA;--n-75:#F2F4F7;--n-100:#EEF1F5;
+  --n-150:#E4E7EC;--n-200:#D0D5DD;--n-300:#98A2B3;--n-500:#667085;
+  --n-700:#475467;--n-800:#344054;--n-900:#1D2939;--n-950:#101828;--n-975:#0B1320;
+  --p-50:#F0F2FF;--p-100:#E0E5FF;--p-200:#C2CCFF;--p-300:#94A3FF;--p-400:#7484FF;
+  --p-500:#4B5BF5;--p-600:#2D3CE5;--p-700:#2531C8;
+  --info:#2E90FA;--info-d:#175CD3;--info-bg:#EFF8FF;--info-bd:#B2DDFF;
+  --warn:#F79009;--warn-d:#B54708;--warn-bg:#FFFAEB;--warn-bd:#FEDF89;
+  --prog:#9A6FDF;--prog-d:#6941C6;--prog-bg:#F4EBFF;--prog-bd:#D9C2FF;
+  --succ:#12B76A;--succ-d:#027A48;--succ-bg:#ECFDF3;--succ-bd:#A6F4C5;
+  --dang:#F04438;--dang-d:#B42318;--dang-bg:#FEF3F2;--dang-bd:#FECDCA;
+  --cmp:#4456C2;--rpt:#159F8A;--hrm:#7244D5;--lbr:#C68420;--acc:#D24E8E;
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:20px;--s6:24px;--s8:32px;--s10:40px;--s12:48px;
+}
+html,body{margin:0;padding:0;background:#F5F6F8;color:var(--n-950);
+  font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased}
+.page-wrap{max-width:1480px;margin:0 auto;padding:48px 32px}
+
+/* ===== DOC HEAD / DIVIDERS / FRAMES ===== */
+.doc-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+  letter-spacing:.1em;text-transform:uppercase;margin:0 0 8px}
+.doc-title{font-size:32px;font-weight:600;letter-spacing:-0.02em;margin:0 0 8px;color:var(--n-950)}
+.doc-sub{font-size:15px;color:var(--n-500);margin:0;max-width:780px;line-height:1.55}
+.doc-sub code,.frame-desc code{font-family:'IBM Plex Mono',monospace;font-size:12px;
+  background:#fff;padding:1px 6px;border-radius:3px;border:1px solid var(--n-150);color:var(--n-700)}
+.section-divider{margin:80px 0 48px;display:flex;align-items:center;gap:16px}
+.section-divider .ln{flex:1;height:1px;background:var(--n-200)}
+.section-divider .lbl{font-family:'IBM Plex Mono',monospace;font-size:12px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--n-700);font-weight:500}
+.frame-wrap{margin-bottom:64px}
+.frame-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+  letter-spacing:.1em;text-transform:uppercase;margin:0 0 12px;font-weight:500;
+  display:flex;align-items:center;gap:12px}
+.frame-label .lbl-num{display:inline-flex;align-items:center;justify-content:center;
+  width:24px;height:24px;border-radius:5px;background:var(--n-950);color:#fff;font-size:11px}
+.frame-label.dk .lbl-num{background:var(--p-600)}
+.frame-label .lbl-px{margin-left:auto;color:var(--n-300);font-weight:400}
+.frame-desc{font-size:13px;color:var(--n-500);margin:0 0 16px;max-width:780px;line-height:1.55}
+.frame-desc b{color:var(--n-700);font-weight:500}
+.frame{border:1px solid var(--n-200);border-radius:14px;overflow:hidden;background:#fff;
+  box-shadow:0 12px 40px -16px rgba(16,24,40,.18)}
+.frame.dk{border-color:#1F2937}
+.vp-desktop{width:1280px;margin:0 auto}
+.vp-tablet{width:900px;margin:0 auto}
+.vp-mobile{padding:32px 16px;background:#0F1115;display:flex;justify-content:center}
+.vp-mobile.dk{background:#000}
+
+/* ===== HEADERS / BUTTONS / SEG ===== */
+.ph-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);
+  letter-spacing:.06em;text-transform:uppercase;margin:0 0 8px}
+.ph-meta span+span::before{content:" · ";margin:0 6px;color:var(--n-200)}
+.ph-title{font-weight:600;font-size:22px;letter-spacing:-0.018em;margin:0 0 4px;color:var(--n-950)}
+.ph-sub{font-size:13px;color:var(--n-500);margin:0}
+.ph-sub b{font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--n-700)}
+.ph-row{display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:24px;gap:16px;flex-wrap:wrap}
+.btn{height:36px;padding:0 16px;border-radius:6px;border:1px solid transparent;
+  font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:13px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-pri{background:var(--p-600);color:#fff}
+.btn-sec{background:#fff;color:var(--n-700);border-color:var(--n-200)}
+.btn svg{width:14px;height:14px}
+.seg{display:inline-flex;height:36px;padding:3px;background:var(--n-100);
+  border-radius:6px;border:1px solid var(--n-150)}
+.seg button{height:28px;padding:0 14px;border:none;background:transparent;cursor:pointer;
+  font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:500;color:var(--n-500);
+  border-radius:4px;display:inline-flex;align-items:center;gap:6px}
+.seg button.on{background:#fff;color:var(--n-950);box-shadow:0 1px 2px rgba(16,24,40,.06),0 0 0 1px var(--n-150)}
+.seg svg{width:14px;height:14px}
+.h-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+
+/* ===== KANBAN ===== */
+.kanban{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.col{background:var(--n-50);border:1px solid var(--n-150);border-radius:12px;
+  display:flex;flex-direction:column;min-height:560px;overflow:hidden}
+.col-head{padding:12px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--n-150);background:#fff}
+.col-name{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;
+  font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--n-500)}
+.col-dot{width:8px;height:8px;border-radius:999px;flex-shrink:0}
+.col-count{font-size:12px;font-weight:500;color:var(--n-700);background:var(--n-100);
+  padding:2px 8px;border-radius:999px;line-height:1.4}
+.col-body{display:flex;flex-direction:column;gap:8px;padding:12px}
+
+/* ===== CARDS ===== */
+.card{background:#fff;border:1px solid var(--n-150);border-radius:6px;
+  border-top-width:2px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.card.t-neutral{border-top-color:var(--n-300)}
+.card.t-info{border-top-color:var(--info)}
+.card.t-warn{border-top-color:var(--warn)}
+.card.t-progress{border-top-color:var(--prog)}
+.card.t-success{border-top-color:var(--succ)}
+.card.t-danger{border-top-color:var(--dang)}
+.card.delivered{opacity:.55}
+.c-id{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-700);
+  letter-spacing:.04em;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.c-id .sla{color:var(--n-500)}
+.c-client{font-size:13px;font-weight:500;color:var(--n-950);line-height:1.3;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.c-equipo{font-size:12px;color:var(--n-500);line-height:1.35;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.c-foot{display:flex;align-items:center;gap:8px;margin-top:2px;
+  padding-top:8px;border-top:1px solid var(--n-100)}
+.av{width:24px;height:24px;border-radius:999px;background:var(--n-100);color:var(--n-700);
+  font-size:10.5px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.c-tech{font-size:12px;color:var(--n-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.c-time{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);flex-shrink:0}
+
+/* ===== CATEGORIES ===== */
+.cat{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px 0 7px;
+  border-radius:4px;font-weight:500;font-size:11.5px;border:1px solid transparent;
+  align-self:flex-start;line-height:1}
+.cat .sw{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.cat-cmp{background:#EEF2FF;color:#2A3478;border-color:#C7D0F2}.cat-cmp .sw{background:var(--cmp)}
+.cat-rpt{background:#E8FAF6;color:#0E5F5A;border-color:#99E8DD}.cat-rpt .sw{background:var(--rpt)}
+.cat-hrm{background:#F5F0FF;color:#5B21B6;border-color:#D9C2FF}.cat-hrm .sw{background:var(--hrm)}
+.cat-lbr{background:#FEF3D6;color:#7A340B;border-color:#F8D58A}.cat-lbr .sw{background:var(--lbr)}
+.cat-acc{background:#FEEEF4;color:#9B226B;border-color:#FBC8DD}.cat-acc .sw{background:var(--acc)}
+
+/* ===== PILLS ===== */
+.pill{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;
+  border-radius:999px;font-weight:500;font-size:11.5px;border:1px solid transparent;line-height:1}
+.pill .dot{width:6px;height:6px;border-radius:999px}
+.p-info{background:var(--info-bg);color:var(--info-d);border-color:var(--info-bd)}.p-info .dot{background:var(--info)}
+.p-warn{background:var(--warn-bg);color:var(--warn-d);border-color:var(--warn-bd)}.p-warn .dot{background:var(--warn)}
+.p-progress{background:var(--prog-bg);color:var(--prog-d);border-color:var(--prog-bd)}.p-progress .dot{background:var(--prog)}
+.p-success{background:var(--succ-bg);color:var(--succ-d);border-color:var(--succ-bd)}.p-success .dot{background:var(--succ)}
+.p-danger{background:var(--dang-bg);color:var(--dang-d);border-color:var(--dang-bd)}.p-danger .dot{background:var(--dang);animation:pulse 2s infinite}
+.p-neutral{background:var(--n-100);color:var(--n-700);border-color:var(--n-200)}.p-neutral .dot{background:var(--n-300)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+
+/* ===== EMPTY / SKELETON / BANNER ===== */
+.empty{padding:20px;text-align:center;color:var(--n-300);font-size:12px;
+  border:1px dashed var(--n-200);border-radius:6px;background:#fff;
+  display:flex;flex-direction:column;align-items:center;gap:8px}
+.empty svg{width:20px;height:20px;color:var(--n-200)}
+.sk-card{background:#fff;border:1px solid var(--n-150);border-top:2px solid var(--n-200);
+  border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.sk{border-radius:3px;background:linear-gradient(90deg,var(--n-100) 0%,var(--n-50) 50%,var(--n-100) 100%);
+  background-size:200% 100%;animation:shim 1.4s infinite linear;display:inline-block}
+@keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.banner{display:flex;align-items:center;gap:12px;padding:12px 16px;
+  background:#FEF3F2;border:1px solid #FECDCA;border-radius:6px;margin-bottom:16px;
+  font-size:13px;color:#B42318}
+.banner b{font-weight:600}.banner svg{width:16px;height:16px;flex-shrink:0}
+
+/* ===== CHROME (sidebar full + rail) ===== */
+.shell{display:grid;background:var(--n-25)}
+.shell.sh-desktop{grid-template-columns:240px 1fr;min-height:900px}
+.shell.sh-tablet{grid-template-columns:56px 1fr;min-height:760px}
+.shell.dk{background:var(--n-975)}
+.side{background:var(--n-950);color:#fff;padding:20px 12px;display:flex;flex-direction:column;gap:1px}
+.side.rail{padding:16px 8px}
+.side.rail .link{justify-content:center;padding:10px 0;width:40px;margin:1px auto}
+.side.rail .brand{padding:0 0 16px;justify-content:center;border-bottom:1px solid var(--n-800);margin-bottom:12px}
+.brand{display:flex;align-items:center;gap:8px;padding:0 12px 20px;
+  border-bottom:1px solid var(--n-800);margin-bottom:16px}
+.logo{width:28px;height:28px;border-radius:6px;background:var(--p-500);color:#fff;
+  font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bn{font-size:13px;font-weight:600;letter-spacing:-0.01em}
+.bs{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--n-300);letter-spacing:.06em}
+.sec{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--n-500);padding:12px 12px 4px;font-weight:500}
+.link{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:5px;
+  color:#D0D5DD;font-size:13px;cursor:pointer;position:relative}
+.link:hover{background:rgba(255,255,255,.04)}
+.link.on{background:rgba(75,91,245,.16);color:#fff;font-weight:500}
+.link.on::before{content:"";position:absolute;left:-3px;top:9px;bottom:9px;width:3px;
+  background:var(--p-500);border-radius:2px}
+.side.rail .link.on::before{left:0}
+.link svg{width:14px;height:14px;flex-shrink:0;opacity:.85}
+.main{background:var(--n-25);overflow:hidden}
+.dk .main{background:var(--n-975)}
+.main-inner{padding:24px 32px}
+.main-inner.tablet{padding:20px}
+
+/* ===== TABLET scroll-x ===== */
+.tab-scroll{overflow-x:auto;margin:0 -20px;padding:0 20px;
+  scrollbar-width:thin;scrollbar-color:var(--n-200) transparent}
+.tab-scroll::-webkit-scrollbar{height:8px}
+.tab-scroll::-webkit-scrollbar-thumb{background:var(--n-200);border-radius:4px}
+.dk .tab-scroll{scrollbar-color:var(--n-700) transparent}
+.dk .tab-scroll::-webkit-scrollbar-thumb{background:var(--n-700)}
+.tab-kanban{display:grid;grid-template-columns:repeat(6,280px);gap:12px;min-height:520px}
+.hint{display:inline-flex;align-items:center;gap:8px;margin-top:16px;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+  letter-spacing:.04em;padding:6px 12px;background:var(--n-100);border-radius:999px}
+.hint svg{width:13px;height:13px}
+.dk .hint{background:var(--n-900);color:var(--n-300)}
+
+/* ===== MOBILE ===== */
+.mob{width:390px;background:var(--n-25);min-height:780px;
+  display:flex;flex-direction:column;position:relative;border:1px solid var(--n-200);
+  border-radius:24px;overflow:hidden;box-shadow:0 20px 60px -20px rgba(16,24,40,.2)}
+.mob.dk{background:var(--n-975);border-color:var(--n-800)}
+.mob-top{background:#fff;border-bottom:1px solid var(--n-150);padding:14px 16px 0;position:relative;z-index:2}
+.dk .mob-top{background:var(--n-950);border-color:var(--n-800)}
+.mob-top-row{display:flex;align-items:center;gap:12px;padding-bottom:14px}
+.mob-icon{width:40px;height:40px;border-radius:8px;border:none;background:transparent;
+  color:var(--n-700);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.dk .mob-icon{color:var(--n-200)}
+.mob-icon svg{width:22px;height:22px}
+.mob-title{font-size:17px;font-weight:600;color:var(--n-950);letter-spacing:-0.01em}
+.dk .mob-title{color:#fff}
+.mob-sub{font-size:12px;color:var(--n-500)}
+.mob-sub b{font-family:'IBM Plex Mono',monospace;color:var(--n-700);font-weight:500}
+.dk .mob-sub{color:var(--n-300)}.dk .mob-sub b{color:var(--n-100)}
+.mob-coltabs{display:flex;gap:6px;overflow-x:auto;padding:0 16px 12px;margin:0 -16px;
+  scrollbar-width:none}
+.mob-coltabs::-webkit-scrollbar{display:none}
+.mob-coltab{flex-shrink:0;display:flex;align-items:center;gap:6px;height:36px;padding:0 12px;
+  background:var(--n-50);border:1px solid var(--n-150);border-radius:999px;cursor:pointer;
+  color:var(--n-700);font-family:'IBM Plex Sans',sans-serif}
+.mob-coltab .lbl{font-size:12px;font-weight:500}
+.mob-coltab .cnt{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+  background:#fff;padding:1px 6px;border-radius:999px;border:1px solid var(--n-150)}
+.mob-coltab.on{background:var(--n-950);color:#fff;border-color:var(--n-950)}
+.mob-coltab.on .cnt{background:rgba(255,255,255,.12);color:#fff;border-color:transparent}
+.dk .mob-coltab{background:var(--n-900);border-color:var(--n-800);color:var(--n-200)}
+.dk .mob-coltab .cnt{background:var(--n-950);color:var(--n-300);border-color:var(--n-800)}
+.dk .mob-coltab.on{background:var(--p-500);border-color:var(--p-500);color:#fff}
+.mob-main{flex:1;padding:16px;padding-bottom:96px;overflow-y:auto}
+.mob-coltitle{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;
+  font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--n-700);
+  margin-bottom:12px;font-weight:500}
+.dk .mob-coltitle{color:var(--n-200)}
+.mob-coltitle .col-count{margin-left:auto}
+.mob-cards{display:flex;flex-direction:column;gap:12px}
+.card.mob{padding:14px;gap:10px}
+.card.mob .c-id{font-size:12px}
+.card.mob .c-client{font-size:15px;white-space:normal}
+.card.mob .c-equipo{font-size:13px;white-space:normal}
+.card.mob .cat{height:26px;font-size:12.5px}
+.card.mob .av{width:32px;height:32px;font-size:12px}
+.card.mob .c-tech{font-size:13px}
+.card.mob .c-time{font-size:12px}
+.card.mob .c-foot{padding-top:12px}
+.mob-fab{position:absolute;right:16px;bottom:80px;width:56px;height:56px;border-radius:999px;
+  background:var(--p-600);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;box-shadow:0 8px 24px rgba(45,60,229,.4);z-index:5}
+.dk .mob-fab{background:var(--p-500);box-shadow:0 8px 24px rgba(75,91,245,.5)}
+.mob-fab svg{width:24px;height:24px}
+.mob-bottom{height:64px;background:#fff;border-top:1px solid var(--n-150);
+  display:grid;grid-template-columns:repeat(5,1fr);position:absolute;bottom:0;left:0;right:0}
+.dk .mob-bottom{background:var(--n-950);border-color:var(--n-800)}
+.mob-tab{background:transparent;border:none;cursor:pointer;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;color:var(--n-500);font-size:11px;
+  font-family:'IBM Plex Sans',sans-serif;font-weight:500;padding:8px 0;min-height:48px}
+.mob-tab svg{width:22px;height:22px}
+.mob-tab.on{color:var(--p-600)}
+.dk .mob-tab{color:var(--n-500)}.dk .mob-tab.on{color:var(--p-300)}
+
+/* ===== DARK overrides ===== */
+.dk .col{background:var(--n-950);border-color:var(--n-800)}
+.dk .col-head{background:var(--n-900);border-color:var(--n-800)}
+.dk .col-name{color:var(--n-300)}
+.dk .col-count{background:var(--n-800);color:var(--n-300)}
+.dk .card{background:var(--n-900);border-color:var(--n-800);color:#fff}
+.dk .c-id{color:var(--n-200)}.dk .c-id .sla{color:var(--n-300)}
+.dk .c-client{color:#fff}.dk .c-equipo{color:var(--n-300)}.dk .c-tech{color:var(--n-200)}
+.dk .c-time{color:var(--n-300)}.dk .c-foot{border-top-color:var(--n-800)}
+.dk .av{background:var(--n-800);color:var(--n-200)}
+.dk .empty{background:var(--n-900);border-color:var(--n-800);color:var(--n-300)}
+.dk .sk-card{background:var(--n-900);border-color:var(--n-800)}
+.dk .sk{background:linear-gradient(90deg,var(--n-800) 0%,var(--n-900) 50%,var(--n-800) 100%);background-size:200% 100%}
+.dk .cat-cmp{background:rgba(68,86,194,.14);color:#A8B4FF;border-color:rgba(68,86,194,.35)}
+.dk .cat-rpt{background:rgba(21,159,138,.14);color:#5EE6CD;border-color:rgba(21,159,138,.35)}
+.dk .cat-hrm{background:rgba(114,68,213,.14);color:#C2A6FF;border-color:rgba(114,68,213,.35)}
+.dk .cat-lbr{background:rgba(198,132,32,.14);color:#F5C26B;border-color:rgba(198,132,32,.35)}
+.dk .cat-acc{background:rgba(210,78,142,.14);color:#F19EC2;border-color:rgba(210,78,142,.35)}
+.dk .p-info{background:rgba(46,144,250,.14);color:#84C5FF;border-color:rgba(46,144,250,.35)}
+.dk .p-warn{background:rgba(247,144,9,.14);color:#FDB022;border-color:rgba(247,144,9,.35)}
+.dk .p-progress{background:rgba(154,111,223,.14);color:#C2A6FF;border-color:rgba(154,111,223,.35)}
+.dk .p-success{background:rgba(18,183,106,.14);color:#5EE6A6;border-color:rgba(18,183,106,.35)}
+.dk .p-danger{background:rgba(240,68,56,.14);color:#FDA29B;border-color:rgba(240,68,56,.35)}
+.dk .p-neutral{background:var(--n-800);color:var(--n-300);border-color:var(--n-800)}
+.dk .banner{background:rgba(240,68,56,.14);border-color:rgba(240,68,56,.35);color:#FDA29B}
+.dk .btn-pri{background:var(--p-500)}.dk .btn-sec{background:var(--n-900);color:var(--n-200);border-color:var(--n-800)}
+.dk .seg{background:var(--n-900);border-color:var(--n-800)}
+.dk .seg button{color:var(--n-300)}
+.dk .seg button.on{background:var(--n-800);color:#fff;box-shadow:none}
+.dk .ph-title{color:#fff}
+.dk .ph-sub{color:var(--n-300)}.dk .ph-sub b{color:#fff}
+.dk .ph-meta{color:var(--n-500)}
+
+/* ===== CHECK CARD / SPECIALS ===== */
+.check-card{background:#fff;border:1px solid var(--n-150);border-radius:12px;overflow:hidden;margin-top:24px}
+.check-row{display:grid;grid-template-columns:24px 1fr;gap:12px;padding:16px 20px;
+  border-bottom:1px solid var(--n-100);align-items:start}
+.check-row:last-child{border-bottom:none}
+.check-dot{width:18px;height:18px;border-radius:999px;background:#12B76A;display:flex;
+  align-items:center;justify-content:center;color:#fff;font-size:10px;margin-top:2px}
+.check-text{font-size:13px;color:var(--n-800);line-height:1.55}
+.check-text strong{color:var(--n-950);font-weight:600}
+.check-text code{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--n-700);
+  background:var(--n-50);padding:1px 6px;border-radius:3px;border:1px solid var(--n-150)}
+.special-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.special-card{background:#fff;border:1px solid var(--n-150);border-radius:12px;padding:20px}
+.special-h{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-700);
+  letter-spacing:.08em;text-transform:uppercase;margin:0 0 12px;font-weight:500}
+.special-d{font-size:12px;color:var(--n-500);margin:0 0 16px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- DOC HEAD -->
+  <div style="margin-bottom:48px">
+    <p class="doc-eyebrow">CHV · Sistema canónico v1.0 · Pantalla 1</p>
+    <h1 class="doc-title">Órdenes de servicio · Kanban</h1>
+    <p class="doc-sub">
+      Workflow board para taller. Seis vistas con el mismo dataset (14 órdenes abiertas, 6 columnas de estado, 2 vencidas) reorganizado para desktop, tablet y mobile, en light y dark mode. Validación crítica: convivencia de los tres azules — royal CTA <code>#2D3CE5</code>, info pill <code>#2E90FA</code>, indigo steel categoría compresores <code>#4456C2</code>.
+    </p>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- LIGHT MODE                                                    -->
+  <!-- ============================================================ -->
+  <div class="section-divider"><span class="lbl">Light mode · 3 breakpoints</span><span class="ln"></span></div>
+
+  <!-- ===== VISTA 1 · DESKTOP LIGHT ===== -->
+  <div class="frame-wrap">
+    <div class="frame-label">
+      <span class="lbl-num">1</span><span>Desktop · sidebar 240 px · vista principal</span><span class="lbl-px">1280 px</span>
+    </div>
+    <p class="frame-desc">La pantalla LIVE adentro de la app. Sidebar de navegación en n-950 con "Órdenes de servicio" activo (border-left p-500 + bg p-500 alpha 16). Header con counters en mono, segmented Tablero/Lista, CTA royal <b>+ Nueva OS</b>. Banner ámbar con las 2 vencidas. Kanban de 6 columnas iguales.</p>
+    <div class="frame">
+      <div class="vp-desktop">
+        <div class="shell sh-desktop">
+          <!-- SIDEBAR FULL -->
+          <aside class="side">
+            <div class="brand">
+              <div class="logo">C</div>
+              <div>
+                <div class="bn">Compresores Valle</div>
+                <div class="bs">WH-01 · Cali</div>
+              </div>
+            </div>
+            <div class="sec">Operación</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg><span>Cockpit</span></div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v3H3zM3 7h10v3H3zM3 11h6v3H3z"/></svg><span>Órdenes de servicio</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5l6-3 6 3v6l-6 3-6-3z"/></svg><span>Inventario</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="13" r="1.5"/><circle cx="12" cy="13" r="1.5"/><path d="M2 3h2l2 8h8"/></svg><span>Ventas</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l5-4 5 4v6H3z"/></svg><span>Compras</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l5-5M13 8L8 3M3 8l5 5M13 8l-5 5"/></svg><span>Traslados</span></div>
+            <div class="sec">Admin</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.5 2-4 5-4s5 1.5 5 4"/></svg><span>Usuarios</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v10H3z"/><path d="M6 6h4M6 9h4"/></svg><span>Reportes</span></div>
+          </aside>
+          <!-- MAIN -->
+          <main class="main">
+            <div class="main-inner">
+              <p class="ph-meta"><span>Compresores del Valle</span><span>Operaciones · Taller</span><span>Vista admin</span></p>
+              <div class="ph-row">
+                <div>
+                  <h1 class="ph-title">Órdenes de servicio</h1>
+                  <p class="ph-sub"><b>14</b> abiertas · <b>6</b> técnicos disponibles · <b>2</b> vencidas</p>
+                </div>
+                <div class="h-actions">
+                  <button class="btn btn-sec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h10M5 9h6M7 12h2"/></svg>Filtros</button>
+                  <div class="seg">
+                    <button class="on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="4" height="12" rx="1"/><rect x="7" y="2" width="4" height="8" rx="1"/><rect x="12" y="2" width="2" height="6" rx="1"/></svg>Tablero</button>
+                    <button><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h10M3 8h10M3 12h10"/></svg>Lista</button>
+                  </div>
+                  <button class="btn btn-pri"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v10M3 8h10"/></svg>Nueva OS</button>
+                </div>
+              </div>
+              <div class="banner">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 10.5v.5"/></svg>
+                <span><b>2 órdenes vencidas</b> requieren atención · OS-2832 (+1d 02h) y OS-2810 (+8h)</span>
+              </div>
+              <!-- KANBAN -->
+              <div class="kanban">
+                <!-- COL 1 RECIBIDA -->
+                <div class="col">
+                  <div class="col-head"><div class="col-name"><span class="col-dot" style="background:#98A2B3"></span>Recibida</div><span class="col-count">2</span></div>
+                  <div class="col-body">
+                    <div class="card t-neutral"><div class="c-id"><span>OS-2851</span><span class="sla">Hoy 09:14</span></div><div class="c-client">Industrial Pacífico S.A.</div><div class="c-equipo">Atlas Copco GA-22 · 2018</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#EEF1F5;color:#475467">SR</span><span class="c-tech">Sin asignar</span><span class="c-time">02h</span></div></div>
+                    <div class="card t-neutral"><div class="c-id"><span>OS-2850</span><span class="sla">Hoy 08:42</span></div><div class="c-client">Cervecería Andina Ltda.</div><div class="c-equipo">Filtros + bandas · varios</div><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="c-foot"><span class="av" style="background:#EEF1F5;color:#475467">SR</span><span class="c-tech">Sin asignar</span><span class="c-time">02h 30m</span></div></div>
+                  </div>
+                </div>
+                <!-- COL 2 DIAGNÓSTICO -->
+                <div class="col">
+                  <div class="col-head"><div class="col-name"><span class="col-dot" style="background:#2E90FA"></span>En diagnóstico</div><span class="col-count">3</span></div>
+                  <div class="col-body">
+                    <div class="card t-info"><div class="c-id"><span>OS-2848</span><span class="sla">06h 12m</span></div><div class="c-client">Metalúrgica del Cauca</div><div class="c-equipo">Kaeser SX-7 · 2020</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#EFF8FF;color:#175CD3">CR</span><span class="c-tech">Carlos R.</span><span class="c-time">06h</span></div></div>
+                    <div class="card t-info"><div class="c-id"><span>OS-2847</span><span class="sla">04h 22m</span></div><div class="c-client">Maderera Pacífico</div><div class="c-equipo">Sullair LS-25 · 2017</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#FEF0C7;color:#93370D">DM</span><span class="c-tech">Diego M.</span><span class="c-time">04h</span></div></div>
+                    <div class="card t-info"><div class="c-id"><span>OS-2846</span><span class="sla">02h 08m</span></div><div class="c-client">Tecnoindustrial Valle</div><div class="c-equipo">Llave torque eléctrica</div><span class="cat cat-hrm"><span class="sw"></span>Herramientas</span><div class="c-foot"><span class="av" style="background:#F4EBFF;color:#6941C6">JL</span><span class="c-tech">Juan L.</span><span class="c-time">02h</span></div></div>
+                  </div>
+                </div>
+                <!-- COL 3 ESPERANDO -->
+                <div class="col">
+                  <div class="col-head"><div class="col-name"><span class="col-dot" style="background:#F79009"></span>Esperando repuestos</div><span class="col-count">3</span></div>
+                  <div class="col-body">
+                    <div class="card t-warn"><div class="c-id"><span>OS-2841</span><span class="sla">04d 18h</span></div><div class="c-client">Cervecería Andina</div><div class="c-equipo">Ingersoll Rand R5 · 2019</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#FFFAEB;color:#B54708">MA</span><span class="c-tech">María A.</span><span class="c-time">04d</span></div></div>
+                    <div class="card t-warn"><div class="c-id"><span>OS-2837</span><span class="sla">02d 06h</span></div><div class="c-client">Lácteos del Norte</div><div class="c-equipo">Aceite ISO-VG 46 (espera)</div><span class="cat cat-lbr"><span class="sw"></span>Lubricantes</span><div class="c-foot"><span class="av" style="background:#FEF3D6;color:#7A340B">RV</span><span class="c-tech">Ricardo V.</span><span class="c-time">02d</span></div></div>
+                    <div class="card t-warn"><div class="c-id"><span>OS-2835</span><span class="sla">01d 14h</span></div><div class="c-client">Plásticos Cali</div><div class="c-equipo">Manguera 8mm + acoples</div><span class="cat cat-acc"><span class="sw"></span>Accesorios</span><div class="c-foot"><span class="av" style="background:#FEEEF4;color:#9B226B">SP</span><span class="c-tech">Sandra P.</span><span class="c-time">01d</span></div></div>
+                  </div>
+                </div>
+                <!-- COL 4 REPARACIÓN -->
+                <div class="col">
+                  <div class="col-head"><div class="col-name"><span class="col-dot" style="background:#9A6FDF"></span>En reparación</div><span class="col-count">3</span></div>
+                  <div class="col-body">
+                    <div class="card t-danger"><div class="c-id"><span>OS-2832</span><span class="pill p-danger"><span class="dot"></span>Vencida +1d 02h</span></div><div class="c-client">Industrial XYZ</div><div class="c-equipo">Compresor línea 3 (urgente)</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#FEF3F2;color:#B42318">CR</span><span class="c-tech">Carlos R.</span><span class="c-time">+1d 02h</span></div></div>
+                    <div class="card t-progress"><div class="c-id"><span>OS-2845</span><span class="sla">02d 04h</span></div><div class="c-client">Industrial XYZ</div><div class="c-equipo">Atlas Copco GA-22 · cambio aceite</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#F4EBFF;color:#6941C6">DM</span><span class="c-tech">Diego M.</span><span class="c-time">02d</span></div></div>
+                    <div class="card t-progress"><div class="c-id"><span>OS-2843</span><span class="sla">18h 40m</span></div><div class="c-client">Concretera del Sur</div><div class="c-equipo">Válvula admisión · reemplazo</div><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="c-foot"><span class="av" style="background:#F4EBFF;color:#6941C6">JL</span><span class="c-tech">Juan L.</span><span class="c-time">18h</span></div></div>
+                  </div>
+                </div>
+                <!-- COL 5 COMPLETADA -->
+                <div class="col">
+                  <div class="col-head"><div class="col-name"><span class="col-dot" style="background:#12B76A"></span>Completada</div><span class="col-count">0</span></div>
+                  <div class="col-body">
+                    <div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 13l4 4L19 7"/></svg><span>Sin completadas hoy</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em">02 may 2026</span></div>
+                  </div>
+                </div>
+                <!-- COL 6 ENTREGADA -->
+                <div class="col">
+                  <div class="col-head"><div class="col-name"><span class="col-dot" style="background:#98A2B3"></span>Entregada</div><span class="col-count">3</span></div>
+                  <div class="col-body">
+                    <div class="card t-neutral delivered"><div class="c-id"><span>OS-2820</span><span class="sla">Ayer 17:22</span></div><div class="c-client">Maderera Pacífico</div><div class="c-equipo">Sullair LS-25 · prevent.</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#EEF1F5;color:#475467">MA</span><span class="c-tech">María A.</span><span class="c-time">— ayer</span></div></div>
+                    <div class="card t-neutral delivered"><div class="c-id"><span>OS-2818</span><span class="sla">Ayer 14:08</span></div><div class="c-client">Plásticos Cali</div><div class="c-equipo">Cambio bandas + filtros</div><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="c-foot"><span class="av" style="background:#EEF1F5;color:#475467">RV</span><span class="c-tech">Ricardo V.</span><span class="c-time">— ayer</span></div></div>
+                    <div class="card t-neutral delivered"><div class="c-id"><span>OS-2811</span><span class="sla">12 abr</span></div><div class="c-client">Tecnoindustrial Valle</div><div class="c-equipo">Llave torque · calibrac.</div><span class="cat cat-hrm"><span class="sw"></span>Herramientas</span><div class="c-foot"><span class="av" style="background:#EEF1F5;color:#475467">SP</span><span class="c-tech">Sandra P.</span><span class="c-time">— 12 abr</span></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VISTA 2 · TABLET LIGHT ===== -->
+  <div class="frame-wrap">
+    <div class="frame-label">
+      <span class="lbl-num">2</span><span>Tablet · sidebar rail 56 px · scroll-x kanban</span><span class="lbl-px">900 px</span>
+    </div>
+    <p class="frame-desc">Sidebar colapsada solo a iconos. Kanban mantiene 6 columnas a 280 px con scroll horizontal — se ven ~3 a la vez. Hint en mono debajo.</p>
+    <div class="frame">
+      <div class="vp-tablet">
+        <div class="shell sh-tablet">
+          <aside class="side rail">
+            <div class="brand"><div class="logo">C</div></div>
+            <div class="link" title="Cockpit"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg></div>
+            <div class="link on" title="OS"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v3H3zM3 7h10v3H3zM3 11h6v3H3z"/></svg></div>
+            <div class="link" title="Inventario"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5l6-3 6 3v6l-6 3-6-3z"/></svg></div>
+            <div class="link" title="Ventas"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="13" r="1.5"/><circle cx="12" cy="13" r="1.5"/><path d="M2 3h2l2 8h8"/></svg></div>
+            <div class="link" title="Compras"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l5-4 5 4v6H3z"/></svg></div>
+            <div class="link" title="Traslados"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l5-5M13 8L8 3M3 8l5 5M13 8l-5 5"/></svg></div>
+            <div class="link" title="Usuarios"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.5 2-4 5-4s5 1.5 5 4"/></svg></div>
+            <div class="link" title="Reportes"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v10H3z"/><path d="M6 6h4M6 9h4"/></svg></div>
+          </aside>
+          <main class="main">
+            <div class="main-inner tablet">
+              <p class="ph-meta"><span>Compresores del Valle</span><span>Operaciones · Taller</span></p>
+              <div class="ph-row">
+                <div>
+                  <h1 class="ph-title" style="font-size:18px">Órdenes de servicio</h1>
+                  <p class="ph-sub" style="font-size:12px"><b>14</b> abiertas · <b>6</b> técnicos · <b>2</b> vencidas</p>
+                </div>
+                <div class="h-actions">
+                  <div class="seg" style="height:32px"><button class="on" style="height:24px;font-size:12px;padding:0 10px">Tablero</button><button style="height:24px;font-size:12px;padding:0 10px">Lista</button></div>
+                  <button class="btn btn-pri" style="height:32px;font-size:12px;padding:0 12px">+ Nueva OS</button>
+                </div>
+              </div>
+              <div class="banner" style="font-size:12px;padding:10px 14px"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 10.5v.5"/></svg><span><b>2 vencidas</b> · OS-2832 (+1d 02h), OS-2810 (+8h)</span></div>
+              <div class="tab-scroll">
+                <div class="tab-kanban">
+                  <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#98A2B3"></span>Recibida</div><span class="col-count">2</span></div><div class="col-body">
+                    <div class="card t-neutral"><div class="c-id"><span>OS-2851</span><span class="sla">09:14</span></div><div class="c-client">Industrial Pacífico S.A.</div><div class="c-equipo">Atlas Copco GA-22</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#EEF1F5;color:#475467">SR</span><span class="c-tech">Sin asignar</span><span class="c-time">02h</span></div></div>
+                    <div class="card t-neutral"><div class="c-id"><span>OS-2850</span><span class="sla">08:42</span></div><div class="c-client">Cervecería Andina</div><div class="c-equipo">Filtros + bandas</div><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="c-foot"><span class="av" style="background:#EEF1F5;color:#475467">SR</span><span class="c-tech">Sin asignar</span><span class="c-time">02h 30m</span></div></div>
+                  </div></div>
+                  <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#2E90FA"></span>En diagnóstico</div><span class="col-count">3</span></div><div class="col-body">
+                    <div class="card t-info"><div class="c-id"><span>OS-2848</span><span class="sla">06h 12m</span></div><div class="c-client">Metalúrgica del Cauca</div><div class="c-equipo">Kaeser SX-7 · 2020</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#EFF8FF;color:#175CD3">CR</span><span class="c-tech">Carlos R.</span><span class="c-time">06h</span></div></div>
+                    <div class="card t-info"><div class="c-id"><span>OS-2847</span><span class="sla">04h 22m</span></div><div class="c-client">Maderera Pacífico</div><div class="c-equipo">Sullair LS-25 · 2017</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#FEF0C7;color:#93370D">DM</span><span class="c-tech">Diego M.</span><span class="c-time">04h</span></div></div>
+                    <div class="card t-info"><div class="c-id"><span>OS-2846</span><span class="sla">02h 08m</span></div><div class="c-client">Tecnoindustrial Valle</div><div class="c-equipo">Llave torque eléctrica</div><span class="cat cat-hrm"><span class="sw"></span>Herramientas</span><div class="c-foot"><span class="av" style="background:#F4EBFF;color:#6941C6">JL</span><span class="c-tech">Juan L.</span><span class="c-time">02h</span></div></div>
+                  </div></div>
+                  <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#F79009"></span>Esperando rep.</div><span class="col-count">3</span></div><div class="col-body">
+                    <div class="card t-warn"><div class="c-id"><span>OS-2841</span><span class="sla">04d 18h</span></div><div class="c-client">Cervecería Andina</div><div class="c-equipo">Ingersoll Rand R5</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#FFFAEB;color:#B54708">MA</span><span class="c-tech">María A.</span><span class="c-time">04d</span></div></div>
+                    <div class="card t-warn"><div class="c-id"><span>OS-2837</span><span class="sla">02d 06h</span></div><div class="c-client">Lácteos del Norte</div><div class="c-equipo">Aceite ISO-VG 46</div><span class="cat cat-lbr"><span class="sw"></span>Lubricantes</span><div class="c-foot"><span class="av" style="background:#FEF3D6;color:#7A340B">RV</span><span class="c-tech">Ricardo V.</span><span class="c-time">02d</span></div></div>
+                    <div class="card t-warn"><div class="c-id"><span>OS-2835</span><span class="sla">01d 14h</span></div><div class="c-client">Plásticos Cali</div><div class="c-equipo">Manguera 8mm + acoples</div><span class="cat cat-acc"><span class="sw"></span>Accesorios</span><div class="c-foot"><span class="av" style="background:#FEEEF4;color:#9B226B">SP</span><span class="c-tech">Sandra P.</span><span class="c-time">01d</span></div></div>
+                  </div></div>
+                  <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#9A6FDF"></span>En reparación</div><span class="col-count">3</span></div><div class="col-body">
+                    <div class="card t-danger"><div class="c-id"><span>OS-2832</span><span class="pill p-danger"><span class="dot"></span>+1d 02h</span></div><div class="c-client">Industrial XYZ</div><div class="c-equipo">Compresor línea 3</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#FEF3F2;color:#B42318">CR</span><span class="c-tech">Carlos R.</span><span class="c-time">+1d</span></div></div>
+                    <div class="card t-progress"><div class="c-id"><span>OS-2845</span><span class="sla">02d 04h</span></div><div class="c-client">Industrial XYZ</div><div class="c-equipo">Atlas Copco GA-22</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#F4EBFF;color:#6941C6">DM</span><span class="c-tech">Diego M.</span><span class="c-time">02d</span></div></div>
+                    <div class="card t-progress"><div class="c-id"><span>OS-2843</span><span class="sla">18h 40m</span></div><div class="c-client">Concretera del Sur</div><div class="c-equipo">Válvula admisión</div><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="c-foot"><span class="av" style="background:#F4EBFF;color:#6941C6">JL</span><span class="c-tech">Juan L.</span><span class="c-time">18h</span></div></div>
+                  </div></div>
+                  <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#12B76A"></span>Completada</div><span class="col-count">0</span></div><div class="col-body">
+                    <div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 13l4 4L19 7"/></svg><span>Sin completadas hoy</span></div>
+                  </div></div>
+                  <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#98A2B3"></span>Entregada</div><span class="col-count">3</span></div><div class="col-body">
+                    <div class="card t-neutral delivered"><div class="c-id"><span>OS-2820</span><span class="sla">Ayer</span></div><div class="c-client">Maderera Pacífico</div><div class="c-equipo">Sullair LS-25</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#EEF1F5;color:#475467">MA</span><span class="c-tech">María A.</span><span class="c-time">— ayer</span></div></div>
+                    <div class="card t-neutral delivered"><div class="c-id"><span>OS-2818</span><span class="sla">Ayer</span></div><div class="c-client">Plásticos Cali</div><div class="c-equipo">Bandas + filtros</div><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="c-foot"><span class="av" style="background:#EEF1F5;color:#475467">RV</span><span class="c-tech">Ricardo V.</span><span class="c-time">— ayer</span></div></div>
+                  </div></div>
+                </div>
+              </div>
+              <div class="hint"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>Desliza para ver Reparación · Completada · Entregada</div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VISTA 3 · MOBILE LIGHT ===== -->
+  <div class="frame-wrap">
+    <div class="frame-label">
+      <span class="lbl-num">3</span><span>Mobile · bottom tabs · una columna a la vez</span><span class="lbl-px">390 px</span>
+    </div>
+    <p class="frame-desc">Sin sidebar — bottom tab bar de 5 entradas. Tabs horizontales scroll-x para navegar entre las 6 columnas (En reparación activa por defecto, contiene la vencida). Cards full-width con padding 14 px y type 15 px. Hit targets ≥48 px. FAB royal flotante.</p>
+    <div class="vp-mobile">
+      <div class="mob">
+        <header class="mob-top">
+          <div class="mob-top-row">
+            <button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+            <div style="flex:1">
+              <div class="mob-title">Órdenes de servicio</div>
+              <div class="mob-sub"><b>14</b> abiertas · <b>2</b> vencidas</div>
+            </div>
+            <button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="6"/><path d="M16 16l4 4"/></svg></button>
+          </div>
+          <div class="mob-coltabs">
+            <button class="mob-coltab"><span class="col-dot" style="background:#98A2B3"></span><span class="lbl">Recibida</span><span class="cnt">2</span></button>
+            <button class="mob-coltab"><span class="col-dot" style="background:#2E90FA"></span><span class="lbl">Diagnóstico</span><span class="cnt">3</span></button>
+            <button class="mob-coltab"><span class="col-dot" style="background:#F79009"></span><span class="lbl">Esperando</span><span class="cnt">3</span></button>
+            <button class="mob-coltab on"><span class="col-dot" style="background:#9A6FDF"></span><span class="lbl">Reparación</span><span class="cnt">3</span></button>
+            <button class="mob-coltab"><span class="col-dot" style="background:#12B76A"></span><span class="lbl">Completada</span><span class="cnt">0</span></button>
+            <button class="mob-coltab"><span class="col-dot" style="background:#98A2B3"></span><span class="lbl">Entregada</span><span class="cnt">3</span></button>
+          </div>
+        </header>
+        <main class="mob-main">
+          <div class="banner" style="margin:0 0 16px"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 10.5v.5"/></svg><span><b>2 vencidas</b> · OS-2832 y OS-2810</span></div>
+          <div class="mob-coltitle"><span class="col-dot" style="background:#9A6FDF;width:10px;height:10px"></span><span>En reparación</span><span class="col-count">3</span></div>
+          <div class="mob-cards">
+            <div class="card mob t-danger"><div class="c-id"><span>OS-2832</span><span class="pill p-danger" style="height:24px;font-size:12px"><span class="dot"></span>Vencida +1d 02h</span></div><div class="c-client">Industrial XYZ</div><div class="c-equipo">Compresor línea 3 (urgente)</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#FEF3F2;color:#B42318">CR</span><span class="c-tech">Carlos R.</span><span class="c-time">+1d 02h</span></div></div>
+            <div class="card mob t-progress"><div class="c-id"><span>OS-2845</span><span class="sla">02d 04h</span></div><div class="c-client">Industrial XYZ</div><div class="c-equipo">Atlas Copco GA-22 · cambio aceite</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#F4EBFF;color:#6941C6">DM</span><span class="c-tech">Diego M.</span><span class="c-time">02d</span></div></div>
+            <div class="card mob t-progress"><div class="c-id"><span>OS-2843</span><span class="sla">18h 40m</span></div><div class="c-client">Concretera del Sur</div><div class="c-equipo">Válvula admisión · reemplazo</div><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="c-foot"><span class="av" style="background:#F4EBFF;color:#6941C6">JL</span><span class="c-tech">Juan L.</span><span class="c-time">18h</span></div></div>
+          </div>
+        </main>
+        <button class="mob-fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button>
+        <nav class="mob-bottom">
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Cockpit</span></button>
+          <button class="mob-tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 5h16v3H4zM4 10.5h16v3H4zM4 16h10v3H4z"/></svg><span>OS</span></button>
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l9-4 9 4v9l-9 4-9-4z"/></svg><span>Inv.</span></button>
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h3l3 12h12"/></svg><span>Ventas</span></button>
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg><span>Más</span></button>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- DARK MODE                                                     -->
+  <!-- ============================================================ -->
+  <div class="section-divider"><span class="lbl">Dark mode · mismas 3 vistas · tokens dark canónicos</span><span class="ln"></span></div>
+
+  <!-- ===== VISTA 4 · DESKTOP DARK ===== -->
+  <div class="frame-wrap">
+    <div class="frame-label dk">
+      <span class="lbl-num">4</span><span>Desktop dark · n-975 fondo · p-500 CTA</span><span class="lbl-px">1280 px</span>
+    </div>
+    <p class="frame-desc">Fondo n-975 <code>#0B1320</code>, surfaces n-950, borders n-800. Pills y categorías a alpha 14 fill / alpha 35 border / paso 200-400 texto. CTA <b>Nueva OS</b> sube a p-500.</p>
+    <div class="frame dk">
+      <div class="vp-desktop">
+        <div class="shell sh-desktop dk">
+          <aside class="side">
+            <div class="brand"><div class="logo">C</div><div><div class="bn">Compresores Valle</div><div class="bs">WH-01 · Cali</div></div></div>
+            <div class="sec">Operación</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg><span>Cockpit</span></div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v3H3zM3 7h10v3H3zM3 11h6v3H3z"/></svg><span>Órdenes de servicio</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5l6-3 6 3v6l-6 3-6-3z"/></svg><span>Inventario</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="13" r="1.5"/><circle cx="12" cy="13" r="1.5"/><path d="M2 3h2l2 8h8"/></svg><span>Ventas</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l5-4 5 4v6H3z"/></svg><span>Compras</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l5-5M13 8L8 3M3 8l5 5M13 8l-5 5"/></svg><span>Traslados</span></div>
+            <div class="sec">Admin</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.5 2-4 5-4s5 1.5 5 4"/></svg><span>Usuarios</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v10H3z"/><path d="M6 6h4M6 9h4"/></svg><span>Reportes</span></div>
+          </aside>
+          <main class="main">
+            <div class="main-inner">
+              <p class="ph-meta"><span>Compresores del Valle</span><span>Operaciones · Taller</span><span>Vista admin</span></p>
+              <div class="ph-row">
+                <div>
+                  <h1 class="ph-title">Órdenes de servicio</h1>
+                  <p class="ph-sub"><b>14</b> abiertas · <b>6</b> técnicos disponibles · <b>2</b> vencidas</p>
+                </div>
+                <div class="h-actions">
+                  <button class="btn btn-sec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h10M5 9h6M7 12h2"/></svg>Filtros</button>
+                  <div class="seg">
+                    <button class="on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="4" height="12" rx="1"/><rect x="7" y="2" width="4" height="8" rx="1"/><rect x="12" y="2" width="2" height="6" rx="1"/></svg>Tablero</button>
+                    <button><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h10M3 8h10M3 12h10"/></svg>Lista</button>
+                  </div>
+                  <button class="btn btn-pri"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v10M3 8h10"/></svg>Nueva OS</button>
+                </div>
+              </div>
+              <div class="banner"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 10.5v.5"/></svg><span><b>2 órdenes vencidas</b> requieren atención · OS-2832 (+1d 02h) y OS-2810 (+8h)</span></div>
+              <div class="kanban">
+                <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#98A2B3"></span>Recibida</div><span class="col-count">2</span></div><div class="col-body">
+                  <div class="card t-neutral"><div class="c-id"><span>OS-2851</span><span class="sla">Hoy 09:14</span></div><div class="c-client">Industrial Pacífico S.A.</div><div class="c-equipo">Atlas Copco GA-22 · 2018</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">SR</span><span class="c-tech">Sin asignar</span><span class="c-time">02h</span></div></div>
+                  <div class="card t-neutral"><div class="c-id"><span>OS-2850</span><span class="sla">Hoy 08:42</span></div><div class="c-client">Cervecería Andina Ltda.</div><div class="c-equipo">Filtros + bandas · varios</div><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="c-foot"><span class="av">SR</span><span class="c-tech">Sin asignar</span><span class="c-time">02h 30m</span></div></div>
+                </div></div>
+                <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#2E90FA"></span>En diagnóstico</div><span class="col-count">3</span></div><div class="col-body">
+                  <div class="card t-info"><div class="c-id"><span>OS-2848</span><span class="sla">06h 12m</span></div><div class="c-client">Metalúrgica del Cauca</div><div class="c-equipo">Kaeser SX-7 · 2020</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">CR</span><span class="c-tech">Carlos R.</span><span class="c-time">06h</span></div></div>
+                  <div class="card t-info"><div class="c-id"><span>OS-2847</span><span class="sla">04h 22m</span></div><div class="c-client">Maderera Pacífico</div><div class="c-equipo">Sullair LS-25 · 2017</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">DM</span><span class="c-tech">Diego M.</span><span class="c-time">04h</span></div></div>
+                  <div class="card t-info"><div class="c-id"><span>OS-2846</span><span class="sla">02h 08m</span></div><div class="c-client">Tecnoindustrial Valle</div><div class="c-equipo">Llave torque eléctrica</div><span class="cat cat-hrm"><span class="sw"></span>Herramientas</span><div class="c-foot"><span class="av">JL</span><span class="c-tech">Juan L.</span><span class="c-time">02h</span></div></div>
+                </div></div>
+                <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#F79009"></span>Esperando repuestos</div><span class="col-count">3</span></div><div class="col-body">
+                  <div class="card t-warn"><div class="c-id"><span>OS-2841</span><span class="sla">04d 18h</span></div><div class="c-client">Cervecería Andina</div><div class="c-equipo">Ingersoll Rand R5 · 2019</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">MA</span><span class="c-tech">María A.</span><span class="c-time">04d</span></div></div>
+                  <div class="card t-warn"><div class="c-id"><span>OS-2837</span><span class="sla">02d 06h</span></div><div class="c-client">Lácteos del Norte</div><div class="c-equipo">Aceite ISO-VG 46</div><span class="cat cat-lbr"><span class="sw"></span>Lubricantes</span><div class="c-foot"><span class="av">RV</span><span class="c-tech">Ricardo V.</span><span class="c-time">02d</span></div></div>
+                  <div class="card t-warn"><div class="c-id"><span>OS-2835</span><span class="sla">01d 14h</span></div><div class="c-client">Plásticos Cali</div><div class="c-equipo">Manguera 8mm + acoples</div><span class="cat cat-acc"><span class="sw"></span>Accesorios</span><div class="c-foot"><span class="av">SP</span><span class="c-tech">Sandra P.</span><span class="c-time">01d</span></div></div>
+                </div></div>
+                <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#9A6FDF"></span>En reparación</div><span class="col-count">3</span></div><div class="col-body">
+                  <div class="card t-danger"><div class="c-id"><span>OS-2832</span><span class="pill p-danger"><span class="dot"></span>Vencida +1d 02h</span></div><div class="c-client">Industrial XYZ</div><div class="c-equipo">Compresor línea 3 (urgente)</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">CR</span><span class="c-tech">Carlos R.</span><span class="c-time">+1d 02h</span></div></div>
+                  <div class="card t-progress"><div class="c-id"><span>OS-2845</span><span class="sla">02d 04h</span></div><div class="c-client">Industrial XYZ</div><div class="c-equipo">Atlas Copco GA-22 · cambio aceite</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">DM</span><span class="c-tech">Diego M.</span><span class="c-time">02d</span></div></div>
+                  <div class="card t-progress"><div class="c-id"><span>OS-2843</span><span class="sla">18h 40m</span></div><div class="c-client">Concretera del Sur</div><div class="c-equipo">Válvula admisión · reemplazo</div><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="c-foot"><span class="av">JL</span><span class="c-tech">Juan L.</span><span class="c-time">18h</span></div></div>
+                </div></div>
+                <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#12B76A"></span>Completada</div><span class="col-count">0</span></div><div class="col-body">
+                  <div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 13l4 4L19 7"/></svg><span>Sin completadas hoy</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em">02 may 2026</span></div>
+                </div></div>
+                <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#98A2B3"></span>Entregada</div><span class="col-count">3</span></div><div class="col-body">
+                  <div class="card t-neutral delivered"><div class="c-id"><span>OS-2820</span><span class="sla">Ayer 17:22</span></div><div class="c-client">Maderera Pacífico</div><div class="c-equipo">Sullair LS-25 · prevent.</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">MA</span><span class="c-tech">María A.</span><span class="c-time">— ayer</span></div></div>
+                  <div class="card t-neutral delivered"><div class="c-id"><span>OS-2818</span><span class="sla">Ayer 14:08</span></div><div class="c-client">Plásticos Cali</div><div class="c-equipo">Cambio bandas + filtros</div><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="c-foot"><span class="av">RV</span><span class="c-tech">Ricardo V.</span><span class="c-time">— ayer</span></div></div>
+                  <div class="card t-neutral delivered"><div class="c-id"><span>OS-2811</span><span class="sla">12 abr</span></div><div class="c-client">Tecnoindustrial Valle</div><div class="c-equipo">Llave torque · calibrac.</div><span class="cat cat-hrm"><span class="sw"></span>Herramientas</span><div class="c-foot"><span class="av">SP</span><span class="c-tech">Sandra P.</span><span class="c-time">— 12 abr</span></div></div>
+                </div></div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VISTA 5 · TABLET DARK ===== -->
+  <div class="frame-wrap">
+    <div class="frame-label dk">
+      <span class="lbl-num">5</span><span>Tablet dark · rail + scroll-x</span><span class="lbl-px">900 px</span>
+    </div>
+    <p class="frame-desc">Mismo patrón rail + scroll. Scrollbar tinted con n-700. Hint pill cambia a fondo n-900.</p>
+    <div class="frame dk">
+      <div class="vp-tablet">
+        <div class="shell sh-tablet dk">
+          <aside class="side rail">
+            <div class="brand"><div class="logo">C</div></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg></div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v3H3zM3 7h10v3H3zM3 11h6v3H3z"/></svg></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5l6-3 6 3v6l-6 3-6-3z"/></svg></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="13" r="1.5"/><circle cx="12" cy="13" r="1.5"/><path d="M2 3h2l2 8h8"/></svg></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l5-4 5 4v6H3z"/></svg></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l5-5M13 8L8 3M3 8l5 5M13 8l-5 5"/></svg></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.5 2-4 5-4s5 1.5 5 4"/></svg></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v10H3z"/><path d="M6 6h4M6 9h4"/></svg></div>
+          </aside>
+          <main class="main">
+            <div class="main-inner tablet">
+              <p class="ph-meta"><span>Compresores del Valle</span><span>Operaciones · Taller</span></p>
+              <div class="ph-row">
+                <div>
+                  <h1 class="ph-title" style="font-size:18px">Órdenes de servicio</h1>
+                  <p class="ph-sub" style="font-size:12px"><b>14</b> abiertas · <b>6</b> técnicos · <b>2</b> vencidas</p>
+                </div>
+                <div class="h-actions">
+                  <div class="seg" style="height:32px"><button class="on" style="height:24px;font-size:12px;padding:0 10px">Tablero</button><button style="height:24px;font-size:12px;padding:0 10px">Lista</button></div>
+                  <button class="btn btn-pri" style="height:32px;font-size:12px;padding:0 12px">+ Nueva OS</button>
+                </div>
+              </div>
+              <div class="banner" style="font-size:12px;padding:10px 14px"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 10.5v.5"/></svg><span><b>2 vencidas</b> · OS-2832 (+1d 02h), OS-2810 (+8h)</span></div>
+              <div class="tab-scroll">
+                <div class="tab-kanban">
+                  <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#98A2B3"></span>Recibida</div><span class="col-count">2</span></div><div class="col-body">
+                    <div class="card t-neutral"><div class="c-id"><span>OS-2851</span><span class="sla">09:14</span></div><div class="c-client">Industrial Pacífico S.A.</div><div class="c-equipo">Atlas Copco GA-22</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">SR</span><span class="c-tech">Sin asignar</span><span class="c-time">02h</span></div></div>
+                    <div class="card t-neutral"><div class="c-id"><span>OS-2850</span><span class="sla">08:42</span></div><div class="c-client">Cervecería Andina</div><div class="c-equipo">Filtros + bandas</div><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="c-foot"><span class="av">SR</span><span class="c-tech">Sin asignar</span><span class="c-time">02h 30m</span></div></div>
+                  </div></div>
+                  <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#2E90FA"></span>En diagnóstico</div><span class="col-count">3</span></div><div class="col-body">
+                    <div class="card t-info"><div class="c-id"><span>OS-2848</span><span class="sla">06h 12m</span></div><div class="c-client">Metalúrgica del Cauca</div><div class="c-equipo">Kaeser SX-7 · 2020</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">CR</span><span class="c-tech">Carlos R.</span><span class="c-time">06h</span></div></div>
+                    <div class="card t-info"><div class="c-id"><span>OS-2847</span><span class="sla">04h 22m</span></div><div class="c-client">Maderera Pacífico</div><div class="c-equipo">Sullair LS-25 · 2017</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">DM</span><span class="c-tech">Diego M.</span><span class="c-time">04h</span></div></div>
+                    <div class="card t-info"><div class="c-id"><span>OS-2846</span><span class="sla">02h 08m</span></div><div class="c-client">Tecnoindustrial Valle</div><div class="c-equipo">Llave torque eléctrica</div><span class="cat cat-hrm"><span class="sw"></span>Herramientas</span><div class="c-foot"><span class="av">JL</span><span class="c-tech">Juan L.</span><span class="c-time">02h</span></div></div>
+                  </div></div>
+                  <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#F79009"></span>Esperando rep.</div><span class="col-count">3</span></div><div class="col-body">
+                    <div class="card t-warn"><div class="c-id"><span>OS-2841</span><span class="sla">04d 18h</span></div><div class="c-client">Cervecería Andina</div><div class="c-equipo">Ingersoll Rand R5</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">MA</span><span class="c-tech">María A.</span><span class="c-time">04d</span></div></div>
+                    <div class="card t-warn"><div class="c-id"><span>OS-2837</span><span class="sla">02d 06h</span></div><div class="c-client">Lácteos del Norte</div><div class="c-equipo">Aceite ISO-VG 46</div><span class="cat cat-lbr"><span class="sw"></span>Lubricantes</span><div class="c-foot"><span class="av">RV</span><span class="c-tech">Ricardo V.</span><span class="c-time">02d</span></div></div>
+                    <div class="card t-warn"><div class="c-id"><span>OS-2835</span><span class="sla">01d 14h</span></div><div class="c-client">Plásticos Cali</div><div class="c-equipo">Manguera 8mm + acoples</div><span class="cat cat-acc"><span class="sw"></span>Accesorios</span><div class="c-foot"><span class="av">SP</span><span class="c-tech">Sandra P.</span><span class="c-time">01d</span></div></div>
+                  </div></div>
+                  <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#9A6FDF"></span>En reparación</div><span class="col-count">3</span></div><div class="col-body">
+                    <div class="card t-danger"><div class="c-id"><span>OS-2832</span><span class="pill p-danger"><span class="dot"></span>+1d 02h</span></div><div class="c-client">Industrial XYZ</div><div class="c-equipo">Compresor línea 3</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">CR</span><span class="c-tech">Carlos R.</span><span class="c-time">+1d</span></div></div>
+                    <div class="card t-progress"><div class="c-id"><span>OS-2845</span><span class="sla">02d 04h</span></div><div class="c-client">Industrial XYZ</div><div class="c-equipo">Atlas Copco GA-22</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">DM</span><span class="c-tech">Diego M.</span><span class="c-time">02d</span></div></div>
+                    <div class="card t-progress"><div class="c-id"><span>OS-2843</span><span class="sla">18h 40m</span></div><div class="c-client">Concretera del Sur</div><div class="c-equipo">Válvula admisión</div><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="c-foot"><span class="av">JL</span><span class="c-tech">Juan L.</span><span class="c-time">18h</span></div></div>
+                  </div></div>
+                  <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#12B76A"></span>Completada</div><span class="col-count">0</span></div><div class="col-body">
+                    <div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 13l4 4L19 7"/></svg><span>Sin completadas hoy</span></div>
+                  </div></div>
+                  <div class="col"><div class="col-head"><div class="col-name"><span class="col-dot" style="background:#98A2B3"></span>Entregada</div><span class="col-count">3</span></div><div class="col-body">
+                    <div class="card t-neutral delivered"><div class="c-id"><span>OS-2820</span><span class="sla">Ayer</span></div><div class="c-client">Maderera Pacífico</div><div class="c-equipo">Sullair LS-25</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">MA</span><span class="c-tech">María A.</span><span class="c-time">— ayer</span></div></div>
+                    <div class="card t-neutral delivered"><div class="c-id"><span>OS-2818</span><span class="sla">Ayer</span></div><div class="c-client">Plásticos Cali</div><div class="c-equipo">Bandas + filtros</div><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="c-foot"><span class="av">RV</span><span class="c-tech">Ricardo V.</span><span class="c-time">— ayer</span></div></div>
+                  </div></div>
+                </div>
+              </div>
+              <div class="hint"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>Desliza para ver Reparación · Completada · Entregada</div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VISTA 6 · MOBILE DARK ===== -->
+  <div class="frame-wrap">
+    <div class="frame-label dk">
+      <span class="lbl-num">6</span><span>Mobile dark · bottom tabs · OLED-friendly</span><span class="lbl-px">390 px</span>
+    </div>
+    <p class="frame-desc">Surfaces n-950 sobre fondo n-975. Tab activa de columna sube a p-500 fill. Bottom tab activa en p-300.</p>
+    <div class="vp-mobile dk">
+      <div class="mob dk">
+        <header class="mob-top">
+          <div class="mob-top-row">
+            <button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+            <div style="flex:1">
+              <div class="mob-title">Órdenes de servicio</div>
+              <div class="mob-sub"><b>14</b> abiertas · <b>2</b> vencidas</div>
+            </div>
+            <button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="6"/><path d="M16 16l4 4"/></svg></button>
+          </div>
+          <div class="mob-coltabs">
+            <button class="mob-coltab"><span class="col-dot" style="background:#98A2B3"></span><span class="lbl">Recibida</span><span class="cnt">2</span></button>
+            <button class="mob-coltab"><span class="col-dot" style="background:#2E90FA"></span><span class="lbl">Diagnóstico</span><span class="cnt">3</span></button>
+            <button class="mob-coltab"><span class="col-dot" style="background:#F79009"></span><span class="lbl">Esperando</span><span class="cnt">3</span></button>
+            <button class="mob-coltab on"><span class="col-dot" style="background:#9A6FDF"></span><span class="lbl">Reparación</span><span class="cnt">3</span></button>
+            <button class="mob-coltab"><span class="col-dot" style="background:#12B76A"></span><span class="lbl">Completada</span><span class="cnt">0</span></button>
+            <button class="mob-coltab"><span class="col-dot" style="background:#98A2B3"></span><span class="lbl">Entregada</span><span class="cnt">3</span></button>
+          </div>
+        </header>
+        <main class="mob-main">
+          <div class="banner" style="margin:0 0 16px"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 10.5v.5"/></svg><span><b>2 vencidas</b> · OS-2832 y OS-2810</span></div>
+          <div class="mob-coltitle"><span class="col-dot" style="background:#9A6FDF;width:10px;height:10px"></span><span>En reparación</span><span class="col-count">3</span></div>
+          <div class="mob-cards">
+            <div class="card mob t-danger"><div class="c-id"><span>OS-2832</span><span class="pill p-danger" style="height:24px;font-size:12px"><span class="dot"></span>Vencida +1d 02h</span></div><div class="c-client">Industrial XYZ</div><div class="c-equipo">Compresor línea 3 (urgente)</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">CR</span><span class="c-tech">Carlos R.</span><span class="c-time">+1d 02h</span></div></div>
+            <div class="card mob t-progress"><div class="c-id"><span>OS-2845</span><span class="sla">02d 04h</span></div><div class="c-client">Industrial XYZ</div><div class="c-equipo">Atlas Copco GA-22 · cambio aceite</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av">DM</span><span class="c-tech">Diego M.</span><span class="c-time">02d</span></div></div>
+            <div class="card mob t-progress"><div class="c-id"><span>OS-2843</span><span class="sla">18h 40m</span></div><div class="c-client">Concretera del Sur</div><div class="c-equipo">Válvula admisión · reemplazo</div><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="c-foot"><span class="av">JL</span><span class="c-tech">Juan L.</span><span class="c-time">18h</span></div></div>
+          </div>
+        </main>
+        <button class="mob-fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button>
+        <nav class="mob-bottom">
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Cockpit</span></button>
+          <button class="mob-tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 5h16v3H4zM4 10.5h16v3H4zM4 16h10v3H4z"/></svg><span>OS</span></button>
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l9-4 9 4v9l-9 4-9-4z"/></svg><span>Inv.</span></button>
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h3l3 12h12"/></svg><span>Ventas</span></button>
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg><span>Más</span></button>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- ESTADOS ESPECIALES                                            -->
+  <!-- ============================================================ -->
+  <div class="section-divider"><span class="lbl">Estados especiales · aislados</span><span class="ln"></span></div>
+  <div class="special-grid">
+    <div class="special-card">
+      <p class="special-h">A · Tarjeta vencida</p>
+      <p class="special-d">Border-top coral <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">#F04438</code> + pill <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">p-danger</code> en el slot de SLA con dot pulsante.</p>
+      <div class="card t-danger"><div class="c-id"><span>OS-2832</span><span class="pill p-danger"><span class="dot"></span>Vencida +1d 02h</span></div><div class="c-client">Industrial XYZ</div><div class="c-equipo">Compresor línea 3 (urgente)</div><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="c-foot"><span class="av" style="background:#FEF3F2;color:#B42318">CR</span><span class="c-tech">Carlos R.</span><span class="c-time">+1d 02h</span></div></div>
+    </div>
+    <div class="special-card">
+      <p class="special-h">B · Empty state</p>
+      <p class="special-d">Columna Completada sin entradas. Border dashed n-200, check icon, fecha en mono.</p>
+      <div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 13l4 4L19 7"/></svg><span>Sin completadas hoy</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--n-300)">02 may 2026</span></div>
+    </div>
+    <div class="special-card">
+      <p class="special-h">C · Skeleton loader</p>
+      <p class="special-d">Fondo n-100 base con shimmer hacia n-50. Border-top en n-200 (todavía no se sabe el estado).</p>
+      <div class="sk-card">
+        <span class="sk" style="width:50%;height:10px"></span>
+        <span class="sk" style="width:80%;height:14px"></span>
+        <span class="sk" style="width:60%;height:11px"></span>
+        <span class="sk" style="width:35%;height:18px;border-radius:4px"></span>
+        <div style="display:flex;gap:8px;margin-top:6px;padding-top:8px;border-top:1px solid var(--n-100)">
+          <span class="sk" style="width:24px;height:24px;border-radius:999px"></span>
+          <span class="sk" style="width:50%;height:11px;align-self:center"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- VALIDATION                                                    -->
+  <!-- ============================================================ -->
+  <div style="margin-top:80px">
+    <div class="frame-label"><span class="lbl-num">✓</span><span>Validación · 6 puntos críticos</span></div>
+    <div class="check-card">
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Royal CTA #2D3CE5</strong> — botón "+ Nueva OS" en las 6 vistas (en dark sube a p-500 #4B5BF5 por contraste).</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Info #2E90FA</strong> — dot col-head + border-top de las 3 cards en "En diagnóstico" en las 6 vistas.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Indigo Steel #4456C2</strong> — swatch en <code>cat-cmp</code> de varias cards (Compresores) en las 6 vistas. En dark cambia a alpha 14/35.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>6 estados diferenciables</strong> — gris (recibida) · azul info (diagnóstico) · ámbar (esperando) · ciruela (reparación) · verde (completada) · gris atenuado opacity 0.55 (entregada).</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Tablet</strong> — sidebar rail 56 px (solo iconos), kanban de 6 col × 280 px con scroll-x, hint visual de scroll.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Mobile</strong> — sin sidebar (bottom tabs), tabs de columna scroll-x arriba, una columna activa, cards full-width con padding 14 px y type 15 px, hit targets ≥48 px, FAB royal.</div></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

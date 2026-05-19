@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Picking · 6 vistas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --n-0:#FFFFFF;--n-25:#FBFBFC;--n-50:#F7F8FA;--n-75:#F2F4F7;--n-100:#EEF1F5;
+  --n-150:#E4E7EC;--n-200:#D0D5DD;--n-300:#98A2B3;--n-500:#667085;
+  --n-700:#475467;--n-800:#344054;--n-900:#1D2939;--n-950:#101828;--n-975:#0B1320;
+  --p-500:#4B5BF5;--p-600:#2D3CE5;
+  --succ-50:#ECFDF3;--succ-100:#D1FADF;--succ-200:#A6F4C5;--succ-500:#12B76A;--succ-600:#039855;--succ-700:#027A48;
+  --warn-50:#FFFAEB;--warn-100:#FEF0C7;--warn-200:#FEDF89;--warn-500:#F79009;--warn-700:#B54708;
+  --dang-50:#FEF3F2;--dang-100:#FEE4E2;--dang-200:#FECDCA;--dang-500:#F04438;--dang-700:#B42318;
+  --cmp:#4456C2;--rpt:#159F8A;--hrm:#7244D5;--lbr:#C68420;--acc:#D24E8E;
+}
+html,body{margin:0;padding:0;background:#F5F6F8;color:var(--n-950);
+  font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased}
+.page-wrap{max-width:1480px;margin:0 auto;padding:48px 32px}
+
+/* ===== DOC HEAD / DIVIDERS / FRAMES ===== */
+.doc-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+  letter-spacing:.1em;text-transform:uppercase;margin:0 0 8px}
+.doc-title{font-size:32px;font-weight:600;letter-spacing:-0.02em;margin:0 0 8px;color:var(--n-950)}
+.doc-sub{font-size:15px;color:var(--n-500);margin:0;max-width:780px;line-height:1.55}
+.doc-sub code,.frame-desc code{font-family:'IBM Plex Mono',monospace;font-size:12px;
+  background:#fff;padding:1px 6px;border-radius:3px;border:1px solid var(--n-150);color:var(--n-700)}
+.section-divider{margin:80px 0 48px;display:flex;align-items:center;gap:16px}
+.section-divider .ln{flex:1;height:1px;background:var(--n-200)}
+.section-divider .lbl{font-family:'IBM Plex Mono',monospace;font-size:12px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--n-700);font-weight:500}
+.frame-wrap{margin-bottom:64px}
+.frame-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+  letter-spacing:.1em;text-transform:uppercase;margin:0 0 12px;font-weight:500;
+  display:flex;align-items:center;gap:12px}
+.frame-label .lbl-num{display:inline-flex;align-items:center;justify-content:center;
+  width:24px;height:24px;border-radius:5px;background:var(--n-950);color:#fff;font-size:11px}
+.frame-label.dk .lbl-num{background:var(--succ-500)}
+.frame-label .lbl-px{margin-left:auto;color:var(--n-300);font-weight:400}
+.frame-desc{font-size:13px;color:var(--n-500);margin:0 0 16px;max-width:780px;line-height:1.55}
+.frame-desc b{color:var(--n-700);font-weight:500}
+.frame{border:1px solid var(--n-200);border-radius:14px;overflow:hidden;background:#fff;
+  box-shadow:0 12px 40px -16px rgba(16,24,40,.18)}
+.frame.dk{border-color:#1F2937}
+.vp-desktop{width:1280px;margin:0 auto;background:#fff}
+.vp-tablet{width:900px;margin:0 auto;background:#fff}
+.vp-mobile{padding:32px 16px;background:#0F1115;display:flex;justify-content:center}
+.vp-mobile.lt{background:#E4E7EC}
+
+/* ===== PICKING SHELL (no chrome) ===== */
+.pk{display:flex;flex-direction:column;background:#fff}
+.pk.dk{background:var(--n-975);color:#fff}
+
+.pk-header{display:flex;align-items:center;gap:12px;padding:16px 20px;
+  border-bottom:1px solid var(--n-100)}
+.pk.dk .pk-header{border-color:var(--n-800)}
+.pk-close{width:32px;height:32px;border-radius:999px;background:var(--n-100);
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--n-700);flex-shrink:0}
+.pk.dk .pk-close{background:var(--n-900);color:var(--n-200)}
+.pk-close svg{width:14px;height:14px}
+.pk-ctx{font-family:'IBM Plex Mono',monospace;font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--n-500);font-weight:500;flex:1}
+.pk.dk .pk-ctx{color:var(--n-300)}
+.pk-loc{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--n-700);font-weight:500}
+.pk.dk .pk-loc{color:var(--n-100)}
+
+/* ===== PROGRESS ===== */
+.pk-prog{display:flex;align-items:center;gap:16px;padding:12px 20px;
+  border-bottom:1px solid var(--n-100)}
+.pk.dk .pk-prog{border-color:var(--n-800)}
+.pk-prog-bar{flex:1;height:6px;background:var(--n-100);border-radius:3px;overflow:hidden}
+.pk.dk .pk-prog-bar{background:var(--n-900)}
+.pk-prog-fill{height:100%;background:var(--succ-500);border-radius:3px}
+.pk-prog-count{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;
+  color:var(--n-950);flex-shrink:0}
+.pk.dk .pk-prog-count{color:#fff}
+
+/* ===== BODY ===== */
+.pk-body{flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:48px 20px;gap:24px}
+.pk-body.compact{padding:32px 20px;gap:20px}
+.pk-step{font-family:'IBM Plex Mono',monospace;font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--n-300);font-weight:500;text-align:center}
+.pk-sku{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--n-700);text-align:center}
+.pk.dk .pk-sku{color:var(--n-200)}
+.pk-name{font-size:28px;font-weight:500;letter-spacing:-0.02em;line-height:1.15;
+  text-align:center;color:var(--n-950);margin:0;max-width:520px;text-wrap:pretty}
+.pk.dk .pk-name{color:#fff}
+.pk-model{font-size:16px;color:var(--n-500);text-align:center;margin:0}
+.pk.dk .pk-model{color:var(--n-300)}
+
+/* ===== CATEGORY ===== */
+.cat{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px 0 8px;
+  border-radius:4px;font-weight:500;font-size:12px;border:1px solid transparent;line-height:1}
+.cat .sw{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.cat-cmp{background:#EEF2FF;color:#2A3478;border-color:#C7D0F2}.cat-cmp .sw{background:var(--cmp)}
+.cat-rpt{background:#E8FAF6;color:#0E5F5A;border-color:#99E8DD}.cat-rpt .sw{background:var(--rpt)}
+.cat-hrm{background:#F5F0FF;color:#5B21B6;border-color:#D9C2FF}.cat-hrm .sw{background:var(--hrm)}
+.cat-lbr{background:#FEF3D6;color:#7A340B;border-color:#F8D58A}.cat-lbr .sw{background:var(--lbr)}
+.cat-acc{background:#FEEEF4;color:#9B226B;border-color:#FBC8DD}.cat-acc .sw{background:var(--acc)}
+.pk.dk .cat-cmp{background:rgba(68,86,194,.14);color:#A8B4FF;border-color:rgba(68,86,194,.35)}
+.pk.dk .cat-rpt{background:rgba(21,159,138,.14);color:#5EE6CD;border-color:rgba(21,159,138,.35)}
+
+/* ===== QTY BLOCK ===== */
+.pk-qty{background:var(--n-50);border-radius:8px;padding:20px;width:200px;
+  display:flex;flex-direction:column;align-items:center;gap:6px}
+.pk.dk .pk-qty{background:var(--n-900)}
+.pk-qty-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--n-300);font-weight:500}
+.pk-qty-num{font-family:'IBM Plex Mono',monospace;font-size:36px;font-weight:500;
+  color:var(--n-950);line-height:1}
+.pk.dk .pk-qty-num{color:#fff}
+
+/* ===== LOC INLINE ===== */
+.pk-loc-inline{font-size:14px;color:var(--n-500);text-align:center}
+.pk-loc-inline .code{font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--n-700);margin-left:4px}
+.pk.dk .pk-loc-inline{color:var(--n-300)}
+.pk.dk .pk-loc-inline .code{color:#fff}
+
+/* ===== ACTIONS ===== */
+.pk-actions{display:flex;gap:8px;padding:20px;border-top:1px solid var(--n-100);margin-top:auto}
+.pk.dk .pk-actions{border-color:var(--n-800)}
+.pk-btn{height:64px;border-radius:8px;font-family:'IBM Plex Sans',sans-serif;
+  font-weight:500;font-size:16px;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;gap:8px}
+.pk-btn-skip{flex:1;background:#fff;color:var(--n-700);border:1px solid var(--n-200)}
+.pk.dk .pk-btn-skip{background:var(--n-950);color:var(--n-100);border-color:var(--n-800)}
+.pk-btn-pick{flex:2;background:var(--succ-500);color:#fff;border:none}
+.pk-btn-pick:hover{background:var(--succ-600)}
+.pk-btn svg{width:18px;height:18px}
+
+/* ===== DESKTOP LAYOUT ===== */
+.pk-desktop-wrap{display:flex;justify-content:center;gap:64px;padding:48px 20px;flex:1;align-items:center}
+.pk-desktop-center{display:flex;flex-direction:column;align-items:center;gap:24px;max-width:600px;flex:1}
+.pk-qr{display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0}
+.pk-qr-img{width:200px;height:200px;border:1px solid var(--n-150);border-radius:8px;
+  background:#fff;padding:16px;display:flex;align-items:center;justify-content:center}
+.pk.dk .pk-qr-img{background:var(--n-50);border-color:var(--n-700)}
+.pk-qr-img svg{width:100%;height:100%}
+.pk-qr-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--n-300);font-weight:500}
+
+/* ===== MOBILE FRAME ===== */
+.mob{width:390px;background:#fff;min-height:780px;
+  display:flex;flex-direction:column;border:1px solid var(--n-200);
+  border-radius:24px;overflow:hidden;box-shadow:0 20px 60px -20px rgba(16,24,40,.2)}
+.mob.dk{background:var(--n-975);border-color:var(--n-800)}
+
+/* ===== TABLET WRAP ===== */
+.pk-tablet{padding:0 24px;flex:1;display:flex;flex-direction:column}
+
+/* ===== ALERT INLINE ===== */
+.pk-alert{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;
+  background:var(--warn-50);border:1px solid var(--warn-200);border-radius:6px;
+  color:var(--warn-700);font-size:14px;max-width:420px;line-height:1.4}
+.pk-alert svg{width:18px;height:18px;flex-shrink:0;margin-top:1px}
+.pk-alert b{font-weight:600}
+
+/* ===== ERROR OVERLAY ===== */
+.pk-err{border-top:4px solid var(--dang-500);background:var(--dang-50);
+  padding:16px 20px;display:flex;flex-direction:column;gap:6px;border-radius:0 0 8px 8px}
+.pk-err-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--dang-700);font-weight:500}
+.pk-err-msg{font-size:14px;color:var(--n-950);line-height:1.4}
+.pk-err-msg .ex{font-family:'IBM Plex Mono',monospace;color:var(--dang-700);font-weight:500}
+.pk-err-msg .got{font-family:'IBM Plex Mono',monospace;color:var(--n-700);font-weight:500}
+
+/* ===== COMPLETED STATE ===== */
+.pk-done{display:flex;flex-direction:column;align-items:center;gap:20px;
+  padding:48px 20px;text-align:center}
+.pk-done-check{width:64px;height:64px;border-radius:999px;background:var(--succ-100);
+  display:flex;align-items:center;justify-content:center;color:var(--succ-700)}
+.pk-done-check svg{width:32px;height:32px}
+.pk-done-title{font-size:28px;font-weight:500;letter-spacing:-0.02em;
+  color:var(--n-950);margin:0;line-height:1.15}
+.pk-done-sub{font-size:14px;color:var(--n-500);margin:0}
+.pk-done-btn{height:64px;width:100%;max-width:420px;background:var(--succ-500);color:#fff;
+  border:none;border-radius:8px;font-size:16px;font-weight:500;cursor:pointer;
+  font-family:'IBM Plex Sans',sans-serif;margin-top:8px}
+
+/* ===== SPECIAL CARDS ===== */
+.special-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.special-card{background:#fff;border:1px solid var(--n-150);border-radius:12px;overflow:hidden}
+.special-h{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-700);
+  letter-spacing:.08em;text-transform:uppercase;margin:0;font-weight:500;
+  padding:14px 18px;border-bottom:1px solid var(--n-100)}
+.special-d{font-size:12px;color:var(--n-500);margin:0;padding:0 18px 16px;line-height:1.5}
+
+/* ===== CHECK CARD ===== */
+.check-card{background:#fff;border:1px solid var(--n-150);border-radius:12px;overflow:hidden;margin-top:24px}
+.check-row{display:grid;grid-template-columns:24px 1fr;gap:12px;padding:16px 20px;
+  border-bottom:1px solid var(--n-100);align-items:start}
+.check-row:last-child{border-bottom:none}
+.check-dot{width:18px;height:18px;border-radius:999px;background:var(--succ-500);display:flex;
+  align-items:center;justify-content:center;color:#fff;font-size:10px;margin-top:2px}
+.check-text{font-size:13px;color:var(--n-800);line-height:1.55}
+.check-text strong{color:var(--n-950);font-weight:600}
+.check-text code{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--n-700);
+  background:var(--n-50);padding:1px 6px;border-radius:3px;border:1px solid var(--n-150)}
+
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- DOC HEAD -->
+  <div style="margin-bottom:48px">
+    <p class="doc-eyebrow">CHV · Sistema canónico v1.0 · Pantalla 2</p>
+    <h1 class="doc-title">Picking · modo dedicado</h1>
+    <p class="doc-sub">
+      Task Mode. Bodeguero recoge ítems de un traspaso bajo luz fluorescente, posiblemente con guantes. Sin chrome de la app — el viewport es la tarea. Tipografía 2× más grande que el kanban, botones gigantes (64 px), verde dominante en progreso/CTA/estado completo.
+    </p>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- LIGHT MODE                                                    -->
+  <!-- ============================================================ -->
+  <div class="section-divider"><span class="lbl">Light mode · 3 breakpoints</span><span class="ln"></span></div>
+
+  <!-- ===== VISTA 1 · DESKTOP LIGHT ===== -->
+  <div class="frame-wrap">
+    <div class="frame-label">
+      <span class="lbl-num">1</span><span>Desktop · max-width 600 px centrado · QR a la derecha</span><span class="lbl-px">1280 px</span>
+    </div>
+    <p class="frame-desc">Sin sidebar, sin breadcrumbs. Header mínimo: <b>X</b> en círculo n-100 32 px + contexto en mono + ubicación física a la derecha. Barra de progreso 6 px verde. Bloque central centrado max-width 600 px con miniatura QR 200×200 a la derecha como referencia visual al código de estantería.</p>
+    <div class="frame">
+      <div class="vp-desktop">
+        <div class="pk" style="min-height:760px">
+          <header class="pk-header">
+            <button class="pk-close" aria-label="Salir"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+            <span class="pk-ctx">Picking · Traspaso TR-0124</span>
+            <span class="pk-loc">Pasillo B · Estante 4</span>
+          </header>
+          <div class="pk-prog">
+            <div class="pk-prog-bar"><div class="pk-prog-fill" style="width:58.3%"></div></div>
+            <span class="pk-prog-count">7 de 12</span>
+          </div>
+          <div class="pk-desktop-wrap">
+            <div class="pk-desktop-center">
+              <span class="pk-step">Producto 8 de 12</span>
+              <span class="pk-sku">SKU-4521-A</span>
+              <h1 class="pk-name">Filtro de aire Atlas Copco GA-22</h1>
+              <p class="pk-model">Atlas Copco · 1613-7409-00</p>
+              <span class="cat cat-rpt"><span class="sw"></span>Repuestos</span>
+              <div class="pk-qty">
+                <span class="pk-qty-lbl">Cantidad a recoger</span>
+                <span class="pk-qty-num">3</span>
+              </div>
+              <p class="pk-loc-inline">Ubicación:<span class="code">B-04-N2</span></p>
+            </div>
+            <div class="pk-qr">
+              <div class="pk-qr-img">
+                <!-- QR placeholder -->
+                <svg viewBox="0 0 21 21" shape-rendering="crispEdges">
+                  <rect width="21" height="21" fill="#fff"/>
+                  <g fill="#101828">
+                    <rect x="0" y="0" width="7" height="1"/><rect x="0" y="6" width="7" height="1"/><rect x="0" y="0" width="1" height="7"/><rect x="6" y="0" width="1" height="7"/><rect x="2" y="2" width="3" height="3"/>
+                    <rect x="14" y="0" width="7" height="1"/><rect x="14" y="6" width="7" height="1"/><rect x="14" y="0" width="1" height="7"/><rect x="20" y="0" width="1" height="7"/><rect x="16" y="2" width="3" height="3"/>
+                    <rect x="0" y="14" width="7" height="1"/><rect x="0" y="20" width="7" height="1"/><rect x="0" y="14" width="1" height="7"/><rect x="6" y="14" width="1" height="7"/><rect x="2" y="16" width="3" height="3"/>
+                    <rect x="8" y="0" width="1" height="2"/><rect x="10" y="1" width="2" height="1"/><rect x="9" y="3" width="1" height="2"/><rect x="11" y="3" width="2" height="1"/><rect x="8" y="5" width="2" height="1"/>
+                    <rect x="0" y="8" width="2" height="1"/><rect x="3" y="8" width="1" height="2"/><rect x="5" y="9" width="2" height="1"/><rect x="8" y="8" width="1" height="2"/><rect x="10" y="8" width="2" height="1"/><rect x="13" y="9" width="3" height="1"/><rect x="17" y="8" width="1" height="2"/><rect x="19" y="9" width="2" height="1"/>
+                    <rect x="2" y="10" width="2" height="1"/><rect x="5" y="11" width="1" height="2"/><rect x="8" y="11" width="3" height="1"/><rect x="12" y="10" width="1" height="3"/><rect x="14" y="11" width="2" height="1"/><rect x="17" y="10" width="2" height="1"/><rect x="20" y="11" width="1" height="2"/>
+                    <rect x="9" y="13" width="2" height="1"/><rect x="13" y="14" width="1" height="2"/><rect x="15" y="14" width="2" height="1"/><rect x="18" y="13" width="1" height="3"/>
+                    <rect x="8" y="15" width="1" height="2"/><rect x="11" y="16" width="3" height="1"/><rect x="15" y="17" width="1" height="2"/><rect x="17" y="16" width="2" height="1"/><rect x="20" y="17" width="1" height="2"/>
+                    <rect x="9" y="18" width="2" height="1"/><rect x="12" y="19" width="1" height="2"/><rect x="14" y="20" width="3" height="1"/><rect x="19" y="20" width="2" height="1"/>
+                  </g>
+                </svg>
+              </div>
+              <span class="pk-qr-lbl">QR del producto</span>
+            </div>
+          </div>
+          <div class="pk-actions" style="max-width:600px;margin:0 auto;width:100%">
+            <button class="pk-btn pk-btn-skip">Saltar</button>
+            <button class="pk-btn pk-btn-pick"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 8l3 3 7-7"/></svg>Recogido</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VISTA 2 · TABLET LIGHT ===== -->
+  <div class="frame-wrap">
+    <div class="frame-label">
+      <span class="lbl-num">2</span><span>Tablet · sin QR · padding-X space-6</span><span class="lbl-px">900 px</span>
+    </div>
+    <p class="frame-desc">Idéntico al mobile escalado. Sin miniatura QR. El bodeguero usa el escáner físico y la tablet sostenida con una mano.</p>
+    <div class="frame">
+      <div class="vp-tablet">
+        <div class="pk" style="min-height:680px">
+          <header class="pk-header">
+            <button class="pk-close" aria-label="Salir"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+            <span class="pk-ctx">Picking · Traspaso TR-0124</span>
+            <span class="pk-loc">Pasillo B · Estante 4</span>
+          </header>
+          <div class="pk-prog">
+            <div class="pk-prog-bar"><div class="pk-prog-fill" style="width:58.3%"></div></div>
+            <span class="pk-prog-count">7 de 12</span>
+          </div>
+          <div class="pk-tablet">
+            <div class="pk-body">
+              <span class="pk-step">Producto 8 de 12</span>
+              <span class="pk-sku">SKU-4521-A</span>
+              <h1 class="pk-name">Filtro de aire Atlas Copco GA-22</h1>
+              <p class="pk-model">Atlas Copco · 1613-7409-00</p>
+              <span class="cat cat-rpt"><span class="sw"></span>Repuestos</span>
+              <div class="pk-qty">
+                <span class="pk-qty-lbl">Cantidad a recoger</span>
+                <span class="pk-qty-num">3</span>
+              </div>
+              <p class="pk-loc-inline">Ubicación:<span class="code">B-04-N2</span></p>
+            </div>
+            <div class="pk-actions" style="padding:20px 0">
+              <button class="pk-btn pk-btn-skip">Saltar</button>
+              <button class="pk-btn pk-btn-pick"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 8l3 3 7-7"/></svg>Recogido</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VISTA 3 · MOBILE LIGHT ===== -->
+  <div class="frame-wrap">
+    <div class="frame-label">
+      <span class="lbl-num">3</span><span>Mobile · vista primaria · padding-X space-5</span><span class="lbl-px">390 px</span>
+    </div>
+    <p class="frame-desc">Layout primario. El bodeguero camina por la bodega con el teléfono en la mano. Hit targets de 64 px en ambos botones — pulsables con guantes.</p>
+    <div class="vp-mobile lt">
+      <div class="mob">
+        <div class="pk" style="flex:1">
+          <header class="pk-header">
+            <button class="pk-close" aria-label="Salir"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+            <span class="pk-ctx">TR-0124</span>
+            <span class="pk-loc">B · 4</span>
+          </header>
+          <div class="pk-prog">
+            <div class="pk-prog-bar"><div class="pk-prog-fill" style="width:58.3%"></div></div>
+            <span class="pk-prog-count">7 de 12</span>
+          </div>
+          <div class="pk-body">
+            <span class="pk-step">Producto 8 de 12</span>
+            <span class="pk-sku">SKU-4521-A</span>
+            <h1 class="pk-name">Filtro de aire Atlas Copco GA-22</h1>
+            <p class="pk-model">Atlas Copco · 1613-7409-00</p>
+            <span class="cat cat-rpt"><span class="sw"></span>Repuestos</span>
+            <div class="pk-qty">
+              <span class="pk-qty-lbl">Cantidad a recoger</span>
+              <span class="pk-qty-num">3</span>
+            </div>
+            <p class="pk-loc-inline">Ubicación:<span class="code">B-04-N2</span></p>
+          </div>
+          <div class="pk-actions">
+            <button class="pk-btn pk-btn-skip">Saltar</button>
+            <button class="pk-btn pk-btn-pick"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 8l3 3 7-7"/></svg>Recogido</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- DARK MODE                                                     -->
+  <!-- ============================================================ -->
+  <div class="section-divider"><span class="lbl">Dark mode · OLED-friendly · verde sin atenuar</span><span class="ln"></span></div>
+
+  <!-- ===== VISTA 4 · DESKTOP DARK ===== -->
+  <div class="frame-wrap">
+    <div class="frame-label dk">
+      <span class="lbl-num">4</span><span>Desktop dark · n-975 fondo · n-900 qty block</span><span class="lbl-px">1280 px</span>
+    </div>
+    <p class="frame-desc">Fondo n-975, bloque de cantidad sube a n-900, texto principal n-50/blanco. Botón "Recogido" mantiene <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">#12B76A</code> sin atenuar — es el ancla visual de la tarea.</p>
+    <div class="frame dk">
+      <div class="vp-desktop" style="background:var(--n-975)">
+        <div class="pk dk" style="min-height:760px">
+          <header class="pk-header">
+            <button class="pk-close" aria-label="Salir"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+            <span class="pk-ctx">Picking · Traspaso TR-0124</span>
+            <span class="pk-loc">Pasillo B · Estante 4</span>
+          </header>
+          <div class="pk-prog">
+            <div class="pk-prog-bar"><div class="pk-prog-fill" style="width:58.3%"></div></div>
+            <span class="pk-prog-count">7 de 12</span>
+          </div>
+          <div class="pk-desktop-wrap">
+            <div class="pk-desktop-center">
+              <span class="pk-step">Producto 8 de 12</span>
+              <span class="pk-sku">SKU-4521-A</span>
+              <h1 class="pk-name">Filtro de aire Atlas Copco GA-22</h1>
+              <p class="pk-model">Atlas Copco · 1613-7409-00</p>
+              <span class="cat cat-rpt"><span class="sw"></span>Repuestos</span>
+              <div class="pk-qty">
+                <span class="pk-qty-lbl">Cantidad a recoger</span>
+                <span class="pk-qty-num">3</span>
+              </div>
+              <p class="pk-loc-inline">Ubicación:<span class="code">B-04-N2</span></p>
+            </div>
+            <div class="pk-qr">
+              <div class="pk-qr-img">
+                <svg viewBox="0 0 21 21" shape-rendering="crispEdges">
+                  <rect width="21" height="21" fill="#F7F8FA"/>
+                  <g fill="#101828">
+                    <rect x="0" y="0" width="7" height="1"/><rect x="0" y="6" width="7" height="1"/><rect x="0" y="0" width="1" height="7"/><rect x="6" y="0" width="1" height="7"/><rect x="2" y="2" width="3" height="3"/>
+                    <rect x="14" y="0" width="7" height="1"/><rect x="14" y="6" width="7" height="1"/><rect x="14" y="0" width="1" height="7"/><rect x="20" y="0" width="1" height="7"/><rect x="16" y="2" width="3" height="3"/>
+                    <rect x="0" y="14" width="7" height="1"/><rect x="0" y="20" width="7" height="1"/><rect x="0" y="14" width="1" height="7"/><rect x="6" y="14" width="1" height="7"/><rect x="2" y="16" width="3" height="3"/>
+                    <rect x="8" y="0" width="1" height="2"/><rect x="10" y="1" width="2" height="1"/><rect x="9" y="3" width="1" height="2"/><rect x="11" y="3" width="2" height="1"/><rect x="8" y="5" width="2" height="1"/>
+                    <rect x="0" y="8" width="2" height="1"/><rect x="3" y="8" width="1" height="2"/><rect x="5" y="9" width="2" height="1"/><rect x="8" y="8" width="1" height="2"/><rect x="10" y="8" width="2" height="1"/><rect x="13" y="9" width="3" height="1"/><rect x="17" y="8" width="1" height="2"/><rect x="19" y="9" width="2" height="1"/>
+                    <rect x="2" y="10" width="2" height="1"/><rect x="5" y="11" width="1" height="2"/><rect x="8" y="11" width="3" height="1"/><rect x="12" y="10" width="1" height="3"/><rect x="14" y="11" width="2" height="1"/><rect x="17" y="10" width="2" height="1"/><rect x="20" y="11" width="1" height="2"/>
+                    <rect x="9" y="13" width="2" height="1"/><rect x="13" y="14" width="1" height="2"/><rect x="15" y="14" width="2" height="1"/><rect x="18" y="13" width="1" height="3"/>
+                    <rect x="8" y="15" width="1" height="2"/><rect x="11" y="16" width="3" height="1"/><rect x="15" y="17" width="1" height="2"/><rect x="17" y="16" width="2" height="1"/><rect x="20" y="17" width="1" height="2"/>
+                    <rect x="9" y="18" width="2" height="1"/><rect x="12" y="19" width="1" height="2"/><rect x="14" y="20" width="3" height="1"/><rect x="19" y="20" width="2" height="1"/>
+                  </g>
+                </svg>
+              </div>
+              <span class="pk-qr-lbl">QR del producto</span>
+            </div>
+          </div>
+          <div class="pk-actions" style="max-width:600px;margin:0 auto;width:100%">
+            <button class="pk-btn pk-btn-skip">Saltar</button>
+            <button class="pk-btn pk-btn-pick"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 8l3 3 7-7"/></svg>Recogido</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VISTA 5 · TABLET DARK ===== -->
+  <div class="frame-wrap">
+    <div class="frame-label dk">
+      <span class="lbl-num">5</span><span>Tablet dark · sin QR</span><span class="lbl-px">900 px</span>
+    </div>
+    <p class="frame-desc">Mismo patrón que tablet light, en tokens dark.</p>
+    <div class="frame dk">
+      <div class="vp-tablet" style="background:var(--n-975)">
+        <div class="pk dk" style="min-height:680px">
+          <header class="pk-header">
+            <button class="pk-close" aria-label="Salir"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+            <span class="pk-ctx">Picking · Traspaso TR-0124</span>
+            <span class="pk-loc">Pasillo B · Estante 4</span>
+          </header>
+          <div class="pk-prog">
+            <div class="pk-prog-bar"><div class="pk-prog-fill" style="width:58.3%"></div></div>
+            <span class="pk-prog-count">7 de 12</span>
+          </div>
+          <div class="pk-tablet">
+            <div class="pk-body">
+              <span class="pk-step">Producto 8 de 12</span>
+              <span class="pk-sku">SKU-4521-A</span>
+              <h1 class="pk-name">Filtro de aire Atlas Copco GA-22</h1>
+              <p class="pk-model">Atlas Copco · 1613-7409-00</p>
+              <span class="cat cat-rpt"><span class="sw"></span>Repuestos</span>
+              <div class="pk-qty">
+                <span class="pk-qty-lbl">Cantidad a recoger</span>
+                <span class="pk-qty-num">3</span>
+              </div>
+              <p class="pk-loc-inline">Ubicación:<span class="code">B-04-N2</span></p>
+            </div>
+            <div class="pk-actions" style="padding:20px 0">
+              <button class="pk-btn pk-btn-skip">Saltar</button>
+              <button class="pk-btn pk-btn-pick"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 8l3 3 7-7"/></svg>Recogido</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VISTA 6 · MOBILE DARK ===== -->
+  <div class="frame-wrap">
+    <div class="frame-label dk">
+      <span class="lbl-num">6</span><span>Mobile dark · OLED-friendly</span><span class="lbl-px">390 px</span>
+    </div>
+    <p class="frame-desc">Surfaces n-950 sobre fondo n-975. Verde p-success-500 sin atenuar para visibilidad bajo luz fluorescente.</p>
+    <div class="vp-mobile">
+      <div class="mob dk">
+        <div class="pk dk" style="flex:1">
+          <header class="pk-header">
+            <button class="pk-close" aria-label="Salir"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+            <span class="pk-ctx">TR-0124</span>
+            <span class="pk-loc">B · 4</span>
+          </header>
+          <div class="pk-prog">
+            <div class="pk-prog-bar"><div class="pk-prog-fill" style="width:58.3%"></div></div>
+            <span class="pk-prog-count">7 de 12</span>
+          </div>
+          <div class="pk-body">
+            <span class="pk-step">Producto 8 de 12</span>
+            <span class="pk-sku">SKU-4521-A</span>
+            <h1 class="pk-name">Filtro de aire Atlas Copco GA-22</h1>
+            <p class="pk-model">Atlas Copco · 1613-7409-00</p>
+            <span class="cat cat-rpt"><span class="sw"></span>Repuestos</span>
+            <div class="pk-qty">
+              <span class="pk-qty-lbl">Cantidad a recoger</span>
+              <span class="pk-qty-num">3</span>
+            </div>
+            <p class="pk-loc-inline">Ubicación:<span class="code">B-04-N2</span></p>
+          </div>
+          <div class="pk-actions">
+            <button class="pk-btn pk-btn-skip">Saltar</button>
+            <button class="pk-btn pk-btn-pick"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 8l3 3 7-7"/></svg>Recogido</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- ESTADOS ESPECIALES                                            -->
+  <!-- ============================================================ -->
+  <div class="section-divider"><span class="lbl">Estados especiales · aislados</span><span class="ln"></span></div>
+  <div class="special-grid">
+
+    <!-- A · CANTIDAD INCORRECTA -->
+    <div class="special-card">
+      <p class="special-h">A · Cantidad incorrecta</p>
+      <p class="special-d">Alerta inline ámbar arriba del bloque. CTA muta a "Confirmar diferencia".</p>
+      <div class="pk" style="border-top:1px solid var(--n-100)">
+        <div class="pk-body compact">
+          <span class="pk-step">Producto 8 de 12</span>
+          <h2 class="pk-name" style="font-size:22px">Filtro de aire Atlas Copco GA-22</h2>
+          <span class="cat cat-rpt"><span class="sw"></span>Repuestos</span>
+          <div class="pk-alert">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 10.5v.5"/></svg>
+            <span><b>Verifica la cantidad</b> — solicitaste 3, ingresaste 2.</span>
+          </div>
+          <div class="pk-qty" style="background:var(--warn-50)">
+            <span class="pk-qty-lbl" style="color:var(--warn-700)">Ingresado</span>
+            <span class="pk-qty-num" style="color:var(--warn-700)">2 / 3</span>
+          </div>
+        </div>
+        <div class="pk-actions">
+          <button class="pk-btn pk-btn-skip">Saltar</button>
+          <button class="pk-btn pk-btn-pick" style="background:var(--warn-500)">Confirmar diferencia</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- B · PICKING COMPLETADO -->
+    <div class="special-card">
+      <p class="special-h">B · Picking completado</p>
+      <p class="special-d">Check verde 64 px en círculo succ-100. Botón ancho completo en succ-500.</p>
+      <div class="pk" style="border-top:1px solid var(--n-100)">
+        <div class="pk-prog">
+          <div class="pk-prog-bar"><div class="pk-prog-fill" style="width:100%"></div></div>
+          <span class="pk-prog-count">12 de 12</span>
+        </div>
+        <div class="pk-done">
+          <div class="pk-done-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <h2 class="pk-done-title">12 de 12 completados</h2>
+          <p class="pk-done-sub">Traspaso TR-0124 listo para verificación</p>
+          <button class="pk-done-btn">Finalizar picking</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- C · ERROR DE ESCANEO -->
+    <div class="special-card">
+      <p class="special-h">C · Error de escaneo</p>
+      <p class="special-d">Overlay con border-top coral. SKU esperado vs SKU escaneado en mono.</p>
+      <div class="pk">
+        <div class="pk-err">
+          <span class="pk-err-lbl">Producto incorrecto</span>
+          <p class="pk-err-msg" style="margin:0">Esperaba <span class="ex">SKU-4521-A</span>, escaneaste <span class="got">SKU-3301</span>.</p>
+        </div>
+        <div class="pk-body compact">
+          <span class="pk-step">Producto 8 de 12</span>
+          <h2 class="pk-name" style="font-size:22px">Filtro de aire Atlas Copco GA-22</h2>
+          <span class="cat cat-rpt"><span class="sw"></span>Repuestos</span>
+          <div class="pk-qty">
+            <span class="pk-qty-lbl">Cantidad a recoger</span>
+            <span class="pk-qty-num">3</span>
+          </div>
+        </div>
+        <div class="pk-actions">
+          <button class="pk-btn pk-btn-skip">Saltar este</button>
+          <button class="pk-btn pk-btn-pick" style="background:var(--n-950)">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8a5 5 0 1 0 1.5-3.5L3 6M3 3v3h3"/></svg>
+            Reintentar
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- VALIDATION                                                    -->
+  <!-- ============================================================ -->
+  <div style="margin-top:80px">
+    <div class="frame-label"><span class="lbl-num">✓</span><span>Validación · 5 puntos críticos</span></div>
+    <div class="check-card">
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Sin chrome</strong> — las 6 vistas no tienen sidebar ni header de app. Solo botón <code>X</code> circular n-100 32 px + contexto en mono + ubicación física. El viewport entero pertenece a la tarea.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Tipografía 2× vs Kanban</strong> — nombre del producto en sans display 28 px peso 500 (vs 13 px en cards de kanban). Legible a 1 metro de distancia.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Botones gigantes</strong> — altura 64 px en ambos (Saltar 1/3, Recogido 2/3). Equivalente a 2× el botón estándar de 36 px del kanban — pulsables con guantes.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Cantidad como segundo elemento jerárquico</strong> — el ojo aterriza primero en el nombre (28 px), después en el bloque de cantidad (mono 36 px en surface n-50). El SKU sirve de anclaje secundario; la categoría y la ubicación son apoyo.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Verde dominante</strong> — barra de progreso (succ-500), botón "Recogido" (succ-500), check de completado (succ-100/700), botón "Finalizar picking" (succ-500). Todo el éxito de la tarea es del mismo verde, sin atenuar en dark.</div></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

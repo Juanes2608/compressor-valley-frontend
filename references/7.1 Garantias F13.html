@@ -1,0 +1,2382 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>7.1 · Garantías F13 · Sistema CHV v1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   CHV v1.0 · Tokens canónicos
+   ============================================================ */
+:root{
+  --n-0:#FFFFFF; --n-25:#FBFBFC; --n-50:#F7F8FA; --n-75:#F2F4F7;
+  --n-100:#EEF1F5; --n-150:#E4E7EC; --n-200:#D0D5DD; --n-300:#98A2B3;
+  --n-500:#667085; --n-700:#475467; --n-800:#344054; --n-900:#1D2939;
+  --n-950:#101828; --n-975:#0B1320;
+
+  --p-50:#F0F2FF; --p-100:#E0E5FF; --p-200:#C2CCFF; --p-300:#94A3FF;
+  --p-400:#6B7BFF; --p-500:#4B5BF5; --p-600:#2D3CE5; --p-700:#2531C8;
+  --p-800:#1F2BA8; --p-900:#1A2389; --p-950:#11185C;
+
+  --succ:#12B76A; --succ-bg:#ECFDF3; --succ-text:#027A48; --succ-border:#A6F4C5;
+  --warn:#F79009; --warn-bg:#FFFAEB; --warn-text:#B54708; --warn-border:#FEDF89;
+  --dang:#F04438; --dang-bg:#FEF3F2; --dang-text:#B42318; --dang-border:#FECDCA;
+  --info:#2E90FA; --info-bg:#EFF8FF; --info-text:#175CD3; --info-border:#B2DDFF;
+  --prog:#9A6FDF; --prog-bg:#F4EBFF; --prog-text:#6941C6; --prog-border:#D9C2FF;
+
+  --cat-cmp:#4456C2; --cat-cmp-bg:#EEF2FF; --cat-cmp-text:#2A3478;
+  --cat-rpt:#159F8A; --cat-rpt-bg:#E8FAF6; --cat-rpt-text:#0E5F5A;
+  --cat-hrm:#7244D5; --cat-hrm-bg:#F5F0FF; --cat-hrm-text:#5B21B6;
+  --cat-lbr:#C68420; --cat-lbr-bg:#FEF3D6; --cat-lbr-text:#7A340B;
+  --cat-acc:#D24E8E; --cat-acc-bg:#FEEEF4; --cat-acc-text:#9B226B;
+
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:20px; --space-6:24px; --space-8:32px; --space-10:40px; --space-12:48px;
+
+  --r-card:12px; --r-md:6px; --r-sm:4px;
+
+  --sans: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--sans);
+  background:#EAECEF;
+  color:var(--n-900);
+  -webkit-font-smoothing:antialiased;
+  font-size:14px;
+  line-height:1.45;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+a{color:inherit;text-decoration:none;}
+
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+
+/* Showcase shell */
+.showcase{padding:48px 32px 96px;max-width:1440px;margin:0 auto;}
+.showcase-h{margin:0 0 8px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--n-500);font-weight:600;}
+.showcase-t{margin:0 0 4px;font-size:22px;font-weight:600;letter-spacing:-.01em;color:var(--n-950);}
+.showcase-s{margin:0 0 40px;color:var(--n-500);font-size:13px;}
+.frame-wrap{margin-bottom:56px;}
+.frame-label{
+  display:flex;align-items:center;gap:12px;
+  padding:6px 0 14px;
+  font-family:var(--mono);font-size:11px;color:var(--n-500);
+  text-transform:uppercase;letter-spacing:.06em;
+}
+.frame-label .dot{width:6px;height:6px;border-radius:50%;background:var(--p-600);}
+.frame-label .vp{color:var(--n-700);font-weight:500;}
+.frame-label .sep{color:var(--n-200);}
+.frame{
+  background:var(--n-0);
+  border-radius:14px;
+  border:1px solid var(--n-150);
+  overflow-x:auto;
+  overflow-y:hidden;
+  box-shadow:0 1px 2px rgba(16,24,40,.04), 0 8px 24px -8px rgba(16,24,40,.08);
+}
+
+/* Chrome /ops */
+.app{display:grid;grid-template-columns:248px 1fr;min-height:840px;}
+.app.tall{min-height:1280px;}
+.app.taller{min-height:1480px;}
+/* ============ SIDEBAR /ops (canónica · idéntica a Devoluciones / Foundation) ============ */
+.sidebar{
+  background:var(--n-975);
+  color:#E6E8ED;
+  border-right:1px solid rgba(255,255,255,.04);
+  padding:18px 0 12px;
+  display:flex;flex-direction:column;
+  min-width:248px;width:248px;flex-shrink:0;
+}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:0 18px 16px;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:6px;}
+.sb-logo{
+  width:30px;height:30px;border-radius:8px;
+  background:linear-gradient(135deg,#2D3CE5,#4456C2);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:-.02em;
+}
+.sb-brandname{font-size:13px;font-weight:600;color:#fff;line-height:1.15;}
+.sb-brandsub{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:#7E8290;text-transform:uppercase;}
+.sb-section{display:flex;flex-direction:column;gap:1px;padding:10px 0 2px;}
+.sb-section-h{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#5C6070;font-weight:500;padding:6px 18px 6px;}
+.sb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 18px;color:#C7CAD3;font-size:13px;font-weight:400;
+  border-left:2px solid transparent;
+  text-decoration:none;cursor:pointer;
+}
+.sb-item:hover{background:rgba(255,255,255,.025);color:#fff;}
+.sb-item svg{flex-shrink:0;opacity:.85;color:#C7CAD3;}
+.sb-item .label{flex:1;}
+.sb-item .counter{
+  font-family:var(--mono);font-size:11px;color:#7E8290;
+  background:rgba(255,255,255,.05);padding:1px 7px;border-radius:999px;
+  min-width:22px;text-align:center;font-weight:500;
+}
+.sb-item.is-active{background:rgba(45,60,229,.16);color:#fff;border-left-color:#3D4DE8;font-weight:500;}
+.sb-item.is-active svg{color:#C2CCFF;opacity:1;}
+.sb-item.is-active .counter{background:rgba(45,60,229,.20);color:#B7BFFC;}
+.sb-item.is-active::before{display:none;}
+.sb-foot{margin-top:auto;padding:14px 18px 4px;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:10px;}
+.sb-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#3645A8,#5F6DF1);color:#fff;font-family:var(--mono);font-weight:600;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-foot-name{font-size:12px;font-weight:600;color:#fff;line-height:1.1;}
+.sb-foot-role{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:#7E8290;text-transform:uppercase;}
+
+/* ============ MAIN (canónico) ============ */
+.main{flex:1;display:flex;flex-direction:column;background:var(--n-25);min-width:0;}
+.topbar{display:flex;align-items:center;gap:16px;padding:10px 24px;background:var(--n-0);border-bottom:1px solid var(--n-100);min-height:56px;}
+.crumb{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--n-500);}
+.crumb b{color:var(--n-800);font-weight:600;}
+.crumb-sep{color:var(--n-200);margin:0 6px;}
+.topbar-spacer{flex:1;}
+.cmdk{display:flex;align-items:center;gap:8px;background:var(--n-75);border:1px solid var(--n-150);border-radius:var(--r-md);padding:5px 10px;font-size:12px;color:var(--n-500);min-width:280px;}
+.cmdk .kbd{font-family:var(--mono);font-size:10px;background:var(--n-0);border:1px solid var(--n-150);padding:1px 5px;border-radius:3px;color:var(--n-700);}
+.icon-btn{width:32px;height:32px;border-radius:var(--r-md);display:grid;place-items:center;color:var(--n-500);}
+.icon-btn:hover{background:var(--n-75);}
+.panel-admin{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:var(--r-md);border:1px solid var(--n-200);background:var(--n-0);font-size:12px;font-weight:500;color:var(--n-700);}
+.panel-admin:hover{background:var(--n-50);}
+
+.content{padding:24px;flex:1;min-width:1000px;}
+
+/* Page header */
+.page-h{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:20px;}
+.page-title{margin:0 0 4px;font-size:22px;font-weight:600;color:var(--n-950);letter-spacing:-.01em;}
+.page-sub{margin:0;font-size:13px;color:var(--n-500);}
+.page-sub b.num{color:var(--n-800);font-family:var(--mono);font-weight:500;}
+.page-actions{display:flex;align-items:center;gap:8px;}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:var(--r-md);font-size:13px;font-weight:500;font-family:var(--sans);border:1px solid transparent;line-height:1.2;transition:background .15s;}
+.btn-primary{background:var(--p-600);color:#fff;}
+.btn-primary:hover{background:var(--p-700);}
+.btn-outline{background:var(--n-0);color:var(--n-800);border-color:var(--n-200);}
+.btn-outline:hover{background:var(--n-50);}
+.btn-ghost{color:var(--n-700);background:transparent;}
+.btn-ghost:hover{background:var(--n-75);}
+.btn-danger-outline{background:var(--n-0);color:var(--dang-text);border-color:var(--dang-border);}
+.btn-danger-outline:hover{background:var(--dang-bg);}
+.btn-danger{background:var(--dang);color:#fff;}
+.btn-warn-outline{background:var(--n-0);color:var(--warn-text);border-color:var(--warn-border);}
+.btn-prog-outline{background:var(--n-0);color:var(--prog-text);border-color:var(--prog-border);}
+.btn-sm{padding:4px 9px;font-size:12px;}
+.btn-block{width:100%;justify-content:center;padding:10px 14px;}
+.btn-split .caret{margin-left:2px;opacity:.85;}
+
+/* Tabs duales */
+.tabs-dual{display:flex;gap:0;background:var(--n-0);border:1px solid var(--n-150);border-radius:var(--r-card) var(--r-card) 0 0;padding:6px 6px 0;margin-bottom:0;width:fit-content;max-width:520px;}
+.tab-d{display:flex;align-items:center;gap:10px;padding:10px 16px 12px;border-radius:var(--r-md) var(--r-md) 0 0;border-bottom:2px solid transparent;color:var(--n-500);font-size:13px;font-weight:500;min-width:240px;position:relative;}
+.tab-d svg{flex-shrink:0;}
+.tab-d .tab-label{display:flex;flex-direction:column;align-items:flex-start;gap:1px;line-height:1.1;}
+.tab-d .tab-main{display:flex;align-items:baseline;gap:6px;font-weight:500;color:var(--n-700);}
+.tab-d .tab-main .count{font-family:var(--mono);font-size:12px;color:var(--n-500);}
+.tab-d .tab-sub{font-size:10.5px;color:var(--n-500);font-weight:400;}
+.tab-d.is-active{background:var(--p-50);border-bottom-color:var(--p-600);}
+.tab-d.is-active .tab-main{color:var(--p-700);}
+.tab-d.is-active .tab-main .count{color:var(--p-700);}
+.tab-d.is-active .tab-sub{color:var(--p-700);opacity:.85;}
+.tab-d.is-active svg{color:var(--p-600);}
+
+/* Sub-filters */
+.subfilters{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:14px 16px;background:var(--n-0);border:1px solid var(--n-150);border-top:none;}
+.pill-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.filter-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;font-size:12px;color:var(--n-700);font-weight:500;border:1px solid var(--n-200);background:var(--n-0);}
+.filter-pill .c{font-family:var(--mono);color:var(--n-500);font-size:11px;}
+.filter-pill.is-active{background:var(--n-900);color:#fff;border-color:var(--n-900);}
+.filter-pill.is-active .c{color:rgba(255,255,255,.7);}
+.subfilter-sep{height:18px;width:1px;background:var(--n-150);}
+.subfilter-label{font-size:11px;color:var(--n-500);text-transform:uppercase;letter-spacing:.06em;font-family:var(--mono);}
+.select-mini{display:inline-flex;align-items:center;gap:6px;padding:5px 8px 5px 10px;border:1px solid var(--n-200);border-radius:var(--r-md);font-size:12px;color:var(--n-700);background:var(--n-0);}
+.check-row{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--n-700);}
+.check-row input{accent-color:var(--p-600);}
+
+/* Table */
+.table-wrap{background:var(--n-0);border:1px solid var(--n-150);border-top:none;border-radius:0 0 var(--r-card) var(--r-card);overflow-x:auto;}
+table.dt{width:100%;border-collapse:collapse;font-size:13px;}
+.dt thead th{background:var(--n-50);font-family:var(--mono);font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--n-500);text-align:left;padding:10px 12px;border-bottom:1px solid var(--n-150);white-space:nowrap;}
+.dt thead th.r{text-align:right;}
+.dt tbody td{padding:10px 12px;border-bottom:1px solid var(--n-100);vertical-align:middle;height:48px;color:var(--n-800);}
+.dt tbody tr:hover{background:var(--n-50);}
+.dt tbody tr.is-warn-row{background:var(--warn-bg);}
+.dt tbody tr.is-warn-row:hover{background:#fff5db;}
+.dt .id{font-family:var(--mono);font-weight:500;color:var(--n-900);font-size:12.5px;}
+.dt .strong{font-weight:500;color:var(--n-900);}
+.dt .sub{font-size:11.5px;color:var(--n-500);margin-top:1px;}
+.dt .mono-s{font-family:var(--mono);font-size:11.5px;}
+.dt .num{font-family:var(--mono);font-weight:500;font-size:12.5px;color:var(--n-900);}
+.dt td .num.warn{color:var(--warn-text) !important;font-weight:600;}
+.dt td .num.dang{color:var(--dang-text) !important;font-weight:600;}
+.dt td .num.succ{color:var(--succ-text) !important;font-weight:600;}
+.dt .r{text-align:right;}
+
+/* Pills */
+.pill{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:999px;font-size:11.5px;font-weight:500;line-height:1;white-space:nowrap;border:1px solid transparent;}
+.pill .pdot{width:6px;height:6px;border-radius:50%;display:inline-block;}
+.pill.pulse .pdot{animation:pulse 1.6s ease-in-out infinite;}
+.pill.lg{height:28px;padding:0 12px;font-size:12.5px;}
+.pill.sm{height:20px;padding:0 8px;font-size:11px;}
+.pill-neutral{background:var(--n-75);color:var(--n-700);border-color:var(--n-200);}
+.pill-succ{background:var(--succ-bg);color:var(--succ-text);border-color:var(--succ-border);}
+.pill-warn{background:var(--warn-bg);color:var(--warn-text);border-color:var(--warn-border);}
+.pill-dang{background:var(--dang-bg);color:var(--dang-text);border-color:var(--dang-border);}
+.pill-info{background:var(--info-bg);color:var(--info-text);border-color:var(--info-border);}
+.pill-prog{background:var(--prog-bg);color:var(--prog-text);border-color:var(--prog-border);}
+.pill .pdot.s-succ{background:var(--succ);} .pill .pdot.s-warn{background:var(--warn);}
+.pill .pdot.s-dang{background:var(--dang);} .pill .pdot.s-info{background:var(--info);}
+.pill .pdot.s-prog{background:var(--prog);} .pill .pdot.s-neutral{background:var(--n-300);}
+
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:.45;transform:scale(.7);}
+}
+@keyframes haloPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(45,60,229,.45);}
+  50%{box-shadow:0 0 0 8px rgba(45,60,229,0);}
+}
+
+.cell-state{display:flex;flex-direction:column;gap:2px;align-items:flex-start;}
+.cell-state .sub{font-size:10.5px;color:var(--n-500);}
+
+/* Link-pill */
+.link-pill{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:var(--r-sm);background:var(--p-50);color:var(--p-700);font-family:var(--mono);font-weight:500;font-size:11.5px;border:1px solid var(--p-100);}
+.link-pill:hover{background:var(--p-100);}
+
+.dt-foot{padding:11px 16px;border-top:1px solid var(--n-150);font-family:var(--mono);font-size:11.5px;color:var(--n-500);display:flex;justify-content:space-between;align-items:center;background:var(--n-25);border-radius:0 0 var(--r-card) var(--r-card);}
+.dt-foot b{color:var(--n-800);font-weight:500;}
+
+/* Banners */
+.banner{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:var(--r-card);border:1px solid var(--warn-border);background:var(--warn-bg);margin-bottom:16px;}
+.banner.b-info{border-color:var(--info-border);background:var(--info-bg);}
+.banner.b-prog{border-color:var(--prog-border);background:var(--prog-bg);}
+.banner.b-succ{border-color:var(--succ-border);background:var(--succ-bg);}
+.banner .icon{flex-shrink:0;margin-top:1px;}
+.banner.b-warn .icon{color:var(--warn-text);}
+.banner.b-info .icon{color:var(--info-text);}
+.banner.b-prog .icon{color:var(--prog-text);}
+.banner-body{flex:1;min-width:0;}
+.banner-title{font-size:13px;font-weight:600;line-height:1.3;margin-bottom:2px;}
+.banner.b-warn .banner-title{color:var(--warn-text);}
+.banner.b-info .banner-title{color:var(--info-text);}
+.banner.b-prog .banner-title{color:var(--prog-text);}
+.banner-text{font-size:12.5px;line-height:1.5;}
+.banner.b-warn .banner-text{color:#7A2E08;}
+.banner.b-info .banner-text{color:var(--info-text);}
+.banner.b-prog .banner-text{color:var(--prog-text);}
+.banner-text .mono{font-family:var(--mono);font-weight:500;}
+.banner-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+
+/* Detail */
+.detail-h{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:16px;}
+.detail-back{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--n-500);font-weight:500;margin-bottom:10px;}
+.detail-back:hover{color:var(--n-800);}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--n-300);font-weight:500;margin-bottom:6px;}
+.detail-id{font-family:var(--mono);font-size:28px;font-weight:500;color:var(--n-950);letter-spacing:-.01em;margin:0 0 6px;}
+.detail-sub{font-size:14px;color:var(--n-500);margin:0;}
+.detail-sub b{color:var(--n-800);font-weight:500;}
+.detail-sub .pill{margin-left:6px;}
+.detail-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+.countdown{text-align:right;background:var(--n-0);border:1px solid var(--n-150);border-radius:var(--r-card);padding:10px 16px;min-width:200px;}
+.countdown .label{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--n-300);}
+.countdown .num{font-family:var(--mono);font-size:22px;font-weight:500;color:var(--n-950);}
+.countdown .num .units{font-size:13px;color:var(--n-500);font-weight:400;margin-left:4px;}
+
+.actions-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+
+/* State machine */
+.statemachine{background:var(--n-0);border:1px solid var(--n-150);border-radius:var(--r-card);padding:18px 20px 20px;margin-bottom:20px;}
+.sm-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.sm-eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--n-500);font-weight:500;}
+.sm-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;align-items:start;}
+.sm-step{display:flex;flex-direction:column;align-items:center;position:relative;text-align:center;padding:0 6px;}
+.sm-dot{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--n-100);color:#fff;border:2px solid var(--n-0);position:relative;z-index:2;font-size:11px;font-weight:600;font-family:var(--mono);box-shadow:0 0 0 1px var(--n-200);}
+.sm-dot.is-done{background:var(--succ);box-shadow:0 0 0 1px var(--succ);}
+.sm-dot.is-active{background:var(--p-600);box-shadow:0 0 0 1px var(--p-600);animation:haloPulse 1.8s ease-in-out infinite;}
+.sm-dot.is-pending{background:var(--n-100);color:var(--n-300);box-shadow:0 0 0 1px var(--n-200);}
+.sm-line{position:absolute;top:11px;height:2px;left:50%;right:-50%;background:var(--n-200);z-index:1;}
+.sm-line.done{background:var(--succ);}
+.sm-line.active{background:linear-gradient(90deg,var(--succ),var(--p-600));}
+.sm-label{margin-top:8px;font-size:12px;font-weight:500;color:var(--n-700);line-height:1.2;}
+.sm-step.done .sm-label{color:var(--succ-text);}
+.sm-step.active .sm-label{color:var(--p-700);font-weight:600;}
+.sm-step.pending .sm-label{color:var(--n-500);}
+.sm-meta{margin-top:3px;font-size:10.5px;font-family:var(--mono);color:var(--n-500);}
+.sm-step.active .sm-meta{color:var(--p-700);}
+.sm-step:last-child .sm-line{display:none;}
+
+/* Detail grid */
+.detail-grid{display:grid;grid-template-columns:1fr 360px;gap:24px;}
+
+/* Cards */
+.card{background:var(--n-0);border:1px solid var(--n-150);border-radius:var(--r-card);padding:18px 20px;margin-bottom:16px;}
+.card-h{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.card-h svg{color:var(--n-500);flex-shrink:0;}
+.card-h .t{font-size:14px;font-weight:600;color:var(--n-900);}
+.card-h .badge{margin-left:auto;}
+
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 24px;}
+.field{display:flex;flex-direction:column;gap:2px;}
+.field-l{font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--n-500);font-weight:500;}
+.field-v{font-size:13px;color:var(--n-900);font-weight:500;}
+.field-v.mono{font-family:var(--mono);}
+
+/* Photos */
+.photos{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+.photo{width:80px;height:80px;border-radius:var(--r-md);background:linear-gradient(135deg,#dee2eb 0%,#eef0f5 50%,#dee2eb 100%);position:relative;border:1px solid var(--n-150);box-shadow:0 1px 2px rgba(16,24,40,.08);overflow:hidden;}
+.photo::after{content:"IMG";position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:9px;color:var(--n-500);}
+.photo.add{background:transparent;border:1.5px dashed var(--n-200);display:grid;place-items:center;color:var(--n-500);}
+.photo.add::after{display:none;}
+.photo .badge-photo{position:absolute;left:4px;bottom:4px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;font-family:var(--mono);padding:1px 5px;border-radius:3px;z-index:2;}
+.photos-foot{margin-top:10px;font-size:11px;color:var(--n-500);}
+
+.salebox{margin-top:14px;padding:12px 14px;background:var(--succ-bg);border:1px solid var(--succ-border);border-radius:var(--r-md);display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--succ-text);font-weight:500;}
+.salebox svg{flex-shrink:0;}
+
+.linkrow{display:flex;align-items:center;gap:14px;margin-top:8px;flex-wrap:wrap;}
+.linkrow .field{flex-direction:row;align-items:baseline;gap:6px;}
+
+.quote{font-style:italic;color:var(--n-700);font-size:13.5px;line-height:1.55;padding:12px 16px;border-left:3px solid var(--n-200);background:var(--n-25);border-radius:0 var(--r-md) var(--r-md) 0;}
+.quote-meta{font-size:11px;color:var(--n-500);margin-top:10px;font-style:normal;}
+
+/* Resolución (decision pending) */
+.card.is-decision{border:2px solid var(--p-600);background:linear-gradient(180deg,var(--p-50) 0%,var(--n-0) 60%);}
+.card.is-decision .card-h svg{color:var(--p-600);}
+.radio-group{display:flex;flex-direction:column;gap:10px;}
+.radio-opt{display:flex;gap:12px;padding:14px 16px;border:1px solid var(--n-200);border-radius:var(--r-md);background:var(--n-0);cursor:pointer;align-items:flex-start;}
+.radio-opt.is-selected{border:2px solid var(--p-600);background:var(--p-50);padding:13px 15px;}
+.radio-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--n-300);flex-shrink:0;margin-top:1px;background:var(--n-0);position:relative;}
+.radio-opt.is-selected .radio-dot{border-color:var(--p-600);}
+.radio-opt.is-selected .radio-dot::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--p-600);}
+.radio-body{flex:1;}
+.radio-title{font-size:13.5px;font-weight:600;color:var(--n-900);margin-bottom:3px;}
+.radio-sub{font-size:12.5px;color:var(--n-700);line-height:1.45;}
+.radio-meta{margin-top:6px;font-size:11.5px;color:var(--n-500);font-family:var(--mono);}
+
+.inset-card{margin-top:14px;padding:12px 14px;background:var(--n-0);border:1px dashed var(--p-300);border-radius:var(--r-md);display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12.5px;color:var(--n-700);}
+
+/* Criteria */
+.crit-list{display:flex;flex-direction:column;}
+.crit-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--n-100);font-size:12.5px;color:var(--n-800);}
+.crit-row:last-child{border:none;}
+.crit-ico{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;}
+.crit-ico.yes{background:var(--succ-bg);color:var(--succ-text);}
+.crit-ico.no{background:var(--n-100);color:var(--n-500);}
+.crit-ico.pend{background:var(--warn-bg);color:var(--warn-text);}
+.crit-text{flex:1;}
+.crit-tag{font-size:10.5px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--n-500);}
+.crit-tag.yes{color:var(--succ-text);}
+.crit-tag.pend{color:var(--warn-text);}
+
+/* Timeline */
+.timeline{display:flex;flex-direction:column;}
+.tl-event{display:flex;gap:12px;padding-bottom:14px;position:relative;}
+.tl-event:not(:last-child)::before{content:"";position:absolute;left:6px;top:14px;bottom:0;width:1px;background:var(--n-200);}
+.tl-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;background:var(--info);margin-top:2px;box-shadow:0 0 0 2px var(--n-0);position:relative;z-index:2;}
+.tl-dot.warn{background:var(--warn);animation:pulse 1.6s ease-in-out infinite;}
+.tl-dot.succ{background:var(--succ);}
+.tl-dot.neutral{background:var(--n-200);}
+.tl-body{flex:1;}
+.tl-title{font-size:12.5px;font-weight:500;color:var(--n-800);}
+.tl-title.warn{color:var(--warn-text);font-weight:600;}
+.tl-title.succ{color:var(--succ-text);font-weight:600;}
+.tl-meta{font-size:11px;color:var(--n-500);margin-top:1px;}
+
+/* Policy */
+.policy{background:var(--info-bg);border:1px solid var(--info-border);border-radius:var(--r-md);padding:14px 16px;}
+.policy.is-prog{background:var(--prog-bg);border-color:var(--prog-border);}
+.policy.is-succ{background:var(--succ-bg);border-color:var(--succ-border);}
+.policy-eyebrow{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--info-text);font-weight:600;margin-bottom:8px;}
+.policy.is-prog .policy-eyebrow{color:var(--prog-text);}
+.policy.is-succ .policy-eyebrow{color:var(--succ-text);}
+.policy ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;}
+.policy li{display:flex;gap:8px;font-size:12px;line-height:1.45;color:var(--info-text);}
+.policy.is-prog li{color:var(--prog-text);}
+.policy.is-succ li{color:var(--succ-text);}
+.policy li svg{flex-shrink:0;margin-top:2px;}
+.policy-link{margin-top:10px;display:inline-block;font-size:12px;color:var(--info-text);text-decoration:underline;font-weight:500;}
+.policy.is-prog .policy-link{color:var(--prog-text);}
+
+/* Wizard */
+.wiz-stepper{background:var(--n-0);border:1px solid var(--n-150);border-radius:var(--r-card);padding:16px 24px;margin-bottom:20px;display:flex;align-items:center;gap:0;}
+.wiz-step{display:flex;align-items:center;gap:10px;flex:1;}
+.wiz-num{width:28px;height:28px;border-radius:50%;background:var(--n-100);color:var(--n-500);display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:600;flex-shrink:0;}
+.wiz-step.done .wiz-num{background:var(--succ);color:#fff;}
+.wiz-step.active .wiz-num{background:var(--p-600);color:#fff;box-shadow:0 0 0 4px var(--p-100);}
+.wiz-step-text{display:flex;flex-direction:column;line-height:1.1;}
+.wiz-step-l{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--n-500);}
+.wiz-step-t{font-size:12.5px;font-weight:500;color:var(--n-700);margin-top:1px;}
+.wiz-step.active .wiz-step-t{color:var(--p-700);font-weight:600;}
+.wiz-step.done .wiz-step-t{color:var(--succ-text);}
+.wiz-line{height:2px;background:var(--n-150);flex:0 0 auto;width:48px;margin:0 8px;}
+.wiz-line.done{background:var(--succ);}
+
+.wiz-grid{display:grid;grid-template-columns:1fr 320px;gap:20px;}
+
+.completed-step{display:flex;align-items:center;justify-content:space-between;background:var(--succ-bg);border:1px solid var(--succ-border);border-radius:var(--r-md);padding:10px 14px;margin-bottom:18px;}
+.completed-step .cs-body{display:flex;gap:10px;align-items:center;font-size:12.5px;color:var(--succ-text);flex-wrap:wrap;}
+.completed-step .cs-l{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--succ-text);opacity:.75;font-weight:500;}
+.completed-step .cs-v{font-weight:500;}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;}
+.form-grid .full{grid-column:1 / -1;}
+.form-l{display:block;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--n-500);font-weight:500;margin-bottom:5px;}
+.input,.select,.textarea{width:100%;display:flex;align-items:center;border:1px solid var(--n-200);border-radius:var(--r-md);background:var(--n-0);font-family:var(--sans);font-size:13px;padding:9px 11px;color:var(--n-900);min-height:38px;}
+.input.mono,.select.mono{font-family:var(--mono);font-size:12.5px;font-weight:500;}
+.textarea{align-items:flex-start;min-height:120px;padding:11px 13px;line-height:1.5;}
+.select{justify-content:space-between;cursor:pointer;}
+.select .opt{display:flex;flex-direction:column;gap:1px;}
+.select .opt .sku{font-family:var(--mono);font-size:11px;color:var(--n-500);}
+.select .opt .nm{font-size:13px;color:var(--n-900);font-weight:500;}
+.stepnum{display:flex;align-items:stretch;border:1px solid var(--n-200);border-radius:var(--r-md);width:120px;overflow:hidden;}
+.stepnum button{width:34px;background:var(--n-50);color:var(--n-700);font-size:16px;font-weight:500;}
+.stepnum input{flex:1;border:none;text-align:center;font-family:var(--mono);font-size:13px;font-weight:500;color:var(--n-900);background:transparent;outline:none;}
+.dropzone{border:1.5px dashed var(--n-200);border-radius:var(--r-md);padding:18px;text-align:center;color:var(--n-500);font-size:12.5px;background:var(--n-25);}
+.dropzone b{color:var(--p-700);}
+.attach-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--n-150);border-radius:var(--r-md);font-size:12px;margin-top:8px;}
+.attach-row .nm{flex:1;color:var(--n-800);}
+.attach-row .sz{font-family:var(--mono);font-size:11px;color:var(--n-500);}
+
+.cart{background:var(--n-0);border:1px solid var(--n-150);border-radius:var(--r-card);padding:18px 20px;position:sticky;top:20px;}
+.cart-eye{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--n-500);font-weight:500;margin-bottom:14px;}
+.cart-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--n-100);font-size:12.5px;}
+.cart-row:last-of-type{border:none;}
+.cart-l{color:var(--n-500);font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;}
+.cart-v{color:var(--n-900);font-weight:500;text-align:right;max-width:60%;}
+.cart .btn{margin-top:14px;}
+
+/* Mobile */
+.mobile{display:grid;grid-template-columns:1fr;min-height:844px;background:var(--n-0);max-width:390px;position:relative;}
+.m-top{padding:12px 16px 8px;border-bottom:1px solid var(--n-150);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.m-title{font-size:20px;font-weight:600;color:var(--n-950);margin:0;}
+.m-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--n-150);}
+.m-tab{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 10px;font-size:12.5px;font-weight:500;color:var(--n-500);border-bottom:2px solid transparent;background:var(--n-25);}
+.m-tab svg{flex-shrink:0;}
+.m-tab .c{font-family:var(--mono);font-size:11px;color:var(--n-500);}
+.m-tab.is-active{background:var(--p-50);color:var(--p-700);border-bottom-color:var(--p-600);}
+.m-tab.is-active .c{color:var(--p-700);}
+.m-subnav{display:flex;gap:6px;padding:10px 12px;overflow-x:auto;border-bottom:1px solid var(--n-150);white-space:nowrap;}
+.m-subnav .filter-pill{flex-shrink:0;}
+.m-list{padding:14px 12px 80px;display:flex;flex-direction:column;gap:10px;background:var(--n-50);min-height:520px;}
+.m-card{background:var(--n-0);border:1px solid var(--n-150);border-radius:var(--r-card);padding:14px;}
+.m-card-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.m-id{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--n-900);}
+.m-cust{font-size:14px;font-weight:600;color:var(--n-900);}
+.m-prod{font-size:12.5px;color:var(--n-500);margin-top:2px;}
+.m-meta-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--n-100);gap:8px;}
+.m-days{font-family:var(--mono);font-size:13px;font-weight:600;}
+.m-days .l{font-family:var(--mono);font-size:10px;color:var(--n-500);text-transform:uppercase;letter-spacing:.05em;display:block;line-height:1;margin-bottom:2px;font-weight:500;}
+.m-bottomnav{position:absolute;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(5,1fr);background:var(--n-0);border-top:1px solid var(--n-150);padding:8px 4px 14px;}
+.m-bn{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--n-500);padding:6px 2px;}
+.m-bn svg{color:var(--n-500);}
+.m-bn.is-active{color:var(--p-700);}
+.m-bn.is-active svg{color:var(--p-600);}
+.m-fab{width:52px;height:52px;border-radius:50%;background:var(--p-600);color:#fff;display:grid;place-items:center;box-shadow:0 6px 16px rgba(45,60,229,.32);border:3px solid var(--n-0);margin-top:-22px;}
+
+/* Dark */
+.dark{
+  --n-0:#0F1626; --n-25:#121A2C; --n-50:#161F33; --n-75:#1B2640;
+  --n-100:#1F2B47; --n-150:#283454; --n-200:#33416A; --n-300:#4D5E85;
+  --n-500:#7C8AAB; --n-700:#A6B0CC; --n-800:#C7CDE2; --n-900:#E3E7F2;
+  --n-950:#F2F4FB;
+  --p-50:#1A2348; --p-100:#243266;
+  --succ-bg:rgba(18,183,106,.14); --succ-text:#6EE7B7; --succ-border:rgba(18,183,106,.32);
+  --warn-bg:rgba(247,144,9,.14); --warn-text:#FDBA74; --warn-border:rgba(247,144,9,.32);
+  --dang-bg:rgba(240,68,56,.14); --dang-text:#FCA5A5; --dang-border:rgba(240,68,56,.32);
+  --info-bg:rgba(46,144,250,.14); --info-text:#93C5FD; --info-border:rgba(46,144,250,.32);
+  --prog-bg:rgba(154,111,223,.14); --prog-text:#C4B5FD; --prog-border:rgba(154,111,223,.32);
+}
+.dark{background:var(--n-25);}
+.dark .topbar,.dark .cmdk,.dark .content,.dark .table-wrap,.dark .tabs-dual,.dark .subfilters,.dark .card,.dark .statemachine,.dark .countdown,.dark .panel-admin,.dark .btn-outline,.dark .filter-pill,.dark .input,.dark .textarea,.dark .select,.dark .cart{background:var(--n-0);}
+.dark .content{background:var(--n-25);}
+.dark .dt thead th{background:var(--n-50);}
+.dark .dt tbody td{color:var(--n-800);}
+.dark .dt td .num.succ{color:#6EE7B7 !important;}
+.dark .dt td .num.warn{color:#FDBA74 !important;}
+.dark .dt td .num.dang{color:#FCA5A5 !important;}
+.dark .filter-pill.is-active{background:var(--n-950);color:var(--n-0);border-color:var(--n-950);}
+.dark .photo{background:linear-gradient(135deg,#1f2b47 0%,#2a3656 50%,#1f2b47 100%);border-color:var(--n-200);}
+
+/* Modal */
+.modal-stage{background:rgba(16,24,40,.6);padding:60px 24px;display:flex;justify-content:center;align-items:flex-start;border-radius:14px;min-height:640px;}
+.modal{width:520px;background:var(--n-0);border-radius:var(--r-card);box-shadow:0 16px 40px rgba(0,0,0,.18);padding:28px 28px 22px;}
+.modal-ico{width:48px;height:48px;border-radius:50%;background:var(--dang-bg);color:var(--dang-text);display:grid;place-items:center;margin-bottom:14px;}
+.modal-t{font-size:18px;font-weight:600;color:var(--n-950);margin:0 0 6px;}
+.modal-s{font-size:13px;color:var(--n-700);margin:0 0 18px;line-height:1.5;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.chip{padding:6px 10px;border-radius:999px;background:var(--n-75);color:var(--n-700);font-size:11.5px;font-weight:500;border:1px solid var(--n-150);}
+.chip:hover{background:var(--p-50);color:var(--p-700);border-color:var(--p-200);}
+.modal-foot-note{background:var(--n-50);border-radius:var(--r-md);padding:10px 12px;margin-top:14px;font-size:11.5px;color:var(--n-700);line-height:1.5;}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;}
+
+/* Validation */
+.validation{margin:48px auto 0;max-width:1240px;padding:24px 28px;background:#0B1320;color:#E3E7F2;border-radius:14px;}
+.validation h3{margin:0 0 14px;font-size:14px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:#7C8AAB;font-weight:600;}
+.validation ol{padding-left:22px;margin:0;}
+.validation li{margin-bottom:10px;font-size:13.5px;line-height:1.6;}
+.validation li b{color:#fff;font-weight:600;}
+
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-package" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.2"/></symbol>
+    <symbol id="i-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></symbol>
+    <symbol id="i-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l3-2 3 2 3-2 3 2 3-2V2z"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 7 3 13 9 13"/><path d="M3 13a9 9 0 1 0 3-6.7L3 9"/></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+    <symbol id="i-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></symbol>
+    <symbol id="i-shield-alt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><circle cx="12" cy="15.5" r=".8" fill="currentColor"/></symbol>
+    <symbol id="i-pkg-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m7.5 4.27 9 5.15"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><polyline points="9 14 11 16 15 12"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+    <symbol id="i-puzzle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 11h-1V8a2 2 0 0 0-2-2h-3V4a2 2 0 1 0-4 0v2H6a2 2 0 0 0-2 2v3h2a2 2 0 1 1 0 4H4v3a2 2 0 0 0 2 2h3v-1a2 2 0 1 1 4 0v1h3a2 2 0 0 0 2-2v-3h-1a2 2 0 1 1 0-4z"/></symbol>
+    <symbol id="i-hammer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 12-8.5 8.5a2.12 2.12 0 0 1-3-3L12 9"/><path d="M17.64 15 22 10.64"/><path d="m20.91 11.7-1.25-1.25a2.5 2.5 0 0 1 0-3.54l1.25-1.25-9-9-1.25 1.25a2.5 2.5 0 0 1-3.54 0L5.87 6.66 14.34 15.13l1.25-1.25a2.5 2.5 0 0 1 3.54 0z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+    <symbol id="i-qr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6"/><rect x="15" y="3" width="6" height="6"/><rect x="3" y="15" width="6" height="6"/><path d="M15 15h2v2h-2zM19 15h2v2h-2zM15 19h2v2h-2zM19 19h2v2h-2z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></symbol>
+    <symbol id="i-arrow-left-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 8 8 12 12 16"/><line x1="16" y1="12" x2="8" y2="12"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+    <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+    <symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-check-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><polyline points="9 14 11 16 15 12"/></symbol>
+    <symbol id="i-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></symbol>
+    <symbol id="i-printer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+    <symbol id="i-paperclip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05 12.25 20.24a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></symbol>
+  </defs>
+</svg>
+
+<div class="showcase">
+  <p class="showcase-h">Fase 7 · Mensaje 7.1</p>
+  <h1 class="showcase-t">Garantías F13 · Ventas + Compras</h1>
+  <p class="showcase-s">Sistema CHV v1.0 final · IBM Plex Sans + Mono · 6 vistas canónicas + 4 estados especiales · sidebar /ops con "Garantías" activa.</p>
+
+<!-- ============================================================
+     VISTA 1 · Desktop light · LISTA tab VENTAS (default)
+     ============================================================ -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span>
+    <span class="vp">Vista 1 · Desktop · Light · 1280 px</span>
+    <span class="sep">·</span>
+    <span>Lista · Tab Garantías de ventas</span>
+  </div>
+  <div class="frame" style="width:1280px;">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sb-brand">
+          <div class="sb-logo">CV</div>
+          <div>
+            <div class="sb-brandname">Compresores del Valle</div>
+            <div class="sb-brandsub">CHV · Operaciones</div>
+          </div>
+        </div>
+        <div class="sb-section">
+          <div class="sb-section-h">Catálogo y stock</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-package"/></svg><span class="label">Inventario</span><span class="counter">2.847</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-tag"/></svg><span class="label">Productos</span></a>
+        </div>
+        <div class="sb-section">
+          <div class="sb-section-h">Operación comercial</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-cart"/></svg><span class="label">Ventas</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="label">Cotizaciones</span><span class="counter">5</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-receipt"/></svg><span class="label">Recibos</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-undo"/></svg><span class="label">Devoluciones</span></a>
+        </div>
+        <div class="sb-section">
+          <div class="sb-section-h">Bodega y movimiento</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-bag"/></svg><span class="label">Compras</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-truck"/></svg><span class="label">Traspasos</span><span class="counter">3</span></a>
+          <a class="sb-item is-active"><svg width="16" height="16"><use href="#i-shield"/></svg><span class="label">Garantías</span></a>
+        </div>
+        <div class="sb-section">
+          <div class="sb-section-h">Taller</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-wrench"/></svg><span class="label">Órdenes de Trabajo</span><span class="counter">14</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-puzzle"/></svg><span class="label">Ensambles</span></a>
+        </div>
+        <div class="sb-section">
+          <div class="sb-section-h">Soporte</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-hammer"/></svg><span class="label">Herramientas</span><span class="counter">2</span></a>
+        </div>
+        <div class="sb-foot">
+          <div class="sb-avatar">CR</div>
+          <div>
+            <div class="sb-foot-name">Carlos Ríos</div>
+            <div class="sb-foot-role">Admin · WH-01</div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="main">
+        <div class="topbar">
+          <div class="crumb"><b>Operaciones</b><span class="crumb-sep">·</span><b style="color:var(--p-700)">Garantías</b></div>
+          <div class="topbar-spacer"></div>
+          <div class="cmdk"><svg width="14" height="14"><use href="#i-search"/></svg><span>Buscar en todo el sistema</span><span style="margin-left:auto"></span><span class="kbd">⌘</span><span class="kbd">K</span></div>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-qr"/></svg></button>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg></button>
+          <button class="panel-admin"><svg width="14" height="14"><use href="#i-shield"/></svg>Panel Admin</button>
+        </div>
+
+        <div class="content">
+          <div class="page-h">
+            <div>
+              <h1 class="page-title">Garantías</h1>
+              <p class="page-sub"><b class="num">5</b> activas <span style="color:var(--n-200)">·</span> <b class="num">2</b> vencen este mes <span style="color:var(--n-200)">·</span> <b class="num">1</b> reclamación pendiente <span style="color:var(--n-200)">·</span> <b class="num">$ 1.45M</b> en garantía</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-outline"><svg width="14" height="14"><use href="#i-upload"/></svg>Exportar</button>
+              <button class="btn btn-primary btn-split"><svg width="14" height="14"><use href="#i-plus"/></svg>Nueva reclamación <svg width="12" height="12" class="caret"><use href="#i-chevron-down"/></svg></button>
+            </div>
+          </div>
+
+          <div class="tabs-dual">
+            <div class="tab-d is-active">
+              <svg width="16" height="16"><use href="#i-shield"/></svg>
+              <div class="tab-label">
+                <div class="tab-main">Garantías de ventas <span class="count mono">(3)</span></div>
+                <div class="tab-sub">Cliente reclama a CHV</div>
+              </div>
+            </div>
+            <div class="tab-d">
+              <svg width="16" height="16"><use href="#i-pkg-check"/></svg>
+              <div class="tab-label">
+                <div class="tab-main">Garantías de compras <span class="count mono">(2)</span></div>
+                <div class="tab-sub">CHV reclama a proveedor</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subfilters">
+            <div class="pill-row">
+              <button class="filter-pill is-active">Todas <span class="c">3</span></button>
+              <button class="filter-pill">Activa <span class="c">1</span></button>
+              <button class="filter-pill">En análisis <span class="c">0</span></button>
+              <button class="filter-pill">En proceso <span class="c">1</span></button>
+              <button class="filter-pill">Resuelta <span class="c">1</span></button>
+              <button class="filter-pill">Rechazada <span class="c">0</span></button>
+              <button class="filter-pill">Vencida <span class="c">0</span></button>
+            </div>
+            <div class="subfilter-sep"></div>
+            <span class="subfilter-label">Resolución</span>
+            <button class="select-mini">Todas <svg width="10" height="10"><use href="#i-chevron-down"/></svg></button>
+            <div class="subfilter-sep"></div>
+            <label class="check-row"><input type="checkbox" checked />Vencen en los próximos 30 días</label>
+          </div>
+
+          <div class="table-wrap">
+            <table class="dt">
+              <thead>
+                <tr>
+                  <th style="width:110px">#</th>
+                  <th style="width:110px">Fecha reporte</th>
+                  <th>Cliente</th>
+                  <th style="width:230px">Producto</th>
+                  <th style="width:120px">Venta origen</th>
+                  <th style="width:120px">Vencimiento</th>
+                  <th style="width:96px">Días</th>
+                  <th style="width:150px">Tipo resolución</th>
+                  <th style="width:170px">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="id">GAR-V-0042</span></td>
+                  <td><span class="mono-s">Hoy 10:15</span></td>
+                  <td><div class="strong">Industrial XYZ S.A.S.</div><div class="sub mono">+57 318 442 5512</div></td>
+                  <td><div class="strong">Filtro de aire GA-22</div><div class="sub"><span class="mono">CMP-2210-A</span> · Atlas Copco · Serie 8472</div></td>
+                  <td><a class="link-pill">V-2843</a></td>
+                  <td><span class="num succ">30 jun 2026</span></td>
+                  <td><span class="num succ">46 días</span></td>
+                  <td><span class="pill pill-info"><span class="pdot s-info"></span>Reparación</span></td>
+                  <td><span class="pill pill-neutral"><span class="pdot s-neutral"></span>Activa</span></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-V-0041</span></td>
+                  <td><span class="mono-s">Ayer</span></td>
+                  <td><div class="strong">Compañía Lácteos Cali</div><div class="sub mono">+57 314 502 ··</div></td>
+                  <td><div class="strong">Compresor portátil</div><div class="sub"><span class="mono">CMP-9100-P</span> · Atlas Copco · Serie 8389</div></td>
+                  <td><a class="link-pill">V-2841</a></td>
+                  <td><span class="num warn">18 jun 2026</span></td>
+                  <td><span class="num warn">34 días</span></td>
+                  <td><span class="pill pill-prog"><span class="pdot s-prog"></span>Cambio de pieza</span></td>
+                  <td><span class="pill pill-info pulse"><span class="pdot s-info"></span>En proceso</span></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-V-0040</span></td>
+                  <td><span class="mono-s">15 abr</span></td>
+                  <td><div class="strong">Petrocali S.A.S.</div><div class="sub mono">+57 315 778 8801</div></td>
+                  <td><div class="strong">Manguera descarga 1m</div><div class="sub"><span class="mono">CMP-1985-C</span></div></td>
+                  <td><a class="link-pill">V-2840</a></td>
+                  <td><span class="num succ">14 jul 2026</span></td>
+                  <td><span class="num succ">60 días</span></td>
+                  <td><span class="pill pill-prog"><span class="pdot s-prog"></span>Cambio de pieza</span></td>
+                  <td><span class="pill pill-succ"><svg width="10" height="10"><use href="#i-check"/></svg>Resuelta</span></td>
+                </tr>
+                <tr class="is-warn-row">
+                  <td><span class="id">GAR-V-0039</span></td>
+                  <td><span class="mono-s">12 abr</span></td>
+                  <td><div class="strong">Constructora del Valle</div><div class="sub mono">+57 312 778 2210</div></td>
+                  <td><div class="strong">Banda V SPB 2240</div><div class="sub"><span class="mono">BAN-2240-V</span></div></td>
+                  <td><a class="link-pill">V-2842</a></td>
+                  <td><span class="num warn">28 may 2026</span></td>
+                  <td><span class="num warn">13 días</span></td>
+                  <td><span class="pill pill-info"><span class="pdot s-info"></span>Reparación</span></td>
+                  <td><span class="pill pill-info pulse"><span class="pdot s-info"></span>En proceso</span></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-V-0038</span></td>
+                  <td><span class="mono-s">10 abr</span></td>
+                  <td><div class="strong">Refinadora Pacífico</div><div class="sub mono">+57 313 718 0044</div></td>
+                  <td><div class="strong">Válvula seguridad 1/2"</div><div class="sub"><span class="mono">VHS-3300</span></div></td>
+                  <td><a class="link-pill">V-2841</a></td>
+                  <td><span class="num succ">9 jul 2026</span></td>
+                  <td><span class="num succ">55 días</span></td>
+                  <td><span class="pill pill-warn"><span class="pdot s-warn"></span>Reembolso</span></td>
+                  <td><span class="pill pill-succ"><span class="pdot s-succ"></span>Aprobada</span></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-V-0037</span></td>
+                  <td><span class="mono-s">8 abr</span></td>
+                  <td><div class="strong">Embotelladora Norte</div><div class="sub mono">+57 316 226 5510</div></td>
+                  <td><div class="strong">Aceite ISO VG-46 5L</div><div class="sub"><span class="mono">CMP-2308-B</span> · Shell</div></td>
+                  <td><a class="link-pill">V-2839</a></td>
+                  <td><span class="num succ">7 jul 2026</span></td>
+                  <td><span class="num succ">53 días</span></td>
+                  <td><span class="pill pill-prog"><span class="pdot s-prog"></span>Cambio de pieza</span></td>
+                  <td><span class="pill pill-succ"><svg width="10" height="10"><use href="#i-check"/></svg>Resuelta</span></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-V-0036</span></td>
+                  <td><span class="mono-s">5 abr</span></td>
+                  <td><div class="strong">Tecnologías del Sur</div><div class="sub mono">+57 311 446 0078</div></td>
+                  <td><div class="strong">Compresor portátil</div><div class="sub"><span class="mono">CMP-9100-P</span> · Atlas Copco · Serie 8201</div></td>
+                  <td><a class="link-pill">V-2837</a></td>
+                  <td><span class="num succ">4 jul 2026</span></td>
+                  <td><span class="num succ">50 días</span></td>
+                  <td><span class="pill pill-warn"><span class="pdot s-warn"></span>Reembolso</span></td>
+                  <td><div class="cell-state"><span class="pill pill-dang"><svg width="10" height="10"><use href="#i-x"/></svg>Rechazada</span><span class="sub">Uso fuera de especificación</span></div></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-V-0035</span></td>
+                  <td><span class="mono-s">1 abr</span></td>
+                  <td><div class="strong">Manufacturas Andes</div><div class="sub mono">+57 318 558 1100</div></td>
+                  <td><div class="strong">Llave torque</div><div class="sub"><span class="mono">HRM-0801-T</span></div></td>
+                  <td><a class="link-pill">V-2836</a></td>
+                  <td><span class="num succ">30 jun 2026</span></td>
+                  <td><span class="num succ">46 días</span></td>
+                  <td><span class="pill pill-info"><span class="pdot s-info"></span>Reparación</span></td>
+                  <td><span class="pill pill-succ"><svg width="10" height="10"><use href="#i-check"/></svg>Resuelta</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="dt-foot">
+              <span>Mostrando <b>8</b> de <b>23</b> garantías de ventas activas <span style="color:var(--n-200)">·</span> <b>3</b> cerradas este mes <span style="color:var(--n-200)">·</span> Valor en garantía <b>$ 1.450.500</b></span>
+              <span>Página 1 de 3</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     VISTA 2 · Desktop light · LISTA tab COMPRAS
+     ============================================================ -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span>
+    <span class="vp">Vista 2 · Desktop · Light · 1280 px</span>
+    <span class="sep">·</span>
+    <span>Lista · Tab Garantías de compras</span>
+  </div>
+  <div class="frame" style="width:1280px;">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sb-brand">
+          <div class="sb-logo">CV</div>
+          <div>
+            <div class="sb-brandname">Compresores del Valle</div>
+            <div class="sb-brandsub">CHV · Operaciones</div>
+          </div>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Catálogo y stock</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-package"/></svg><span class="label">Inventario</span><span class="counter">2.847</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-tag"/></svg><span class="label">Productos</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Operación comercial</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-cart"/></svg><span class="label">Ventas</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="label">Cotizaciones</span><span class="counter">5</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-receipt"/></svg><span class="label">Recibos</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-undo"/></svg><span class="label">Devoluciones</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Bodega y movimiento</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-bag"/></svg><span class="label">Compras</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-truck"/></svg><span class="label">Traspasos</span><span class="counter">3</span></a>
+          <a class="sb-item is-active"><svg width="16" height="16"><use href="#i-shield"/></svg><span class="label">Garantías</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Taller</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-wrench"/></svg><span class="label">Órdenes de Trabajo</span><span class="counter">14</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-puzzle"/></svg><span class="label">Ensambles</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Soporte</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-hammer"/></svg><span class="label">Herramientas</span><span class="counter">2</span></a>
+        </div>
+        <div class="sb-foot">
+          <div class="sb-avatar">CR</div>
+          <div><div class="sb-foot-name">Carlos Ríos</div><div class="sb-foot-role">Admin · WH-01</div></div>
+        </div>
+      </aside>
+
+      <section class="main">
+        <div class="topbar">
+          <div class="crumb"><b>Operaciones</b><span class="crumb-sep">·</span><b style="color:var(--p-700)">Garantías</b></div>
+          <div class="topbar-spacer"></div>
+          <div class="cmdk"><svg width="14" height="14"><use href="#i-search"/></svg><span>Buscar en todo el sistema</span><span style="margin-left:auto"></span><span class="kbd">⌘</span><span class="kbd">K</span></div>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-qr"/></svg></button>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg></button>
+          <button class="panel-admin"><svg width="14" height="14"><use href="#i-shield"/></svg>Panel Admin</button>
+        </div>
+
+        <div class="content">
+          <div class="page-h">
+            <div>
+              <h1 class="page-title">Garantías</h1>
+              <p class="page-sub"><b class="num">5</b> activas <span style="color:var(--n-200)">·</span> <b class="num">2</b> vencen este mes <span style="color:var(--n-200)">·</span> <b class="num">1</b> reclamación pendiente <span style="color:var(--n-200)">·</span> <b class="num">$ 1.45M</b> en garantía</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-outline"><svg width="14" height="14"><use href="#i-upload"/></svg>Exportar</button>
+              <button class="btn btn-primary btn-split"><svg width="14" height="14"><use href="#i-plus"/></svg>Nueva reclamación <svg width="12" height="12" class="caret"><use href="#i-chevron-down"/></svg></button>
+            </div>
+          </div>
+
+          <div class="tabs-dual">
+            <div class="tab-d">
+              <svg width="16" height="16"><use href="#i-shield"/></svg>
+              <div class="tab-label">
+                <div class="tab-main">Garantías de ventas <span class="count mono">(3)</span></div>
+                <div class="tab-sub">Cliente reclama a CHV</div>
+              </div>
+            </div>
+            <div class="tab-d is-active">
+              <svg width="16" height="16"><use href="#i-pkg-check"/></svg>
+              <div class="tab-label">
+                <div class="tab-main">Garantías de compras <span class="count mono">(2)</span></div>
+                <div class="tab-sub">CHV reclama a proveedor</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subfilters">
+            <div class="pill-row">
+              <button class="filter-pill is-active">Todas <span class="c">2</span></button>
+              <button class="filter-pill">Activa <span class="c">1</span></button>
+              <button class="filter-pill">Enviada al proveedor <span class="c">1</span></button>
+              <button class="filter-pill">Aceptada <span class="c">2</span></button>
+              <button class="filter-pill">Rechazada <span class="c">1</span></button>
+            </div>
+            <div class="subfilter-sep"></div>
+            <span class="subfilter-label">Resolución</span>
+            <button class="select-mini">Todas <svg width="10" height="10"><use href="#i-chevron-down"/></svg></button>
+            <div class="subfilter-sep"></div>
+            <span class="subfilter-label">Proveedor</span>
+            <button class="select-mini">Todos <svg width="10" height="10"><use href="#i-chevron-down"/></svg></button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="dt">
+              <thead>
+                <tr>
+                  <th style="width:110px">#</th>
+                  <th style="width:110px">Fecha reclamo</th>
+                  <th>Proveedor</th>
+                  <th style="width:230px">Producto</th>
+                  <th style="width:120px">Compra origen</th>
+                  <th style="width:140px">Motivo</th>
+                  <th style="width:150px">Tipo resolución</th>
+                  <th style="width:140px" class="r">Valor en garantía</th>
+                  <th style="width:180px">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="id">GAR-C-0018</span></td>
+                  <td><span class="mono-s">19 abr</span></td>
+                  <td><div class="strong">Atlas Copco Colombia</div><div class="sub mono">900.123.456-7</div></td>
+                  <td><div class="strong">Filtro aire GA-22 · 5 und</div><div class="sub"><span class="mono">CMP-2210-A</span></div></td>
+                  <td><a class="link-pill">OC-1842</a></td>
+                  <td><span class="strong" style="font-size:12.5px">Defecto fábrica</span></td>
+                  <td><span class="pill pill-prog"><span class="pdot s-prog"></span>Reposición física</span></td>
+                  <td class="r"><span class="num">$ 1.225.000</span></td>
+                  <td><span class="pill pill-info pulse"><span class="pdot s-info"></span>Enviada al proveedor</span></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-C-0017</span></td>
+                  <td><span class="mono-s">16 abr</span></td>
+                  <td><div class="strong">Industrias Hidráulicas</div><div class="sub mono">800.442.018-9</div></td>
+                  <td><div class="strong">Válvula seguridad 1/2"</div><div class="sub"><span class="mono">VHS-3300</span></div></td>
+                  <td><a class="link-pill">OC-1839</a></td>
+                  <td><span class="strong" style="font-size:12.5px">Vicio oculto</span></td>
+                  <td><span class="pill pill-prog"><span class="pdot s-prog"></span>Reposición física</span></td>
+                  <td class="r"><span class="num">$ 640.000</span></td>
+                  <td><div class="cell-state"><span class="pill pill-succ"><span class="pdot s-succ"></span>Aceptada</span><span class="sub">Reposición programada</span></div></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-C-0016</span></td>
+                  <td><span class="mono-s">14 abr</span></td>
+                  <td><div class="strong">Sullair Colombia</div><div class="sub mono">901.220.554-1</div></td>
+                  <td><div class="strong">Compresor LS-110</div><div class="sub"><span class="mono">CMP-1100-L</span> · Serie 7889</div></td>
+                  <td><a class="link-pill">OC-1838</a></td>
+                  <td><span class="strong" style="font-size:12.5px">Falla prematura</span></td>
+                  <td><span class="pill pill-info"><span class="pdot s-info"></span>Nota crédito</span></td>
+                  <td class="r"><span class="num">$ 24.500.000</span></td>
+                  <td><div class="cell-state"><span class="pill pill-neutral"><span class="pdot s-neutral"></span>Activa</span><span class="sub"><span class="pill pill-prog sm" style="height:18px;font-size:10px;padding:0 6px">Alto valor</span></span></div></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-C-0015</span></td>
+                  <td><span class="mono-s">10 abr</span></td>
+                  <td><div class="strong">Bandas Industriales SA</div><div class="sub mono">901.448.012-3</div></td>
+                  <td><div class="strong">Banda transmisión · 3 und</div><div class="sub"><span class="mono">BAN-3010-X</span></div></td>
+                  <td><a class="link-pill">OC-1833</a></td>
+                  <td><span class="strong" style="font-size:12.5px">Defecto fábrica</span></td>
+                  <td><span class="pill pill-info"><span class="pdot s-info"></span>Nota crédito</span></td>
+                  <td class="r"><span class="num">$ 185.000</span></td>
+                  <td><span class="pill pill-succ"><span class="pdot s-succ"></span>Aceptada</span></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-C-0014</span></td>
+                  <td><span class="mono-s">5 abr</span></td>
+                  <td><div class="strong">Shell Lubricantes S.A.</div><div class="sub mono">860.555.221-3</div></td>
+                  <td><div class="strong">Aceite ISO · 8 litros</div><div class="sub"><span class="mono">CMP-2308-B</span></div></td>
+                  <td><a class="link-pill">OC-1832</a></td>
+                  <td><span class="strong" style="font-size:12.5px">Vicio oculto</span></td>
+                  <td><span class="pill pill-prog"><span class="pdot s-prog"></span>Reposición física</span></td>
+                  <td class="r"><span class="num">$ 228.000</span></td>
+                  <td><div class="cell-state"><span class="pill pill-dang"><svg width="10" height="10"><use href="#i-x"/></svg>Rechazada</span><span class="sub">Sin evidencia de defecto</span></div></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="dt-foot">
+              <span>Mostrando <b>5</b> garantías de compras <span style="color:var(--n-200)">·</span> <b>1</b> esperando respuesta del proveedor <span style="color:var(--n-200)">·</span> Valor reclamado <b>$ 26.778.000</b></span>
+              <span>Página 1 de 1</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     VISTA 3 · Desktop light · DETALLE GAR-V-0042
+     ============================================================ -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span>
+    <span class="vp">Vista 3 · Desktop · Light · 1280 px</span>
+    <span class="sep">·</span>
+    <span>Detalle GAR-V-0042 · State machine activa · Decisión pendiente</span>
+  </div>
+  <div class="frame" style="width:1280px;">
+    <div class="app taller">
+      <aside class="sidebar">
+        <div class="sb-brand"><div class="sb-logo">CV</div><div><div class="sb-brandname">Compresores del Valle</div><div class="sb-brandsub">CHV · Operaciones</div></div></div>
+        <div class="sb-section"><div class="sb-section-h">Catálogo y stock</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-package"/></svg><span class="label">Inventario</span><span class="counter">2.847</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-tag"/></svg><span class="label">Productos</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Operación comercial</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-cart"/></svg><span class="label">Ventas</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="label">Cotizaciones</span><span class="counter">5</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-receipt"/></svg><span class="label">Recibos</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-undo"/></svg><span class="label">Devoluciones</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Bodega y movimiento</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-bag"/></svg><span class="label">Compras</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-truck"/></svg><span class="label">Traspasos</span><span class="counter">3</span></a>
+          <a class="sb-item is-active"><svg width="16" height="16"><use href="#i-shield"/></svg><span class="label">Garantías</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Taller</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-wrench"/></svg><span class="label">Órdenes de Trabajo</span><span class="counter">14</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-puzzle"/></svg><span class="label">Ensambles</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Soporte</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-hammer"/></svg><span class="label">Herramientas</span><span class="counter">2</span></a>
+        </div>
+        <div class="sb-foot"><div class="sb-avatar">CR</div><div><div class="sb-foot-name">Carlos Ríos</div><div class="sb-foot-role">Admin · WH-01</div></div></div>
+      </aside>
+
+      <section class="main">
+        <div class="topbar">
+          <div class="crumb"><b>Operaciones</b><span class="crumb-sep">·</span><b style="color:var(--p-700)">Garantías</b><span class="crumb-sep">·</span><b>GAR-V-0042</b></div>
+          <div class="topbar-spacer"></div>
+          <div class="cmdk"><svg width="14" height="14"><use href="#i-search"/></svg><span>Buscar en todo el sistema</span><span style="margin-left:auto"></span><span class="kbd">⌘</span><span class="kbd">K</span></div>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-qr"/></svg></button>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg></button>
+          <button class="panel-admin"><svg width="14" height="14"><use href="#i-shield"/></svg>Panel Admin</button>
+        </div>
+
+        <div class="content">
+          <a class="detail-back"><svg width="14" height="14"><use href="#i-arrow-left-circle"/></svg>Volver a Garantías</a>
+
+          <div class="detail-h">
+            <div>
+              <div class="eyebrow">Garantía de venta</div>
+              <h1 class="detail-id">GAR-V-0042</h1>
+              <p class="detail-sub">Industrial XYZ S.A.S. <span style="color:var(--n-200)">·</span> Filtro de aire Atlas Copco GA-22 <span class="pill pill-neutral lg"><span class="pdot s-neutral"></span>Activa</span></p>
+            </div>
+            <div class="detail-right">
+              <div class="countdown">
+                <div class="label">Vence 30 jun 2026</div>
+                <div class="num">46 <span class="units">días restantes</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn btn-primary"><svg width="14" height="14"><use href="#i-check"/></svg>Aprobar reclamación</button>
+            <button class="btn btn-danger-outline"><svg width="14" height="14"><use href="#i-x"/></svg>Rechazar reclamación</button>
+            <button class="btn btn-outline"><svg width="14" height="14"><use href="#i-msg"/></svg>Solicitar más información al cliente</button>
+            <button class="btn btn-ghost"><svg width="14" height="14"><use href="#i-printer"/></svg>Imprimir comprobante</button>
+          </div>
+
+          <div class="statemachine">
+            <div class="sm-head">
+              <span class="sm-eyebrow">Proceso de la reclamación</span>
+              <span class="sm-eyebrow">Inicio · hoy 10:15</span>
+            </div>
+            <div class="sm-steps">
+              <div class="sm-step done">
+                <div class="sm-dot is-done"><svg width="12" height="12"><use href="#i-check"/></svg></div>
+                <div class="sm-line done"></div>
+                <div class="sm-label">Reportada</div>
+                <div class="sm-meta">Hoy 10:15</div>
+              </div>
+              <div class="sm-step done">
+                <div class="sm-dot is-done"><svg width="12" height="12"><use href="#i-check"/></svg></div>
+                <div class="sm-line active"></div>
+                <div class="sm-label">En análisis</div>
+                <div class="sm-meta">Hoy 11:30</div>
+              </div>
+              <div class="sm-step active">
+                <div class="sm-dot is-active">3</div>
+                <div class="sm-line"></div>
+                <div class="sm-label">Aprobada · Rechazada</div>
+                <div class="sm-meta">Decisión pendiente</div>
+              </div>
+              <div class="sm-step pending">
+                <div class="sm-dot is-pending">4</div>
+                <div class="sm-line"></div>
+                <div class="sm-label">En proceso</div>
+                <div class="sm-meta">—</div>
+              </div>
+              <div class="sm-step pending">
+                <div class="sm-dot is-pending">5</div>
+                <div class="sm-label">Resuelta</div>
+                <div class="sm-meta">—</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-grid">
+            <div>
+              <div class="card">
+                <div class="card-h"><svg width="16" height="16"><use href="#i-package"/></svg><span class="t">Producto en garantía</span></div>
+                <div class="field-grid">
+                  <div class="field"><span class="field-l">SKU</span><span class="field-v mono">CMP-2210-A</span></div>
+                  <div class="field"><span class="field-l">Producto</span><span class="field-v">Filtro de aire Atlas Copco GA-22</span></div>
+                  <div class="field"><span class="field-l">Marca · Modelo</span><span class="field-v">Atlas Copco <span class="mono">· 1613-7409-00</span></span></div>
+                  <div class="field"><span class="field-l">Número de serie</span><span class="field-v mono">Serie 8472</span></div>
+                  <div class="field"><span class="field-l">Fecha de instalación</span><span class="field-v mono">15 abr 2026</span></div>
+                  <div class="field"><span class="field-l">Categoría</span><span class="field-v"><span class="pill" style="background:var(--cat-cmp-bg);color:var(--cat-cmp-text);height:26px;padding:0 10px;border:none"><span style="width:10px;height:10px;background:var(--cat-cmp);border-radius:2px;display:inline-block;margin-right:4px"></span>Compresores</span></span></div>
+                </div>
+                <div class="photos">
+                  <div class="photo"><span class="badge-photo">01</span></div>
+                  <div class="photo"><span class="badge-photo">02</span></div>
+                  <div class="photo"><span class="badge-photo">03</span></div>
+                  <div class="photo"><span class="badge-photo">04</span></div>
+                  <div class="photo add"><svg width="20" height="20"><use href="#i-plus"/></svg></div>
+                </div>
+                <p class="photos-foot">Fotos enviadas por el cliente vía WhatsApp <span style="color:var(--n-200)">·</span> hoy 09:15</p>
+              </div>
+
+              <div class="card">
+                <div class="card-h"><svg width="16" height="16"><use href="#i-user"/></svg><span class="t">Cliente y venta origen</span></div>
+                <div class="field-grid">
+                  <div class="field"><span class="field-l">Razón social</span><span class="field-v">Industrial XYZ S.A.S.</span></div>
+                  <div class="field"><span class="field-l">NIT</span><span class="field-v mono">800.123.456-7</span></div>
+                  <div class="field"><span class="field-l">Contacto</span><span class="field-v">Sandra Pérez</span></div>
+                  <div class="field"><span class="field-l">Cargo</span><span class="field-v">Jefe de mantenimiento</span></div>
+                  <div class="field"><span class="field-l">Teléfono</span><span class="field-v mono">+57 318 442 5512</span></div>
+                  <div class="field"><span class="field-l">Email</span><span class="field-v mono" style="font-size:12px">compras@industrialxyz.co</span></div>
+                </div>
+                <div class="linkrow" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--n-100);">
+                  <a class="link-pill" style="height:28px;font-size:13px;padding:0 12px">V-2843</a>
+                  <span class="field-l" style="margin-bottom:0;">Vendido</span><span class="field-v mono">14 abr 2026 · hace 32 días</span>
+                  <span class="field-l" style="margin-bottom:0;">Vendedor</span><span class="field-v">Carlos R.</span>
+                  <span class="field-l" style="margin-bottom:0;">Monto</span><span class="field-v mono">$ 245.000</span>
+                </div>
+                <div class="salebox">
+                  <svg width="16" height="16"><use href="#i-shield-check"/></svg>
+                  <span>Dentro de garantía <span style="color:var(--n-200);margin:0 4px">·</span> faltan <b>46 días</b> para vencer (30 jun 2026)</span>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-h"><svg width="16" height="16"><use href="#i-msg"/></svg><span class="t">Reclamación</span></div>
+                <p class="quote">"Filtro instalado hace 30 días presenta pérdida de presión constante. He revisado las conexiones y están bien apretadas, el problema parece ser del filtro mismo. Necesito reparación o reemplazo urgente porque el compresor opera 12 horas al día."</p>
+                <div class="photos">
+                  <div class="photo"><span class="badge-photo">def 01</span></div>
+                  <div class="photo"><span class="badge-photo">def 02</span></div>
+                  <div class="photo"><span class="badge-photo">def 03</span></div>
+                </div>
+                <p class="quote-meta">Reportado vía WhatsApp <span style="color:var(--n-200)">·</span> hoy 09:15 <span style="color:var(--n-200)">·</span> Sandra Pérez (Jefe de mantenimiento)</p>
+              </div>
+
+              <div class="card is-decision">
+                <div class="card-h">
+                  <svg width="16" height="16"><use href="#i-check-square"/></svg>
+                  <span class="t">Resolución propuesta</span>
+                  <span class="badge"><span class="pill pill-warn pulse sm"><span class="pdot s-warn"></span>Decisión pendiente</span></span>
+                </div>
+                <div class="radio-group">
+                  <label class="radio-opt is-selected">
+                    <span class="radio-dot"></span>
+                    <div class="radio-body">
+                      <div class="radio-title">Reparación del producto</div>
+                      <div class="radio-sub">El producto se diagnostica y repara en taller. Tiempo estimado: 3 a 5 días hábiles. Sin costo para el cliente. Genera OT interna asociada a esta garantía.</div>
+                    </div>
+                  </label>
+                  <label class="radio-opt">
+                    <span class="radio-dot"></span>
+                    <div class="radio-body">
+                      <div class="radio-title">Cambio de pieza por un producto nuevo</div>
+                      <div class="radio-sub">Entrega de unidad nueva del mismo modelo desde stock. Verificar disponibilidad en sedes.</div>
+                      <div class="radio-meta">Stock disponible: WH-01 · 4 und, WH-02 · 2 und</div>
+                    </div>
+                  </label>
+                  <label class="radio-opt">
+                    <span class="radio-dot"></span>
+                    <div class="radio-body">
+                      <div class="radio-title">Reembolso al método de pago original</div>
+                      <div class="radio-sub">Devuelve el monto al medio de pago original. Solo Admin puede aprobar reembolsos sobre garantías.</div>
+                      <div class="radio-meta">Monto a reembolsar: $ 245.000 · Método original: Transferencia Bancolombia</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="inset-card">
+                  <span>Diagnóstico inicial estimado: <b>24 horas</b>. Técnico sugerido: <b>Diego P.</b> (especialista en filtros Atlas Copco).</span>
+                  <button class="btn btn-outline btn-sm" style="border-color:var(--p-300);color:var(--p-700)"><svg width="13" height="13"><use href="#i-wrench"/></svg>Generar OT interna</button>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-h">
+                  <svg width="16" height="16"><use href="#i-clipboard"/></svg>
+                  <span class="t">Validación técnica del defecto</span>
+                  <span class="badge"><span class="pill pill-warn sm"><span class="pdot s-warn"></span>Pendiente</span></span>
+                </div>
+                <p style="margin:0 0 12px;font-size:12.5px;color:var(--n-500);line-height:1.5;">Antes de aprobar la garantía, valida técnicamente que el defecto reportado corresponde a defecto cubierto por garantía y no a uso fuera de especificación.</p>
+                <div class="crit-list">
+                  <div class="crit-row">
+                    <span class="crit-ico yes"><svg width="12" height="12"><use href="#i-check"/></svg></span>
+                    <span class="crit-text">Producto dentro de período de garantía (mayor 30 días, menor 90 días)</span>
+                    <span class="crit-tag yes">Sí</span>
+                  </div>
+                  <div class="crit-row">
+                    <span class="crit-ico pend"><svg width="12" height="12"><use href="#i-clipboard"/></svg></span>
+                    <span class="crit-text">Defecto reproducible en taller</span>
+                    <span class="crit-tag pend">Pendiente diagnóstico</span>
+                  </div>
+                  <div class="crit-row">
+                    <span class="crit-ico yes"><svg width="12" height="12"><use href="#i-check"/></svg></span>
+                    <span class="crit-text">Uso del producto dentro de especificación de fábrica</span>
+                    <span class="crit-tag yes">Sí</span>
+                  </div>
+                  <div class="crit-row">
+                    <span class="crit-ico yes"><svg width="12" height="12"><use href="#i-check"/></svg></span>
+                    <span class="crit-text">Sin evidencia de manipulación o sabotaje</span>
+                    <span class="crit-tag yes">Sí</span>
+                  </div>
+                  <div class="crit-row">
+                    <span class="crit-ico yes"><svg width="12" height="12"><use href="#i-check"/></svg></span>
+                    <span class="crit-text">Defecto cubierto por garantía F13</span>
+                    <span class="crit-tag yes">Sí</span>
+                  </div>
+                </div>
+                <p style="margin:12px 0 0;font-size:12px;color:var(--n-500);">4 de 5 criterios validados <span style="color:var(--n-200)">·</span> 1 pendiente de validar (requiere diagnóstico físico)</p>
+              </div>
+            </div>
+
+            <div>
+              <div class="card">
+                <div class="card-h"><svg width="16" height="16"><use href="#i-activity"/></svg><span class="t">Historial</span></div>
+                <div class="timeline">
+                  <div class="tl-event">
+                    <div class="tl-dot"></div>
+                    <div class="tl-body">
+                      <div class="tl-title">Reclamación reportada vía WhatsApp</div>
+                      <div class="tl-meta">Hoy 09:15 <span style="color:var(--n-200)">·</span> Sandra Pérez</div>
+                    </div>
+                  </div>
+                  <div class="tl-event">
+                    <div class="tl-dot"></div>
+                    <div class="tl-body">
+                      <div class="tl-title">Producto recibido en taller para análisis</div>
+                      <div class="tl-meta">Hoy 10:15 <span style="color:var(--n-200)">·</span> Diego P.</div>
+                    </div>
+                  </div>
+                  <div class="tl-event">
+                    <div class="tl-dot"></div>
+                    <div class="tl-body">
+                      <div class="tl-title">Datos del cliente verificados contra V-2843</div>
+                      <div class="tl-meta">Hoy 11:00 <span style="color:var(--n-200)">·</span> Carlos R.</div>
+                    </div>
+                  </div>
+                  <div class="tl-event">
+                    <div class="tl-dot warn"></div>
+                    <div class="tl-body">
+                      <div class="tl-title warn">Estado actual: en análisis · decisión pendiente</div>
+                      <div class="tl-meta" style="color:var(--warn-text)">Ahora</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" style="padding:0;border:none;background:transparent;">
+                <div class="policy">
+                  <div class="policy-eyebrow">Política aplicable F13</div>
+                  <ul>
+                    <li><svg width="14" height="14"><use href="#i-shield-check"/></svg>Garantía: 90 días desde fecha de venta.</li>
+                    <li><svg width="14" height="14"><use href="#i-shield-check"/></svg>Cubre: defectos de fábrica reproducibles, fallas prematuras.</li>
+                    <li><svg width="14" height="14"><use href="#i-shield-check"/></svg>No cubre: uso fuera de especificación, daño por instalación, modificaciones.</li>
+                    <li><svg width="14" height="14"><use href="#i-shield-check"/></svg>Resolución máxima: reembolso del valor pagado.</li>
+                    <li><svg width="14" height="14"><use href="#i-shield-check"/></svg>Si el defecto requiere análisis del proveedor original, se inicia GAR-C en paralelo.</li>
+                  </ul>
+                  <a class="policy-link">Ver políticas completas en F13 · Configuración</a>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-h"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="t">Documentos vinculados</span></div>
+                <div class="attach-row"><svg width="14" height="14"><use href="#i-paperclip"/></svg><span class="nm">Factura V-2843.pdf</span><span class="sz">142 KB</span></div>
+                <div class="attach-row"><svg width="14" height="14"><use href="#i-paperclip"/></svg><span class="nm">Reporte WhatsApp.pdf</span><span class="sz">238 KB</span></div>
+                <div class="attach-row"><svg width="14" height="14"><use href="#i-paperclip"/></svg><span class="nm">Hoja técnica CMP-2210-A.pdf</span><span class="sz">512 KB</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     VISTA 4 · Desktop light · WIZARD NUEVA RECLAMACIÓN (paso 2)
+     ============================================================ -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span>
+    <span class="vp">Vista 4 · Desktop · Light · 1280 px</span>
+    <span class="sep">·</span>
+    <span>Wizard nueva reclamación · Paso 2 de 4</span>
+  </div>
+  <div class="frame" style="width:1280px;">
+    <div class="app tall">
+      <aside class="sidebar">
+        <div class="sb-brand"><div class="sb-logo">CV</div><div><div class="sb-brandname">Compresores del Valle</div><div class="sb-brandsub">CHV · Operaciones</div></div></div>
+        <div class="sb-section"><div class="sb-section-h">Catálogo y stock</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-package"/></svg><span class="label">Inventario</span><span class="counter">2.847</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-tag"/></svg><span class="label">Productos</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Operación comercial</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-cart"/></svg><span class="label">Ventas</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="label">Cotizaciones</span><span class="counter">5</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-receipt"/></svg><span class="label">Recibos</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-undo"/></svg><span class="label">Devoluciones</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Bodega y movimiento</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-bag"/></svg><span class="label">Compras</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-truck"/></svg><span class="label">Traspasos</span><span class="counter">3</span></a>
+          <a class="sb-item is-active"><svg width="16" height="16"><use href="#i-shield"/></svg><span class="label">Garantías</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Taller</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-wrench"/></svg><span class="label">Órdenes de Trabajo</span><span class="counter">14</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-puzzle"/></svg><span class="label">Ensambles</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Soporte</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-hammer"/></svg><span class="label">Herramientas</span><span class="counter">2</span></a>
+        </div>
+        <div class="sb-foot"><div class="sb-avatar">ML</div><div><div class="sb-foot-name">María Lozano</div><div class="sb-foot-role">Vendedor · WH-01</div></div></div>
+      </aside>
+
+      <section class="main">
+        <div class="topbar">
+          <div class="crumb"><b>Operaciones</b><span class="crumb-sep">·</span><b style="color:var(--p-700)">Garantías</b><span class="crumb-sep">·</span><b>Nueva reclamación</b></div>
+          <div class="topbar-spacer"></div>
+          <div class="cmdk"><svg width="14" height="14"><use href="#i-search"/></svg><span>Buscar en todo el sistema</span><span style="margin-left:auto"></span><span class="kbd">⌘</span><span class="kbd">K</span></div>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-qr"/></svg></button>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg></button>
+        </div>
+
+        <div class="content">
+          <a class="detail-back"><svg width="14" height="14"><use href="#i-arrow-left-circle"/></svg>Volver a Garantías</a>
+          <div class="page-h">
+            <div>
+              <h1 class="page-title">Nueva reclamación · Garantía de venta</h1>
+              <p class="page-sub">Cliente reclama un producto vendido por CHV. Cubre defectos de fábrica dentro del período de garantía F13.</p>
+            </div>
+          </div>
+
+          <div class="wiz-stepper">
+            <div class="wiz-step done">
+              <div class="wiz-num"><svg width="13" height="13"><use href="#i-check"/></svg></div>
+              <div class="wiz-step-text"><span class="wiz-step-l">Paso 1</span><span class="wiz-step-t">Venta origen</span></div>
+            </div>
+            <div class="wiz-line done"></div>
+            <div class="wiz-step active">
+              <div class="wiz-num">2</div>
+              <div class="wiz-step-text"><span class="wiz-step-l">Paso 2</span><span class="wiz-step-t">Producto y motivo</span></div>
+            </div>
+            <div class="wiz-line"></div>
+            <div class="wiz-step">
+              <div class="wiz-num">3</div>
+              <div class="wiz-step-text"><span class="wiz-step-l">Paso 3</span><span class="wiz-step-t">Tipo de resolución</span></div>
+            </div>
+            <div class="wiz-line"></div>
+            <div class="wiz-step">
+              <div class="wiz-num">4</div>
+              <div class="wiz-step-text"><span class="wiz-step-l">Paso 4</span><span class="wiz-step-t">Confirmar</span></div>
+            </div>
+          </div>
+
+          <div class="wiz-grid">
+            <div>
+              <div class="card">
+                <p class="eyebrow" style="margin-bottom:2px">Paso 2 de 4</p>
+                <h2 style="margin:0 0 16px;font-size:18px;font-weight:600;color:var(--n-950);">Producto y motivo de la reclamación</h2>
+
+                <div class="completed-step">
+                  <div class="cs-body">
+                    <span class="cs-l">Venta seleccionada</span>
+                    <span class="cs-v"><span class="mono" style="font-weight:600">V-2843</span> <span style="color:var(--succ-text);opacity:.6;margin:0 6px">·</span> Industrial XYZ S.A.S. <span style="color:var(--succ-text);opacity:.6;margin:0 6px">·</span> <span class="mono">14 abr 2026</span> <span style="color:var(--succ-text);opacity:.6;margin:0 6px">·</span> <span class="mono">$ 1.450.000</span></span>
+                  </div>
+                  <button class="btn btn-ghost btn-sm" style="color:var(--succ-text)">Editar</button>
+                </div>
+
+                <div class="form-grid">
+                  <div class="full">
+                    <label class="form-l">Producto en garantía</label>
+                    <div class="select">
+                      <div class="opt">
+                        <span class="sku">CMP-2210-A · 3 und vendidas</span>
+                        <span class="nm">Filtro de aire Atlas Copco GA-22</span>
+                      </div>
+                      <svg width="14" height="14" style="color:var(--n-500)"><use href="#i-chevron-down"/></svg>
+                    </div>
+                    <p style="margin:6px 0 0;font-size:11.5px;color:var(--n-500);">Mostrando 3 productos de V-2843. Filtro de aire seleccionado por defecto (es el más reportado de la venta).</p>
+                  </div>
+
+                  <div>
+                    <label class="form-l">Serie (si aplica)</label>
+                    <div class="input mono">Serie 8472</div>
+                  </div>
+                  <div>
+                    <label class="form-l">Cantidad reclamada</label>
+                    <div class="stepnum">
+                      <button>−</button>
+                      <input value="1" readonly />
+                      <button>+</button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="form-l">Fecha de detección del defecto</label>
+                    <div class="input mono">14 may 2026</div>
+                  </div>
+                  <div>
+                    <label class="form-l">Origen del reporte</label>
+                    <div class="select">
+                      <span style="font-size:13px;color:var(--n-900)">WhatsApp</span>
+                      <svg width="14" height="14" style="color:var(--n-500)"><use href="#i-chevron-down"/></svg>
+                    </div>
+                  </div>
+
+                  <div class="full">
+                    <label class="form-l">Motivo de la reclamación</label>
+                    <div class="textarea">Filtro instalado hace 30 días presenta pérdida de presión constante. He revisado las conexiones y están bien apretadas, el problema parece ser del filtro mismo. Necesito reparación o reemplazo urgente porque el compresor opera 12 horas al día.</div>
+                  </div>
+
+                  <div class="full">
+                    <label class="form-l">Evidencia adjunta</label>
+                    <div class="dropzone">Arrastra fotos del defecto aquí, o <b>haz clic para subir</b>. Formatos: JPG, PNG, PDF · máx 10 MB por archivo.</div>
+                    <div class="attach-row"><svg width="14" height="14"><use href="#i-paperclip"/></svg><span class="nm">WhatsApp Image 2026-05-16 at 09.15.jpg</span><span class="sz">842 KB</span><button class="btn btn-ghost btn-sm"><svg width="12" height="12"><use href="#i-x"/></svg></button></div>
+                    <div class="attach-row"><svg width="14" height="14"><use href="#i-paperclip"/></svg><span class="nm">WhatsApp Image 2026-05-16 at 09.16.jpg</span><span class="sz">1.2 MB</span><button class="btn btn-ghost btn-sm"><svg width="12" height="12"><use href="#i-x"/></svg></button></div>
+                    <div class="attach-row"><svg width="14" height="14"><use href="#i-paperclip"/></svg><span class="nm">WhatsApp Image 2026-05-16 at 09.17.jpg</span><span class="sz">980 KB</span><button class="btn btn-ghost btn-sm"><svg width="12" height="12"><use href="#i-x"/></svg></button></div>
+                  </div>
+
+                  <div class="full">
+                    <div class="policy">
+                      <div class="policy-eyebrow">Política aplicable para este producto</div>
+                      <ul>
+                        <li><svg width="14" height="14"><use href="#i-shield-check"/></svg>Garantía F13 estándar <span style="color:var(--n-200);margin:0 4px">·</span> 90 días desde venta <span style="color:var(--n-200);margin:0 4px">·</span> Vence <b class="mono">30 jun 2026</b> (46 días restantes).</li>
+                        <li><svg width="14" height="14"><use href="#i-shield-check"/></svg>Cubre defectos de fábrica reproducibles y fallas prematuras.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display:flex;justify-content:space-between;margin-top:24px;padding-top:18px;border-top:1px solid var(--n-100);">
+                  <button class="btn btn-ghost"><svg width="14" height="14"><use href="#i-arrow-left-circle"/></svg>Paso anterior</button>
+                  <button class="btn btn-primary">Continuar al paso 3 <svg width="14" height="14"><use href="#i-arrow-right"/></svg></button>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="cart">
+                <div class="cart-eye">Resumen de la reclamación</div>
+                <div class="cart-row"><span class="cart-l">Venta origen</span><span class="cart-v mono">V-2843</span></div>
+                <div class="cart-row"><span class="cart-l">Cliente</span><span class="cart-v">Industrial XYZ</span></div>
+                <div class="cart-row"><span class="cart-l">Producto</span><span class="cart-v">Filtro aire GA-22</span></div>
+                <div class="cart-row"><span class="cart-l">SKU</span><span class="cart-v mono">CMP-2210-A</span></div>
+                <div class="cart-row"><span class="cart-l">Cantidad</span><span class="cart-v mono">1 und</span></div>
+                <div class="cart-row"><span class="cart-l">Serie</span><span class="cart-v mono">8472</span></div>
+                <div class="cart-row"><span class="cart-l">Fecha defecto</span><span class="cart-v mono">14 may 2026</span></div>
+                <div class="cart-row"><span class="cart-l">Vence garantía</span><span class="cart-v mono" style="color:var(--succ-text)">30 jun 2026</span></div>
+                <div class="cart-row"><span class="cart-l">Días restantes</span><span class="cart-v mono" style="color:var(--succ-text)">46 días</span></div>
+                <button class="btn btn-primary btn-block">Continuar al paso 3 <svg width="14" height="14"><use href="#i-arrow-right"/></svg></button>
+                <button class="btn btn-ghost btn-block" style="margin-top:6px;padding:8px">Guardar borrador</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     VISTA 5 · Mobile light · LISTA tab VENTAS
+     ============================================================ -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span>
+    <span class="vp">Vista 5 · Mobile · Light · 390 px</span>
+    <span class="sep">·</span>
+    <span>Lista · Tab Garantías de ventas con tabs compactas</span>
+  </div>
+  <div class="frame" style="width:390px;">
+    <div class="mobile">
+      <div class="m-top">
+        <h1 class="m-title">Garantías</h1>
+        <button class="btn btn-primary btn-sm"><svg width="13" height="13"><use href="#i-plus"/></svg>Nueva</button>
+      </div>
+      <div class="m-tabs">
+        <div class="m-tab is-active">
+          <svg width="14" height="14"><use href="#i-shield"/></svg>
+          Ventas <span class="c">(3)</span>
+        </div>
+        <div class="m-tab">
+          <svg width="14" height="14"><use href="#i-pkg-check"/></svg>
+          Compras <span class="c">(2)</span>
+        </div>
+      </div>
+      <div class="m-subnav">
+        <button class="filter-pill is-active">Todas <span class="c">3</span></button>
+        <button class="filter-pill">Activa <span class="c">1</span></button>
+        <button class="filter-pill">En proceso <span class="c">1</span></button>
+        <button class="filter-pill">Resuelta <span class="c">1</span></button>
+        <button class="filter-pill">Rechazada <span class="c">0</span></button>
+        <button class="filter-pill">Vencida <span class="c">0</span></button>
+      </div>
+
+      <div class="m-list">
+        <div class="m-card">
+          <div class="m-card-h">
+            <span class="m-id">GAR-V-0042</span>
+            <span class="pill pill-neutral"><span class="pdot s-neutral"></span>Activa</span>
+          </div>
+          <div class="m-cust">Industrial XYZ S.A.S.</div>
+          <div class="m-prod">Filtro aire GA-22 <span style="color:var(--n-200)">·</span> <span class="mono">CMP-2210-A</span></div>
+          <div class="m-meta-row">
+            <div class="m-days" style="color:var(--succ-text)">
+              <span class="l">Vence en</span>
+              46 días
+            </div>
+            <span class="pill pill-info"><span class="pdot s-info"></span>Reparación</span>
+            <button class="icon-btn" style="margin-right:-8px"><svg width="16" height="16"><use href="#i-more"/></svg></button>
+          </div>
+        </div>
+
+        <div class="m-card" style="background:var(--warn-bg);border-color:var(--warn-border)">
+          <div class="m-card-h">
+            <span class="m-id">GAR-V-0039</span>
+            <span class="pill pill-info pulse"><span class="pdot s-info"></span>En proceso</span>
+          </div>
+          <div class="m-cust">Constructora del Valle</div>
+          <div class="m-prod">Banda V SPB 2240 <span style="color:var(--n-200)">·</span> <span class="mono">BAN-2240-V</span></div>
+          <div class="m-meta-row">
+            <div class="m-days" style="color:var(--warn-text)">
+              <span class="l">Vence en</span>
+              13 días
+            </div>
+            <span class="pill pill-info"><span class="pdot s-info"></span>Reparación</span>
+            <button class="icon-btn" style="margin-right:-8px"><svg width="16" height="16"><use href="#i-more"/></svg></button>
+          </div>
+        </div>
+
+        <div class="m-card">
+          <div class="m-card-h">
+            <span class="m-id">GAR-V-0041</span>
+            <span class="pill pill-info pulse"><span class="pdot s-info"></span>En proceso</span>
+          </div>
+          <div class="m-cust">Compañía Lácteos Cali</div>
+          <div class="m-prod">Compresor portátil <span style="color:var(--n-200)">·</span> <span class="mono">CMP-9100-P</span></div>
+          <div class="m-meta-row">
+            <div class="m-days" style="color:var(--warn-text)">
+              <span class="l">Vence en</span>
+              34 días
+            </div>
+            <span class="pill pill-prog"><span class="pdot s-prog"></span>Cambio pieza</span>
+            <button class="icon-btn" style="margin-right:-8px"><svg width="16" height="16"><use href="#i-more"/></svg></button>
+          </div>
+        </div>
+
+        <div class="m-card">
+          <div class="m-card-h">
+            <span class="m-id">GAR-V-0040</span>
+            <span class="pill pill-succ"><svg width="10" height="10"><use href="#i-check"/></svg>Resuelta</span>
+          </div>
+          <div class="m-cust">Petrocali S.A.S.</div>
+          <div class="m-prod">Manguera descarga 1m <span style="color:var(--n-200)">·</span> <span class="mono">CMP-1985-C</span></div>
+          <div class="m-meta-row">
+            <div class="m-days" style="color:var(--succ-text)">
+              <span class="l">Cerrada</span>
+              22 abr
+            </div>
+            <span class="pill pill-prog"><span class="pdot s-prog"></span>Cambio pieza</span>
+            <button class="icon-btn" style="margin-right:-8px"><svg width="16" height="16"><use href="#i-more"/></svg></button>
+          </div>
+        </div>
+
+        <div class="m-card">
+          <div class="m-card-h">
+            <span class="m-id">GAR-V-0036</span>
+            <span class="pill pill-dang"><svg width="10" height="10"><use href="#i-x"/></svg>Rechazada</span>
+          </div>
+          <div class="m-cust">Tecnologías del Sur</div>
+          <div class="m-prod">Compresor portátil <span style="color:var(--n-200)">·</span> <span class="mono">CMP-9100-P</span></div>
+          <div class="m-meta-row">
+            <div class="m-days" style="color:var(--n-500)">
+              <span class="l">Rechazada</span>
+              7 abr
+            </div>
+            <span class="pill pill-warn"><span class="pdot s-warn"></span>Reembolso</span>
+            <button class="icon-btn" style="margin-right:-8px"><svg width="16" height="16"><use href="#i-more"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="m-bottomnav">
+        <div class="m-bn"><svg width="20" height="20"><use href="#i-home"/></svg>Inicio</div>
+        <div class="m-bn"><svg width="20" height="20"><use href="#i-package"/></svg>Inventario</div>
+        <div class="m-bn"><div class="m-fab"><svg width="22" height="22"><use href="#i-qr"/></svg></div></div>
+        <div class="m-bn is-active"><svg width="20" height="20"><use href="#i-shield"/></svg>Garantías</div>
+        <div class="m-bn"><svg width="20" height="20"><use href="#i-more"/></svg>Más</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     VISTA 6 · Desktop DARK · LISTA tab VENTAS
+     ============================================================ -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span>
+    <span class="vp">Vista 6 · Desktop · Dark · 1280 px</span>
+    <span class="sep">·</span>
+    <span>Lista · Tab Garantías de ventas (modo oscuro)</span>
+  </div>
+  <div class="frame dark" style="width:1280px;">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sb-brand"><div class="sb-logo">CV</div><div><div class="sb-brandname">Compresores del Valle</div><div class="sb-brandsub">CHV · Operaciones</div></div></div>
+        <div class="sb-section"><div class="sb-section-h">Catálogo y stock</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-package"/></svg><span class="label">Inventario</span><span class="counter">2.847</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-tag"/></svg><span class="label">Productos</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Operación comercial</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-cart"/></svg><span class="label">Ventas</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="label">Cotizaciones</span><span class="counter">5</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-receipt"/></svg><span class="label">Recibos</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-undo"/></svg><span class="label">Devoluciones</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Bodega y movimiento</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-bag"/></svg><span class="label">Compras</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-truck"/></svg><span class="label">Traspasos</span><span class="counter">3</span></a>
+          <a class="sb-item is-active"><svg width="16" height="16"><use href="#i-shield"/></svg><span class="label">Garantías</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Taller</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-wrench"/></svg><span class="label">Órdenes de Trabajo</span><span class="counter">14</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-puzzle"/></svg><span class="label">Ensambles</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Soporte</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-hammer"/></svg><span class="label">Herramientas</span><span class="counter">2</span></a>
+        </div>
+        <div class="sb-foot"><div class="sb-avatar">CR</div><div><div class="sb-foot-name">Carlos Ríos</div><div class="sb-foot-role">Admin · WH-01</div></div></div>
+      </aside>
+
+      <section class="main">
+        <div class="topbar">
+          <div class="crumb"><b>Operaciones</b><span class="crumb-sep">·</span><b style="color:var(--p-700)">Garantías</b></div>
+          <div class="topbar-spacer"></div>
+          <div class="cmdk"><svg width="14" height="14"><use href="#i-search"/></svg><span>Buscar en todo el sistema</span><span style="margin-left:auto"></span><span class="kbd">⌘</span><span class="kbd">K</span></div>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-qr"/></svg></button>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg></button>
+          <button class="panel-admin"><svg width="14" height="14"><use href="#i-shield"/></svg>Panel Admin</button>
+        </div>
+
+        <div class="content">
+          <div class="page-h">
+            <div>
+              <h1 class="page-title">Garantías</h1>
+              <p class="page-sub"><b class="num">5</b> activas <span style="color:var(--n-200)">·</span> <b class="num">2</b> vencen este mes <span style="color:var(--n-200)">·</span> <b class="num">1</b> reclamación pendiente <span style="color:var(--n-200)">·</span> <b class="num">$ 1.45M</b> en garantía</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-outline"><svg width="14" height="14"><use href="#i-upload"/></svg>Exportar</button>
+              <button class="btn btn-primary btn-split"><svg width="14" height="14"><use href="#i-plus"/></svg>Nueva reclamación <svg width="12" height="12" class="caret"><use href="#i-chevron-down"/></svg></button>
+            </div>
+          </div>
+
+          <div class="tabs-dual">
+            <div class="tab-d is-active">
+              <svg width="16" height="16"><use href="#i-shield"/></svg>
+              <div class="tab-label">
+                <div class="tab-main">Garantías de ventas <span class="count mono">(3)</span></div>
+                <div class="tab-sub">Cliente reclama a CHV</div>
+              </div>
+            </div>
+            <div class="tab-d">
+              <svg width="16" height="16"><use href="#i-pkg-check"/></svg>
+              <div class="tab-label">
+                <div class="tab-main">Garantías de compras <span class="count mono">(2)</span></div>
+                <div class="tab-sub">CHV reclama a proveedor</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subfilters">
+            <div class="pill-row">
+              <button class="filter-pill is-active">Todas <span class="c">3</span></button>
+              <button class="filter-pill">Activa <span class="c">1</span></button>
+              <button class="filter-pill">En proceso <span class="c">1</span></button>
+              <button class="filter-pill">Resuelta <span class="c">1</span></button>
+              <button class="filter-pill">Rechazada <span class="c">0</span></button>
+              <button class="filter-pill">Vencida <span class="c">0</span></button>
+            </div>
+            <div class="subfilter-sep"></div>
+            <span class="subfilter-label">Resolución</span>
+            <button class="select-mini">Todas <svg width="10" height="10"><use href="#i-chevron-down"/></svg></button>
+            <div class="subfilter-sep"></div>
+            <label class="check-row"><input type="checkbox" checked />Vencen en los próximos 30 días</label>
+          </div>
+
+          <div class="table-wrap">
+            <table class="dt">
+              <thead>
+                <tr>
+                  <th style="width:110px">#</th>
+                  <th style="width:110px">Fecha</th>
+                  <th>Cliente</th>
+                  <th style="width:230px">Producto</th>
+                  <th style="width:110px">Venta</th>
+                  <th style="width:120px">Vencimiento</th>
+                  <th style="width:96px">Días</th>
+                  <th style="width:150px">Resolución</th>
+                  <th style="width:170px">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="id">GAR-V-0042</span></td>
+                  <td><span class="mono-s">Hoy 10:15</span></td>
+                  <td><div class="strong">Industrial XYZ S.A.S.</div><div class="sub mono">+57 318 442 5512</div></td>
+                  <td><div class="strong">Filtro aire GA-22</div><div class="sub"><span class="mono">CMP-2210-A</span> · Serie 8472</div></td>
+                  <td><a class="link-pill">V-2843</a></td>
+                  <td><span class="num succ">30 jun 2026</span></td>
+                  <td><span class="num succ">46 días</span></td>
+                  <td><span class="pill pill-info"><span class="pdot s-info"></span>Reparación</span></td>
+                  <td><span class="pill pill-neutral"><span class="pdot s-neutral"></span>Activa</span></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-V-0041</span></td>
+                  <td><span class="mono-s">Ayer</span></td>
+                  <td><div class="strong">Compañía Lácteos Cali</div><div class="sub mono">+57 314 502 ··</div></td>
+                  <td><div class="strong">Compresor portátil</div><div class="sub"><span class="mono">CMP-9100-P</span> · Serie 8389</div></td>
+                  <td><a class="link-pill">V-2841</a></td>
+                  <td><span class="num warn">18 jun 2026</span></td>
+                  <td><span class="num warn">34 días</span></td>
+                  <td><span class="pill pill-prog"><span class="pdot s-prog"></span>Cambio de pieza</span></td>
+                  <td><span class="pill pill-info pulse"><span class="pdot s-info"></span>En proceso</span></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-V-0040</span></td>
+                  <td><span class="mono-s">15 abr</span></td>
+                  <td><div class="strong">Petrocali S.A.S.</div><div class="sub mono">+57 315 778 8801</div></td>
+                  <td><div class="strong">Manguera descarga 1m</div><div class="sub"><span class="mono">CMP-1985-C</span></div></td>
+                  <td><a class="link-pill">V-2840</a></td>
+                  <td><span class="num succ">14 jul 2026</span></td>
+                  <td><span class="num succ">60 días</span></td>
+                  <td><span class="pill pill-prog"><span class="pdot s-prog"></span>Cambio de pieza</span></td>
+                  <td><span class="pill pill-succ"><svg width="10" height="10"><use href="#i-check"/></svg>Resuelta</span></td>
+                </tr>
+                <tr class="is-warn-row">
+                  <td><span class="id">GAR-V-0039</span></td>
+                  <td><span class="mono-s">12 abr</span></td>
+                  <td><div class="strong">Constructora del Valle</div><div class="sub mono">+57 312 778 2210</div></td>
+                  <td><div class="strong">Banda V SPB 2240</div><div class="sub"><span class="mono">BAN-2240-V</span></div></td>
+                  <td><a class="link-pill">V-2842</a></td>
+                  <td><span class="num warn">28 may 2026</span></td>
+                  <td><span class="num warn">13 días</span></td>
+                  <td><span class="pill pill-info"><span class="pdot s-info"></span>Reparación</span></td>
+                  <td><span class="pill pill-info pulse"><span class="pdot s-info"></span>En proceso</span></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-V-0038</span></td>
+                  <td><span class="mono-s">10 abr</span></td>
+                  <td><div class="strong">Refinadora Pacífico</div><div class="sub mono">+57 313 718 0044</div></td>
+                  <td><div class="strong">Válvula seguridad 1/2"</div><div class="sub"><span class="mono">VHS-3300</span></div></td>
+                  <td><a class="link-pill">V-2841</a></td>
+                  <td><span class="num succ">9 jul 2026</span></td>
+                  <td><span class="num succ">55 días</span></td>
+                  <td><span class="pill pill-warn"><span class="pdot s-warn"></span>Reembolso</span></td>
+                  <td><span class="pill pill-succ"><span class="pdot s-succ"></span>Aprobada</span></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-V-0037</span></td>
+                  <td><span class="mono-s">8 abr</span></td>
+                  <td><div class="strong">Embotelladora Norte</div><div class="sub mono">+57 316 226 5510</div></td>
+                  <td><div class="strong">Aceite ISO VG-46 5L</div><div class="sub"><span class="mono">CMP-2308-B</span> · Shell</div></td>
+                  <td><a class="link-pill">V-2839</a></td>
+                  <td><span class="num succ">7 jul 2026</span></td>
+                  <td><span class="num succ">53 días</span></td>
+                  <td><span class="pill pill-prog"><span class="pdot s-prog"></span>Cambio de pieza</span></td>
+                  <td><span class="pill pill-succ"><svg width="10" height="10"><use href="#i-check"/></svg>Resuelta</span></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-V-0036</span></td>
+                  <td><span class="mono-s">5 abr</span></td>
+                  <td><div class="strong">Tecnologías del Sur</div><div class="sub mono">+57 311 446 0078</div></td>
+                  <td><div class="strong">Compresor portátil</div><div class="sub"><span class="mono">CMP-9100-P</span> · Serie 8201</div></td>
+                  <td><a class="link-pill">V-2837</a></td>
+                  <td><span class="num succ">4 jul 2026</span></td>
+                  <td><span class="num succ">50 días</span></td>
+                  <td><span class="pill pill-warn"><span class="pdot s-warn"></span>Reembolso</span></td>
+                  <td><div class="cell-state"><span class="pill pill-dang"><svg width="10" height="10"><use href="#i-x"/></svg>Rechazada</span><span class="sub">Uso fuera de espec.</span></div></td>
+                </tr>
+                <tr>
+                  <td><span class="id">GAR-V-0035</span></td>
+                  <td><span class="mono-s">1 abr</span></td>
+                  <td><div class="strong">Manufacturas Andes</div><div class="sub mono">+57 318 558 1100</div></td>
+                  <td><div class="strong">Llave torque</div><div class="sub"><span class="mono">HRM-0801-T</span></div></td>
+                  <td><a class="link-pill">V-2836</a></td>
+                  <td><span class="num succ">30 jun 2026</span></td>
+                  <td><span class="num succ">46 días</span></td>
+                  <td><span class="pill pill-info"><span class="pdot s-info"></span>Reparación</span></td>
+                  <td><span class="pill pill-succ"><svg width="10" height="10"><use href="#i-check"/></svg>Resuelta</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="dt-foot">
+              <span>Mostrando <b>8</b> de <b>23</b> garantías de ventas activas <span style="color:var(--n-200)">·</span> <b>3</b> cerradas este mes <span style="color:var(--n-200)">·</span> Valor en garantía <b>$ 1.450.500</b></span>
+              <span>Página 1 de 3</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     ESTADO A · Modal rechazar garantía
+     ============================================================ -->
+<h2 class="showcase-t" style="margin-top:64px;">Estados especiales</h2>
+<p class="showcase-s">A. Modal rechazar · B. Banner política aplicable · C. Alerta vencimiento próximo · D. State machine resuelta.</p>
+
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span>
+    <span class="vp">Estado A · Modal · Rechazar garantía GAR-V-0042</span>
+    <span class="sep">·</span>
+    <span>Motivo obligatorio + chips de sugerencias rápidas</span>
+  </div>
+  <div class="frame" style="width:1080px;">
+    <div class="modal-stage">
+      <div class="modal">
+        <div class="modal-ico"><svg width="26" height="26"><use href="#i-x-circle"/></svg></div>
+        <h3 class="modal-t">Rechazar garantía GAR-V-0042</h3>
+        <p class="modal-s">Industrial XYZ S.A.S. <span style="color:var(--n-200)">·</span> Filtro de aire GA-22 <span class="mono" style="color:var(--n-700)">· CMP-2210-A</span>. Indica el motivo del rechazo. Esta acción no se puede deshacer sin auditoría.</p>
+
+        <label class="form-l">Motivo de rechazo <span style="color:var(--dang-text);text-transform:none;letter-spacing:0">· obligatorio</span></label>
+        <div class="textarea" style="min-height:90px;font-style:italic;color:var(--n-500);">Describe por qué se rechaza la reclamación. Este texto se envía al cliente.</div>
+
+        <div style="margin-top:12px;font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--n-500);font-weight:500;">Sugerencias rápidas</div>
+        <div class="chips">
+          <button class="chip">Fuera de período de garantía</button>
+          <button class="chip">Uso fuera de especificación de fábrica</button>
+          <button class="chip">Evidencia de manipulación o modificación</button>
+          <button class="chip">Defecto no reproducible en taller</button>
+          <button class="chip">No cubierto por política F13</button>
+        </div>
+
+        <div class="modal-foot-note">El cliente recibirá notificación con motivo del rechazo. El producto se devuelve sin modificación. Si el cliente reclama formalmente, el caso pasa a auditoría F13.</div>
+
+        <div class="modal-actions">
+          <button class="btn btn-outline">No rechazar</button>
+          <button class="btn btn-danger"><svg width="14" height="14"><use href="#i-x"/></svg>Rechazar garantía</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     ESTADO B · Banner política aplicable según producto
+     ============================================================ -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span>
+    <span class="vp">Estado B · Banner política aplicable</span>
+    <span class="sep">·</span>
+    <span>Producto con política extendida 180 días (no default 90)</span>
+  </div>
+  <div class="frame" style="width:1280px;">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sb-brand"><div class="sb-logo">CV</div><div><div class="sb-brandname">Compresores del Valle</div><div class="sb-brandsub">CHV · Operaciones</div></div></div>
+        <div class="sb-section"><div class="sb-section-h">Catálogo y stock</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-package"/></svg><span class="label">Inventario</span><span class="counter">2.847</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-tag"/></svg><span class="label">Productos</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Operación comercial</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-cart"/></svg><span class="label">Ventas</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="label">Cotizaciones</span><span class="counter">5</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-receipt"/></svg><span class="label">Recibos</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-undo"/></svg><span class="label">Devoluciones</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Bodega y movimiento</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-bag"/></svg><span class="label">Compras</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-truck"/></svg><span class="label">Traspasos</span><span class="counter">3</span></a>
+          <a class="sb-item is-active"><svg width="16" height="16"><use href="#i-shield"/></svg><span class="label">Garantías</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Taller</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-wrench"/></svg><span class="label">Órdenes de Trabajo</span><span class="counter">14</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-puzzle"/></svg><span class="label">Ensambles</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Soporte</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-hammer"/></svg><span class="label">Herramientas</span><span class="counter">2</span></a>
+        </div>
+        <div class="sb-foot"><div class="sb-avatar">CR</div><div><div class="sb-foot-name">Carlos Ríos</div><div class="sb-foot-role">Admin · WH-01</div></div></div>
+      </aside>
+
+      <section class="main">
+        <div class="topbar">
+          <div class="crumb"><b>Operaciones</b><span class="crumb-sep">·</span><b style="color:var(--p-700)">Garantías</b><span class="crumb-sep">·</span><b>GAR-V-0041</b></div>
+          <div class="topbar-spacer"></div>
+          <div class="cmdk"><svg width="14" height="14"><use href="#i-search"/></svg><span>Buscar en todo el sistema</span><span style="margin-left:auto"></span><span class="kbd">⌘</span><span class="kbd">K</span></div>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-qr"/></svg></button>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg></button>
+          <button class="panel-admin"><svg width="14" height="14"><use href="#i-shield"/></svg>Panel Admin</button>
+        </div>
+
+        <div class="content">
+          <a class="detail-back"><svg width="14" height="14"><use href="#i-arrow-left-circle"/></svg>Volver a Garantías</a>
+
+          <div class="detail-h" style="margin-bottom:14px;">
+            <div>
+              <div class="eyebrow">Garantía de venta</div>
+              <h1 class="detail-id">GAR-V-0041</h1>
+              <p class="detail-sub">Compañía Lácteos Cali <span style="color:var(--n-200)">·</span> Compresor portátil CMP-9100-P · Serie 8389 <span class="pill pill-info lg pulse"><span class="pdot s-info"></span>En proceso</span></p>
+            </div>
+            <div class="detail-right">
+              <div class="countdown">
+                <div class="label">Vence 11 oct 2026</div>
+                <div class="num">148 <span class="units">días restantes</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="banner b-prog">
+            <span class="icon"><svg width="20" height="20"><use href="#i-shield-alt"/></svg></span>
+            <div class="banner-body">
+              <div class="banner-title">Este producto tiene política F13 extendida</div>
+              <div class="banner-text">El compresor portátil <span class="mono">CMP-9100-P</span> tiene política extendida: <b>180 días desde venta</b> (no los <b>90 días</b> default). Esta excepción se configura por producto en Productos · <span class="mono">CMP-9100-P</span>.</div>
+              <div class="banner-actions">
+                <button class="btn btn-prog-outline btn-sm"><svg width="13" height="13"><use href="#i-tag"/></svg>Ver configuración del producto</button>
+                <button class="btn btn-ghost btn-sm" style="color:var(--prog-text)">Ver política F13 completa</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h">
+              <svg width="16" height="16"><use href="#i-package"/></svg>
+              <span class="t">Producto en garantía</span>
+              <span class="badge"><span class="pill pill-prog sm"><span class="pdot s-prog"></span>Política extendida · 180 días</span></span>
+            </div>
+            <div class="field-grid">
+              <div class="field"><span class="field-l">SKU</span><span class="field-v mono">CMP-9100-P</span></div>
+              <div class="field"><span class="field-l">Producto</span><span class="field-v">Compresor portátil Atlas Copco</span></div>
+              <div class="field"><span class="field-l">Serie</span><span class="field-v mono">Serie 8389</span></div>
+              <div class="field"><span class="field-l">Vendido</span><span class="field-v mono">14 abr 2026 · hace 32 días</span></div>
+              <div class="field"><span class="field-l">Garantía estándar F13</span><span class="field-v" style="color:var(--n-500)">90 días</span></div>
+              <div class="field"><span class="field-l">Garantía aplicada</span><span class="field-v" style="color:var(--prog-text)">180 días (extendida)</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><svg width="16" height="16"><use href="#i-clipboard"/></svg><span class="t">Comparativa de políticas</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <div style="padding:14px;border:1px solid var(--n-150);border-radius:var(--r-md);">
+                <div class="field-l" style="margin-bottom:8px">Política F13 default</div>
+                <div style="font-family:var(--mono);font-size:22px;font-weight:500;color:var(--n-500)">90 días</div>
+                <p style="margin:6px 0 0;font-size:12px;color:var(--n-500);line-height:1.45">Filtros, mangueras, lubricantes, herramientas, repuestos pequeños.</p>
+              </div>
+              <div style="padding:14px;border:1px solid var(--prog-border);background:var(--prog-bg);border-radius:var(--r-md);">
+                <div class="field-l" style="margin-bottom:8px;color:var(--prog-text)">Política extendida (este producto)</div>
+                <div style="font-family:var(--mono);font-size:22px;font-weight:500;color:var(--prog-text)">180 días</div>
+                <p style="margin:6px 0 0;font-size:12px;color:var(--prog-text);line-height:1.45">Compresores Atlas Copco GA y portátiles, equipos de alto valor con servicio postventa de fabricante.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     ESTADO C · Alerta vencimiento próximo (banner sticky)
+     ============================================================ -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span>
+    <span class="vp">Estado C · Lista con banner sticky de vencimiento</span>
+    <span class="sep">·</span>
+    <span>2 garantías vencen sin resolución activa</span>
+  </div>
+  <div class="frame" style="width:1280px;">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sb-brand"><div class="sb-logo">CV</div><div><div class="sb-brandname">Compresores del Valle</div><div class="sb-brandsub">CHV · Operaciones</div></div></div>
+        <div class="sb-section"><div class="sb-section-h">Catálogo y stock</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-package"/></svg><span class="label">Inventario</span><span class="counter">2.847</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-tag"/></svg><span class="label">Productos</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Operación comercial</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-cart"/></svg><span class="label">Ventas</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="label">Cotizaciones</span><span class="counter">5</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-receipt"/></svg><span class="label">Recibos</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-undo"/></svg><span class="label">Devoluciones</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Bodega y movimiento</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-bag"/></svg><span class="label">Compras</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-truck"/></svg><span class="label">Traspasos</span><span class="counter">3</span></a>
+          <a class="sb-item is-active"><svg width="16" height="16"><use href="#i-shield"/></svg><span class="label">Garantías</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Taller</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-wrench"/></svg><span class="label">Órdenes de Trabajo</span><span class="counter">14</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-puzzle"/></svg><span class="label">Ensambles</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Soporte</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-hammer"/></svg><span class="label">Herramientas</span><span class="counter">2</span></a>
+        </div>
+        <div class="sb-foot"><div class="sb-avatar">CR</div><div><div class="sb-foot-name">Carlos Ríos</div><div class="sb-foot-role">Admin · WH-01</div></div></div>
+      </aside>
+
+      <section class="main">
+        <div class="topbar">
+          <div class="crumb"><b>Operaciones</b><span class="crumb-sep">·</span><b style="color:var(--p-700)">Garantías</b></div>
+          <div class="topbar-spacer"></div>
+          <div class="cmdk"><svg width="14" height="14"><use href="#i-search"/></svg><span>Buscar en todo el sistema</span><span style="margin-left:auto"></span><span class="kbd">⌘</span><span class="kbd">K</span></div>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-qr"/></svg></button>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg></button>
+          <button class="panel-admin"><svg width="14" height="14"><use href="#i-shield"/></svg>Panel Admin</button>
+        </div>
+
+        <div class="content">
+
+          <div class="banner b-warn">
+            <span class="icon"><svg width="20" height="20"><use href="#i-alert"/></svg></span>
+            <div class="banner-body">
+              <div class="banner-title">2 garantías de ventas vencen en los próximos 30 días</div>
+              <div class="banner-text">Sin resolución activa: <a class="link-pill" style="background:rgba(247,144,9,.18);color:var(--warn-text);border-color:rgba(247,144,9,.24);height:20px;font-size:11px">GAR-V-0039</a> <span class="mono">(13 días)</span> y <a class="link-pill" style="background:rgba(247,144,9,.18);color:var(--warn-text);border-color:rgba(247,144,9,.24);height:20px;font-size:11px">GAR-V-0044</a> <span class="mono">(28 días)</span>. Si vencen sin resolver pasan automáticamente a estado <b>Vencida</b> y CHV pierde la opción de gestión.</div>
+              <div class="banner-actions">
+                <button class="btn btn-warn-outline btn-sm"><svg width="13" height="13"><use href="#i-alert"/></svg>Ver garantías que vencen</button>
+                <button class="btn btn-ghost btn-sm" style="color:var(--warn-text)">Posponer 7 días</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="page-h">
+            <div>
+              <h1 class="page-title">Garantías</h1>
+              <p class="page-sub"><b class="num">5</b> activas <span style="color:var(--n-200)">·</span> <b class="num" style="color:var(--warn-text)">2</b> vencen este mes <span style="color:var(--n-200)">·</span> <b class="num">1</b> reclamación pendiente <span style="color:var(--n-200)">·</span> <b class="num">$ 1.45M</b> en garantía</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-outline"><svg width="14" height="14"><use href="#i-upload"/></svg>Exportar</button>
+              <button class="btn btn-primary btn-split"><svg width="14" height="14"><use href="#i-plus"/></svg>Nueva reclamación <svg width="12" height="12" class="caret"><use href="#i-chevron-down"/></svg></button>
+            </div>
+          </div>
+
+          <div class="tabs-dual">
+            <div class="tab-d is-active">
+              <svg width="16" height="16"><use href="#i-shield"/></svg>
+              <div class="tab-label">
+                <div class="tab-main">Garantías de ventas <span class="count mono">(3)</span></div>
+                <div class="tab-sub">Cliente reclama a CHV</div>
+              </div>
+            </div>
+            <div class="tab-d">
+              <svg width="16" height="16"><use href="#i-pkg-check"/></svg>
+              <div class="tab-label">
+                <div class="tab-main">Garantías de compras <span class="count mono">(2)</span></div>
+                <div class="tab-sub">CHV reclama a proveedor</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subfilters">
+            <div class="pill-row">
+              <button class="filter-pill">Todas <span class="c">3</span></button>
+              <button class="filter-pill is-active">Vencen en 30 días <span class="c">2</span></button>
+              <button class="filter-pill">Activa <span class="c">1</span></button>
+              <button class="filter-pill">En proceso <span class="c">1</span></button>
+              <button class="filter-pill">Resuelta <span class="c">1</span></button>
+            </div>
+            <div class="subfilter-sep"></div>
+            <span class="subfilter-label">Ordenar por</span>
+            <button class="select-mini">Días restantes (asc) <svg width="10" height="10"><use href="#i-chevron-down"/></svg></button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="dt">
+              <thead>
+                <tr>
+                  <th style="width:110px">#</th>
+                  <th style="width:110px">Fecha</th>
+                  <th>Cliente</th>
+                  <th style="width:240px">Producto</th>
+                  <th style="width:110px">Venta</th>
+                  <th style="width:120px">Vencimiento</th>
+                  <th style="width:96px">Días</th>
+                  <th style="width:170px">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="is-warn-row">
+                  <td><span class="id">GAR-V-0039</span></td>
+                  <td><span class="mono-s">12 abr</span></td>
+                  <td><div class="strong">Constructora del Valle</div><div class="sub mono">+57 312 778 2210</div></td>
+                  <td><div class="strong">Banda V SPB 2240</div><div class="sub"><span class="mono">BAN-2240-V</span></div></td>
+                  <td><a class="link-pill">V-2842</a></td>
+                  <td><span class="num warn">28 may 2026</span></td>
+                  <td><span class="num warn">13 días</span></td>
+                  <td><span class="pill pill-info pulse"><span class="pdot s-info"></span>En proceso</span></td>
+                </tr>
+                <tr class="is-warn-row">
+                  <td><span class="id">GAR-V-0044</span></td>
+                  <td><span class="mono-s">14 may</span></td>
+                  <td><div class="strong">Embotelladora Norte</div><div class="sub mono">+57 316 226 5510</div></td>
+                  <td><div class="strong">Filtro aceite GA-22</div><div class="sub"><span class="mono">CMP-2212-A</span></div></td>
+                  <td><a class="link-pill">V-2845</a></td>
+                  <td><span class="num warn">12 jun 2026</span></td>
+                  <td><span class="num warn">28 días</span></td>
+                  <td><span class="pill pill-neutral"><span class="pdot s-neutral"></span>Activa</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="dt-foot">
+              <span>Mostrando <b>2</b> garantías que vencen en los próximos 30 días <span style="color:var(--n-200)">·</span> Riesgo total <b>$ 824.500</b></span>
+              <span>Filtrando por urgencia</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     ESTADO D · State machine resuelta · GAR-V-0040
+     ============================================================ -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span>
+    <span class="vp">Estado D · Detalle con state machine resuelta</span>
+    <span class="sep">·</span>
+    <span>GAR-V-0040 · Resolución aplicada · Garantía cerrada</span>
+  </div>
+  <div class="frame" style="width:1280px;">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sb-brand"><div class="sb-logo">CV</div><div><div class="sb-brandname">Compresores del Valle</div><div class="sb-brandsub">CHV · Operaciones</div></div></div>
+        <div class="sb-section"><div class="sb-section-h">Catálogo y stock</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-package"/></svg><span class="label">Inventario</span><span class="counter">2.847</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-tag"/></svg><span class="label">Productos</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Operación comercial</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-cart"/></svg><span class="label">Ventas</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="label">Cotizaciones</span><span class="counter">5</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-receipt"/></svg><span class="label">Recibos</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-undo"/></svg><span class="label">Devoluciones</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Bodega y movimiento</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-bag"/></svg><span class="label">Compras</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-truck"/></svg><span class="label">Traspasos</span><span class="counter">3</span></a>
+          <a class="sb-item is-active"><svg width="16" height="16"><use href="#i-shield"/></svg><span class="label">Garantías</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Taller</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-wrench"/></svg><span class="label">Órdenes de Trabajo</span><span class="counter">14</span></a>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-puzzle"/></svg><span class="label">Ensambles</span></a>
+        </div>
+        <div class="sb-section"><div class="sb-section-h">Soporte</div>
+          <a class="sb-item"><svg width="16" height="16"><use href="#i-hammer"/></svg><span class="label">Herramientas</span><span class="counter">2</span></a>
+        </div>
+        <div class="sb-foot"><div class="sb-avatar">CR</div><div><div class="sb-foot-name">Carlos Ríos</div><div class="sb-foot-role">Admin · WH-01</div></div></div>
+      </aside>
+
+      <section class="main">
+        <div class="topbar">
+          <div class="crumb"><b>Operaciones</b><span class="crumb-sep">·</span><b style="color:var(--p-700)">Garantías</b><span class="crumb-sep">·</span><b>GAR-V-0040</b></div>
+          <div class="topbar-spacer"></div>
+          <div class="cmdk"><svg width="14" height="14"><use href="#i-search"/></svg><span>Buscar en todo el sistema</span><span style="margin-left:auto"></span><span class="kbd">⌘</span><span class="kbd">K</span></div>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-qr"/></svg></button>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg></button>
+          <button class="panel-admin"><svg width="14" height="14"><use href="#i-shield"/></svg>Panel Admin</button>
+        </div>
+
+        <div class="content">
+          <a class="detail-back"><svg width="14" height="14"><use href="#i-arrow-left-circle"/></svg>Volver a Garantías</a>
+
+          <div class="detail-h">
+            <div>
+              <div class="eyebrow">Garantía de venta · cerrada</div>
+              <h1 class="detail-id">GAR-V-0040</h1>
+              <p class="detail-sub">Petrocali S.A.S. <span style="color:var(--n-200)">·</span> Manguera descarga 1m · CMP-1985-C <span class="pill pill-succ lg"><svg width="12" height="12"><use href="#i-check"/></svg>Resuelta</span></p>
+            </div>
+            <div class="detail-right">
+              <div class="countdown" style="background:var(--succ-bg);border-color:var(--succ-border);">
+                <div class="label" style="color:var(--succ-text);opacity:.85">Resuelta · 22 abr 2026</div>
+                <div class="num" style="color:var(--succ-text)">4 <span class="units" style="color:var(--succ-text);opacity:.7">días hábiles</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn btn-outline"><svg width="14" height="14"><use href="#i-file-text"/></svg>Ver documento de resolución (PDF)</button>
+            <button class="btn btn-outline"><svg width="14" height="14"><use href="#i-printer"/></svg>Imprimir comprobante</button>
+            <button class="btn btn-ghost"><svg width="14" height="14"><use href="#i-paperclip"/></svg>Compartir con cliente</button>
+          </div>
+
+          <div class="statemachine">
+            <div class="sm-head">
+              <span class="sm-eyebrow">Proceso de la reclamación · finalizado</span>
+              <span class="sm-eyebrow" style="color:var(--succ-text)">Resuelta el 22 abr 2026</span>
+            </div>
+            <div class="sm-steps">
+              <div class="sm-step done">
+                <div class="sm-dot is-done"><svg width="12" height="12"><use href="#i-check"/></svg></div>
+                <div class="sm-line done"></div>
+                <div class="sm-label">Reportada</div>
+                <div class="sm-meta">15 abr 09:20</div>
+              </div>
+              <div class="sm-step done">
+                <div class="sm-dot is-done"><svg width="12" height="12"><use href="#i-check"/></svg></div>
+                <div class="sm-line done"></div>
+                <div class="sm-label">En análisis</div>
+                <div class="sm-meta">15 abr 14:00</div>
+              </div>
+              <div class="sm-step done">
+                <div class="sm-dot is-done"><svg width="12" height="12"><use href="#i-check"/></svg></div>
+                <div class="sm-line done"></div>
+                <div class="sm-label">Aprobada</div>
+                <div class="sm-meta">16 abr 10:30</div>
+              </div>
+              <div class="sm-step done">
+                <div class="sm-dot is-done"><svg width="12" height="12"><use href="#i-check"/></svg></div>
+                <div class="sm-line done"></div>
+                <div class="sm-label">En proceso</div>
+                <div class="sm-meta">18 abr 08:00</div>
+              </div>
+              <div class="sm-step done">
+                <div class="sm-dot is-active" style="background:var(--succ);box-shadow:0 0 0 1px var(--succ);animation:haloPulse 1.8s ease-in-out infinite;animation-name:none"><svg width="12" height="12"><use href="#i-check"/></svg></div>
+                <div class="sm-label" style="color:var(--succ-text);font-weight:600">Resuelta</div>
+                <div class="sm-meta" style="color:var(--succ-text)">22 abr 16:45</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-grid">
+            <div>
+              <div class="card" style="border-color:var(--succ-border);background:linear-gradient(180deg,var(--succ-bg) 0%,var(--n-0) 60%);">
+                <div class="card-h">
+                  <svg width="16" height="16" style="color:var(--succ-text)"><use href="#i-shield-check"/></svg>
+                  <span class="t" style="color:var(--succ-text)">Resolución aplicada</span>
+                  <span class="badge"><span class="pill pill-succ"><svg width="11" height="11"><use href="#i-check"/></svg>Cerrada</span></span>
+                </div>
+                <div class="field-grid">
+                  <div class="field"><span class="field-l">Tipo de resolución</span><span class="field-v" style="color:var(--succ-text)">Cambio de pieza por nueva</span></div>
+                  <div class="field"><span class="field-l">Aplicada el</span><span class="field-v mono">18 abr 2026 · 11:20</span></div>
+                  <div class="field"><span class="field-l">Técnico responsable</span><span class="field-v">Diego P.</span></div>
+                  <div class="field"><span class="field-l">Costo para el cliente</span><span class="field-v" style="color:var(--succ-text)">Sin costo</span></div>
+                  <div class="field"><span class="field-l">Entregado el</span><span class="field-v mono">22 abr 2026 · 16:45</span></div>
+                  <div class="field"><span class="field-l">Recibió</span><span class="field-v">Sandra Pérez</span></div>
+                </div>
+                <p style="margin:14px 0 0;font-size:12.5px;color:var(--succ-text);line-height:1.5;">Cambio de manguera de descarga aprobado tras verificar defecto de fábrica reproducible. Se entregó unidad nueva desde stock <span class="mono">WH-01</span>. Garantía cerrada con resolución completa, sin costo para el cliente, sin disputas.</p>
+              </div>
+
+              <div class="card">
+                <div class="card-h"><svg width="16" height="16"><use href="#i-package"/></svg><span class="t">Producto reemplazado</span></div>
+                <div class="field-grid">
+                  <div class="field"><span class="field-l">SKU</span><span class="field-v mono">CMP-1985-C</span></div>
+                  <div class="field"><span class="field-l">Producto</span><span class="field-v">Manguera descarga 1/2" 3m</span></div>
+                  <div class="field"><span class="field-l">Cantidad reemplazada</span><span class="field-v mono">1 und</span></div>
+                  <div class="field"><span class="field-l">Salida de stock</span><span class="field-v mono">WH-01 Cali</span></div>
+                  <div class="field"><span class="field-l">Defecto reportado</span><span class="field-v">Fisura en empalme</span></div>
+                  <div class="field"><span class="field-l">Diagnóstico</span><span class="field-v">Defecto de fábrica reproducible</span></div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-h"><svg width="16" height="16"><use href="#i-user"/></svg><span class="t">Cliente y venta origen</span></div>
+                <div class="field-grid">
+                  <div class="field"><span class="field-l">Razón social</span><span class="field-v">Petrocali S.A.S.</span></div>
+                  <div class="field"><span class="field-l">Teléfono</span><span class="field-v mono">+57 315 778 8801</span></div>
+                </div>
+                <div class="linkrow" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--n-100);">
+                  <a class="link-pill" style="height:28px;font-size:13px;padding:0 12px">V-2840</a>
+                  <span class="field-l" style="margin-bottom:0;">Vendido</span><span class="field-v mono">14 abr 2026</span>
+                  <span class="field-l" style="margin-bottom:0;">Monto</span><span class="field-v mono">$ 89.500</span>
+                </div>
+              </div>
+
+            </div>
+
+            <div>
+              <div class="card">
+                <div class="card-h"><svg width="16" height="16"><use href="#i-activity"/></svg><span class="t">Historial completo</span></div>
+                <div class="timeline">
+                  <div class="tl-event">
+                    <div class="tl-dot succ"></div>
+                    <div class="tl-body">
+                      <div class="tl-title">Reclamación reportada</div>
+                      <div class="tl-meta">15 abr 09:20 <span style="color:var(--n-200)">·</span> Cliente vía teléfono</div>
+                    </div>
+                  </div>
+                  <div class="tl-event">
+                    <div class="tl-dot succ"></div>
+                    <div class="tl-body">
+                      <div class="tl-title">Producto recibido en taller</div>
+                      <div class="tl-meta">15 abr 14:00 <span style="color:var(--n-200)">·</span> Diego P.</div>
+                    </div>
+                  </div>
+                  <div class="tl-event">
+                    <div class="tl-dot succ"></div>
+                    <div class="tl-body">
+                      <div class="tl-title">Diagnóstico confirmado: defecto reproducible</div>
+                      <div class="tl-meta">16 abr 09:15 <span style="color:var(--n-200)">·</span> Diego P.</div>
+                    </div>
+                  </div>
+                  <div class="tl-event">
+                    <div class="tl-dot succ"></div>
+                    <div class="tl-body">
+                      <div class="tl-title">Aprobada: cambio de pieza</div>
+                      <div class="tl-meta">16 abr 10:30 <span style="color:var(--n-200)">·</span> Carlos R.</div>
+                    </div>
+                  </div>
+                  <div class="tl-event">
+                    <div class="tl-dot succ"></div>
+                    <div class="tl-body">
+                      <div class="tl-title">Manguera nueva preparada en WH-01</div>
+                      <div class="tl-meta">18 abr 11:20 <span style="color:var(--n-200)">·</span> Sandra L.</div>
+                    </div>
+                  </div>
+                  <div class="tl-event">
+                    <div class="tl-dot succ"></div>
+                    <div class="tl-body">
+                      <div class="tl-title succ">Producto entregado al cliente</div>
+                      <div class="tl-meta" style="color:var(--succ-text)">22 abr 16:45 <span style="color:var(--n-200)">·</span> Recibió Sandra Pérez</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" style="padding:0;border:none;background:transparent;">
+                <div class="policy is-succ">
+                  <div class="policy-eyebrow">Resumen de cierre</div>
+                  <ul>
+                    <li><svg width="14" height="14"><use href="#i-shield-check"/></svg>Tiempo total de resolución: 7 días (15 abr a 22 abr).</li>
+                    <li><svg width="14" height="14"><use href="#i-shield-check"/></svg>Sin costo para el cliente.</li>
+                    <li><svg width="14" height="14"><use href="#i-shield-check"/></svg>Documento PDF generado y enviado.</li>
+                    <li><svg width="14" height="14"><use href="#i-shield-check"/></svg>Encuesta de satisfacción enviada el 23 abr.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-h"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="t">Documentos generados</span></div>
+                <div class="attach-row"><svg width="14" height="14"><use href="#i-paperclip"/></svg><span class="nm">Resolución GAR-V-0040.pdf</span><span class="sz">186 KB</span></div>
+                <div class="attach-row"><svg width="14" height="14"><use href="#i-paperclip"/></svg><span class="nm">Acta de entrega.pdf</span><span class="sz">112 KB</span></div>
+                <div class="attach-row"><svg width="14" height="14"><use href="#i-paperclip"/></svg><span class="nm">Salida inventario WH-01.pdf</span><span class="sz">98 KB</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+
+
+  <div class="validation">
+    <h3>Checklist de validación · Mensaje 7.1 · 6 puntos críticos</h3>
+    <ol>
+      <li><b>Sidebar canónica idéntica a Foundation con "Garantías" activa.</b> Las 5 secciones canónicas con los 12 módulos en orden exacto (Catálogo y stock, Operación comercial, Bodega y movimiento, Taller, Soporte). Contadores correctos: Inventario 2.847, Cotizaciones 5, Traspasos 3, Órdenes de Trabajo 14, Herramientas 2. Garantías sin contador, marcada como activa con filete royal p-600 a la izquierda.</li>
+      <li><b>Tabs duales (Ventas / Compras) en patrón Devoluciones.</b> Card-tab prominentes (~520 px combinado), icono shield + label sans 13 px + contador mono entre paréntesis + sub-texto explicativo. Tab activa con fondo p-50, filete inferior 2 px p-600, texto p-700. Para tab Compras: ícono pkg-check (shield mirrored).</li>
+      <li><b>State machine visible en detalle.</b> 5 pasos secuenciales conectados por líneas: Reportada → En análisis → Aprobada/Rechazada → En proceso → Resuelta. Pasos completados en succ verde con check, paso activo en royal p-600 con halo pulsante, pasos pendientes en gris claro. En GAR-V-0040 (Estado D) los 5 pasos en succ con check final.</li>
+      <li><b>Días restantes con color semántico.</b> Succ si más de 30 días (46, 60, 55, 53, 50, 46, 34 días), warn si entre 8-30 días (13 días en GAR-V-0039 con fila warn-50 sutil de fondo), dang si menos de 8 días o vencida. La urgencia se lee del color, no solo del número.</li>
+      <li><b>Políticas F13 contextuales visibles.</b> Bloque política aplicable en columna derecha del detalle (90 días default), banner prog destacado cuando el producto tiene política extendida (180 días, ver Estado B), sub-texto policy-info en wizard paso 2 al seleccionar producto, ficha de resumen de cierre en Estado D.</li>
+      <li><b>Vinculación bidireccional con V-XXXX y OC-XXXX.</b> Link-pills clickeables en cada fila de garantía (V-2843, V-2841, V-2840, V-2842, V-2839, V-2837, V-2836 para ventas; OC-1842, OC-1839, OC-1838, OC-1833, OC-1832 para compras). Coherencia con archivos previos del ciclo comercial canónico (V-2843 ↔ Industrial XYZ ↔ OT eventualmente generada).</li>
+    </ol>
+  </div>
+
+
+</div>
+</body>
+</html>

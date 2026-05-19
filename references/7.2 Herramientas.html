@@ -1,0 +1,2133 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>7.2 · Herramientas · Sistema CHV v1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   CHV v1.0 · Tokens canónicos · Herramientas F · Mensaje 7.2
+   ============================================================ */
+:root{
+  --n-0:#FFFFFF; --n-25:#FBFBFC; --n-50:#F7F8FA; --n-75:#F2F4F7;
+  --n-100:#EEF1F5; --n-150:#E4E7EC; --n-200:#D0D5DD; --n-300:#98A2B3;
+  --n-500:#667085; --n-700:#475467; --n-800:#344054; --n-900:#1D2939;
+  --n-950:#101828; --n-975:#0B1320;
+
+  --p-50:#F0F2FF; --p-100:#E0E5FF; --p-200:#C2CCFF; --p-300:#94A3FF;
+  --p-400:#6B7BFF; --p-500:#4B5BF5; --p-600:#2D3CE5; --p-700:#2531C8;
+
+  --succ:#12B76A; --succ-bg:#ECFDF3; --succ-text:#027A48; --succ-border:#A6F4C5;
+  --warn:#F79009; --warn-bg:#FFFAEB; --warn-text:#B54708; --warn-border:#FEDF89;
+  --dang:#F04438; --dang-bg:#FEF3F2; --dang-text:#B42318; --dang-border:#FECDCA;
+  --info:#2E90FA; --info-bg:#EFF8FF; --info-text:#175CD3; --info-border:#B2DDFF;
+  --prog:#9A6FDF; --prog-bg:#F4EBFF; --prog-text:#6941C6; --prog-border:#D9C2FF;
+
+  --cat-hrm:#7244D5; --cat-hrm-bg:#F5F0FF; --cat-hrm-text:#5B21B6;
+
+  --r-card:12px; --r-md:6px; --r-sm:4px;
+  --sans:"IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{font-family:var(--sans);background:#EAECEF;color:var(--n-900);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.45;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+a{color:inherit;text-decoration:none;}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+
+/* Showcase */
+.showcase{padding:48px 32px 96px;max-width:1440px;margin:0 auto;}
+.showcase-h{margin:0 0 8px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--n-500);font-weight:600;}
+.showcase-t{margin:0 0 4px;font-size:22px;font-weight:600;letter-spacing:-.01em;color:var(--n-950);}
+.showcase-s{margin:0 0 40px;color:var(--n-500);font-size:13px;}
+.frame-wrap{margin-bottom:56px;}
+.frame-label{display:flex;align-items:center;gap:12px;padding:6px 0 14px;font-family:var(--mono);font-size:11px;color:var(--n-500);text-transform:uppercase;letter-spacing:.06em;}
+.frame-label .dot{width:6px;height:6px;border-radius:50%;background:var(--p-600);}
+.frame-label .vp{color:var(--n-700);font-weight:500;}
+.frame-label .sep{color:var(--n-200);}
+.frame{background:var(--n-0);border-radius:14px;border:1px solid var(--n-150);overflow-x:auto;overflow-y:hidden;box-shadow:0 1px 2px rgba(16,24,40,.04),0 8px 24px -8px rgba(16,24,40,.08);}
+
+/* App shell */
+.app{display:grid;grid-template-columns:248px 1fr;min-height:840px;}
+.app.tall{min-height:1280px;}
+.app.taller{min-height:1480px;}
+
+/* SIDEBAR canónica idéntica a Devoluciones/Garantías F13 */
+.sidebar{
+  background:var(--n-975);color:#E6E8ED;
+  border-right:1px solid rgba(255,255,255,.04);
+  padding:18px 0 12px;display:flex;flex-direction:column;
+  min-width:248px;width:248px;flex-shrink:0;
+}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:0 18px 16px;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:6px;}
+.sb-logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#2D3CE5,#4456C2);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:-.02em;}
+.sb-brandname{font-size:13px;font-weight:600;color:#fff;line-height:1.15;}
+.sb-brandsub{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:#7E8290;text-transform:uppercase;}
+.sb-section{display:flex;flex-direction:column;gap:1px;padding:10px 0 2px;}
+.sb-section-h{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#5C6070;font-weight:500;padding:6px 18px 6px;}
+.sb-item{display:flex;align-items:center;gap:10px;padding:8px 18px;color:#C7CAD3;font-size:13px;font-weight:400;border-left:2px solid transparent;cursor:pointer;}
+.sb-item:hover{background:rgba(255,255,255,.025);color:#fff;}
+.sb-item svg{flex-shrink:0;opacity:.85;color:#C7CAD3;}
+.sb-item .label{flex:1;}
+.sb-item .counter{font-family:var(--mono);font-size:11px;color:#7E8290;background:rgba(255,255,255,.05);padding:1px 7px;border-radius:999px;min-width:22px;text-align:center;font-weight:500;}
+.sb-item.is-active{background:rgba(45,60,229,.16);color:#fff;border-left-color:#3D4DE8;font-weight:500;}
+.sb-item.is-active svg{color:#C2CCFF;opacity:1;}
+.sb-item.is-active .counter{background:rgba(45,60,229,.20);color:#B7BFFC;}
+.sb-item .counter.dang{background:rgba(240,68,56,.18);color:#FDA29B;}
+.sb-foot{margin-top:auto;padding:14px 18px 4px;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:10px;}
+.sb-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#3645A8,#5F6DF1);color:#fff;font-family:var(--mono);font-weight:600;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-foot-name{font-size:12px;font-weight:600;color:#fff;line-height:1.1;}
+.sb-foot-role{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:#7E8290;text-transform:uppercase;}
+
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;background:var(--n-25);min-width:0;}
+.topbar{display:flex;align-items:center;gap:16px;padding:10px 24px;background:var(--n-0);border-bottom:1px solid var(--n-100);min-height:56px;}
+.crumb{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--n-500);}
+.crumb b{color:var(--n-800);font-weight:600;}
+.crumb-sep{color:var(--n-200);margin:0 6px;}
+.topbar-spacer{flex:1;}
+.cmdk{display:flex;align-items:center;gap:8px;background:var(--n-75);border:1px solid var(--n-150);border-radius:var(--r-md);padding:5px 10px;font-size:12px;color:var(--n-500);min-width:280px;}
+.cmdk .kbd{font-family:var(--mono);font-size:10px;background:var(--n-0);border:1px solid var(--n-150);padding:1px 5px;border-radius:3px;color:var(--n-700);}
+.icon-btn{width:32px;height:32px;border-radius:var(--r-md);display:grid;place-items:center;color:var(--n-500);}
+.icon-btn:hover{background:var(--n-75);}
+.panel-admin{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:var(--r-md);border:1px solid var(--n-200);background:var(--n-0);font-size:12px;font-weight:500;color:var(--n-700);}
+.content{padding:24px;flex:1;min-width:1000px;}
+
+/* Page header */
+.page-h{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:20px;}
+.page-title{margin:0 0 4px;font-size:22px;font-weight:600;color:var(--n-950);letter-spacing:-.01em;}
+.page-sub{margin:0;font-size:13px;color:var(--n-500);}
+.page-sub b.num{color:var(--n-800);font-family:var(--mono);font-weight:500;}
+.page-sub b.num.dang{color:var(--dang-text);}
+.page-actions{display:flex;align-items:center;gap:8px;}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:var(--r-md);font-size:13px;font-weight:500;border:1px solid transparent;line-height:1.2;}
+.btn-primary{background:var(--p-600);color:#fff;}
+.btn-primary:hover{background:var(--p-700);}
+.btn-outline{background:var(--n-0);color:var(--n-800);border-color:var(--n-200);}
+.btn-outline:hover{background:var(--n-50);}
+.btn-ghost{color:var(--n-700);background:transparent;}
+.btn-ghost:hover{background:var(--n-75);}
+.btn-succ{background:var(--n-0);color:var(--succ-text);border-color:var(--succ-border);}
+.btn-succ:hover{background:var(--succ-bg);}
+.btn-succ-solid{background:var(--succ);color:#fff;}
+.btn-warn-out{background:var(--n-0);color:var(--warn-text);border-color:var(--warn-border);}
+.btn-warn-out:hover{background:var(--warn-bg);}
+.btn-warn-solid{background:var(--warn);color:#fff;}
+.btn-dang-out{background:var(--n-0);color:var(--dang-text);border-color:var(--dang-border);}
+.btn-dang-out:hover{background:var(--dang-bg);}
+.btn-dang{background:var(--dang);color:#fff;}
+.btn-sm{padding:4px 9px;font-size:12px;}
+.btn-block{width:100%;justify-content:center;padding:10px 14px;}
+
+/* Internal tabs (Tabs Devoluciones-like) */
+.tabs-mod{display:flex;gap:0;border-bottom:1px solid var(--n-150);margin-bottom:18px;}
+.tab-m{display:flex;align-items:center;gap:8px;padding:11px 16px 13px;font-size:13px;font-weight:500;color:var(--n-500);border-bottom:2px solid transparent;cursor:pointer;}
+.tab-m svg{flex-shrink:0;opacity:.75;}
+.tab-m .count{font-family:var(--mono);font-size:11px;color:var(--n-500);background:var(--n-100);padding:1px 7px;border-radius:999px;font-weight:500;min-width:22px;text-align:center;}
+.tab-m .count.dang{background:var(--dang-bg);color:var(--dang-text);animation:dotPulse 1.6s ease-in-out infinite;}
+.tab-m .late{font-family:var(--mono);font-size:11px;color:var(--dang-text);font-weight:500;}
+.tab-m.is-active{color:var(--p-700);border-bottom-color:var(--p-600);background:var(--p-50);}
+.tab-m.is-active .count{background:var(--p-100);color:var(--p-700);}
+.tab-m.is-active svg{color:var(--p-600);opacity:1;}
+
+/* Banner */
+.banner{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:var(--r-card);margin-bottom:16px;}
+.banner.b-warn{background:var(--warn-bg);border:1px solid var(--warn-border);}
+.banner.b-dang{background:var(--dang-bg);border:1px solid var(--dang-border);}
+.banner .icon{flex-shrink:0;margin-top:1px;}
+.banner.b-warn .icon{color:var(--warn-text);}
+.banner.b-dang .icon{color:var(--dang-text);}
+.banner-body{flex:1;font-size:12.5px;line-height:1.5;}
+.banner-title{font-weight:600;margin-bottom:2px;font-size:13px;}
+.banner.b-warn .banner-title{color:var(--warn-text);}
+.banner.b-dang .banner-title{color:var(--dang-text);}
+.banner.b-warn .banner-text{color:#7A2E08;}
+.banner.b-dang .banner-text{color:#7A1B1B;}
+.banner-text b{font-weight:500;}
+.banner-text .mono{font-family:var(--mono);font-weight:500;}
+.banner-actions{display:flex;gap:8px;margin-top:10px;}
+
+/* Table */
+.table-wrap{background:var(--n-0);border:1px solid var(--n-150);border-radius:var(--r-card);overflow-x:auto;}
+table.dt{width:100%;border-collapse:collapse;font-size:13px;}
+.dt thead th{background:var(--n-50);font-family:var(--mono);font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--n-500);text-align:left;padding:10px 14px;border-bottom:1px solid var(--n-150);white-space:nowrap;}
+.dt tbody td{padding:12px 14px;border-bottom:1px solid var(--n-100);vertical-align:middle;height:64px;color:var(--n-800);}
+.dt tbody tr:hover{background:var(--n-50);}
+.dt tbody tr.is-dang-row{background:#FEF5F4;}
+.dt tbody tr.is-dang-row:hover{background:#FCEAE9;}
+.dt-foot{padding:11px 16px;border-top:1px solid var(--n-150);font-family:var(--mono);font-size:11.5px;color:var(--n-500);background:var(--n-25);display:flex;justify-content:space-between;}
+.dt-foot b{color:var(--n-800);font-weight:500;}
+
+/* Pills */
+.pill{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:999px;font-size:11.5px;font-weight:500;line-height:1;white-space:nowrap;border:1px solid transparent;}
+.pill .pdot{width:6px;height:6px;border-radius:50%;display:inline-block;}
+.pill.pulse .pdot{animation:dotPulse 1.6s ease-in-out infinite;}
+.pill.lg{height:28px;padding:0 12px;font-size:12.5px;}
+.pill.sm{height:20px;padding:0 8px;font-size:11px;}
+.pill-neutral{background:var(--n-75);color:var(--n-700);border-color:var(--n-200);}
+.pill-neutral .pdot{background:var(--n-300);}
+.pill-succ{background:var(--succ-bg);color:var(--succ-text);border-color:var(--succ-border);}
+.pill-succ .pdot{background:var(--succ);}
+.pill-warn{background:var(--warn-bg);color:var(--warn-text);border-color:var(--warn-border);}
+.pill-warn .pdot{background:var(--warn);}
+.pill-dang{background:var(--dang-bg);color:var(--dang-text);border-color:var(--dang-border);}
+.pill-dang .pdot{background:var(--dang);}
+.pill-info{background:var(--info-bg);color:var(--info-text);border-color:var(--info-border);}
+.pill-info .pdot{background:var(--info);}
+.pill-cat-hrm{background:var(--cat-hrm-bg);color:var(--cat-hrm-text);border:none;height:28px;font-size:12px;}
+.pill-cat-hrm::before{content:"";width:10px;height:10px;background:var(--cat-hrm);border-radius:2px;margin-right:6px;display:inline-block;}
+
+@keyframes dotPulse{
+  0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:.45;transform:scale(.7);}
+}
+@keyframes haloPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(240,68,56,.45);}
+  50%{box-shadow:0 0 0 8px rgba(240,68,56,0);}
+}
+
+/* Tool icon (cell) */
+.tool-cell{display:flex;align-items:center;gap:12px;}
+.tool-ico{
+  width:40px;height:40px;border-radius:8px;
+  background:var(--cat-hrm-bg);color:var(--cat-hrm);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.tool-name{font-size:13px;font-weight:500;color:var(--n-900);line-height:1.2;}
+.tool-sub{font-size:11px;color:var(--n-500);margin-top:2px;}
+
+/* Avatar */
+.avatar{display:flex;align-items:center;gap:10px;}
+.av{
+  width:30px;height:30px;border-radius:50%;
+  color:#fff;font-family:var(--mono);font-weight:600;font-size:11px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.av.av-lg{width:40px;height:40px;font-size:13px;}
+.av.av-md{width:36px;height:36px;font-size:12px;}
+.av.av-sm{width:24px;height:24px;font-size:10px;}
+.av.av-DP{background:linear-gradient(135deg,#7244D5,#9A6FDF);}
+.av.av-AM{background:linear-gradient(135deg,#2E90FA,#0E5FB8);}
+.av.av-SL{background:linear-gradient(135deg,#12B76A,#0A8E50);}
+.av.av-CR{background:linear-gradient(135deg,#F79009,#C66B00);}
+.av.av-ML{background:linear-gradient(135deg,#D24E8E,#9B226B);}
+.av.av-CR2{background:linear-gradient(135deg,#159F8A,#0E5F5A);}
+.user-name{font-size:13px;font-weight:500;color:var(--n-900);line-height:1.2;}
+.user-role{font-size:11px;color:var(--n-500);margin-top:2px;}
+
+/* Code mono cell */
+.code-mono{font-family:var(--mono);font-weight:500;color:var(--n-800);font-size:12.5px;}
+.cell-mono{font-family:var(--mono);font-size:11.5px;color:var(--n-700);}
+.cell-mono.succ{color:var(--succ-text);font-weight:600;}
+.cell-mono.warn{color:var(--warn-text);font-weight:600;}
+.cell-mono.dang{color:var(--dang-text);font-weight:600;}
+.cell-strong{font-family:var(--mono);font-weight:600;font-size:12.5px;}
+.cell-strong.succ{color:var(--succ-text);}
+.cell-strong.warn{color:var(--warn-text);}
+.cell-strong.dang{color:var(--dang-text);}
+
+.row-actions{display:flex;align-items:center;gap:6px;justify-content:flex-end;}
+
+/* CATALOG GRID */
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.cat-card{background:var(--n-0);border:1px solid var(--n-150);border-radius:var(--r-card);padding:18px;display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:background .15s,border-color .15s;}
+.cat-card:hover{background:var(--n-50);border-color:var(--n-200);}
+.cat-ico-big{
+  width:56px;height:56px;border-radius:10px;
+  background:var(--cat-hrm-bg);color:var(--cat-hrm);
+  display:flex;align-items:center;justify-content:center;
+}
+.cat-name{font-size:14px;font-weight:500;color:var(--n-900);line-height:1.25;}
+.cat-meta{font-size:11.5px;color:var(--n-500);margin-top:1px;}
+.cat-code{font-family:var(--mono);font-size:11.5px;color:var(--n-700);font-weight:500;}
+.cat-footer{display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding-top:10px;border-top:1px solid var(--n-100);}
+.cat-loc{font-size:11px;color:var(--n-500);}
+.cat-loc b{color:var(--n-700);font-family:var(--mono);font-weight:500;}
+
+/* Detail */
+.detail-h{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:16px;}
+.detail-back{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--n-500);font-weight:500;margin-bottom:10px;}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--n-300);font-weight:500;margin-bottom:6px;}
+.detail-title{font-size:26px;font-weight:500;color:var(--n-950);letter-spacing:-.01em;margin:0 0 6px;}
+.detail-sub{font-size:14px;color:var(--n-500);margin:0;}
+.detail-sub .mono{font-family:var(--mono);font-weight:500;color:var(--n-700);}
+.detail-right{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+.detail-warn{font-size:12px;color:var(--dang-text);font-weight:500;}
+.actions-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.detail-grid{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start;}
+
+/* Cards */
+.card{background:var(--n-0);border:1px solid var(--n-150);border-radius:var(--r-card);padding:18px 20px;margin-bottom:16px;}
+.card-h{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.card-h svg{color:var(--n-500);flex-shrink:0;}
+.card-h .t{font-size:14px;font-weight:600;color:var(--n-900);}
+.card-h .badge{margin-left:auto;}
+.card-h .ct-counter{font-family:var(--mono);font-size:11px;color:var(--n-500);margin-left:auto;}
+.card.is-warn-loaned{border:2px solid var(--warn);background:linear-gradient(180deg,var(--warn-bg) 0%,var(--n-0) 70%);}
+.card.is-warn-loaned .card-h svg{color:var(--warn-text);}
+.card.is-neutral-maint{border:1px solid var(--n-200);background:var(--n-50);}
+
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 24px;}
+.field{display:flex;flex-direction:column;gap:2px;}
+.field-l{font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--n-500);font-weight:500;}
+.field-v{font-size:13px;color:var(--n-900);font-weight:500;}
+.field-v.mono{font-family:var(--mono);}
+.field-v.dang{color:var(--dang-text);}
+
+/* Photos */
+.photos{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+.photo{width:80px;height:80px;border-radius:var(--r-md);background:linear-gradient(135deg,#dee2eb 0%,#eef0f5 50%,#dee2eb 100%);position:relative;border:1px solid var(--n-150);overflow:hidden;}
+.photo::after{content:"IMG";position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:9px;color:var(--n-500);}
+.photo.add{background:transparent;border:1.5px dashed var(--n-200);display:grid;place-items:center;color:var(--n-500);}
+.photo.add::after{display:none;}
+
+/* Loan-now block */
+.loan-current{display:flex;align-items:center;gap:14px;padding:14px;background:var(--n-0);border:1px solid var(--warn-border);border-radius:var(--r-md);}
+.loan-current-meta{flex:1;}
+.loan-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:14px;}
+.loan-stat{display:flex;flex-direction:column;gap:2px;padding:10px 12px;background:var(--n-0);border:1px solid var(--n-150);border-radius:var(--r-md);}
+.loan-stat .l{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--n-500);}
+.loan-stat .v{font-family:var(--mono);font-weight:600;font-size:16px;color:var(--n-900);}
+.loan-stat.dang .v{color:var(--dang-text);}
+.loan-notes{margin-top:14px;padding:10px 12px;background:var(--n-25);border-radius:var(--r-md);font-size:12.5px;color:var(--n-700);font-style:italic;}
+.loan-notes b{font-style:normal;color:var(--n-500);font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;}
+
+/* History list (per tool) */
+.hist-list{display:flex;flex-direction:column;}
+.hist-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--n-100);}
+.hist-row:last-child{border-bottom:none;}
+.hist-row .user{flex:1;}
+.hist-row .nm{font-size:13px;font-weight:500;color:var(--n-900);}
+.hist-row .period{font-family:var(--mono);font-size:11px;color:var(--n-500);margin-top:1px;}
+.hist-row .sub{font-size:11px;color:var(--n-500);font-style:italic;margin-top:2px;}
+.hist-link{margin-top:12px;font-size:12px;color:var(--p-700);font-weight:500;}
+
+/* QR card */
+.qr-card{background:var(--n-0);border:1px solid var(--n-150);border-radius:var(--r-card);padding:20px;text-align:center;margin-bottom:16px;}
+.qr-eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--n-500);font-weight:600;margin-bottom:14px;}
+.qr-canvas{width:180px;height:180px;margin:0 auto 12px;background:#fff;border:1px solid var(--n-200);border-radius:8px;display:grid;place-items:center;padding:14px;}
+.qr-canvas svg{width:100%;height:100%;}
+.qr-code{font-family:var(--mono);font-weight:600;font-size:14px;color:var(--n-900);margin-bottom:14px;letter-spacing:.04em;}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.stat{display:flex;flex-direction:column;gap:3px;}
+.stat-l{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--n-500);font-weight:500;}
+.stat-v{font-size:13px;font-weight:500;color:var(--n-900);}
+.stat-v.mono{font-family:var(--mono);font-size:14px;}
+.stat-v.succ{color:var(--succ-text);}
+
+/* Toggle */
+.toggle-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--n-100);}
+.toggle-row:last-child{border-bottom:none;}
+.tg-info{flex:1;}
+.tg-label{font-size:13px;font-weight:500;color:var(--n-900);}
+.tg-sub{font-size:11.5px;color:var(--n-500);margin-top:2px;line-height:1.4;}
+.tg{width:34px;height:20px;border-radius:999px;background:var(--n-200);position:relative;flex-shrink:0;cursor:pointer;margin-top:2px;}
+.tg::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;}
+.tg.on{background:var(--p-600);}
+.tg.on::after{transform:translateX(14px);}
+
+/* Modal */
+.modal-stage{background:rgba(16,24,40,.6);padding:60px 24px;display:flex;justify-content:center;align-items:flex-start;border-radius:14px;min-height:680px;}
+.modal{background:var(--n-0);border-radius:var(--r-card);box-shadow:0 16px 40px rgba(0,0,0,.18);padding:24px 24px 18px;}
+.modal-h{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.modal-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.modal-ico.danger{background:var(--dang-bg);color:var(--dang-text);}
+.modal-ico.warn{background:var(--warn-bg);color:var(--warn-text);}
+.modal-ico.primary{background:var(--p-50);color:var(--p-700);}
+.modal-t{font-size:16px;font-weight:600;color:var(--n-950);margin:0;line-height:1.3;flex:1;}
+.modal-close{color:var(--n-500);cursor:pointer;}
+.modal-s{font-size:13px;color:var(--n-700);margin:6px 0 18px;line-height:1.5;}
+.modal-section{margin-bottom:16px;}
+.modal-section .label-top{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--n-500);font-weight:600;margin-bottom:8px;display:block;}
+
+/* Search bar */
+.search-bar{display:flex;gap:8px;align-items:stretch;}
+.search-input{flex:1;display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--n-200);border-radius:var(--r-md);font-size:13px;color:var(--n-500);background:var(--n-0);}
+.search-input svg{color:var(--n-500);flex-shrink:0;}
+.search-input input{flex:1;border:none;outline:none;font:inherit;color:var(--n-900);background:transparent;}
+
+/* Result card */
+.result-card{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--n-200);border-radius:var(--r-md);margin-top:8px;cursor:pointer;}
+.result-card:hover{background:var(--n-50);}
+.result-card.is-selected{border:2px solid var(--p-600);background:var(--p-50);padding:9px 11px;}
+.result-card .tool-ico{width:36px;height:36px;}
+.result-info{flex:1;}
+.result-info .nm{font-size:13px;font-weight:500;color:var(--n-900);}
+.result-info .meta{font-size:11px;color:var(--n-500);margin-top:1px;}
+.result-info .meta .mono{font-family:var(--mono);color:var(--n-700);font-weight:500;}
+
+/* Dropdown */
+.select{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--n-200);border-radius:var(--r-md);font-size:13px;background:var(--n-0);color:var(--n-900);cursor:pointer;}
+
+/* Inputs */
+.input{display:flex;align-items:center;padding:9px 11px;border:1px solid var(--n-200);border-radius:var(--r-md);background:var(--n-0);font-size:13px;color:var(--n-900);min-height:38px;}
+.input.mono{font-family:var(--mono);font-weight:500;}
+.textarea{display:flex;align-items:flex-start;padding:10px 12px;border:1px solid var(--n-200);border-radius:var(--r-md);background:var(--n-0);font-size:13px;color:var(--n-900);min-height:60px;font-family:var(--sans);line-height:1.5;}
+
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* Modal foot */
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--n-100);}
+
+/* Radio cards */
+.radio-list{display:flex;flex-direction:column;gap:10px;}
+.radio-card{display:flex;gap:12px;padding:13px 14px;border:1px solid var(--n-200);border-radius:var(--r-md);cursor:pointer;align-items:flex-start;}
+.radio-card.is-selected{border:2px solid var(--succ);background:var(--succ-bg);padding:12px 13px;}
+.radio-card.is-selected.warn{border-color:var(--warn);background:var(--warn-bg);}
+.radio-card.is-selected.dang{border-color:var(--dang);background:var(--dang-bg);}
+.radio-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--n-300);background:var(--n-0);flex-shrink:0;margin-top:1px;position:relative;}
+.radio-card.is-selected .radio-dot{border-color:var(--succ);}
+.radio-card.is-selected .radio-dot::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--succ);}
+.radio-card.is-selected.warn .radio-dot{border-color:var(--warn);}
+.radio-card.is-selected.warn .radio-dot::after{background:var(--warn);}
+.radio-card.is-selected.dang .radio-dot{border-color:var(--dang);}
+.radio-card.is-selected.dang .radio-dot::after{background:var(--dang);}
+.radio-body{flex:1;}
+.radio-title{font-size:13.5px;font-weight:600;color:var(--n-900);margin-bottom:3px;display:flex;align-items:center;gap:8px;}
+.radio-sub{font-size:12px;color:var(--n-700);line-height:1.45;}
+
+/* Drop zone */
+.dropzone{border:1.5px dashed var(--n-200);border-radius:var(--r-md);padding:18px;text-align:center;color:var(--n-500);font-size:12.5px;background:var(--n-25);margin-top:10px;}
+.dropzone b{color:var(--p-700);}
+
+/* MOBILE */
+.mobile{display:flex;flex-direction:column;min-height:844px;background:var(--n-0);max-width:390px;position:relative;}
+.m-top{padding:14px 16px 10px;border-bottom:1px solid var(--n-100);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.m-title{font-size:20px;font-weight:600;color:var(--n-950);margin:0;}
+.m-tabs{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--n-150);}
+.m-tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 6px;font-size:11.5px;font-weight:500;color:var(--n-500);border-bottom:2px solid transparent;background:var(--n-25);}
+.m-tab .c{font-family:var(--mono);font-size:10px;color:var(--n-500);}
+.m-tab.is-active{background:var(--p-50);color:var(--p-700);border-bottom-color:var(--p-600);}
+.m-tab.is-active .c{color:var(--p-700);}
+.m-list{padding:14px 12px 80px;display:flex;flex-direction:column;gap:10px;background:var(--n-50);flex:1;}
+.m-card{background:var(--n-0);border:1px solid var(--n-150);border-radius:var(--r-card);padding:14px;display:flex;gap:12px;align-items:flex-start;}
+.m-card.is-dang{background:#FEF5F4;border-color:var(--dang-border);}
+.m-card-body{flex:1;min-width:0;}
+.m-card-h{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:4px;}
+.m-card-name{font-size:14px;font-weight:600;color:var(--n-900);}
+.m-card-tool{font-size:13px;color:var(--n-700);font-weight:500;}
+.m-card-meta{font-size:11.5px;color:var(--n-500);margin-top:2px;}
+.m-card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--n-100);}
+.m-days{font-family:var(--mono);font-size:13px;font-weight:600;}
+.m-days.dang{color:var(--dang-text);}
+.m-days.warn{color:var(--warn-text);}
+.m-days.succ{color:var(--succ-text);}
+.m-bottomnav{position:absolute;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(5,1fr);background:var(--n-0);border-top:1px solid var(--n-150);padding:8px 4px 14px;}
+.m-bn{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--n-500);padding:6px 2px;}
+.m-bn svg{color:var(--n-500);}
+.m-bn.is-active{color:var(--p-700);}
+.m-bn.is-active svg{color:var(--p-600);}
+.m-fab{width:52px;height:52px;border-radius:50%;background:var(--p-600);color:#fff;display:grid;place-items:center;box-shadow:0 6px 16px rgba(45,60,229,.32);border:3px solid var(--n-0);margin-top:-22px;}
+
+.m-banner{margin:12px;padding:10px 12px;border-radius:var(--r-md);background:var(--dang-bg);border:1px solid var(--dang-border);font-size:11.5px;color:var(--dang-text);display:flex;align-items:flex-start;gap:8px;}
+.m-banner svg{flex-shrink:0;margin-top:1px;}
+
+/* Dark */
+.dark{--n-25:#161F33;--n-50:#1B2640;--n-100:#1F2B47;--n-150:#283454;--n-200:#33416A;--n-300:#4D5E85;--n-500:#7C8AAB;--n-700:#A6B0CC;--n-800:#C7CDE2;--n-900:#E3E7F2;--n-950:#F2F4FB;--n-0:#0F1626;--p-50:rgba(75,91,245,.16);--p-100:#243266;--p-700:#94A3FF;--succ-bg:rgba(18,183,106,.14);--succ-text:#6EE7B7;--succ-border:rgba(18,183,106,.32);--warn-bg:rgba(247,144,9,.14);--warn-text:#FDBA74;--warn-border:rgba(247,144,9,.32);--dang-bg:rgba(240,68,56,.14);--dang-text:#FCA5A5;--dang-border:rgba(240,68,56,.32);--info-bg:rgba(46,144,250,.14);--info-text:#93C5FD;--info-border:rgba(46,144,250,.32);--cat-hrm-bg:rgba(114,68,213,.16);--cat-hrm-text:#C4B5FD;--cat-hrm:#C4B5FD;}
+.dark{background:var(--n-25);}
+.dark .topbar,.dark .content,.dark .table-wrap,.dark .card,.dark .panel-admin,.dark .btn-outline,.dark .cmdk{background:var(--n-0);}
+.dark .topbar{border-bottom-color:var(--n-150);}
+.dark .table-wrap{border-color:var(--n-150);}
+.dark .dt thead th{background:var(--n-50);border-bottom-color:var(--n-150);color:var(--n-500);}
+.dark .dt tbody td{border-bottom-color:var(--n-150);color:var(--n-800);}
+.dark .dt tbody tr:hover{background:var(--n-50);}
+.dark .dt tbody tr.is-dang-row{background:rgba(240,68,56,.08);}
+.dark .dt-foot{background:var(--n-25);color:var(--n-500);}
+.dark .tab-m.is-active{background:rgba(75,91,245,.14);color:#C2CCFF;}
+.dark .tab-m.is-active .count{background:rgba(75,91,245,.20);color:#C2CCFF;}
+.dark .tool-name{color:var(--n-950);}
+.dark .user-name{color:var(--n-950);}
+.dark .code-mono{color:var(--n-800);}
+
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- sidebar / nav icons -->
+    <symbol id="i-package" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.2"/></symbol>
+    <symbol id="i-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></symbol>
+    <symbol id="i-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l3-2 3 2 3-2 3 2 3-2V2z"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 7 3 13 9 13"/><path d="M3 13a9 9 0 1 0 3-6.7L3 9"/></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+    <symbol id="i-puzzle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 11h-1V8a2 2 0 0 0-2-2h-3V4a2 2 0 1 0-4 0v2H6a2 2 0 0 0-2 2v3h2a2 2 0 1 1 0 4H4v3a2 2 0 0 0 2 2h3v-1a2 2 0 1 1 4 0v1h3a2 2 0 0 0 2-2v-3h-1a2 2 0 1 1 0-4z"/></symbol>
+    <symbol id="i-hammer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 12-8.5 8.5a2.12 2.12 0 0 1-3-3L12 9"/><path d="M17.64 15 22 10.64"/><path d="m20.91 11.7-1.25-1.25a2.5 2.5 0 0 1 0-3.54l1.25-1.25-9-9-1.25 1.25a2.5 2.5 0 0 1-3.54 0L5.87 6.66 14.34 15.13l1.25-1.25a2.5 2.5 0 0 1 3.54 0z"/></symbol>
+
+    <!-- common ui -->
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+    <symbol id="i-qr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6"/><rect x="15" y="3" width="6" height="6"/><rect x="3" y="15" width="6" height="6"/><path d="M15 15h2v2h-2zM19 15h2v2h-2zM15 19h2v2h-2zM19 19h2v2h-2z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+    <symbol id="i-chev-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></symbol>
+    <symbol id="i-chev-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+    <symbol id="i-arrow-left-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 8 8 12 12 16"/><line x1="16" y1="12" x2="8" y2="12"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+    <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+    <symbol id="i-printer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+    <symbol id="i-alert-oct" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></symbol>
+    <symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-msg-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+    <symbol id="i-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></symbol>
+    <symbol id="i-bar-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+    <symbol id="i-user-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><circle cx="19" cy="18" r="3"/><line x1="19" y1="16" x2="19" y2="18"/><line x1="19" y1="18" x2="20.5" y2="19.5"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+
+    <!-- tool-specific icons -->
+    <symbol id="i-tool-torque" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="17.5" r="3.5"/><path d="M9 15 21 3"/><path d="M17 3h4v4"/><path d="m14 6 4 4"/></symbol>
+    <symbol id="i-tool-multimeter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="14" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M9 21l1-2M15 21l-1-2"/><line x1="8" y1="6" x2="10" y2="6"/></symbol>
+    <symbol id="i-tool-gauge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/><path d="M12 21v1"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></symbol>
+    <symbol id="i-tool-drill" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13h6M6 8h6a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2z"/><path d="M14 11h3l3-2v4l-3-2z"/><path d="M8 15v2"/><path d="M10 15v3"/></symbol>
+    <symbol id="i-tool-ozone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12c0-2 1-4 4-4s4 2 4 4-1 4-4 4-4-2-4-4z"/><line x1="3" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="21" y2="12"/></symbol>
+    <symbol id="i-tool-blower" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h6l4-3v6l-4-3"/><circle cx="17" cy="12" r="4"/><path d="M17 8v8M13 12h8"/></symbol>
+    <symbol id="i-tool-caliper" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="6" rx="1"/><path d="M7 9v6M11 9v6M15 9v6M19 9v6"/><path d="M3 7l3-2 3 2M15 17l3 2 3-2"/></symbol>
+    <symbol id="i-tool-welder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="12" rx="2"/><path d="M17 10h4l-3 3 3 3h-4"/><circle cx="8" cy="12" r="1.5"/><line x1="12" y1="10" x2="12" y2="14"/></symbol>
+    <symbol id="i-tool-compressor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="12" height="10" rx="2"/><circle cx="9" cy="14" r="3"/><path d="M15 12h4v6h-4M19 6v3M17 6h4"/></symbol>
+    <symbol id="i-tool-impact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l6 6-4 4-6-6 4-4z"/><path d="M10 8l-7 7v3h3l7-7"/><path d="M14 14l4 4"/></symbol>
+    <symbol id="i-tool-flashlight" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 8.5 15.5 6 18l-3 3 3-3 2.5-2.5L18 6z"/><path d="M18 6l3-3"/><circle cx="6" cy="18" r="1.5"/></symbol>
+    <symbol id="i-tool-pressure" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="7"/><path d="M12 7v3l2 2"/><path d="M9 17l-1 4M15 17l1 4"/></symbol>
+    <symbol id="i-wrench-screwdriver" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 7l3-3 3 3-3 3-3-3z"/><path d="M14 7 4 17l-2 5 5-2L17 10"/><path d="M11 11l3 3"/></symbol>
+  </defs>
+</svg>
+
+<div class="showcase">
+  <p class="showcase-h">Fase 7 · Mensaje 7.2 · cierra Fase 7</p>
+  <h1 class="showcase-t">Herramientas · Préstamos internos</h1>
+  <p class="showcase-s">Sistema CHV v1.0 final · 12 herramientas físicas con QR · pairing persona/objeto · 6 vistas + 4 estados especiales.</p>
+
+<!-- VISTA 1 · Desktop light · Tab PRÉSTAMOS ACTIVOS -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span><span class="vp">Vista 1 · Desktop · Light · 1280 px</span><span class="sep">·</span><span>Préstamos activos · 1 atrasada destacada</span>
+  </div>
+  <div class="frame" style="width:1280px;">
+    <div class="app">
+      <aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">CV</div>
+    <div>
+      <div class="sb-brandname">Compresores del Valle</div>
+      <div class="sb-brandsub">CHV · Operaciones</div>
+    </div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Catálogo y stock</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-package"/></svg><span class="label">Inventario</span><span class="counter">2.847</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-tag"/></svg><span class="label">Productos</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Operación comercial</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-cart"/></svg><span class="label">Ventas</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="label">Cotizaciones</span><span class="counter">5</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-receipt"/></svg><span class="label">Recibos</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-undo"/></svg><span class="label">Devoluciones</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Bodega y movimiento</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-bag"/></svg><span class="label">Compras</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-truck"/></svg><span class="label">Traspasos</span><span class="counter">3</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-shield"/></svg><span class="label">Garantías</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Taller</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-wrench"/></svg><span class="label">Órdenes de Trabajo</span><span class="counter">14</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-puzzle"/></svg><span class="label">Ensambles</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Soporte</div>
+    <a class="sb-item is-active"><svg width="16" height="16"><use href="#i-hammer"/></svg><span class="label">Herramientas</span><span class="counter">2</span></a>
+  </div>
+  <div class="sb-foot">
+    <div class="sb-avatar">SL</div>
+    <div>
+      <div class="sb-foot-name">Sandra López</div>
+      <div class="sb-foot-role">Bodeguero · WH-01</div>
+    </div>
+  </div>
+</aside>
+      <section class="main">
+        <div class="topbar">
+  <div class="crumb"><b>Operaciones</b><span class="crumb-sep">·</span><b style="color:var(--p-700)">Herramientas</b></div>
+  <div class="topbar-spacer"></div>
+  <div class="cmdk"><svg width="14" height="14"><use href="#i-search"/></svg><span>Buscar en todo el sistema</span><span style="margin-left:auto"></span><span class="kbd">⌘</span><span class="kbd">K</span></div>
+  <button class="icon-btn"><svg width="18" height="18"><use href="#i-qr"/></svg></button>
+  <button class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg></button>
+  <button class="panel-admin"><svg width="14" height="14"><use href="#i-shield"/></svg>Panel Admin</button>
+</div>
+        <div class="content">
+
+          <div class="page-h">
+            <div>
+              <h1 class="page-title">Herramientas</h1>
+              <p class="page-sub"><b class="num">12</b> herramientas <span style="color:var(--n-200)">·</span> <b class="num">2</b> prestadas <span style="color:var(--n-200)">·</span> <b class="num dang">1</b> atrasada <span style="color:var(--n-200)">·</span> <b class="num">1</b> en mantenimiento</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-outline"><svg width="14" height="14"><use href="#i-printer"/></svg>Imprimir etiquetas</button>
+              <button class="btn btn-primary"><svg width="14" height="14"><use href="#i-plus"/></svg>Registrar préstamo</button>
+            </div>
+          </div>
+
+          <div class="tabs-mod">
+            <div class="tab-m is-active">
+              <svg width="16" height="16"><use href="#i-user-clock"/></svg>
+              Préstamos activos
+              <span class="count dang">2</span>
+              <span class="late">· 1 atrasada</span>
+            </div>
+            <div class="tab-m">
+              <svg width="16" height="16"><use href="#i-hammer"/></svg>
+              Catálogo completo
+              <span class="count">12</span>
+            </div>
+            <div class="tab-m">
+              <svg width="16" height="16"><use href="#i-activity"/></svg>
+              Historial
+              <span class="count">47 este mes</span>
+            </div>
+          </div>
+
+          <div class="banner b-warn">
+            <span class="icon"><svg width="20" height="20"><use href="#i-alert"/></svg></span>
+            <div class="banner-body">
+              <div class="banner-title">1 herramienta atrasada</div>
+              <div class="banner-text"><b>Llave torque digital</b> prestada a <b>Diego P.</b> desde hace <span class="mono">5 días</span> (devolución esperada <span class="mono">hace 3 días</span>).</div>
+              <div class="banner-actions">
+                <button class="btn btn-warn-out btn-sm"><svg width="13" height="13"><use href="#i-chev-right"/></svg>Ver préstamo</button>
+                <button class="btn btn-ghost btn-sm" style="color:var(--warn-text)"><svg width="13" height="13"><use href="#i-msg-circle"/></svg>Enviar recordatorio</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="dt">
+              <thead>
+                <tr>
+                  <th style="width:240px">Herramienta</th>
+                  <th style="width:110px">Código</th>
+                  <th style="width:200px">Prestada a</th>
+                  <th style="width:130px">Fecha préstamo</th>
+                  <th style="width:130px">Devolución esperada</th>
+                  <th style="width:96px">Días en uso</th>
+                  <th style="width:150px">Estado</th>
+                  <th style="width:180px;text-align:right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr class="is-dang-row">
+                  <td>
+                    <div class="tool-cell">
+                      <div class="tool-ico"><svg width="20" height="20"><use href="#i-tool-torque"/></svg></div>
+                      <div>
+                        <div class="tool-name">Llave torque digital</div>
+                        <div class="tool-sub">Stanley · STN-2410</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="code-mono">HRM-2410-S</span></td>
+                  <td>
+                    <div class="avatar">
+                      <div class="av av-DP">DP</div>
+                      <div>
+                        <div class="user-name">Diego Páez</div>
+                        <div class="user-role">Técnico</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="cell-mono">5 abr 2026 · 09:30</span></td>
+                  <td><span class="cell-mono dang">8 abr 2026</span></td>
+                  <td><span class="cell-strong dang">11 días</span></td>
+                  <td><span class="pill pill-dang pulse"><span class="pdot"></span>Atrasado</span></td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="btn btn-succ btn-sm"><svg width="13" height="13"><use href="#i-check"/></svg>Marcar devuelta</button>
+                      <button class="icon-btn"><svg width="16" height="16"><use href="#i-more"/></svg></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="tool-cell">
+                      <div class="tool-ico"><svg width="20" height="20"><use href="#i-tool-multimeter"/></svg></div>
+                      <div>
+                        <div class="tool-name">Multímetro Fluke</div>
+                        <div class="tool-sub">Fluke · F-87V</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="code-mono">HRM-3320-F</span></td>
+                  <td>
+                    <div class="avatar">
+                      <div class="av av-AM">AM</div>
+                      <div>
+                        <div class="user-name">Andrés Mejía</div>
+                        <div class="user-role">Vendedor</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="cell-mono">Hace 2 días</span></td>
+                  <td><span class="cell-mono warn">Mañana</span></td>
+                  <td><span class="cell-strong warn">2 días</span></td>
+                  <td><span class="pill pill-warn"><span class="pdot"></span>Próximo a vencer</span></td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="btn btn-succ btn-sm"><svg width="13" height="13"><use href="#i-check"/></svg>Marcar devuelta</button>
+                      <button class="icon-btn"><svg width="16" height="16"><use href="#i-more"/></svg></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="tool-cell">
+                      <div class="tool-ico"><svg width="20" height="20"><use href="#i-tool-gauge"/></svg></div>
+                      <div>
+                        <div class="tool-name">Manómetro digital</div>
+                        <div class="tool-sub">Bosch · BCH-MG-100</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="code-mono">HRM-1180-B</span></td>
+                  <td>
+                    <div class="avatar">
+                      <div class="av av-SL">SL</div>
+                      <div>
+                        <div class="user-name">Sandra López</div>
+                        <div class="user-role">Bodeguero</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="cell-mono">Hoy 09:00</span></td>
+                  <td><span class="cell-mono succ">18 may 2026</span></td>
+                  <td><span class="cell-strong succ">0 días</span></td>
+                  <td><span class="pill pill-neutral"><span class="pdot"></span>Activo</span></td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="btn btn-succ btn-sm"><svg width="13" height="13"><use href="#i-check"/></svg>Marcar devuelta</button>
+                      <button class="icon-btn"><svg width="16" height="16"><use href="#i-more"/></svg></button>
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+            <div class="dt-foot">
+              <span>Mostrando <b>3</b> préstamos activos <span style="color:var(--n-200)">·</span> <b>1</b> atrasada <span style="color:var(--n-200)">·</span> <b>1</b> próxima a vencer <span style="color:var(--n-200)">·</span> <b>9</b> herramientas disponibles en catálogo</span>
+              <span>Última actualización · hoy 09:00</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<!-- VISTA 2 · Desktop light · Tab CATÁLOGO COMPLETO -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span><span class="vp">Vista 2 · Desktop · Light · 1280 px</span><span class="sep">·</span><span>Catálogo completo · 12 herramientas</span>
+  </div>
+  <div class="frame" style="width:1280px;">
+    <div class="app tall">
+      <aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">CV</div>
+    <div>
+      <div class="sb-brandname">Compresores del Valle</div>
+      <div class="sb-brandsub">CHV · Operaciones</div>
+    </div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Catálogo y stock</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-package"/></svg><span class="label">Inventario</span><span class="counter">2.847</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-tag"/></svg><span class="label">Productos</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Operación comercial</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-cart"/></svg><span class="label">Ventas</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="label">Cotizaciones</span><span class="counter">5</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-receipt"/></svg><span class="label">Recibos</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-undo"/></svg><span class="label">Devoluciones</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Bodega y movimiento</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-bag"/></svg><span class="label">Compras</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-truck"/></svg><span class="label">Traspasos</span><span class="counter">3</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-shield"/></svg><span class="label">Garantías</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Taller</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-wrench"/></svg><span class="label">Órdenes de Trabajo</span><span class="counter">14</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-puzzle"/></svg><span class="label">Ensambles</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Soporte</div>
+    <a class="sb-item is-active"><svg width="16" height="16"><use href="#i-hammer"/></svg><span class="label">Herramientas</span><span class="counter">2</span></a>
+  </div>
+  <div class="sb-foot">
+    <div class="sb-avatar">SL</div>
+    <div>
+      <div class="sb-foot-name">Sandra López</div>
+      <div class="sb-foot-role">Bodeguero · WH-01</div>
+    </div>
+  </div>
+</aside>
+      <section class="main">
+        <div class="topbar">
+  <div class="crumb"><b>Operaciones</b><span class="crumb-sep">·</span><b style="color:var(--p-700)">Herramientas</b></div>
+  <div class="topbar-spacer"></div>
+  <div class="cmdk"><svg width="14" height="14"><use href="#i-search"/></svg><span>Buscar en todo el sistema</span><span style="margin-left:auto"></span><span class="kbd">⌘</span><span class="kbd">K</span></div>
+  <button class="icon-btn"><svg width="18" height="18"><use href="#i-qr"/></svg></button>
+  <button class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg></button>
+  <button class="panel-admin"><svg width="14" height="14"><use href="#i-shield"/></svg>Panel Admin</button>
+</div>
+        <div class="content">
+
+          <div class="page-h">
+            <div>
+              <h1 class="page-title">Herramientas</h1>
+              <p class="page-sub"><b class="num">12</b> herramientas <span style="color:var(--n-200)">·</span> <b class="num">2</b> prestadas <span style="color:var(--n-200)">·</span> <b class="num dang">1</b> atrasada <span style="color:var(--n-200)">·</span> <b class="num">1</b> en mantenimiento</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-outline"><svg width="14" height="14"><use href="#i-printer"/></svg>Imprimir etiquetas</button>
+              <button class="btn btn-primary"><svg width="14" height="14"><use href="#i-plus"/></svg>Registrar préstamo</button>
+            </div>
+          </div>
+
+          <div class="tabs-mod">
+            <div class="tab-m">
+              <svg width="16" height="16"><use href="#i-user-clock"/></svg>
+              Préstamos activos
+              <span class="count dang">2</span>
+            </div>
+            <div class="tab-m is-active">
+              <svg width="16" height="16"><use href="#i-hammer"/></svg>
+              Catálogo completo
+              <span class="count">12</span>
+            </div>
+            <div class="tab-m">
+              <svg width="16" height="16"><use href="#i-activity"/></svg>
+              Historial
+              <span class="count">47 este mes</span>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;">
+            <div class="search-input" style="flex:1;max-width:340px;">
+              <svg width="14" height="14"><use href="#i-search"/></svg>
+              <input placeholder="Buscar por nombre, código o marca..." />
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button class="pill pill-neutral" style="cursor:pointer">Todas <span class="mono" style="color:var(--n-500);margin-left:4px">12</span></button>
+              <button class="pill pill-succ" style="cursor:pointer"><span class="pdot"></span>Disponibles <span class="mono" style="color:var(--succ-text);margin-left:4px">8</span></button>
+              <button class="pill pill-warn" style="cursor:pointer"><span class="pdot"></span>Prestadas <span class="mono" style="color:var(--warn-text);margin-left:4px">2</span></button>
+              <button class="pill pill-neutral" style="cursor:pointer"><span class="pdot"></span>Mantenimiento <span class="mono" style="color:var(--n-500);margin-left:4px">1</span></button>
+              <button class="pill pill-dang" style="cursor:pointer"><span class="pdot"></span>Dañadas <span class="mono" style="color:var(--dang-text);margin-left:4px">1</span></button>
+            </div>
+            <div style="flex:1"></div>
+            <button class="btn btn-outline btn-sm"><svg width="13" height="13"><use href="#i-settings"/></svg>Filtros</button>
+          </div>
+
+          <div class="cat-grid">
+            <div class="cat-card">
+  <div class="cat-ico-big"><svg width="28" height="28"><use href="#i-tool-torque"/></svg></div>
+  <div>
+    <div class="cat-name">Llave torque digital</div>
+    <div class="cat-meta">Stanley · STN-2410</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <span class="code-mono">HRM-2410-S</span>
+    <span class="pill pill-warn sm"><span class="pdot"></span>Prestada</span>
+  </div>
+  <div class="cat-footer">
+    <span class="cat-loc"><b>WH-01</b> · Estante A-03</span>
+    <svg width="14" height="14" style="color:var(--n-300)"><use href="#i-chev-right"/></svg>
+  </div>
+</div>
+            <div class="cat-card">
+  <div class="cat-ico-big"><svg width="28" height="28"><use href="#i-tool-multimeter"/></svg></div>
+  <div>
+    <div class="cat-name">Multímetro Fluke</div>
+    <div class="cat-meta">Fluke · F-87V</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <span class="code-mono">HRM-3320-F</span>
+    <span class="pill pill-warn sm"><span class="pdot"></span>Prestada</span>
+  </div>
+  <div class="cat-footer">
+    <span class="cat-loc"><b>WH-01</b> · Estante A-15</span>
+    <svg width="14" height="14" style="color:var(--n-300)"><use href="#i-chev-right"/></svg>
+  </div>
+</div>
+            <div class="cat-card">
+  <div class="cat-ico-big"><svg width="28" height="28"><use href="#i-tool-gauge"/></svg></div>
+  <div>
+    <div class="cat-name">Manómetro digital</div>
+    <div class="cat-meta">Bosch · BCH-MG-100</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <span class="code-mono">HRM-1180-B</span>
+    <span class="pill pill-warn sm"><span class="pdot"></span>Prestada</span>
+  </div>
+  <div class="cat-footer">
+    <span class="cat-loc"><b>WH-01</b> · Estante A-08</span>
+    <svg width="14" height="14" style="color:var(--n-300)"><use href="#i-chev-right"/></svg>
+  </div>
+</div>
+            <div class="cat-card">
+  <div class="cat-ico-big"><svg width="28" height="28"><use href="#i-tool-drill"/></svg></div>
+  <div>
+    <div class="cat-name">Pistola neumática</div>
+    <div class="cat-meta">Ingersoll Rand · IR-2235</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <span class="code-mono">HRM-2235-I</span>
+    <span class="pill pill-succ sm"><span class="pdot"></span>Disponible</span>
+  </div>
+  <div class="cat-footer">
+    <span class="cat-loc"><b>WH-01</b> · Estante B-04</span>
+    <svg width="14" height="14" style="color:var(--n-300)"><use href="#i-chev-right"/></svg>
+  </div>
+</div>
+            <div class="cat-card">
+  <div class="cat-ico-big"><svg width="28" height="28"><use href="#i-tool-ozone"/></svg></div>
+  <div>
+    <div class="cat-name">Generador de ozono</div>
+    <div class="cat-meta">Generic · GZ-500</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <span class="code-mono">HRM-0500-G</span>
+    <span class="pill pill-neutral sm"><span class="pdot"></span>Mantenimiento</span>
+  </div>
+  <div class="cat-footer">
+    <span class="cat-loc"><b>WH-01</b> · Servicio técnico</span>
+    <svg width="14" height="14" style="color:var(--n-300)"><use href="#i-chev-right"/></svg>
+  </div>
+</div>
+            <div class="cat-card">
+  <div class="cat-ico-big"><svg width="28" height="28"><use href="#i-tool-blower"/></svg></div>
+  <div>
+    <div class="cat-name">Sopladora industrial</div>
+    <div class="cat-meta">Makita · MK-BL360</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <span class="code-mono">HRM-3601-M</span>
+    <span class="pill pill-succ sm"><span class="pdot"></span>Disponible</span>
+  </div>
+  <div class="cat-footer">
+    <span class="cat-loc"><b>WH-02</b> · Estante C-22</span>
+    <svg width="14" height="14" style="color:var(--n-300)"><use href="#i-chev-right"/></svg>
+  </div>
+</div>
+            <div class="cat-card">
+  <div class="cat-ico-big"><svg width="28" height="28"><use href="#i-tool-caliper"/></svg></div>
+  <div>
+    <div class="cat-name">Calibrador digital</div>
+    <div class="cat-meta">Mitutoyo · MTY-500</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <span class="code-mono">HRM-5001-M</span>
+    <span class="pill pill-succ sm"><span class="pdot"></span>Disponible</span>
+  </div>
+  <div class="cat-footer">
+    <span class="cat-loc"><b>WH-01</b> · Estante A-11</span>
+    <svg width="14" height="14" style="color:var(--n-300)"><use href="#i-chev-right"/></svg>
+  </div>
+</div>
+            <div class="cat-card">
+  <div class="cat-ico-big"><svg width="28" height="28"><use href="#i-tool-welder"/></svg></div>
+  <div>
+    <div class="cat-name">Soldadora MIG</div>
+    <div class="cat-meta">Lincoln · LC-MIG-200</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <span class="code-mono">HRM-2002-L</span>
+    <span class="pill pill-succ sm"><span class="pdot"></span>Disponible</span>
+  </div>
+  <div class="cat-footer">
+    <span class="cat-loc"><b>WH-01</b> · Estante B-09</span>
+    <svg width="14" height="14" style="color:var(--n-300)"><use href="#i-chev-right"/></svg>
+  </div>
+</div>
+            <div class="cat-card">
+  <div class="cat-ico-big"><svg width="28" height="28"><use href="#i-tool-compressor"/></svg></div>
+  <div>
+    <div class="cat-name">Compresor portátil</div>
+    <div class="cat-meta">Atlas Copco · AC-PRT-50</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <span class="code-mono">HRM-0501-A</span>
+    <span class="pill pill-succ sm"><span class="pdot"></span>Disponible</span>
+  </div>
+  <div class="cat-footer">
+    <span class="cat-loc"><b>WH-04</b> · Estante D-01</span>
+    <svg width="14" height="14" style="color:var(--n-300)"><use href="#i-chev-right"/></svg>
+  </div>
+</div>
+            <div class="cat-card">
+  <div class="cat-ico-big"><svg width="28" height="28"><use href="#i-tool-impact"/></svg></div>
+  <div>
+    <div class="cat-name">Llave de impacto</div>
+    <div class="cat-meta">Milwaukee · MW-2767</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <span class="code-mono">HRM-2767-M</span>
+    <span class="pill pill-dang sm"><span class="pdot"></span>Dañada</span>
+  </div>
+  <div class="cat-footer">
+    <span class="cat-loc"><b>WH-01</b> · Servicio técnico</span>
+    <svg width="14" height="14" style="color:var(--n-300)"><use href="#i-chev-right"/></svg>
+  </div>
+</div>
+            <div class="cat-card">
+  <div class="cat-ico-big"><svg width="28" height="28"><use href="#i-tool-flashlight"/></svg></div>
+  <div>
+    <div class="cat-name">Linterna industrial</div>
+    <div class="cat-meta">Streamlight · SL-PRO</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <span class="code-mono">HRM-PRO-S</span>
+    <span class="pill pill-succ sm"><span class="pdot"></span>Disponible</span>
+  </div>
+  <div class="cat-footer">
+    <span class="cat-loc"><b>WH-01</b> · Estante A-22</span>
+    <svg width="14" height="14" style="color:var(--n-300)"><use href="#i-chev-right"/></svg>
+  </div>
+</div>
+            <div class="cat-card">
+  <div class="cat-ico-big"><svg width="28" height="28"><use href="#i-tool-pressure"/></svg></div>
+  <div>
+    <div class="cat-name">Tester de presión</div>
+    <div class="cat-meta">Fluke · F-718</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <span class="code-mono">HRM-0718-F</span>
+    <span class="pill pill-succ sm"><span class="pdot"></span>Disponible</span>
+  </div>
+  <div class="cat-footer">
+    <span class="cat-loc"><b>WH-02</b> · Estante C-15</span>
+    <svg width="14" height="14" style="color:var(--n-300)"><use href="#i-chev-right"/></svg>
+  </div>
+</div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<!-- VISTA 3 · Desktop light · DETALLE HRM-2410-S -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span><span class="vp">Vista 3 · Desktop · Light · 1280 px</span><span class="sep">·</span><span>Detalle de herramienta HRM-2410-S · Llave torque digital · Atrasada</span>
+  </div>
+  <div class="frame" style="width:1280px;">
+    <div class="app taller">
+      <aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">CV</div>
+    <div>
+      <div class="sb-brandname">Compresores del Valle</div>
+      <div class="sb-brandsub">CHV · Operaciones</div>
+    </div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Catálogo y stock</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-package"/></svg><span class="label">Inventario</span><span class="counter">2.847</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-tag"/></svg><span class="label">Productos</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Operación comercial</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-cart"/></svg><span class="label">Ventas</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="label">Cotizaciones</span><span class="counter">5</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-receipt"/></svg><span class="label">Recibos</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-undo"/></svg><span class="label">Devoluciones</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Bodega y movimiento</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-bag"/></svg><span class="label">Compras</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-truck"/></svg><span class="label">Traspasos</span><span class="counter">3</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-shield"/></svg><span class="label">Garantías</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Taller</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-wrench"/></svg><span class="label">Órdenes de Trabajo</span><span class="counter">14</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-puzzle"/></svg><span class="label">Ensambles</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Soporte</div>
+    <a class="sb-item is-active"><svg width="16" height="16"><use href="#i-hammer"/></svg><span class="label">Herramientas</span><span class="counter">2</span></a>
+  </div>
+  <div class="sb-foot">
+    <div class="sb-avatar">SL</div>
+    <div>
+      <div class="sb-foot-name">Sandra López</div>
+      <div class="sb-foot-role">Bodeguero · WH-01</div>
+    </div>
+  </div>
+</aside>
+      <section class="main">
+        <div class="topbar">
+          <div class="crumb"><b>Operaciones</b><span class="crumb-sep">·</span><b style="color:var(--p-700)">Herramientas</b><span class="crumb-sep">·</span><b>HRM-2410-S</b></div>
+          <div class="topbar-spacer"></div>
+          <div class="cmdk"><svg width="14" height="14"><use href="#i-search"/></svg><span>Buscar en todo el sistema</span><span style="margin-left:auto"></span><span class="kbd">⌘</span><span class="kbd">K</span></div>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-qr"/></svg></button>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg></button>
+          <button class="panel-admin"><svg width="14" height="14"><use href="#i-shield"/></svg>Panel Admin</button>
+        </div>
+        <div class="content">
+
+          <a class="detail-back"><svg width="14" height="14"><use href="#i-arrow-left-circle"/></svg>Volver a Herramientas</a>
+
+          <div class="detail-h">
+            <div style="display:flex;gap:18px;align-items:flex-start">
+              <div class="cat-ico-big" style="width:72px;height:72px;flex-shrink:0;border-radius:14px;">
+                <svg width="36" height="36"><use href="#i-tool-torque"/></svg>
+              </div>
+              <div>
+                <div class="eyebrow">Herramienta</div>
+                <h1 class="detail-title">Llave torque digital</h1>
+                <p class="detail-sub">Stanley · <span class="mono">STN-2410</span> · <span class="mono">HRM-2410-S</span></p>
+              </div>
+            </div>
+            <div class="detail-right">
+              <span class="pill pill-warn lg"><span class="pdot"></span>Prestada</span>
+              <span class="detail-warn">Atrasada · 3 días vencida</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn btn-primary"><svg width="14" height="14"><use href="#i-check"/></svg>Marcar devuelta</button>
+            <button class="btn btn-warn-out"><svg width="14" height="14"><use href="#i-alert-oct"/></svg>Reportar daño</button>
+            <button class="btn btn-outline"><svg width="14" height="14"><use href="#i-wrench-screwdriver"/></svg>Enviar a mantenimiento</button>
+            <button class="btn btn-ghost"><svg width="14" height="14"><use href="#i-printer"/></svg>Imprimir QR</button>
+          </div>
+
+          <div class="detail-grid">
+            <!-- LEFT COL -->
+            <div>
+
+              <!-- Datos -->
+              <div class="card">
+                <div class="card-h">
+                  <svg width="16" height="16"><use href="#i-hammer"/></svg>
+                  <span class="t">Datos de la herramienta</span>
+                  <span class="badge"><span class="pill pill-cat-hrm">Herramientas</span></span>
+                </div>
+                <div class="field-grid">
+                  <div class="field"><span class="field-l">Marca</span><span class="field-v">Stanley</span></div>
+                  <div class="field"><span class="field-l">Modelo</span><span class="field-v mono">STN-2410</span></div>
+                  <div class="field"><span class="field-l">Número de serie</span><span class="field-v mono">ST24-00847</span></div>
+                  <div class="field"><span class="field-l">Año adquisición</span><span class="field-v mono">2024</span></div>
+                  <div class="field"><span class="field-l">Costo · solo Admin</span><span class="field-v mono">$ 1.450.000</span></div>
+                  <div class="field"><span class="field-l">Sede asignada</span><span class="field-v"><span class="pill pill-succ sm"><span class="pdot"></span>WH-01 · Cali</span></span></div>
+                  <div class="field"><span class="field-l">Ubicación física</span><span class="field-v">Estante <span class="mono">A-03</span></span></div>
+                  <div class="field"><span class="field-l">Última calibración</span><span class="field-v mono">12 mar 2026</span></div>
+                </div>
+                <div class="photos">
+                  <div class="photo"></div>
+                  <div class="photo"></div>
+                  <div class="photo"></div>
+                  <div class="photo add"><svg width="20" height="20"><use href="#i-plus"/></svg></div>
+                </div>
+              </div>
+
+              <!-- Préstamo actual -->
+              <div class="card is-warn-loaned">
+                <div class="card-h">
+                  <svg width="16" height="16" style="color:var(--warn-text)"><use href="#i-user-clock"/></svg>
+                  <span class="t" style="color:var(--warn-text)">Préstamo actual</span>
+                  <span class="badge"><span class="pill pill-dang sm pulse"><span class="pdot"></span>Atrasado · 3 días</span></span>
+                </div>
+                <div class="loan-current">
+                  <div class="av av-lg av-DP">DP</div>
+                  <div class="loan-current-meta">
+                    <div style="font-size:14px;font-weight:600;color:var(--n-900)">Diego Páez</div>
+                    <div style="font-size:12px;color:var(--n-500);margin-top:2px">Técnico · Taller WH-01</div>
+                  </div>
+                  <button class="btn btn-warn-out btn-sm"><svg width="13" height="13"><use href="#i-msg-circle"/></svg>Recordatorio WhatsApp</button>
+                </div>
+                <div class="loan-stats">
+                  <div class="loan-stat"><span class="l">Fecha préstamo</span><span class="v" style="font-size:13px">5 abr 2026 · 09:30</span></div>
+                  <div class="loan-stat dang"><span class="l">Devolución esperada</span><span class="v" style="font-size:13px">8 abr 2026</span></div>
+                  <div class="loan-stat dang"><span class="l">Días en uso</span><span class="v">11 días</span></div>
+                </div>
+                <div class="loan-notes">
+                  <b>Notas del préstamo</b>
+                  Calibración compresores cliente Industrial XYZ. Requerida para diagnóstico inicial de GAR-V-0042.
+                </div>
+              </div>
+
+              <!-- Historial -->
+              <div class="card">
+                <div class="card-h">
+                  <svg width="16" height="16"><use href="#i-activity"/></svg>
+                  <span class="t">Historial de uso</span>
+                  <span class="ct-counter">23 préstamos · últimos 12 meses</span>
+                </div>
+                <div class="hist-list">
+                  <div class="hist-row">
+                    <div class="av av-md av-DP">DP</div>
+                    <div class="user">
+                      <div class="nm">Diego Páez</div>
+                      <div class="period">5 abr · en curso</div>
+                    </div>
+                    <span class="pill pill-warn pulse sm"><span class="pdot"></span>Pendiente devolución</span>
+                  </div>
+                  <div class="hist-row">
+                    <div class="av av-md av-AM">AM</div>
+                    <div class="user">
+                      <div class="nm">Andrés Mejía</div>
+                      <div class="period">25 mar · 28 mar · 3 días</div>
+                    </div>
+                    <span class="pill pill-succ sm"><span class="pdot"></span>Buen estado</span>
+                  </div>
+                  <div class="hist-row">
+                    <div class="av av-md av-SL">SL</div>
+                    <div class="user">
+                      <div class="nm">Sandra López</div>
+                      <div class="period">18 mar · 22 mar · 4 días</div>
+                    </div>
+                    <span class="pill pill-succ sm"><span class="pdot"></span>Buen estado</span>
+                  </div>
+                  <div class="hist-row">
+                    <div class="av av-md av-DP">DP</div>
+                    <div class="user">
+                      <div class="nm">Diego Páez</div>
+                      <div class="period">10 mar · 14 mar · 4 días</div>
+                      <div class="sub">Cable raspado por uso</div>
+                    </div>
+                    <span class="pill pill-warn sm"><span class="pdot"></span>Daño leve</span>
+                  </div>
+                  <div class="hist-row">
+                    <div class="av av-md av-CR">CR</div>
+                    <div class="user">
+                      <div class="nm">Carlos Ríos</div>
+                      <div class="period">1 mar · 3 mar · 2 días</div>
+                    </div>
+                    <span class="pill pill-succ sm"><span class="pdot"></span>Buen estado</span>
+                  </div>
+                </div>
+                <a class="hist-link">Ver historial completo · 23 préstamos</a>
+              </div>
+
+            </div>
+
+            <!-- RIGHT COL -->
+            <div>
+
+              <!-- QR -->
+              <div class="qr-card">
+                <div class="qr-eyebrow">QR de identificación</div>
+                <div class="qr-canvas">
+                  <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+                    <rect width="21" height="21" fill="#fff"/>
+                    <g fill="#000">
+                      <!-- finder TL -->
+                      <rect x="0" y="0" width="7" height="1"/><rect x="0" y="6" width="7" height="1"/><rect x="0" y="0" width="1" height="7"/><rect x="6" y="0" width="1" height="7"/><rect x="2" y="2" width="3" height="3"/>
+                      <!-- finder TR -->
+                      <rect x="14" y="0" width="7" height="1"/><rect x="14" y="6" width="7" height="1"/><rect x="14" y="0" width="1" height="7"/><rect x="20" y="0" width="1" height="7"/><rect x="16" y="2" width="3" height="3"/>
+                      <!-- finder BL -->
+                      <rect x="0" y="14" width="7" height="1"/><rect x="0" y="20" width="7" height="1"/><rect x="0" y="14" width="1" height="7"/><rect x="6" y="14" width="1" height="7"/><rect x="2" y="16" width="3" height="3"/>
+                      <!-- timing patterns -->
+                      <rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="12" y="6" width="1" height="1"/>
+                      <rect x="6" y="8" width="1" height="1"/><rect x="6" y="10" width="1" height="1"/><rect x="6" y="12" width="1" height="1"/>
+                      <!-- data pattern (decorative) -->
+                      <rect x="8" y="0" width="1" height="1"/><rect x="10" y="0" width="1" height="1"/><rect x="11" y="0" width="1" height="1"/><rect x="13" y="0" width="1" height="1"/>
+                      <rect x="9" y="2" width="1" height="1"/><rect x="11" y="2" width="1" height="1"/><rect x="13" y="2" width="1" height="1"/>
+                      <rect x="8" y="3" width="1" height="1"/><rect x="10" y="3" width="1" height="1"/><rect x="12" y="3" width="1" height="1"/>
+                      <rect x="9" y="4" width="1" height="1"/><rect x="11" y="4" width="1" height="1"/>
+                      <rect x="8" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="12" y="5" width="1" height="1"/><rect x="13" y="5" width="1" height="1"/>
+                      <rect x="0" y="8" width="1" height="1"/><rect x="2" y="8" width="1" height="1"/><rect x="3" y="8" width="1" height="1"/><rect x="8" y="8" width="1" height="1"/><rect x="10" y="8" width="2" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="16" y="8" width="1" height="1"/><rect x="18" y="8" width="1" height="1"/><rect x="20" y="8" width="1" height="1"/>
+                      <rect x="1" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="9" y="9" width="1" height="1"/><rect x="11" y="9" width="2" height="1"/><rect x="15" y="9" width="2" height="1"/><rect x="18" y="9" width="1" height="1"/>
+                      <rect x="0" y="10" width="1" height="1"/><rect x="3" y="10" width="1" height="1"/><rect x="5" y="10" width="1" height="1"/><rect x="8" y="10" width="2" height="1"/><rect x="12" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="17" y="10" width="1" height="1"/><rect x="20" y="10" width="1" height="1"/>
+                      <rect x="2" y="11" width="1" height="1"/><rect x="4" y="11" width="1" height="1"/><rect x="9" y="11" width="1" height="1"/><rect x="13" y="11" width="2" height="1"/><rect x="16" y="11" width="1" height="1"/><rect x="19" y="11" width="1" height="1"/>
+                      <rect x="0" y="12" width="1" height="1"/><rect x="3" y="12" width="2" height="1"/><rect x="8" y="12" width="1" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="17" y="12" width="2" height="1"/><rect x="20" y="12" width="1" height="1"/>
+                      <rect x="8" y="14" width="1" height="1"/><rect x="10" y="14" width="2" height="1"/><rect x="14" y="14" width="1" height="1"/><rect x="16" y="14" width="1" height="1"/><rect x="18" y="14" width="1" height="1"/><rect x="20" y="14" width="1" height="1"/>
+                      <rect x="9" y="15" width="1" height="1"/><rect x="11" y="15" width="1" height="1"/><rect x="13" y="15" width="2" height="1"/><rect x="17" y="15" width="1" height="1"/><rect x="19" y="15" width="1" height="1"/>
+                      <rect x="8" y="16" width="2" height="1"/><rect x="12" y="16" width="1" height="1"/><rect x="15" y="16" width="1" height="1"/><rect x="17" y="16" width="1" height="1"/><rect x="20" y="16" width="1" height="1"/>
+                      <rect x="9" y="17" width="2" height="1"/><rect x="13" y="17" width="1" height="1"/><rect x="16" y="17" width="2" height="1"/><rect x="19" y="17" width="1" height="1"/>
+                      <rect x="8" y="18" width="1" height="1"/><rect x="11" y="18" width="2" height="1"/><rect x="14" y="18" width="2" height="1"/><rect x="18" y="18" width="1" height="1"/><rect x="20" y="18" width="1" height="1"/>
+                      <rect x="9" y="19" width="1" height="1"/><rect x="11" y="19" width="1" height="1"/><rect x="13" y="19" width="1" height="1"/><rect x="15" y="19" width="2" height="1"/><rect x="18" y="19" width="1" height="1"/>
+                      <rect x="8" y="20" width="1" height="1"/><rect x="10" y="20" width="2" height="1"/><rect x="14" y="20" width="1" height="1"/><rect x="16" y="20" width="1" height="1"/><rect x="19" y="20" width="2" height="1"/>
+                    </g>
+                  </svg>
+                </div>
+                <div class="qr-code">HRM-2410-S</div>
+                <button class="btn btn-outline btn-block"><svg width="13" height="13"><use href="#i-printer"/></svg>Imprimir etiqueta</button>
+              </div>
+
+              <!-- Estadísticas -->
+              <div class="card">
+                <div class="card-h"><svg width="16" height="16"><use href="#i-bar-chart"/></svg><span class="t">Estadísticas de uso</span></div>
+                <div class="stats-grid">
+                  <div class="stat"><span class="stat-l">Total préstamos</span><span class="stat-v mono">23</span></div>
+                  <div class="stat"><span class="stat-l">Duración promedio</span><span class="stat-v mono">3.5 días</span></div>
+                  <div class="stat" style="grid-column:1/-1"><span class="stat-l">Usuario más frecuente</span><span class="stat-v">Diego Páez · <span class="mono" style="font-weight:500">8 préstamos</span></span></div>
+                  <div class="stat" style="grid-column:1/-1"><span class="stat-l">Estado dominante</span><span class="stat-v succ">Buen estado · <span class="mono">87%</span></span></div>
+                  <div class="stat"><span class="stat-l">Reparaciones</span><span class="stat-v">1 · <span class="mono" style="color:var(--n-500);font-weight:500">jul 2025</span></span></div>
+                  <div class="stat"><span class="stat-l">Última calibración</span><span class="stat-v mono">12 mar 2026</span></div>
+                </div>
+              </div>
+
+              <!-- Configuración -->
+              <div class="card">
+                <div class="card-h"><svg width="16" height="16"><use href="#i-settings"/></svg><span class="t">Configuración</span></div>
+                <div class="toggle-row">
+                  <div class="tg-info">
+                    <div class="tg-label">Requiere autorización Admin para préstamo</div>
+                    <div class="tg-sub">Útil para herramientas de alto valor o calibración crítica.</div>
+                  </div>
+                  <div class="tg"></div>
+                </div>
+                <div class="toggle-row">
+                  <div class="tg-info">
+                    <div class="tg-label">Notificar vencimiento al usuario</div>
+                    <div class="tg-sub">Mensaje automático por WhatsApp el día anterior.</div>
+                  </div>
+                  <div class="tg on"></div>
+                </div>
+                <div class="toggle-row">
+                  <div class="tg-info">
+                    <div class="tg-label">Notificar al supervisor si atrasa más de 2 días</div>
+                    <div class="tg-sub">Escalamiento automático al Admin del taller.</div>
+                  </div>
+                  <div class="tg on"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<!-- VISTA 4 · Desktop light · MODAL REGISTRAR PRÉSTAMO -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span><span class="vp">Vista 4 · Desktop · Light · 1280 px</span><span class="sep">·</span><span>Modal registrar préstamo · search inline + datos pre-cargados</span>
+  </div>
+  <div class="frame" style="width:1280px;">
+    <div class="modal-stage" style="padding:48px 24px;">
+      <div class="modal" style="width:560px">
+        <div class="modal-h">
+          <div class="modal-ico primary"><svg width="20" height="20"><use href="#i-package"/></svg></div>
+          <h2 class="modal-t">Registrar préstamo de herramienta</h2>
+          <button class="modal-close"><svg width="18" height="18"><use href="#i-x"/></svg></button>
+        </div>
+        <p class="modal-s">Selecciona la herramienta disponible y el usuario que la recibe en préstamo.</p>
+
+        <div class="modal-section">
+          <span class="label-top">1 · Buscar herramienta</span>
+          <div class="search-bar">
+            <div class="search-input">
+              <svg width="14" height="14"><use href="#i-search"/></svg>
+              <input value="manómetro" />
+            </div>
+            <button class="btn btn-primary"><svg width="14" height="14"><use href="#i-qr"/></svg>Escanear QR</button>
+          </div>
+          <p style="margin:8px 0 0;font-size:11.5px;color:var(--n-500)">1 resultado para <b style="color:var(--n-800)">manómetro</b></p>
+          <div class="result-card is-selected">
+            <div class="tool-ico"><svg width="18" height="18"><use href="#i-tool-gauge"/></svg></div>
+            <div class="result-info">
+              <div class="nm">Manómetro digital Bosch</div>
+              <div class="meta"><span class="mono">HRM-1180-B</span> · BCH-MG-100 · WH-01 Estante A-08</div>
+            </div>
+            <span class="pill pill-succ sm"><span class="pdot"></span>Disponible</span>
+          </div>
+        </div>
+
+        <div class="modal-section">
+          <span class="label-top">2 · Asignar usuario</span>
+          <div class="select">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="av av-sm av-SL">SL</div>
+              <div>
+                <div style="font-weight:500">Sandra López</div>
+                <div style="font-size:11px;color:var(--n-500);margin-top:1px">Bodeguero · WH-01</div>
+              </div>
+            </div>
+            <svg width="14" height="14" style="color:var(--n-500)"><use href="#i-chev-down"/></svg>
+          </div>
+          <p style="margin:6px 0 0;font-size:11px;color:var(--n-500)">6 usuarios activos disponibles · cualquier rol puede recibir préstamo</p>
+        </div>
+
+        <div class="modal-section">
+          <span class="label-top">3 · Fechas</span>
+          <div class="form-grid-2">
+            <div>
+              <span class="field-l" style="margin-bottom:5px;display:block">Fecha de préstamo</span>
+              <div class="input mono">Hoy · 17 may 2026 · 09:15</div>
+            </div>
+            <div>
+              <span class="field-l" style="margin-bottom:5px;display:block">Devolución esperada</span>
+              <div class="input mono">18 may 2026</div>
+            </div>
+          </div>
+          <p style="margin:6px 0 0;font-size:11px;color:var(--n-500)">Duración default 1 día · ajusta según el uso planeado</p>
+        </div>
+
+        <div class="modal-section">
+          <span class="label-top">4 · Notas <span style="color:var(--n-300);text-transform:none;letter-spacing:0">· opcional</span></span>
+          <div class="textarea" style="color:var(--n-500);font-style:italic">Propósito del préstamo, equipo o cliente asociado...</div>
+        </div>
+
+        <div class="modal-foot">
+          <button class="btn btn-outline">Cancelar</button>
+          <button class="btn btn-primary"><svg width="14" height="14"><use href="#i-check"/></svg>Registrar préstamo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- VISTA 5 · Mobile light · Tab préstamos activos -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span><span class="vp">Vista 5 · Mobile · Light · 390 px</span><span class="sep">·</span><span>Préstamos activos · cards apiladas con pairing usuario/herramienta</span>
+  </div>
+  <div class="frame" style="width:390px;">
+    <div class="mobile">
+      <div class="m-top">
+        <h1 class="m-title">Herramientas</h1>
+        <button class="btn btn-primary btn-sm"><svg width="13" height="13"><use href="#i-plus"/></svg>Préstamo</button>
+      </div>
+      <div class="m-tabs">
+        <div class="m-tab is-active"><svg width="14" height="14"><use href="#i-user-clock"/></svg>Activos<span class="c">2</span></div>
+        <div class="m-tab"><svg width="14" height="14"><use href="#i-hammer"/></svg>Catálogo<span class="c">12</span></div>
+        <div class="m-tab"><svg width="14" height="14"><use href="#i-activity"/></svg>Historial<span class="c">47</span></div>
+      </div>
+
+      <div class="m-banner">
+        <svg width="16" height="16"><use href="#i-alert"/></svg>
+        <div>
+          <b>1 atrasada</b> · Llave torque digital · Diego P. · vencida hace 3 días
+        </div>
+      </div>
+
+      <div class="m-list">
+
+        <div class="m-card is-dang">
+          <div class="av av-md av-DP">DP</div>
+          <div class="m-card-body">
+            <div class="m-card-h">
+              <div>
+                <div class="m-card-name">Diego Páez</div>
+                <div class="m-card-meta">Técnico · Taller</div>
+              </div>
+              <span class="pill pill-dang pulse sm"><span class="pdot"></span>Atrasado</span>
+            </div>
+            <div class="m-card-tool">Llave torque digital</div>
+            <div class="m-card-meta"><span class="mono" style="color:var(--n-700);font-weight:500">HRM-2410-S</span> · Stanley STN-2410</div>
+            <div class="m-card-foot">
+              <span class="m-days dang">11 días <span style="font-size:10px;color:var(--n-500);font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;font-weight:500;display:block">vencida hace 3</span></span>
+              <button class="btn btn-succ btn-sm"><svg width="13" height="13"><use href="#i-check"/></svg>Devuelta</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="m-card">
+          <div class="av av-md av-AM">AM</div>
+          <div class="m-card-body">
+            <div class="m-card-h">
+              <div>
+                <div class="m-card-name">Andrés Mejía</div>
+                <div class="m-card-meta">Vendedor · WH-01</div>
+              </div>
+              <span class="pill pill-warn sm"><span class="pdot"></span>Por vencer</span>
+            </div>
+            <div class="m-card-tool">Multímetro Fluke</div>
+            <div class="m-card-meta"><span class="mono" style="color:var(--n-700);font-weight:500">HRM-3320-F</span> · Fluke F-87V</div>
+            <div class="m-card-foot">
+              <span class="m-days warn">2 días <span style="font-size:10px;color:var(--n-500);font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;font-weight:500;display:block">vence mañana</span></span>
+              <button class="btn btn-succ btn-sm"><svg width="13" height="13"><use href="#i-check"/></svg>Devuelta</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="m-card">
+          <div class="av av-md av-SL">SL</div>
+          <div class="m-card-body">
+            <div class="m-card-h">
+              <div>
+                <div class="m-card-name">Sandra López</div>
+                <div class="m-card-meta">Bodeguero · WH-01</div>
+              </div>
+              <span class="pill pill-neutral sm"><span class="pdot"></span>Activo</span>
+            </div>
+            <div class="m-card-tool">Manómetro digital</div>
+            <div class="m-card-meta"><span class="mono" style="color:var(--n-700);font-weight:500">HRM-1180-B</span> · Bosch BCH-MG-100</div>
+            <div class="m-card-foot">
+              <span class="m-days succ">0 días <span style="font-size:10px;color:var(--n-500);font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;font-weight:500;display:block">vence 18 may</span></span>
+              <button class="btn btn-succ btn-sm"><svg width="13" height="13"><use href="#i-check"/></svg>Devuelta</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="m-bottomnav">
+        <div class="m-bn"><svg width="20" height="20"><use href="#i-home"/></svg>Inicio</div>
+        <div class="m-bn"><svg width="20" height="20"><use href="#i-package"/></svg>Inventario</div>
+        <div class="m-bn"><div class="m-fab"><svg width="22" height="22"><use href="#i-qr"/></svg></div></div>
+        <div class="m-bn is-active"><svg width="20" height="20"><use href="#i-hammer"/></svg>Herram.</div>
+        <div class="m-bn"><svg width="20" height="20"><use href="#i-more"/></svg>Más</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- VISTA 6 · Desktop DARK · Tab PRÉSTAMOS ACTIVOS -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span><span class="vp">Vista 6 · Desktop · Dark · 1280 px</span><span class="sep">·</span><span>Préstamos activos · modo oscuro</span>
+  </div>
+  <div class="frame" style="width:1280px;background:#0B1320">
+    <div class="app dark">
+      <aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">CV</div>
+    <div>
+      <div class="sb-brandname">Compresores del Valle</div>
+      <div class="sb-brandsub">CHV · Operaciones</div>
+    </div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Catálogo y stock</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-package"/></svg><span class="label">Inventario</span><span class="counter">2.847</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-tag"/></svg><span class="label">Productos</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Operación comercial</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-cart"/></svg><span class="label">Ventas</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="label">Cotizaciones</span><span class="counter">5</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-receipt"/></svg><span class="label">Recibos</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-undo"/></svg><span class="label">Devoluciones</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Bodega y movimiento</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-bag"/></svg><span class="label">Compras</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-truck"/></svg><span class="label">Traspasos</span><span class="counter">3</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-shield"/></svg><span class="label">Garantías</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Taller</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-wrench"/></svg><span class="label">Órdenes de Trabajo</span><span class="counter">14</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-puzzle"/></svg><span class="label">Ensambles</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Soporte</div>
+    <a class="sb-item is-active"><svg width="16" height="16"><use href="#i-hammer"/></svg><span class="label">Herramientas</span><span class="counter">2</span></a>
+  </div>
+  <div class="sb-foot">
+    <div class="sb-avatar">SL</div>
+    <div>
+      <div class="sb-foot-name">Sandra López</div>
+      <div class="sb-foot-role">Bodeguero · WH-01</div>
+    </div>
+  </div>
+</aside>
+      <section class="main">
+        <div class="topbar">
+  <div class="crumb"><b>Operaciones</b><span class="crumb-sep">·</span><b style="color:var(--p-700)">Herramientas</b></div>
+  <div class="topbar-spacer"></div>
+  <div class="cmdk"><svg width="14" height="14"><use href="#i-search"/></svg><span>Buscar en todo el sistema</span><span style="margin-left:auto"></span><span class="kbd">⌘</span><span class="kbd">K</span></div>
+  <button class="icon-btn"><svg width="18" height="18"><use href="#i-qr"/></svg></button>
+  <button class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg></button>
+  <button class="panel-admin"><svg width="14" height="14"><use href="#i-shield"/></svg>Panel Admin</button>
+</div>
+        <div class="content">
+
+          <div class="page-h">
+            <div>
+              <h1 class="page-title">Herramientas</h1>
+              <p class="page-sub"><b class="num">12</b> herramientas <span style="color:var(--n-300)">·</span> <b class="num">2</b> prestadas <span style="color:var(--n-300)">·</span> <b class="num dang">1</b> atrasada <span style="color:var(--n-300)">·</span> <b class="num">1</b> en mantenimiento</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-outline"><svg width="14" height="14"><use href="#i-printer"/></svg>Imprimir etiquetas</button>
+              <button class="btn btn-primary"><svg width="14" height="14"><use href="#i-plus"/></svg>Registrar préstamo</button>
+            </div>
+          </div>
+
+          <div class="tabs-mod">
+            <div class="tab-m is-active">
+              <svg width="16" height="16"><use href="#i-user-clock"/></svg>
+              Préstamos activos
+              <span class="count dang">2</span>
+              <span class="late">· 1 atrasada</span>
+            </div>
+            <div class="tab-m">
+              <svg width="16" height="16"><use href="#i-hammer"/></svg>
+              Catálogo completo
+              <span class="count">12</span>
+            </div>
+            <div class="tab-m">
+              <svg width="16" height="16"><use href="#i-activity"/></svg>
+              Historial
+              <span class="count">47 este mes</span>
+            </div>
+          </div>
+
+          <div class="banner b-warn">
+            <span class="icon"><svg width="20" height="20"><use href="#i-alert"/></svg></span>
+            <div class="banner-body">
+              <div class="banner-title">1 herramienta atrasada</div>
+              <div class="banner-text"><b>Llave torque digital</b> prestada a <b>Diego P.</b> desde hace <span class="mono">5 días</span> (devolución esperada <span class="mono">hace 3 días</span>).</div>
+              <div class="banner-actions">
+                <button class="btn btn-warn-out btn-sm"><svg width="13" height="13"><use href="#i-chev-right"/></svg>Ver préstamo</button>
+                <button class="btn btn-ghost btn-sm" style="color:var(--warn-text)"><svg width="13" height="13"><use href="#i-msg-circle"/></svg>Enviar recordatorio</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="dt">
+              <thead>
+                <tr>
+                  <th style="width:240px">Herramienta</th>
+                  <th style="width:110px">Código</th>
+                  <th style="width:200px">Prestada a</th>
+                  <th style="width:130px">Fecha préstamo</th>
+                  <th style="width:130px">Devolución esperada</th>
+                  <th style="width:96px">Días en uso</th>
+                  <th style="width:150px">Estado</th>
+                  <th style="width:180px;text-align:right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="is-dang-row">
+                  <td><div class="tool-cell"><div class="tool-ico"><svg width="20" height="20"><use href="#i-tool-torque"/></svg></div><div><div class="tool-name">Llave torque digital</div><div class="tool-sub">Stanley · STN-2410</div></div></div></td>
+                  <td><span class="code-mono">HRM-2410-S</span></td>
+                  <td><div class="avatar"><div class="av av-DP">DP</div><div><div class="user-name">Diego Páez</div><div class="user-role">Técnico</div></div></div></td>
+                  <td><span class="cell-mono">5 abr · 09:30</span></td>
+                  <td><span class="cell-mono dang">8 abr 2026</span></td>
+                  <td><span class="cell-strong dang">11 días</span></td>
+                  <td><span class="pill pill-dang pulse"><span class="pdot"></span>Atrasado</span></td>
+                  <td><div class="row-actions"><button class="btn btn-succ btn-sm"><svg width="13" height="13"><use href="#i-check"/></svg>Marcar devuelta</button><button class="icon-btn"><svg width="16" height="16"><use href="#i-more"/></svg></button></div></td>
+                </tr>
+                <tr>
+                  <td><div class="tool-cell"><div class="tool-ico"><svg width="20" height="20"><use href="#i-tool-multimeter"/></svg></div><div><div class="tool-name">Multímetro Fluke</div><div class="tool-sub">Fluke · F-87V</div></div></div></td>
+                  <td><span class="code-mono">HRM-3320-F</span></td>
+                  <td><div class="avatar"><div class="av av-AM">AM</div><div><div class="user-name">Andrés Mejía</div><div class="user-role">Vendedor</div></div></div></td>
+                  <td><span class="cell-mono">Hace 2 días</span></td>
+                  <td><span class="cell-mono warn">Mañana</span></td>
+                  <td><span class="cell-strong warn">2 días</span></td>
+                  <td><span class="pill pill-warn"><span class="pdot"></span>Próximo a vencer</span></td>
+                  <td><div class="row-actions"><button class="btn btn-succ btn-sm"><svg width="13" height="13"><use href="#i-check"/></svg>Marcar devuelta</button><button class="icon-btn"><svg width="16" height="16"><use href="#i-more"/></svg></button></div></td>
+                </tr>
+                <tr>
+                  <td><div class="tool-cell"><div class="tool-ico"><svg width="20" height="20"><use href="#i-tool-gauge"/></svg></div><div><div class="tool-name">Manómetro digital</div><div class="tool-sub">Bosch · BCH-MG-100</div></div></div></td>
+                  <td><span class="code-mono">HRM-1180-B</span></td>
+                  <td><div class="avatar"><div class="av av-SL">SL</div><div><div class="user-name">Sandra López</div><div class="user-role">Bodeguero</div></div></div></td>
+                  <td><span class="cell-mono">Hoy 09:00</span></td>
+                  <td><span class="cell-mono succ">18 may 2026</span></td>
+                  <td><span class="cell-strong succ">0 días</span></td>
+                  <td><span class="pill pill-neutral"><span class="pdot"></span>Activo</span></td>
+                  <td><div class="row-actions"><button class="btn btn-succ btn-sm"><svg width="13" height="13"><use href="#i-check"/></svg>Marcar devuelta</button><button class="icon-btn"><svg width="16" height="16"><use href="#i-more"/></svg></button></div></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="dt-foot">
+              <span>Mostrando <b>3</b> préstamos activos <span style="color:var(--n-300)">·</span> <b>1</b> atrasada <span style="color:var(--n-300)">·</span> <b>1</b> próxima a vencer <span style="color:var(--n-300)">·</span> <b>9</b> herramientas disponibles</span>
+              <span>Última actualización · hoy 09:00</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<!-- ESTADOS ESPECIALES -->
+<h2 class="showcase-t" style="margin-top:64px;">Estados especiales</h2>
+<p class="showcase-s">A. Devolución con evaluación · B. Reporte de daño · C. Banner atraso crítico · D. Detalle en mantenimiento.</p>
+
+<!-- ESTADO A · Modal devolución -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span><span class="vp">Estado A · Modal · Devolución con evaluación de estado</span>
+  </div>
+  <div class="frame" style="width:1080px;">
+    <div class="modal-stage">
+      <div class="modal" style="width:480px">
+        <div class="modal-h">
+          <div class="modal-ico" style="background:var(--succ-bg);color:var(--succ-text)"><svg width="20" height="20"><use href="#i-check"/></svg></div>
+          <h2 class="modal-t">Confirmar devolución · Llave torque digital</h2>
+          <button class="modal-close"><svg width="18" height="18"><use href="#i-x"/></svg></button>
+        </div>
+        <p class="modal-s">Evalúa el estado de la herramienta al retornar para registrar el historial. Diego Páez · prestada desde el 5 abr 2026.</p>
+
+        <div class="modal-section">
+          <span class="label-top">Estado al devolver</span>
+          <div class="radio-list">
+            <label class="radio-card is-selected">
+              <span class="radio-dot"></span>
+              <div class="radio-body">
+                <div class="radio-title"><span class="pill pill-succ sm"><span class="pdot"></span>Buen estado</span></div>
+                <div class="radio-sub">La herramienta se devuelve en condiciones normales de uso, sin daños visibles ni desgaste atípico.</div>
+              </div>
+            </label>
+            <label class="radio-card">
+              <span class="radio-dot"></span>
+              <div class="radio-body">
+                <div class="radio-title"><span class="pill pill-warn sm"><span class="pdot"></span>Daño leve</span></div>
+                <div class="radio-sub">Marcas, raspones o desgaste superior al normal. Requiere foto de evidencia.</div>
+              </div>
+            </label>
+            <label class="radio-card">
+              <span class="radio-dot"></span>
+              <div class="radio-body">
+                <div class="radio-title"><span class="pill pill-dang sm"><span class="pdot"></span>Daño grave</span></div>
+                <div class="radio-sub">Daño que afecta funcionalidad. La herramienta pasa a Mantenimiento. Requiere foto de evidencia.</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-section">
+          <span class="label-top">Notas de la devolución <span style="color:var(--n-300);text-transform:none;letter-spacing:0">· opcional</span></span>
+          <div class="textarea" style="color:var(--n-500);font-style:italic">Observaciones sobre el uso, condiciones específicas...</div>
+        </div>
+
+        <div class="modal-foot">
+          <button class="btn btn-outline">Cancelar</button>
+          <button class="btn btn-primary"><svg width="14" height="14"><use href="#i-check"/></svg>Confirmar devolución</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ESTADO B · Modal herramienta dañada -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span><span class="vp">Estado B · Modal · Reportar herramienta dañada</span><span class="sep">·</span><span>Llave de impacto Milwaukee · vínculo a GAR-C automático</span>
+  </div>
+  <div class="frame" style="width:1080px;">
+    <div class="modal-stage">
+      <div class="modal" style="width:520px">
+        <div class="modal-h">
+          <div class="modal-ico danger" style="width:48px;height:48px"><svg width="26" height="26"><use href="#i-alert-oct"/></svg></div>
+          <h2 class="modal-t">Reportar herramienta dañada<br/><span style="font-weight:400;font-size:13px;color:var(--n-500)">Llave de impacto Milwaukee · <span class="mono" style="color:var(--n-700);font-weight:500">HRM-2767-M</span></span></h2>
+          <button class="modal-close"><svg width="18" height="18"><use href="#i-x"/></svg></button>
+        </div>
+
+        <div class="modal-section">
+          <span class="label-top">Tipo de daño</span>
+          <div class="radio-list">
+            <label class="radio-card">
+              <span class="radio-dot"></span>
+              <div class="radio-body">
+                <div class="radio-title">Funcional · sigue operativa</div>
+                <div class="radio-sub">La herramienta opera pero tiene daño cosmético o desgaste. Se reporta para historial.</div>
+              </div>
+            </label>
+            <label class="radio-card is-selected dang">
+              <span class="radio-dot"></span>
+              <div class="radio-body">
+                <div class="radio-title">No funcional · fuera de servicio</div>
+                <div class="radio-sub">No opera. Pasa automáticamente a estado Dañada y queda inhabilitada para préstamo.</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-section">
+          <span class="label-top">Descripción del daño <span style="color:var(--dang-text);text-transform:none;letter-spacing:0">· obligatoria</span></span>
+          <div class="textarea" style="min-height:80px">Motor no enciende. Daño visible en el cable de alimentación. Se reportó durante uso normal en cliente Petrocali el 14 may.</div>
+        </div>
+
+        <div class="modal-section">
+          <span class="label-top">Fotos del daño <span style="color:var(--dang-text);text-transform:none;letter-spacing:0">· obligatorio</span></span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+            <div class="photo"></div>
+            <div class="photo"></div>
+            <div class="photo add"><svg width="20" height="20"><use href="#i-plus"/></svg></div>
+          </div>
+        </div>
+
+        <div class="modal-section">
+          <span class="label-top">Enviar a</span>
+          <div class="select">
+            <div>
+              <div style="font-weight:500">Devolver al proveedor para garantía</div>
+              <div style="font-size:11px;color:var(--n-500);margin-top:1px">Milwaukee · OC-1825 (15 ene 2026)</div>
+            </div>
+            <svg width="14" height="14" style="color:var(--n-500)"><use href="#i-chev-down"/></svg>
+          </div>
+          <p style="margin:8px 0 0;font-size:11.5px;color:var(--info-text);background:var(--info-bg);padding:8px 10px;border-radius:var(--r-md);border:1px solid var(--info-border);">
+            <b>Vínculo automático con Garantías:</b> Si seleccionas "Garantía proveedor", se genera reclamación <span class="mono" style="font-weight:600">GAR-C-0019</span> vinculada a la compra original.
+          </p>
+        </div>
+
+        <div class="modal-foot">
+          <button class="btn btn-outline">Cancelar</button>
+          <button class="btn btn-warn-solid"><svg width="14" height="14"><use href="#i-alert-oct"/></svg>Reportar daño</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ESTADO C · Banner atraso crítico -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span><span class="vp">Estado C · Banner atraso crítico (> 7 días)</span><span class="sep">·</span><span>Lista con banner dang-50</span>
+  </div>
+  <div class="frame" style="width:1280px;">
+    <div class="app">
+      <aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">CV</div>
+    <div>
+      <div class="sb-brandname">Compresores del Valle</div>
+      <div class="sb-brandsub">CHV · Operaciones</div>
+    </div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Catálogo y stock</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-package"/></svg><span class="label">Inventario</span><span class="counter">2.847</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-tag"/></svg><span class="label">Productos</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Operación comercial</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-cart"/></svg><span class="label">Ventas</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="label">Cotizaciones</span><span class="counter">5</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-receipt"/></svg><span class="label">Recibos</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-undo"/></svg><span class="label">Devoluciones</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Bodega y movimiento</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-bag"/></svg><span class="label">Compras</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-truck"/></svg><span class="label">Traspasos</span><span class="counter">3</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-shield"/></svg><span class="label">Garantías</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Taller</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-wrench"/></svg><span class="label">Órdenes de Trabajo</span><span class="counter">14</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-puzzle"/></svg><span class="label">Ensambles</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Soporte</div>
+    <a class="sb-item is-active"><svg width="16" height="16"><use href="#i-hammer"/></svg><span class="label">Herramientas</span><span class="counter">2</span></a>
+  </div>
+  <div class="sb-foot">
+    <div class="sb-avatar">SL</div>
+    <div>
+      <div class="sb-foot-name">Sandra López</div>
+      <div class="sb-foot-role">Bodeguero · WH-01</div>
+    </div>
+  </div>
+</aside>
+      <section class="main">
+        <div class="topbar">
+  <div class="crumb"><b>Operaciones</b><span class="crumb-sep">·</span><b style="color:var(--p-700)">Herramientas</b></div>
+  <div class="topbar-spacer"></div>
+  <div class="cmdk"><svg width="14" height="14"><use href="#i-search"/></svg><span>Buscar en todo el sistema</span><span style="margin-left:auto"></span><span class="kbd">⌘</span><span class="kbd">K</span></div>
+  <button class="icon-btn"><svg width="18" height="18"><use href="#i-qr"/></svg></button>
+  <button class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg></button>
+  <button class="panel-admin"><svg width="14" height="14"><use href="#i-shield"/></svg>Panel Admin</button>
+</div>
+        <div class="content">
+
+          <div class="banner b-dang">
+            <span class="icon"><svg width="20" height="20"><use href="#i-alert"/></svg></span>
+            <div class="banner-body">
+              <div class="banner-title">Atraso crítico</div>
+              <div class="banner-text"><b>Llave torque digital</b> prestada a <b>Diego P.</b> desde hace <span class="mono">11 días</span> · <b>8 días de atraso</b>. Posible pérdida o uso indebido. Contacta al supervisor.</div>
+              <div class="banner-actions">
+                <button class="btn btn-dang-out btn-sm"><svg width="13" height="13"><use href="#i-phone"/></svg>Contactar Admin</button>
+                <button class="btn btn-dang btn-sm"><svg width="13" height="13"><use href="#i-x-circle"/></svg>Marcar como perdida</button>
+                <button class="btn btn-ghost btn-sm" style="color:var(--dang-text)"><svg width="13" height="13"><use href="#i-msg-circle"/></svg>Tercer recordatorio</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="page-h">
+            <div>
+              <h1 class="page-title">Herramientas</h1>
+              <p class="page-sub"><b class="num">12</b> herramientas <span style="color:var(--n-200)">·</span> <b class="num dang">1 caso crítico</b> · acción requerida</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-primary"><svg width="14" height="14"><use href="#i-plus"/></svg>Registrar préstamo</button>
+            </div>
+          </div>
+
+          <div class="tabs-mod">
+            <div class="tab-m is-active"><svg width="16" height="16"><use href="#i-user-clock"/></svg>Préstamos activos<span class="count dang">2</span><span class="late">· 1 crítica</span></div>
+            <div class="tab-m"><svg width="16" height="16"><use href="#i-hammer"/></svg>Catálogo completo<span class="count">12</span></div>
+            <div class="tab-m"><svg width="16" height="16"><use href="#i-activity"/></svg>Historial<span class="count">47 este mes</span></div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="dt">
+              <thead>
+                <tr>
+                  <th style="width:240px">Herramienta</th>
+                  <th style="width:110px">Código</th>
+                  <th style="width:200px">Prestada a</th>
+                  <th style="width:130px">Devolución esperada</th>
+                  <th style="width:120px">Atraso</th>
+                  <th style="width:200px">Estado</th>
+                  <th style="width:180px;text-align:right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="is-dang-row">
+                  <td><div class="tool-cell"><div class="tool-ico" style="background:var(--dang-bg);color:var(--dang-text)"><svg width="20" height="20"><use href="#i-tool-torque"/></svg></div><div><div class="tool-name">Llave torque digital</div><div class="tool-sub">Stanley · STN-2410</div></div></div></td>
+                  <td><span class="code-mono">HRM-2410-S</span></td>
+                  <td><div class="avatar"><div class="av av-DP">DP</div><div><div class="user-name">Diego Páez</div><div class="user-role">Técnico</div></div></div></td>
+                  <td><span class="cell-mono dang">8 abr 2026</span></td>
+                  <td><span class="cell-strong dang">8 días</span></td>
+                  <td><span class="pill pill-dang pulse"><span class="pdot"></span>Atraso crítico</span></td>
+                  <td><div class="row-actions"><button class="btn btn-dang-out btn-sm">Marcar perdida</button><button class="icon-btn"><svg width="16" height="16"><use href="#i-more"/></svg></button></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+
+<!-- ESTADO D · Detalle herramienta en mantenimiento -->
+<div class="frame-wrap">
+  <div class="frame-label">
+    <span class="dot"></span><span class="vp">Estado D · Detalle herramienta en mantenimiento</span><span class="sep">·</span><span>HRM-0500-G Generador de ozono</span>
+  </div>
+  <div class="frame" style="width:1280px;">
+    <div class="app">
+      <aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">CV</div>
+    <div>
+      <div class="sb-brandname">Compresores del Valle</div>
+      <div class="sb-brandsub">CHV · Operaciones</div>
+    </div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Catálogo y stock</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-package"/></svg><span class="label">Inventario</span><span class="counter">2.847</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-tag"/></svg><span class="label">Productos</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Operación comercial</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-cart"/></svg><span class="label">Ventas</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-file-text"/></svg><span class="label">Cotizaciones</span><span class="counter">5</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-receipt"/></svg><span class="label">Recibos</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-undo"/></svg><span class="label">Devoluciones</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Bodega y movimiento</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-bag"/></svg><span class="label">Compras</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-truck"/></svg><span class="label">Traspasos</span><span class="counter">3</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-shield"/></svg><span class="label">Garantías</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Taller</div>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-wrench"/></svg><span class="label">Órdenes de Trabajo</span><span class="counter">14</span></a>
+    <a class="sb-item"><svg width="16" height="16"><use href="#i-puzzle"/></svg><span class="label">Ensambles</span></a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-h">Soporte</div>
+    <a class="sb-item is-active"><svg width="16" height="16"><use href="#i-hammer"/></svg><span class="label">Herramientas</span><span class="counter">2</span></a>
+  </div>
+  <div class="sb-foot">
+    <div class="sb-avatar">SL</div>
+    <div>
+      <div class="sb-foot-name">Sandra López</div>
+      <div class="sb-foot-role">Bodeguero · WH-01</div>
+    </div>
+  </div>
+</aside>
+      <section class="main">
+        <div class="topbar">
+          <div class="crumb"><b>Operaciones</b><span class="crumb-sep">·</span><b style="color:var(--p-700)">Herramientas</b><span class="crumb-sep">·</span><b>HRM-0500-G</b></div>
+          <div class="topbar-spacer"></div>
+          <div class="cmdk"><svg width="14" height="14"><use href="#i-search"/></svg><span>Buscar en todo el sistema</span><span style="margin-left:auto"></span><span class="kbd">⌘</span><span class="kbd">K</span></div>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-qr"/></svg></button>
+          <button class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg></button>
+          <button class="panel-admin"><svg width="14" height="14"><use href="#i-shield"/></svg>Panel Admin</button>
+        </div>
+        <div class="content">
+
+          <a class="detail-back"><svg width="14" height="14"><use href="#i-arrow-left-circle"/></svg>Volver a Herramientas</a>
+
+          <div class="detail-h">
+            <div style="display:flex;gap:18px;align-items:flex-start">
+              <div class="cat-ico-big" style="width:72px;height:72px;flex-shrink:0;border-radius:14px;background:var(--n-100);color:var(--n-700);">
+                <svg width="36" height="36"><use href="#i-tool-ozone"/></svg>
+              </div>
+              <div>
+                <div class="eyebrow">Herramienta · en mantenimiento</div>
+                <h1 class="detail-title">Generador de ozono</h1>
+                <p class="detail-sub">Generic · <span class="mono">GZ-500</span> · <span class="mono">HRM-0500-G</span></p>
+              </div>
+            </div>
+            <div class="detail-right">
+              <span class="pill pill-neutral lg"><svg width="13" height="13"><use href="#i-wrench-screwdriver"/></svg>Mantenimiento</span>
+              <span style="font-size:12px;color:var(--n-500)">Servicio técnico WH-01 · desde 18 abr</span>
+            </div>
+          </div>
+
+          <div class="card is-neutral-maint">
+            <div class="card-h">
+              <svg width="16" height="16" style="color:var(--n-700)"><use href="#i-wrench-screwdriver"/></svg>
+              <span class="t">Herramienta en mantenimiento</span>
+              <span class="badge"><span class="pill pill-neutral sm"><svg width="11" height="11"><use href="#i-clock"/></svg>Reparación estimada 25 abr</span></span>
+            </div>
+            <p style="margin:0;font-size:13px;color:var(--n-700);line-height:1.5;">Herramienta en mantenimiento desde <b style="color:var(--n-900)">18 abr 2026</b> · Servicio técnico <b style="color:var(--n-900)">WH-01</b> · Reparación estimada <b style="color:var(--n-900)">25 abr 2026</b>. No se puede prestar hasta marcar reparada o dar de baja.</p>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn btn-succ-solid"><svg width="14" height="14"><use href="#i-check"/></svg>Marcar reparada y disponible</button>
+            <button class="btn btn-dang-out"><svg width="14" height="14"><use href="#i-x-circle"/></svg>Reportar como pérdida total</button>
+            <button class="btn btn-ghost"><svg width="14" height="14"><use href="#i-printer"/></svg>Imprimir reporte</button>
+          </div>
+
+          <div class="detail-grid">
+            <div>
+              <div class="card">
+                <div class="card-h"><svg width="16" height="16"><use href="#i-alert-oct"/></svg><span class="t">Razón del mantenimiento</span></div>
+                <div class="field-grid">
+                  <div class="field"><span class="field-l">Tipo de falla</span><span class="field-v">No funcional · Motor no enciende</span></div>
+                  <div class="field"><span class="field-l">Reportado por</span><span class="field-v">Carlos Restrepo · Bodeguero</span></div>
+                  <div class="field"><span class="field-l">Fecha de reporte</span><span class="field-v mono">18 abr 2026 · 14:20</span></div>
+                  <div class="field"><span class="field-l">Asignado a</span><span class="field-v">Servicio técnico WH-01</span></div>
+                </div>
+                <div style="margin-top:14px;padding:12px 14px;background:var(--n-25);border-radius:var(--r-md);font-size:12.5px;color:var(--n-700);line-height:1.5;">
+                  Equipo no enciende tras intento de uso en taller. Cable de alimentación íntegro, fusibles correctos. Se sospecha falla en motor interno o tarjeta de control. Pendiente diagnóstico completo del técnico.
+                </div>
+                <div class="photos">
+                  <div class="photo"></div>
+                  <div class="photo"></div>
+                  <div class="photo"></div>
+                  <div class="photo add"><svg width="20" height="20"><use href="#i-plus"/></svg></div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-h"><svg width="16" height="16"><use href="#i-activity"/></svg><span class="t">Eventos del mantenimiento</span></div>
+                <div class="hist-list">
+                  <div class="hist-row">
+                    <div class="av av-md av-CR2">CR</div>
+                    <div class="user">
+                      <div class="nm">Carlos Restrepo</div>
+                      <div class="period">18 abr 2026 · 14:20</div>
+                    </div>
+                    <span style="font-size:12px;color:var(--n-700);font-weight:500">Reportó falla y envió a mantenimiento</span>
+                  </div>
+                  <div class="hist-row">
+                    <div class="av av-md av-DP">DP</div>
+                    <div class="user">
+                      <div class="nm">Diego Páez</div>
+                      <div class="period">19 abr 2026 · 09:00</div>
+                    </div>
+                    <span style="font-size:12px;color:var(--n-700);font-weight:500">Diagnóstico inicial · tarjeta dañada</span>
+                  </div>
+                  <div class="hist-row">
+                    <div class="av av-md av-CR">CR</div>
+                    <div class="user">
+                      <div class="nm">Carlos Ríos</div>
+                      <div class="period">20 abr 2026 · 11:30</div>
+                    </div>
+                    <span style="font-size:12px;color:var(--n-700);font-weight:500">Repuesto solicitado al proveedor</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="qr-card">
+                <div class="qr-eyebrow">QR de identificación</div>
+                <div class="qr-canvas">
+                  <svg viewBox="0 0 21 21" shape-rendering="crispEdges">
+                    <rect width="21" height="21" fill="#fff"/>
+                    <g fill="#000">
+                      <rect x="0" y="0" width="7" height="1"/><rect x="0" y="6" width="7" height="1"/><rect x="0" y="0" width="1" height="7"/><rect x="6" y="0" width="1" height="7"/><rect x="2" y="2" width="3" height="3"/>
+                      <rect x="14" y="0" width="7" height="1"/><rect x="14" y="6" width="7" height="1"/><rect x="14" y="0" width="1" height="7"/><rect x="20" y="0" width="1" height="7"/><rect x="16" y="2" width="3" height="3"/>
+                      <rect x="0" y="14" width="7" height="1"/><rect x="0" y="20" width="7" height="1"/><rect x="0" y="14" width="1" height="7"/><rect x="6" y="14" width="1" height="7"/><rect x="2" y="16" width="3" height="3"/>
+                      <rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="12" y="6" width="1" height="1"/>
+                      <rect x="6" y="8" width="1" height="1"/><rect x="6" y="10" width="1" height="1"/><rect x="6" y="12" width="1" height="1"/>
+                      <rect x="9" y="0" width="1" height="1"/><rect x="11" y="0" width="2" height="1"/>
+                      <rect x="8" y="2" width="1" height="1"/><rect x="11" y="2" width="2" height="1"/>
+                      <rect x="9" y="3" width="2" height="1"/><rect x="13" y="3" width="1" height="1"/>
+                      <rect x="8" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="13" y="4" width="1" height="1"/>
+                      <rect x="9" y="5" width="1" height="1"/><rect x="11" y="5" width="1" height="1"/>
+                      <rect x="0" y="8" width="1" height="1"/><rect x="3" y="8" width="2" height="1"/><rect x="9" y="8" width="2" height="1"/><rect x="13" y="8" width="2" height="1"/><rect x="17" y="8" width="2" height="1"/>
+                      <rect x="2" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="16" y="9" width="2" height="1"/><rect x="19" y="9" width="2" height="1"/>
+                      <rect x="0" y="10" width="1" height="1"/><rect x="3" y="10" width="1" height="1"/><rect x="9" y="10" width="2" height="1"/><rect x="13" y="10" width="1" height="1"/><rect x="15" y="10" width="1" height="1"/><rect x="18" y="10" width="1" height="1"/>
+                      <rect x="2" y="11" width="2" height="1"/><rect x="5" y="11" width="1" height="1"/><rect x="8" y="11" width="1" height="1"/><rect x="10" y="11" width="2" height="1"/><rect x="14" y="11" width="2" height="1"/><rect x="17" y="11" width="1" height="1"/><rect x="20" y="11" width="1" height="1"/>
+                      <rect x="0" y="12" width="2" height="1"/><rect x="4" y="12" width="1" height="1"/><rect x="9" y="12" width="1" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="13" y="12" width="2" height="1"/><rect x="16" y="12" width="1" height="1"/><rect x="18" y="12" width="2" height="1"/>
+                      <rect x="8" y="14" width="2" height="1"/><rect x="12" y="14" width="1" height="1"/><rect x="14" y="14" width="1" height="1"/><rect x="17" y="14" width="2" height="1"/>
+                      <rect x="9" y="15" width="1" height="1"/><rect x="11" y="15" width="2" height="1"/><rect x="15" y="15" width="2" height="1"/><rect x="18" y="15" width="1" height="1"/><rect x="20" y="15" width="1" height="1"/>
+                      <rect x="8" y="16" width="1" height="1"/><rect x="10" y="16" width="1" height="1"/><rect x="13" y="16" width="2" height="1"/><rect x="17" y="16" width="1" height="1"/><rect x="19" y="16" width="2" height="1"/>
+                      <rect x="9" y="17" width="2" height="1"/><rect x="12" y="17" width="1" height="1"/><rect x="14" y="17" width="1" height="1"/><rect x="16" y="17" width="1" height="1"/><rect x="18" y="17" width="2" height="1"/>
+                      <rect x="8" y="18" width="1" height="1"/><rect x="11" y="18" width="1" height="1"/><rect x="13" y="18" width="2" height="1"/><rect x="17" y="18" width="1" height="1"/><rect x="20" y="18" width="1" height="1"/>
+                      <rect x="9" y="19" width="2" height="1"/><rect x="12" y="19" width="1" height="1"/><rect x="14" y="19" width="2" height="1"/><rect x="17" y="19" width="2" height="1"/>
+                      <rect x="8" y="20" width="2" height="1"/><rect x="11" y="20" width="1" height="1"/><rect x="13" y="20" width="1" height="1"/><rect x="15" y="20" width="1" height="1"/><rect x="17" y="20" width="2" height="1"/><rect x="20" y="20" width="1" height="1"/>
+                    </g>
+                  </svg>
+                </div>
+                <div class="qr-code">HRM-0500-G</div>
+                <button class="btn btn-outline btn-block"><svg width="13" height="13"><use href="#i-printer"/></svg>Imprimir etiqueta</button>
+              </div>
+
+              <div class="card">
+                <div class="card-h"><svg width="16" height="16"><use href="#i-bar-chart"/></svg><span class="t">Estadísticas</span></div>
+                <div class="stats-grid">
+                  <div class="stat"><span class="stat-l">Total préstamos</span><span class="stat-v mono">7</span></div>
+                  <div class="stat"><span class="stat-l">Reparaciones</span><span class="stat-v mono">2</span></div>
+                  <div class="stat" style="grid-column:1/-1"><span class="stat-l">Última disponibilidad</span><span class="stat-v">15 abr 2026 · <span class="mono" style="font-weight:500;color:var(--n-500)">hace 32 días</span></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+
+<div class="validation" style="margin:48px auto 0;max-width:1240px;padding:24px 28px;background:#0B1320;color:#E3E7F2;border-radius:14px;">
+  <h3 style="margin:0 0 14px;font-size:14px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:#7C8AAB;font-weight:600;">Checklist de validación · Mensaje 7.2 · 5 puntos críticos</h3>
+  <ol style="padding-left:22px;margin:0;">
+    <li style="margin-bottom:10px;font-size:13.5px;line-height:1.6;"><b style="color:#fff;font-weight:600;">Sidebar canónica idéntica al resto del shell /ops.</b> Background <span class="mono">var(--n-975)</span> (#0B1320), texto #E6E8ED, 5 secciones con 12 módulos en orden exacto. Contadores: Inventario 2.847, Cotizaciones 5, Traspasos 3, OT 14, Herramientas 2 (activo con border-left royal #3D4DE8 + bg rgba royal alpha .16). Idéntico a Devoluciones / Compras / Garantías F13.</li>
+    <li style="margin-bottom:10px;font-size:13.5px;line-height:1.6;"><b style="color:#fff;font-weight:600;">Pairing persona/objeto claro en cada préstamo.</b> Avatar 30 px del usuario con iniciales coloridas (DP púrpura, AM azul, SL verde, CR ámbar, ML rosa, CR2 teal) a la izquierda en la columna "Prestada a"; herramienta con icono específico tool + nombre + marca/modelo a la izquierda en la columna "Herramienta". En mobile el avatar 36 px abre cada card, máximo pairing visual. En el detalle, bloque "Préstamo actual" con avatar 40 px destacado.</li>
+    <li style="margin-bottom:10px;font-size:13.5px;line-height:1.6;"><b style="color:#fff;font-weight:600;">Alerta de atraso proactiva pero no agresiva.</b> Banner warn-50 arriba con "Ver préstamo" inline (no modal bloqueante); fila completa con tinte dang-50 sutil pero legible; botones de resolución directos (Marcar devuelta succ + Recordatorio WhatsApp); pill "Atrasado" pulsa pero la fila no parpadea. Estado C escala a banner dang-50 solo cuando >7 días de atraso.</li>
+    <li style="margin-bottom:10px;font-size:13.5px;line-height:1.6;"><b style="color:#fff;font-weight:600;">4 estados de herramienta representados con color semántico.</b> En catálogo: Disponible succ (8 cards), Prestada warn (3 cards: torque, multímetro, manómetro), Mantenimiento neutral (1: generador ozono), Dañada dang (1: llave impacto Milwaukee). Cada estado con pill apropiada + dot del color. Filtros pills arriba del grid permiten cruzar por estado.</li>
+    <li style="margin-bottom:10px;font-size:13.5px;line-height:1.6;"><b style="color:#fff;font-weight:600;">QR de identificación con fondo siempre blanco.</b> Card <span class="mono">.qr-card</span> con <span class="mono">.qr-canvas</span> background <span class="mono">#fff</span> hardcoded (no usa token, no se invierte en dark). QR 180×180 px renderizado como SVG con patrones reales de finder + timing + datos. Código mono debajo. Botón "Imprimir etiqueta" full-width para el flujo físico de pegado en la herramienta.</li>
+  </ol>
+</div>
+
+</div>
+</body>
+</html>

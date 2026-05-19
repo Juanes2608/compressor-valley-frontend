@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Inventario · 7 vistas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --n-0:#FFFFFF;--n-25:#FBFBFC;--n-50:#F7F8FA;--n-75:#F2F4F7;--n-100:#EEF1F5;
+  --n-150:#E4E7EC;--n-200:#D0D5DD;--n-300:#98A2B3;--n-400:#7A8290;--n-500:#667085;
+  --n-700:#475467;--n-800:#344054;--n-900:#1D2939;--n-950:#101828;--n-975:#0B1320;
+  --p-50:#F0F2FF;--p-100:#E0E5FF;--p-200:#C2CCFF;--p-300:#94A3FF;--p-500:#4B5BF5;
+  --p-600:#2D3CE5;--p-700:#2531C8;
+  --info:#2E90FA;--info-d:#175CD3;--info-bg:#EFF8FF;--info-bd:#B2DDFF;
+  --warn-50:#FFFAEB;--warn-200:#FEDF89;--warn-500:#F79009;--warn-700:#B54708;
+  --succ-50:#ECFDF3;--succ-200:#A6F4C5;--succ-500:#12B76A;--succ-700:#027A48;
+  --dang-50:#FEF3F2;--dang-200:#FECDCA;--dang-500:#F04438;--dang-700:#B42318;
+  --cmp:#4456C2;--rpt:#159F8A;--hrm:#7244D5;--lbr:#C68420;--acc:#D24E8E;
+}
+html,body{margin:0;padding:0;background:#F5F6F8;color:var(--n-950);
+  font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased}
+.page-wrap{max-width:1480px;margin:0 auto;padding:48px 32px}
+.doc-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+  letter-spacing:.1em;text-transform:uppercase;margin:0 0 8px}
+.doc-title{font-size:32px;font-weight:600;letter-spacing:-0.02em;margin:0 0 8px}
+.doc-sub{font-size:15px;color:var(--n-500);margin:0;max-width:780px;line-height:1.55}
+.doc-sub code{font-family:'IBM Plex Mono',monospace;font-size:12px;background:#fff;
+  padding:1px 6px;border-radius:3px;border:1px solid var(--n-150);color:var(--n-700)}
+.section-divider{margin:80px 0 48px;display:flex;align-items:center;gap:16px}
+.section-divider .ln{flex:1;height:1px;background:var(--n-200)}
+.section-divider .lbl{font-family:'IBM Plex Mono',monospace;font-size:12px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--n-700);font-weight:500}
+.frame-wrap{margin-bottom:64px}
+.frame-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+  letter-spacing:.1em;text-transform:uppercase;margin:0 0 12px;font-weight:500;
+  display:flex;align-items:center;gap:12px}
+.frame-label .lbl-num{display:inline-flex;align-items:center;justify-content:center;
+  width:24px;height:24px;border-radius:5px;background:var(--n-950);color:#fff;font-size:11px}
+.frame-label.dk .lbl-num{background:var(--p-600)}
+.frame-label .lbl-px{margin-left:auto;color:var(--n-300);font-weight:400}
+.frame-desc{font-size:13px;color:var(--n-500);margin:0 0 16px;max-width:780px;line-height:1.55}
+.frame-desc b{color:var(--n-700);font-weight:500}
+.frame{border:1px solid var(--n-200);border-radius:14px;overflow:hidden;background:#fff;
+  box-shadow:0 12px 40px -16px rgba(16,24,40,.18)}
+.frame.dk{border-color:#1F2937}
+.vp-desktop{width:1280px;margin:0 auto}
+.vp-tablet{width:900px;margin:0 auto}
+.vp-mobile{padding:32px 16px;background:#0F1115;display:flex;justify-content:center}
+.vp-mobile.lt{background:#E4E7EC}
+
+/* Chrome */
+.shell{display:grid;background:var(--n-25)}
+.shell.sh-desktop{grid-template-columns:240px 1fr;min-height:900px}
+.shell.sh-tablet{grid-template-columns:56px 1fr;min-height:760px}
+.shell.dk{background:var(--n-975)}
+.side{background:var(--n-950);color:#fff;padding:20px 12px;display:flex;flex-direction:column;gap:1px}
+.side.rail{padding:16px 8px}
+.side.rail .link{justify-content:center;padding:10px 0;width:40px;margin:1px auto}
+.side.rail .brand{padding:0 0 16px;justify-content:center;border-bottom:1px solid var(--n-800);margin-bottom:12px}
+.brand{display:flex;align-items:center;gap:8px;padding:0 12px 20px;
+  border-bottom:1px solid var(--n-800);margin-bottom:16px}
+.logo{width:28px;height:28px;border-radius:6px;background:var(--p-500);color:#fff;
+  font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bn{font-size:13px;font-weight:600}
+.bs{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--n-300);letter-spacing:.06em}
+.sec{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--n-500);padding:12px 12px 4px;font-weight:500}
+.link{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:5px;
+  color:#D0D5DD;font-size:13px;cursor:pointer;position:relative}
+.link:hover{background:rgba(255,255,255,.04)}
+.link.on{background:rgba(75,91,245,.16);color:#fff;font-weight:500}
+.link.on::before{content:"";position:absolute;left:-3px;top:9px;bottom:9px;width:3px;background:var(--p-500);border-radius:2px}
+.side.rail .link.on::before{left:0}
+.link svg{width:14px;height:14px;flex-shrink:0;opacity:.85}
+.main{background:var(--n-25);overflow:hidden}
+.dk .main{background:var(--n-975)}
+.main-inner{padding:32px 40px}
+.main-inner.tablet{padding:24px}
+
+/* Header */
+.ph-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);
+  letter-spacing:.06em;text-transform:uppercase;margin:0 0 8px}
+.ph-title{font-weight:600;font-size:22px;letter-spacing:-0.018em;margin:0 0 4px;color:var(--n-950)}
+.ph-sub{font-size:13px;color:var(--n-500);margin:0}
+.ph-sub b{font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--n-700)}
+.ph-row{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;gap:16px;flex-wrap:wrap}
+.dk .ph-title{color:#fff}.dk .ph-sub{color:var(--n-300)}.dk .ph-sub b{color:#fff}
+.dk .ph-meta{color:var(--n-500)}
+
+.btn{height:36px;padding:0 16px;border-radius:6px;border:1px solid transparent;
+  font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:13px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-pri{background:var(--p-600);color:#fff}
+.btn-sec{background:#fff;color:var(--n-700);border-color:var(--n-200)}
+.btn svg{width:14px;height:14px}
+.dk .btn-pri{background:var(--p-500)}
+.dk .btn-sec{background:var(--n-900);color:var(--n-200);border-color:var(--n-800)}
+
+.seg{display:inline-flex;height:36px;padding:3px;background:var(--n-100);border-radius:6px;border:1px solid var(--n-150)}
+.seg button{height:28px;padding:0 14px;border:none;background:transparent;cursor:pointer;
+  font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:500;color:var(--n-500);
+  border-radius:4px;display:inline-flex;align-items:center;gap:6px}
+.seg button.on{background:#fff;color:var(--n-950);box-shadow:0 1px 2px rgba(16,24,40,.06),0 0 0 1px var(--n-150)}
+.seg svg{width:14px;height:14px}
+.dk .seg{background:var(--n-900);border-color:var(--n-800)}
+.dk .seg button{color:var(--n-300)}
+.dk .seg button.on{background:var(--n-800);color:#fff;box-shadow:none}
+.h-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+
+/* Search row */
+.search-row{display:flex;gap:12px;margin-bottom:20px}
+.search{flex:1;height:44px;border:1px solid var(--n-150);background:#fff;border-radius:6px;
+  display:flex;align-items:center;padding:0 14px;gap:10px;color:var(--n-500)}
+.search input{flex:1;border:none;outline:none;background:transparent;font-family:inherit;
+  font-size:14px;color:var(--n-950)}
+.search input::placeholder{color:var(--n-300)}
+.search svg{width:16px;height:16px;flex-shrink:0;stroke:var(--n-500)}
+.kbd{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+  border:1px solid var(--n-150);padding:2px 8px;border-radius:4px;background:var(--n-50)}
+.btn-scan{height:44px;padding:0 20px;background:var(--p-600);color:#fff;border:none;
+  border-radius:6px;font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:14px;
+  cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.btn-scan svg{width:16px;height:16px}
+.dk .search{background:var(--n-900);border-color:var(--n-800);color:var(--n-300)}
+.dk .search input{color:#fff}
+.dk .search input::placeholder{color:var(--n-500)}
+.dk .kbd{background:var(--n-950);border-color:var(--n-800);color:var(--n-300)}
+.dk .btn-scan{background:var(--p-500)}
+
+/* Layout */
+.cat-layout{display:grid;grid-template-columns:220px 1fr;gap:20px}
+
+/* Filter sidebar */
+.filt{background:#fff;border:1px solid var(--n-150);border-radius:12px;padding:16px;align-self:start}
+.dk .filt{background:var(--n-950);border-color:var(--n-800)}
+.filt-sec{margin-bottom:20px}
+.filt-sec:last-child{margin-bottom:0}
+.filt-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--n-300);margin:0 0 8px;font-weight:500}
+.filt-item{display:flex;align-items:center;gap:8px;padding:6px 10px;font-size:13px;
+  color:var(--n-700);cursor:pointer;border-radius:5px;position:relative;line-height:1.3}
+.filt-item:hover{background:var(--n-50)}
+.dk .filt-item{color:var(--n-200)}
+.dk .filt-item:hover{background:var(--n-900)}
+.filt-item.on{background:var(--p-50);color:var(--n-950);font-weight:500}
+.filt-item.on::before{content:"";position:absolute;left:-1px;top:6px;bottom:6px;width:2px;background:var(--p-600);border-radius:1px}
+.dk .filt-item.on{background:rgba(75,91,245,.14);color:#fff}
+.dk .filt-item.on::before{background:var(--p-500)}
+.filt-cnt{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500)}
+.dk .filt-cnt{color:var(--n-300)}
+.filt-dot{width:6px;height:6px;border-radius:999px;flex-shrink:0}
+
+/* Table */
+.tbl-card{background:#fff;border:1px solid var(--n-150);border-radius:12px;overflow:hidden}
+.dk .tbl-card{background:var(--n-950);border-color:var(--n-800)}
+.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
+.tbl thead th{background:var(--n-50);font-family:'IBM Plex Mono',monospace;font-size:11px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--n-500);font-weight:500;
+  text-align:left;padding:12px 16px;border-bottom:1px solid var(--n-150)}
+.dk .tbl thead th{background:var(--n-900);color:var(--n-300);border-color:var(--n-800)}
+.tbl tbody tr{height:48px;border-bottom:1px solid var(--n-100);cursor:pointer}
+.dk .tbl tbody tr{border-color:var(--n-800)}
+.tbl tbody tr:last-child{border-bottom:none}
+.tbl tbody tr:hover{background:var(--n-50)}
+.dk .tbl tbody tr:hover{background:var(--n-900)}
+.tbl tbody tr.sel{background:var(--p-50)}
+.dk .tbl tbody tr.sel{background:rgba(75,91,245,.16)}
+.tbl td{padding:8px 16px;vertical-align:middle}
+.col-sku{width:130px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:500;color:var(--n-700)}
+.dk .col-sku{color:var(--n-100)}
+.col-prod-n{font-size:13px;font-weight:500;color:var(--n-950);line-height:1.25;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.col-prod-m{font-size:11px;color:var(--n-500);line-height:1.3;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dk .col-prod-n{color:#fff}.dk .col-prod-m{color:var(--n-300)}
+.col-cat{width:130px}
+.col-loc{width:100px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500)}
+.dk .col-loc{color:var(--n-300)}
+.col-stock{width:160px;text-align:right}
+.col-pr{width:110px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--n-950)}
+.dk .col-pr{color:#fff}
+tr.depleted .col-prod-n,tr.depleted .col-pr,tr.depleted .col-sku{color:var(--n-400)}
+.dk tr.depleted .col-prod-n,.dk tr.depleted .col-pr,.dk tr.depleted .col-sku{color:var(--n-500)}
+
+/* Stock pills */
+.stock-pills{display:inline-flex;gap:4px;justify-content:flex-end}
+.spill{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;
+  padding:1px 8px;border-radius:4px;line-height:1.4;min-width:30px;text-align:center}
+.sp-succ{background:var(--succ-50);color:var(--succ-700)}
+.sp-warn{background:var(--warn-50);color:var(--warn-700)}
+.sp-dang{background:var(--dang-50);color:var(--dang-700)}
+.sp-zero{background:var(--n-50);color:var(--n-300)}
+.dk .sp-succ{background:rgba(18,183,106,.14);color:#5EE6A6}
+.dk .sp-warn{background:rgba(247,144,9,.14);color:#FDB022}
+.dk .sp-dang{background:rgba(240,68,56,.14);color:#FDA29B}
+.dk .sp-zero{background:var(--n-800);color:var(--n-500)}
+
+/* Categories */
+.cat{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px 0 7px;
+  border-radius:4px;font-weight:500;font-size:11.5px;border:1px solid transparent;line-height:1}
+.cat .sw{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.cat-cmp{background:#EEF2FF;color:#2A3478;border-color:#C7D0F2}.cat-cmp .sw{background:var(--cmp)}
+.cat-rpt{background:#E8FAF6;color:#0E5F5A;border-color:#99E8DD}.cat-rpt .sw{background:var(--rpt)}
+.cat-hrm{background:#F5F0FF;color:#5B21B6;border-color:#D9C2FF}.cat-hrm .sw{background:var(--hrm)}
+.cat-lbr{background:#FEF3D6;color:#7A340B;border-color:#F8D58A}.cat-lbr .sw{background:var(--lbr)}
+.cat-acc{background:#FEEEF4;color:#9B226B;border-color:#FBC8DD}.cat-acc .sw{background:var(--acc)}
+.cat.lg{height:26px;font-size:12.5px;padding:0 10px 0 9px}.cat.lg .sw{width:10px;height:10px}
+.dk .cat-cmp{background:rgba(68,86,194,.14);color:#A8B4FF;border-color:rgba(68,86,194,.35)}
+.dk .cat-rpt{background:rgba(21,159,138,.14);color:#5EE6CD;border-color:rgba(21,159,138,.35)}
+.dk .cat-hrm{background:rgba(114,68,213,.14);color:#C2A6FF;border-color:rgba(114,68,213,.35)}
+.dk .cat-lbr{background:rgba(198,132,32,.14);color:#F5C26B;border-color:rgba(198,132,32,.35)}
+.dk .cat-acc{background:rgba(210,78,142,.14);color:#F19EC2;border-color:rgba(210,78,142,.35)}
+
+/* Stock dots in filter */
+.dot{width:8px;height:8px;border-radius:999px;flex-shrink:0}
+
+/* Mobile */
+.mob{width:390px;background:var(--n-25);min-height:780px;display:flex;flex-direction:column;
+  position:relative;border:1px solid var(--n-200);border-radius:24px;overflow:hidden;
+  box-shadow:0 20px 60px -20px rgba(16,24,40,.2)}
+.mob.dk{background:var(--n-975);border-color:var(--n-800)}
+.mob-top{background:#fff;border-bottom:1px solid var(--n-150);padding:14px 16px}
+.dk .mob-top{background:var(--n-950);border-color:var(--n-800)}
+.mob-top-row{display:flex;align-items:center;gap:12px}
+.mob-icon{width:40px;height:40px;border-radius:8px;border:none;background:transparent;
+  color:var(--n-700);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.dk .mob-icon{color:var(--n-200)}
+.mob-icon svg{width:20px;height:20px}
+.mob-title{font-size:17px;font-weight:600;color:var(--n-950);letter-spacing:-0.01em}
+.dk .mob-title{color:#fff}
+.mob-sub{font-size:12px;color:var(--n-500)}
+.mob-sub b{font-family:'IBM Plex Mono',monospace;color:var(--n-700);font-weight:500}
+.dk .mob-sub{color:var(--n-300)}.dk .mob-sub b{color:var(--n-100)}
+.mob-search{margin-top:12px;height:44px;border:1px solid var(--n-150);background:#fff;border-radius:8px;
+  display:flex;align-items:center;padding:0 12px;gap:8px}
+.dk .mob-search{background:var(--n-900);border-color:var(--n-800)}
+.mob-search input{flex:1;border:none;outline:none;background:transparent;font-family:inherit;font-size:14px;color:var(--n-950)}
+.mob-search input::placeholder{color:var(--n-300)}
+.dk .mob-search input{color:#fff}
+.mob-search svg{width:16px;height:16px;color:var(--n-500)}
+.mob-list{flex:1;background:#fff;overflow-y:auto;padding-bottom:96px}
+.dk .mob-list{background:var(--n-950)}
+.mob-li{padding:14px 16px;border-bottom:1px solid var(--n-100);display:flex;flex-direction:column;gap:6px}
+.dk .mob-li{border-color:var(--n-800)}
+.mob-li-top{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.mob-li-sku{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500)}
+.dk .mob-li-sku{color:var(--n-300)}
+.mob-li-pr{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--n-950)}
+.dk .mob-li-pr{color:#fff}
+.mob-li-name{font-size:14px;font-weight:500;color:var(--n-950);line-height:1.3}
+.dk .mob-li-name{color:#fff}
+.mob-li-meta{font-size:12px;color:var(--n-500)}
+.dk .mob-li-meta{color:var(--n-300)}
+.mob-li-foot{display:flex;align-items:center;gap:8px;justify-content:space-between;margin-top:2px}
+.mob-fab{position:absolute;right:16px;bottom:80px;width:56px;height:56px;border-radius:999px;
+  background:var(--p-600);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;box-shadow:0 8px 24px rgba(45,60,229,.4);z-index:5}
+.dk .mob-fab{background:var(--p-500);box-shadow:0 8px 24px rgba(75,91,245,.5)}
+.mob-fab svg{width:24px;height:24px}
+.mob-bottom{height:64px;background:#fff;border-top:1px solid var(--n-150);
+  display:grid;grid-template-columns:repeat(5,1fr);position:absolute;bottom:0;left:0;right:0}
+.dk .mob-bottom{background:var(--n-950);border-color:var(--n-800)}
+.mob-tab{background:transparent;border:none;cursor:pointer;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;color:var(--n-500);font-size:11px;
+  font-family:'IBM Plex Sans',sans-serif;font-weight:500;padding:8px 0}
+.mob-tab svg{width:22px;height:22px}
+.mob-tab.on{color:var(--p-600)}
+.dk .mob-tab{color:var(--n-500)}.dk .mob-tab.on{color:var(--p-300)}
+
+/* Detail panel */
+.det-panel{position:absolute;top:0;right:0;width:480px;height:100%;background:#fff;
+  border-left:1px solid var(--n-150);box-shadow:-12px 0 40px -16px rgba(16,24,40,.15);
+  display:flex;flex-direction:column;z-index:10}
+.det-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--n-100)}
+.det-x{width:32px;height:32px;border:none;background:var(--n-100);color:var(--n-700);
+  border-radius:999px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.det-x svg{width:14px;height:14px}
+.det-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--n-300);margin:0;font-weight:500}
+.det-body{flex:1;overflow-y:auto;padding:24px}
+.det-hero{margin-bottom:28px}
+.det-sku{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--n-700);margin:0 0 8px}
+.det-name{font-size:24px;font-weight:500;letter-spacing:-0.02em;line-height:1.2;margin:0 0 6px;color:var(--n-950)}
+.det-model{font-size:14px;color:var(--n-500);margin:0 0 12px}
+.det-block{margin-bottom:28px}
+.det-block-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--n-300);margin:0 0 12px;font-weight:500;
+  display:flex;align-items:center;gap:6px}
+.det-block-lbl.adm{color:var(--info-d)}
+.det-block-lbl .pulse{width:6px;height:6px;border-radius:999px;background:var(--info);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.det-qr{display:flex;flex-direction:column;align-items:center;gap:12px}
+.det-qr-img{width:200px;height:200px;background:#fff;border:1px solid var(--n-150);
+  border-radius:8px;padding:14px;display:flex;align-items:center;justify-content:center}
+.det-qr-img svg{width:100%;height:100%}
+.det-stock-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.det-stock-c{border:1px solid var(--n-150);border-top-width:2px;border-radius:6px;padding:12px}
+.det-stock-c.t-succ{border-top-color:var(--succ-500)}
+.det-stock-c.t-warn{border-top-color:var(--warn-500)}
+.det-stock-c.t-dang{border-top-color:var(--dang-500)}
+.det-stock-c.t-zero{border-top-color:var(--n-300)}
+.det-stock-name{font-size:12px;font-weight:500;color:var(--n-950);margin:0 0 2px}
+.det-stock-num{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500;color:var(--n-950);line-height:1.2;margin:0}
+.det-stock-num.zero{color:var(--n-300)}
+.det-stock-min{font-size:11px;color:var(--n-500);margin:0}
+.det-tl{display:flex;flex-direction:column;gap:10px}
+.det-tl-row{display:grid;grid-template-columns:14px 60px 1fr;gap:10px;align-items:flex-start}
+.det-tl-dot{width:8px;height:8px;border-radius:999px;margin-top:5px}
+.tl-succ{background:var(--succ-500)}.tl-info{background:var(--info)}.tl-prog{background:#9A6FDF}.tl-warn{background:var(--warn-500)}
+.det-tl-time{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);line-height:1.4}
+.det-tl-desc{font-size:12px;color:var(--n-700);line-height:1.4}
+.det-tl-desc b{font-weight:500;color:var(--n-950)}
+.det-cost{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;border:1px solid var(--info-bd);background:var(--info-bg);border-radius:6px;padding:12px}
+.det-cost-c-lbl{font-size:11px;color:var(--info-d);font-weight:500;margin:0 0 2px}
+.det-cost-c-num{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;color:var(--n-950);margin:0}
+.det-foot{padding:16px 24px;border-top:1px solid var(--n-100);display:flex;gap:8px;background:#fff}
+.det-foot .btn{flex:1;height:40px;font-size:13px;justify-content:center}
+
+/* Cards alt grid */
+.cards-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.prod-card{background:#fff;border:1px solid var(--n-150);border-radius:12px;padding:16px;
+  display:flex;flex-direction:column;gap:8px;position:relative}
+.prod-card .cat{position:absolute;top:12px;right:12px}
+.prod-card-sku{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:var(--n-700)}
+.prod-card-name{font-size:13px;font-weight:500;color:var(--n-950);line-height:1.3;padding-right:90px}
+.prod-card-meta{font-size:11px;color:var(--n-500);line-height:1.3}
+.prod-card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:8px;border-top:1px solid var(--n-100)}
+.prod-card-pr{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--n-950)}
+
+/* Specials */
+.special-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.special-card{background:#fff;border:1px solid var(--n-150);border-radius:12px;overflow:hidden}
+.special-h{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-700);
+  letter-spacing:.08em;text-transform:uppercase;margin:0;font-weight:500;
+  padding:14px 18px;border-bottom:1px solid var(--n-100)}
+.special-d{font-size:12px;color:var(--n-500);margin:0;padding:14px 18px;line-height:1.5}
+.empty-state{padding:40px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
+.empty-state svg{width:32px;height:32px;color:var(--n-300)}
+.empty-msg{font-size:14px;color:var(--n-500);margin:0}
+.empty-sub{font-size:12px;color:var(--n-300);margin:0}
+.qr-modal{padding:24px;background:rgba(16,24,40,.4);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;min-height:480px}
+.qr-card{width:360px;background:#fff;border-radius:12px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.qr-cam{width:280px;height:280px;background:var(--n-950);border-radius:8px;position:relative;overflow:hidden}
+.qr-frame{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:180px;height:180px;border:2px dashed var(--p-500);border-radius:8px;animation:scan 2s infinite ease-in-out}
+@keyframes scan{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1}50%{transform:translate(-50%,-50%) scale(1.05);opacity:.7}}
+.qr-msg{font-size:14px;font-weight:500;color:var(--n-950);margin:0;text-align:center}
+.qr-cancel{height:40px;padding:0 24px;background:#fff;border:1px solid var(--n-200);border-radius:6px;color:var(--n-700);font-family:inherit;font-weight:500;font-size:13px;cursor:pointer}
+.sk{border-radius:3px;background:linear-gradient(90deg,var(--n-100) 0%,var(--n-50) 50%,var(--n-100) 100%);background-size:200% 100%;animation:shim 1.4s infinite linear;display:inline-block}
+@keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-row{display:grid;grid-template-columns:90px 1fr 90px 70px 110px 80px;gap:14px;padding:14px 16px;align-items:center;border-bottom:1px solid var(--n-100)}
+.sk-row:last-child{border-bottom:none}
+
+/* Validation */
+.check-card{background:#fff;border:1px solid var(--n-150);border-radius:12px;overflow:hidden;margin-top:24px}
+.check-row{display:grid;grid-template-columns:24px 1fr;gap:12px;padding:16px 20px;border-bottom:1px solid var(--n-100);align-items:start}
+.check-row:last-child{border-bottom:none}
+.check-dot{width:18px;height:18px;border-radius:999px;background:#12B76A;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;margin-top:2px}
+.check-text{font-size:13px;color:var(--n-800);line-height:1.55}
+.check-text strong{color:var(--n-950);font-weight:600}
+.check-text code{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--n-700);background:var(--n-50);padding:1px 6px;border-radius:3px;border:1px solid var(--n-150)}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div style="margin-bottom:48px">
+    <p class="doc-eyebrow">CHV · Sistema canónico v1.0 · Pantalla 4</p>
+    <h1 class="doc-title">Inventario · Catalog Browse</h1>
+    <p class="doc-sub">2,847 SKUs en 4 sedes y 12 categorías. Sin fotos — la identificación visual la hacen el SKU mono, el badge de categoría y los pills de stock por sede en código de semáforo. Meta: encontrar cualquier producto en menos de 3 segundos.</p>
+  </div>
+
+  <!-- LIGHT -->
+  <div class="section-divider"><span class="lbl">Light mode · 3 breakpoints</span><span class="ln"></span></div>
+
+  <!-- VISTA 1 DESKTOP LIGHT -->
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">1</span><span>Desktop · sidebar 240 px · vista TABLA (default)</span><span class="lbl-px">1280 px</span></div>
+    <p class="frame-desc">Search row con input 44 px + atajo <code>⌘K</code> + botón royal <b>Escanear QR</b> al mismo alto. Filtros 220 px a la izquierda con sede activa, estado de stock y categorías con bolitas de color. Tabla densa de 14 filas, mezcla de las 5 categorías. Una fila agotada (atenuada) y una crítica (pill dang en una sede).</p>
+    <div class="frame">
+      <div class="vp-desktop">
+        <div class="shell sh-desktop">
+          <aside class="side">
+            <div class="brand"><div class="logo">C</div><div><div class="bn">Compresores Valle</div><div class="bs">WH-01 · Cali</div></div></div>
+            <div class="sec">Operación</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg><span>Cockpit</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v3H3zM3 7h10v3H3zM3 11h6v3H3z"/></svg><span>Órdenes de servicio</span></div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5l6-3 6 3v6l-6 3-6-3z"/></svg><span>Inventario</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="13" r="1.5"/><circle cx="12" cy="13" r="1.5"/><path d="M2 3h2l2 8h8"/></svg><span>Ventas</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l5-4 5 4v6H3z"/></svg><span>Compras</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l5-5M13 8L8 3M3 8l5 5M13 8l-5 5"/></svg><span>Traslados</span></div>
+            <div class="sec">Admin</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.5 2-4 5-4s5 1.5 5 4"/></svg><span>Usuarios</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v10H3z"/><path d="M6 6h4M6 9h4"/></svg><span>Reportes</span></div>
+          </aside>
+          <main class="main">
+            <div class="main-inner">
+              <p class="ph-meta">Compresores del Valle · Operaciones</p>
+              <div class="ph-row">
+                <div><h1 class="ph-title">Inventario</h1><p class="ph-sub"><b>2,847</b> SKUs · <b>4</b> sedes · <b>12</b> categorías</p></div>
+                <div class="h-actions">
+                  <div class="seg"><button class="on">Tabla</button><button>Tarjetas</button></div>
+                  <button class="btn btn-sec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M5 7l3 3 3-3M2 13h12"/></svg>Exportar</button>
+                </div>
+              </div>
+              <div class="search-row">
+                <label class="search">
+                  <svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+                  <input placeholder="Buscar por nombre, SKU o referencia..." />
+                  <span class="kbd">⌘K</span>
+                </label>
+                <button class="btn-scan"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="10" y="10" width="2" height="2" fill="currentColor"/><rect x="13" y="10" width="1" height="2" fill="currentColor"/><rect x="10" y="13" width="2" height="1" fill="currentColor"/><rect x="13" y="13" width="1" height="1" fill="currentColor"/></svg>Escanear QR</button>
+              </div>
+              <div class="cat-layout">
+                <aside class="filt">
+                  <div class="filt-sec">
+                    <p class="filt-lbl">Sede</p>
+                    <div class="filt-item on">Todas las sedes<span class="filt-cnt">2,847</span></div>
+                    <div class="filt-item">Bodega central · WH-01<span class="filt-cnt">1,420</span></div>
+                    <div class="filt-item">Almacén Norte · WH-02<span class="filt-cnt">612</span></div>
+                    <div class="filt-item">Almacén Sur · WH-03<span class="filt-cnt">485</span></div>
+                    <div class="filt-item">Almacén Cali · WH-04<span class="filt-cnt">330</span></div>
+                  </div>
+                  <div class="filt-sec">
+                    <p class="filt-lbl">Estado de stock</p>
+                    <div class="filt-item"><span class="dot" style="background:var(--succ-500)"></span>En stock<span class="filt-cnt">2,184</span></div>
+                    <div class="filt-item"><span class="dot" style="background:var(--warn-500)"></span>Stock bajo<span class="filt-cnt">478</span></div>
+                    <div class="filt-item"><span class="dot" style="background:var(--dang-500)"></span>Agotado<span class="filt-cnt">185</span></div>
+                  </div>
+                  <div class="filt-sec">
+                    <p class="filt-lbl">Categoría</p>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--cmp)"></span>Compresores<span class="filt-cnt">340</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--rpt)"></span>Repuestos<span class="filt-cnt">892</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--hrm)"></span>Herramientas<span class="filt-cnt">415</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--lbr)"></span>Lubricantes<span class="filt-cnt">218</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--acc)"></span>Accesorios<span class="filt-cnt">612</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--n-400)"></span>Otras<span class="filt-cnt">370</span></div>
+                  </div>
+                </aside>
+                <div class="tbl-card">
+                  <table class="tbl">
+                    <thead><tr><th>SKU</th><th>Producto</th><th>Categoría</th><th>Ubicación</th><th style="text-align:right">Stock por sede</th><th style="text-align:right">Precio</th></tr></thead>
+                    <tbody>
+                      <tr><td class="col-sku">SKU-4521-A</td><td><div class="col-prod-n">Filtro de aire GA-22</div><div class="col-prod-m">Atlas Copco · 1613-7409-00</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span></td><td class="col-loc">B-04-N2</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">24</span><span class="spill sp-succ">18</span><span class="spill sp-warn">6</span><span class="spill sp-succ">12</span></div></td><td class="col-pr">$ 245.000</td></tr>
+                      <tr><td class="col-sku">CMP-2210-K</td><td><div class="col-prod-n">Compresor Kaeser SX-7</div><div class="col-prod-m">Kaeser · SX 7 · 7 HP</div></td><td><span class="cat cat-cmp"><span class="sw"></span>Compresores</span></td><td class="col-loc">A-01-N1</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">3</span><span class="spill sp-warn">1</span><span class="spill sp-zero">—</span><span class="spill sp-succ">2</span></div></td><td class="col-pr">$ 12.450.000</td></tr>
+                      <tr><td class="col-sku">CMP-1840-A</td><td><div class="col-prod-n">Compresor Atlas Copco GA-22</div><div class="col-prod-m">Atlas Copco · GA 22 · 30 HP</div></td><td><span class="cat cat-cmp"><span class="sw"></span>Compresores</span></td><td class="col-loc">A-01-N2</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">5</span><span class="spill sp-succ">2</span><span class="spill sp-succ">3</span><span class="spill sp-warn">1</span></div></td><td class="col-pr">$ 38.900.000</td></tr>
+                      <tr><td class="col-sku">SKU-3301-R</td><td><div class="col-prod-n">Banda en V SPB-2240</div><div class="col-prod-m">Optibelt · SPB 2240 LW</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span></td><td class="col-loc">B-12-N1</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">42</span><span class="spill sp-succ">28</span><span class="spill sp-succ">15</span><span class="spill sp-succ">22</span></div></td><td class="col-pr">$ 89.500</td></tr>
+                      <tr><td class="col-sku">HRM-0712-T</td><td><div class="col-prod-n">Llave torque eléctrica 1/2"</div><div class="col-prod-m">Bosch · GDS 18V-1050 H</div></td><td><span class="cat cat-hrm"><span class="sw"></span>Herramientas</span></td><td class="col-loc">D-03-N3</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">8</span><span class="spill sp-warn">2</span><span class="spill sp-zero">—</span><span class="spill sp-succ">4</span></div></td><td class="col-pr">$ 1.890.000</td></tr>
+                      <tr><td class="col-sku">LBR-0451-S</td><td><div class="col-prod-n">Aceite ISO-VG 46 · 20 L</div><div class="col-prod-m">Shell Corena S2 R 46</div></td><td><span class="cat cat-lbr"><span class="sw"></span>Lubricantes</span></td><td class="col-loc">C-02-N1</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">15</span><span class="spill sp-succ">12</span><span class="spill sp-succ">8</span><span class="spill sp-succ">10</span></div></td><td class="col-pr">$ 420.000</td></tr>
+                      <tr class="depleted"><td class="col-sku">CMP-1410-S</td><td><div class="col-prod-n">Compresor Sullair LS-25</div><div class="col-prod-m">Sullair · LS 25 · 25 HP</div></td><td><span class="cat cat-cmp"><span class="sw"></span>Compresores</span></td><td class="col-loc">A-02-N1</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-zero">—</span><span class="spill sp-zero">—</span><span class="spill sp-zero">—</span><span class="spill sp-zero">—</span></div></td><td class="col-pr">$ 31.500.000</td></tr>
+                      <tr><td class="col-sku">ACC-0918-M</td><td><div class="col-prod-n">Manguera neumática 8 mm</div><div class="col-prod-m">Festo · PUN-8x1.25-BL · m</div></td><td><span class="cat cat-acc"><span class="sw"></span>Accesorios</span></td><td class="col-loc">E-08-N2</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">120</span><span class="spill sp-succ">88</span><span class="spill sp-succ">45</span><span class="spill sp-warn">8</span></div></td><td class="col-pr">$ 18.500</td></tr>
+                      <tr><td class="col-sku">SKU-4220-V</td><td><div class="col-prod-n">Válvula admisión Ingersoll R5</div><div class="col-prod-m">Ingersoll Rand · 39875847</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span></td><td class="col-loc">B-06-N3</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-warn">2</span><span class="spill sp-dang">1</span><span class="spill sp-zero">—</span><span class="spill sp-warn">1</span></div></td><td class="col-pr">$ 1.245.000</td></tr>
+                      <tr><td class="col-sku">HRM-0335-C</td><td><div class="col-prod-n">Calibrador de presión 0-300 PSI</div><div class="col-prod-m">Wika · 213.53 · glicerina</div></td><td><span class="cat cat-hrm"><span class="sw"></span>Herramientas</span></td><td class="col-loc">D-01-N2</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">18</span><span class="spill sp-succ">9</span><span class="spill sp-succ">6</span><span class="spill sp-succ">11</span></div></td><td class="col-pr">$ 285.000</td></tr>
+                      <tr><td class="col-sku">LBR-0218-G</td><td><div class="col-prod-n">Grasa multipropósito EP-2 · 1 kg</div><div class="col-prod-m">Mobilgrease XHP 222</div></td><td><span class="cat cat-lbr"><span class="sw"></span>Lubricantes</span></td><td class="col-loc">C-03-N2</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">35</span><span class="spill sp-succ">22</span><span class="spill sp-succ">14</span><span class="spill sp-succ">18</span></div></td><td class="col-pr">$ 78.500</td></tr>
+                      <tr><td class="col-sku">SKU-4108-S</td><td><div class="col-prod-n">Sello mecánico 35 mm Type-21</div><div class="col-prod-m">John Crane · T21 · SiC/Carb</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span></td><td class="col-loc">B-09-N1</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">12</span><span class="spill sp-succ">8</span><span class="spill sp-warn">3</span><span class="spill sp-succ">7</span></div></td><td class="col-pr">$ 580.000</td></tr>
+                      <tr><td class="col-sku">ACC-0512-A</td><td><div class="col-prod-n">Acople rápido neumático 1/4"</div><div class="col-prod-m">Parker · 23 Series · NPT</div></td><td><span class="cat cat-acc"><span class="sw"></span>Accesorios</span></td><td class="col-loc">E-04-N1</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">85</span><span class="spill sp-succ">62</span><span class="spill sp-succ">48</span><span class="spill sp-succ">35</span></div></td><td class="col-pr">$ 24.500</td></tr>
+                      <tr><td class="col-sku">CMP-2540-I</td><td><div class="col-prod-n">Compresor Ingersoll Rand R5.5</div><div class="col-prod-m">Ingersoll · R5.5i · 7.5 HP</div></td><td><span class="cat cat-cmp"><span class="sw"></span>Compresores</span></td><td class="col-loc">A-03-N1</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">4</span><span class="spill sp-succ">2</span><span class="spill sp-succ">1</span><span class="spill sp-succ">2</span></div></td><td class="col-pr">$ 14.200.000</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 2 TABLET LIGHT -->
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">2</span><span>Tablet · sidebar rail 56 px · vista TABLA</span><span class="lbl-px">900 px</span></div>
+    <p class="frame-desc">Sidebar colapsada a iconos. Filtros 220 px y tabla mantenidos. La columna Producto comprime, Ubicación y Precio se mantienen.</p>
+    <div class="frame">
+      <div class="vp-tablet">
+        <div class="shell sh-tablet">
+          <aside class="side rail">
+            <div class="brand"><div class="logo">C</div></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v3H3zM3 7h10v3H3zM3 11h6v3H3z"/></svg></div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5l6-3 6 3v6l-6 3-6-3z"/></svg></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="13" r="1.5"/><circle cx="12" cy="13" r="1.5"/><path d="M2 3h2l2 8h8"/></svg></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l5-4 5 4v6H3z"/></svg></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l5-5M13 8L8 3M3 8l5 5M13 8l-5 5"/></svg></div>
+          </aside>
+          <main class="main">
+            <div class="main-inner tablet">
+              <p class="ph-meta">Compresores del Valle · Operaciones</p>
+              <div class="ph-row">
+                <div><h1 class="ph-title" style="font-size:18px">Inventario</h1><p class="ph-sub" style="font-size:12px"><b>2,847</b> SKUs · <b>4</b> sedes</p></div>
+                <div class="h-actions">
+                  <div class="seg" style="height:32px"><button class="on" style="height:24px;font-size:12px;padding:0 10px">Tabla</button><button style="height:24px;font-size:12px;padding:0 10px">Tarjetas</button></div>
+                  <button class="btn btn-sec" style="height:32px;font-size:12px;padding:0 12px">Exportar</button>
+                </div>
+              </div>
+              <div class="search-row">
+                <label class="search"><svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input placeholder="Buscar por nombre, SKU o referencia..." /><span class="kbd">⌘K</span></label>
+                <button class="btn-scan"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/></svg>Escanear</button>
+              </div>
+              <div class="cat-layout" style="grid-template-columns:180px 1fr">
+                <aside class="filt">
+                  <div class="filt-sec">
+                    <p class="filt-lbl">Sede</p>
+                    <div class="filt-item on">Todas<span class="filt-cnt">2,847</span></div>
+                    <div class="filt-item">WH-01<span class="filt-cnt">1,420</span></div>
+                    <div class="filt-item">WH-02<span class="filt-cnt">612</span></div>
+                    <div class="filt-item">WH-03<span class="filt-cnt">485</span></div>
+                    <div class="filt-item">WH-04<span class="filt-cnt">330</span></div>
+                  </div>
+                  <div class="filt-sec">
+                    <p class="filt-lbl">Stock</p>
+                    <div class="filt-item"><span class="dot" style="background:var(--succ-500)"></span>En stock<span class="filt-cnt">2,184</span></div>
+                    <div class="filt-item"><span class="dot" style="background:var(--warn-500)"></span>Bajo<span class="filt-cnt">478</span></div>
+                    <div class="filt-item"><span class="dot" style="background:var(--dang-500)"></span>Agotado<span class="filt-cnt">185</span></div>
+                  </div>
+                  <div class="filt-sec">
+                    <p class="filt-lbl">Categoría</p>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--cmp)"></span>Compresores<span class="filt-cnt">340</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--rpt)"></span>Repuestos<span class="filt-cnt">892</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--hrm)"></span>Herramientas<span class="filt-cnt">415</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--lbr)"></span>Lubricantes<span class="filt-cnt">218</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--acc)"></span>Accesorios<span class="filt-cnt">612</span></div>
+                  </div>
+                </aside>
+                <div class="tbl-card">
+                  <table class="tbl">
+                    <thead><tr><th style="width:110px">SKU</th><th>Producto</th><th style="width:100px">Cat.</th><th style="text-align:right;width:140px">Stock</th><th style="text-align:right;width:100px">Precio</th></tr></thead>
+                    <tbody>
+                      <tr><td class="col-sku">SKU-4521-A</td><td><div class="col-prod-n">Filtro de aire GA-22</div><div class="col-prod-m">Atlas Copco</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Rep.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">24</span><span class="spill sp-succ">18</span><span class="spill sp-warn">6</span><span class="spill sp-succ">12</span></div></td><td class="col-pr">$ 245k</td></tr>
+                      <tr><td class="col-sku">CMP-2210-K</td><td><div class="col-prod-n">Compresor Kaeser SX-7</div><div class="col-prod-m">7 HP</div></td><td><span class="cat cat-cmp"><span class="sw"></span>Cmp.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">3</span><span class="spill sp-warn">1</span><span class="spill sp-zero">—</span><span class="spill sp-succ">2</span></div></td><td class="col-pr">$ 12.4M</td></tr>
+                      <tr><td class="col-sku">CMP-1840-A</td><td><div class="col-prod-n">Compresor Atlas Copco GA-22</div><div class="col-prod-m">30 HP</div></td><td><span class="cat cat-cmp"><span class="sw"></span>Cmp.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">5</span><span class="spill sp-succ">2</span><span class="spill sp-succ">3</span><span class="spill sp-warn">1</span></div></td><td class="col-pr">$ 38.9M</td></tr>
+                      <tr><td class="col-sku">SKU-3301-R</td><td><div class="col-prod-n">Banda en V SPB-2240</div><div class="col-prod-m">Optibelt</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Rep.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">42</span><span class="spill sp-succ">28</span><span class="spill sp-succ">15</span><span class="spill sp-succ">22</span></div></td><td class="col-pr">$ 89k</td></tr>
+                      <tr><td class="col-sku">HRM-0712-T</td><td><div class="col-prod-n">Llave torque eléctrica</div><div class="col-prod-m">Bosch</div></td><td><span class="cat cat-hrm"><span class="sw"></span>Hrm.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">8</span><span class="spill sp-warn">2</span><span class="spill sp-zero">—</span><span class="spill sp-succ">4</span></div></td><td class="col-pr">$ 1.89M</td></tr>
+                      <tr><td class="col-sku">LBR-0451-S</td><td><div class="col-prod-n">Aceite ISO-VG 46 · 20 L</div><div class="col-prod-m">Shell Corena</div></td><td><span class="cat cat-lbr"><span class="sw"></span>Lbr.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">15</span><span class="spill sp-succ">12</span><span class="spill sp-succ">8</span><span class="spill sp-succ">10</span></div></td><td class="col-pr">$ 420k</td></tr>
+                      <tr class="depleted"><td class="col-sku">CMP-1410-S</td><td><div class="col-prod-n">Compresor Sullair LS-25</div><div class="col-prod-m">25 HP</div></td><td><span class="cat cat-cmp"><span class="sw"></span>Cmp.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-zero">—</span><span class="spill sp-zero">—</span><span class="spill sp-zero">—</span><span class="spill sp-zero">—</span></div></td><td class="col-pr">$ 31.5M</td></tr>
+                      <tr><td class="col-sku">ACC-0918-M</td><td><div class="col-prod-n">Manguera neumática 8 mm</div><div class="col-prod-m">Festo · m</div></td><td><span class="cat cat-acc"><span class="sw"></span>Acc.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">120</span><span class="spill sp-succ">88</span><span class="spill sp-succ">45</span><span class="spill sp-warn">8</span></div></td><td class="col-pr">$ 18k</td></tr>
+                      <tr><td class="col-sku">SKU-4220-V</td><td><div class="col-prod-n">Válvula admisión Ingersoll R5</div><div class="col-prod-m">Ingersoll Rand</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Rep.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-warn">2</span><span class="spill sp-dang">1</span><span class="spill sp-zero">—</span><span class="spill sp-warn">1</span></div></td><td class="col-pr">$ 1.24M</td></tr>
+                      <tr><td class="col-sku">HRM-0335-C</td><td><div class="col-prod-n">Calibrador 0-300 PSI</div><div class="col-prod-m">Wika</div></td><td><span class="cat cat-hrm"><span class="sw"></span>Hrm.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">18</span><span class="spill sp-succ">9</span><span class="spill sp-succ">6</span><span class="spill sp-succ">11</span></div></td><td class="col-pr">$ 285k</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 3 MOBILE LIGHT -->
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">3</span><span>Mobile · sin sidebar · lista de tarjetas · FAB Escanear QR</span><span class="lbl-px">390 px</span></div>
+    <p class="frame-desc">Header compacto con icono de filtros. Search bar full-width. FAB royal a la derecha sustituye al botón Escanear QR. Lista de productos como list-items con SKU, nombre, categoría inline, ubicación y pills de stock al pie.</p>
+    <div class="vp-mobile lt">
+      <div class="mob">
+        <header class="mob-top">
+          <div class="mob-top-row">
+            <button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+            <div style="flex:1"><div class="mob-title">Inventario</div><div class="mob-sub"><b>2,847</b> SKUs · <b>4</b> sedes</div></div>
+            <button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M6 12h12M9 18h6"/></svg></button>
+          </div>
+          <label class="mob-search"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input placeholder="Buscar nombre, SKU o referencia..." /></label>
+        </header>
+        <div class="mob-list">
+          <div class="mob-li"><div class="mob-li-top"><span class="mob-li-sku">SKU-4521-A · B-04-N2</span><span class="mob-li-pr">$ 245.000</span></div><div class="mob-li-name">Filtro de aire Atlas Copco GA-22</div><div class="mob-li-meta">Atlas Copco · 1613-7409-00</div><div class="mob-li-foot"><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="stock-pills"><span class="spill sp-succ">24</span><span class="spill sp-succ">18</span><span class="spill sp-warn">6</span><span class="spill sp-succ">12</span></div></div></div>
+          <div class="mob-li"><div class="mob-li-top"><span class="mob-li-sku">CMP-2210-K · A-01-N1</span><span class="mob-li-pr">$ 12.450.000</span></div><div class="mob-li-name">Compresor Kaeser SX-7</div><div class="mob-li-meta">Kaeser · SX 7 · 7 HP</div><div class="mob-li-foot"><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="stock-pills"><span class="spill sp-succ">3</span><span class="spill sp-warn">1</span><span class="spill sp-zero">—</span><span class="spill sp-succ">2</span></div></div></div>
+          <div class="mob-li"><div class="mob-li-top"><span class="mob-li-sku">CMP-1840-A · A-01-N2</span><span class="mob-li-pr">$ 38.900.000</span></div><div class="mob-li-name">Compresor Atlas Copco GA-22</div><div class="mob-li-meta">Atlas Copco · 30 HP</div><div class="mob-li-foot"><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="stock-pills"><span class="spill sp-succ">5</span><span class="spill sp-succ">2</span><span class="spill sp-succ">3</span><span class="spill sp-warn">1</span></div></div></div>
+          <div class="mob-li"><div class="mob-li-top"><span class="mob-li-sku">HRM-0712-T · D-03-N3</span><span class="mob-li-pr">$ 1.890.000</span></div><div class="mob-li-name">Llave torque eléctrica 1/2"</div><div class="mob-li-meta">Bosch · GDS 18V-1050 H</div><div class="mob-li-foot"><span class="cat cat-hrm"><span class="sw"></span>Herramientas</span><div class="stock-pills"><span class="spill sp-succ">8</span><span class="spill sp-warn">2</span><span class="spill sp-zero">—</span><span class="spill sp-succ">4</span></div></div></div>
+          <div class="mob-li"><div class="mob-li-top"><span class="mob-li-sku">LBR-0451-S · C-02-N1</span><span class="mob-li-pr">$ 420.000</span></div><div class="mob-li-name">Aceite ISO-VG 46 · 20 L</div><div class="mob-li-meta">Shell Corena S2 R 46</div><div class="mob-li-foot"><span class="cat cat-lbr"><span class="sw"></span>Lubricantes</span><div class="stock-pills"><span class="spill sp-succ">15</span><span class="spill sp-succ">12</span><span class="spill sp-succ">8</span><span class="spill sp-succ">10</span></div></div></div>
+          <div class="mob-li"><div class="mob-li-top"><span class="mob-li-sku">SKU-4220-V · B-06-N3</span><span class="mob-li-pr">$ 1.245.000</span></div><div class="mob-li-name">Válvula admisión Ingersoll R5</div><div class="mob-li-meta">Ingersoll Rand</div><div class="mob-li-foot"><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="stock-pills"><span class="spill sp-warn">2</span><span class="spill sp-dang">1</span><span class="spill sp-zero">—</span><span class="spill sp-warn">1</span></div></div></div>
+        </div>
+        <button class="mob-fab" aria-label="Escanear QR"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="15" y="15" width="3" height="3" fill="currentColor"/><rect x="19" y="15" width="2" height="3" fill="currentColor"/><rect x="15" y="19" width="3" height="2" fill="currentColor"/></svg></button>
+        <nav class="mob-bottom">
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Cockpit</span></button>
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 5h16v3H4zM4 10.5h16v3H4zM4 16h10v3H4z"/></svg><span>OS</span></button>
+          <button class="mob-tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l9-4 9 4v9l-9 4-9-4z"/></svg><span>Inv.</span></button>
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h3l3 12h12"/></svg><span>Ventas</span></button>
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg><span>Más</span></button>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- DARK -->
+  <div class="section-divider"><span class="lbl">Dark mode · OLED-friendly · QR siempre blanco</span><span class="ln"></span></div>
+
+  <!-- VISTA 4 DESKTOP DARK -->
+  <div class="frame-wrap">
+    <div class="frame-label dk"><span class="lbl-num">4</span><span>Desktop dark · TABLA</span><span class="lbl-px">1280 px</span></div>
+    <p class="frame-desc">Fondo n-975, tabla en n-950, header n-900. Pills de stock en alpha 14/texto bright. Categorías en alpha 14/35. CTA Escanear sube a p-500.</p>
+    <div class="frame dk">
+      <div class="vp-desktop">
+        <div class="shell sh-desktop dk">
+          <aside class="side">
+            <div class="brand"><div class="logo">C</div><div><div class="bn">Compresores Valle</div><div class="bs">WH-01 · Cali</div></div></div>
+            <div class="sec">Operación</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg><span>Cockpit</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v3H3zM3 7h10v3H3zM3 11h6v3H3z"/></svg><span>Órdenes de servicio</span></div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5l6-3 6 3v6l-6 3-6-3z"/></svg><span>Inventario</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="13" r="1.5"/><circle cx="12" cy="13" r="1.5"/><path d="M2 3h2l2 8h8"/></svg><span>Ventas</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l5-4 5 4v6H3z"/></svg><span>Compras</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l5-5M13 8L8 3M3 8l5 5M13 8l-5 5"/></svg><span>Traslados</span></div>
+            <div class="sec">Admin</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.5 2-4 5-4s5 1.5 5 4"/></svg><span>Usuarios</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v10H3z"/><path d="M6 6h4M6 9h4"/></svg><span>Reportes</span></div>
+          </aside>
+          <main class="main">
+            <div class="main-inner">
+              <p class="ph-meta">Compresores del Valle · Operaciones</p>
+              <div class="ph-row">
+                <div><h1 class="ph-title">Inventario</h1><p class="ph-sub"><b>2,847</b> SKUs · <b>4</b> sedes · <b>12</b> categorías</p></div>
+                <div class="h-actions">
+                  <div class="seg"><button class="on">Tabla</button><button>Tarjetas</button></div>
+                  <button class="btn btn-sec">Exportar</button>
+                </div>
+              </div>
+              <div class="search-row">
+                <label class="search"><svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input placeholder="Buscar por nombre, SKU o referencia..." /><span class="kbd">⌘K</span></label>
+                <button class="btn-scan"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/></svg>Escanear QR</button>
+              </div>
+              <div class="cat-layout">
+                <aside class="filt">
+                  <div class="filt-sec">
+                    <p class="filt-lbl">Sede</p>
+                    <div class="filt-item on">Todas las sedes<span class="filt-cnt">2,847</span></div>
+                    <div class="filt-item">Bodega central · WH-01<span class="filt-cnt">1,420</span></div>
+                    <div class="filt-item">Almacén Norte · WH-02<span class="filt-cnt">612</span></div>
+                    <div class="filt-item">Almacén Sur · WH-03<span class="filt-cnt">485</span></div>
+                    <div class="filt-item">Almacén Cali · WH-04<span class="filt-cnt">330</span></div>
+                  </div>
+                  <div class="filt-sec">
+                    <p class="filt-lbl">Estado de stock</p>
+                    <div class="filt-item"><span class="dot" style="background:var(--succ-500)"></span>En stock<span class="filt-cnt">2,184</span></div>
+                    <div class="filt-item"><span class="dot" style="background:var(--warn-500)"></span>Stock bajo<span class="filt-cnt">478</span></div>
+                    <div class="filt-item"><span class="dot" style="background:var(--dang-500)"></span>Agotado<span class="filt-cnt">185</span></div>
+                  </div>
+                  <div class="filt-sec">
+                    <p class="filt-lbl">Categoría</p>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--cmp)"></span>Compresores<span class="filt-cnt">340</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--rpt)"></span>Repuestos<span class="filt-cnt">892</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--hrm)"></span>Herramientas<span class="filt-cnt">415</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--lbr)"></span>Lubricantes<span class="filt-cnt">218</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--acc)"></span>Accesorios<span class="filt-cnt">612</span></div>
+                  </div>
+                </aside>
+                <div class="tbl-card">
+                  <table class="tbl">
+                    <thead><tr><th>SKU</th><th>Producto</th><th>Categoría</th><th>Ubicación</th><th style="text-align:right">Stock por sede</th><th style="text-align:right">Precio</th></tr></thead>
+                    <tbody>
+                      <tr><td class="col-sku">SKU-4521-A</td><td><div class="col-prod-n">Filtro de aire GA-22</div><div class="col-prod-m">Atlas Copco · 1613-7409-00</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span></td><td class="col-loc">B-04-N2</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">24</span><span class="spill sp-succ">18</span><span class="spill sp-warn">6</span><span class="spill sp-succ">12</span></div></td><td class="col-pr">$ 245.000</td></tr>
+                      <tr><td class="col-sku">CMP-2210-K</td><td><div class="col-prod-n">Compresor Kaeser SX-7</div><div class="col-prod-m">Kaeser · SX 7 · 7 HP</div></td><td><span class="cat cat-cmp"><span class="sw"></span>Compresores</span></td><td class="col-loc">A-01-N1</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">3</span><span class="spill sp-warn">1</span><span class="spill sp-zero">—</span><span class="spill sp-succ">2</span></div></td><td class="col-pr">$ 12.450.000</td></tr>
+                      <tr><td class="col-sku">CMP-1840-A</td><td><div class="col-prod-n">Compresor Atlas Copco GA-22</div><div class="col-prod-m">Atlas Copco · GA 22 · 30 HP</div></td><td><span class="cat cat-cmp"><span class="sw"></span>Compresores</span></td><td class="col-loc">A-01-N2</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">5</span><span class="spill sp-succ">2</span><span class="spill sp-succ">3</span><span class="spill sp-warn">1</span></div></td><td class="col-pr">$ 38.900.000</td></tr>
+                      <tr><td class="col-sku">SKU-3301-R</td><td><div class="col-prod-n">Banda en V SPB-2240</div><div class="col-prod-m">Optibelt · SPB 2240 LW</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span></td><td class="col-loc">B-12-N1</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">42</span><span class="spill sp-succ">28</span><span class="spill sp-succ">15</span><span class="spill sp-succ">22</span></div></td><td class="col-pr">$ 89.500</td></tr>
+                      <tr><td class="col-sku">HRM-0712-T</td><td><div class="col-prod-n">Llave torque eléctrica 1/2"</div><div class="col-prod-m">Bosch · GDS 18V-1050 H</div></td><td><span class="cat cat-hrm"><span class="sw"></span>Herramientas</span></td><td class="col-loc">D-03-N3</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">8</span><span class="spill sp-warn">2</span><span class="spill sp-zero">—</span><span class="spill sp-succ">4</span></div></td><td class="col-pr">$ 1.890.000</td></tr>
+                      <tr><td class="col-sku">LBR-0451-S</td><td><div class="col-prod-n">Aceite ISO-VG 46 · 20 L</div><div class="col-prod-m">Shell Corena S2 R 46</div></td><td><span class="cat cat-lbr"><span class="sw"></span>Lubricantes</span></td><td class="col-loc">C-02-N1</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">15</span><span class="spill sp-succ">12</span><span class="spill sp-succ">8</span><span class="spill sp-succ">10</span></div></td><td class="col-pr">$ 420.000</td></tr>
+                      <tr class="depleted"><td class="col-sku">CMP-1410-S</td><td><div class="col-prod-n">Compresor Sullair LS-25</div><div class="col-prod-m">Sullair · LS 25 · 25 HP</div></td><td><span class="cat cat-cmp"><span class="sw"></span>Compresores</span></td><td class="col-loc">A-02-N1</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-zero">—</span><span class="spill sp-zero">—</span><span class="spill sp-zero">—</span><span class="spill sp-zero">—</span></div></td><td class="col-pr">$ 31.500.000</td></tr>
+                      <tr><td class="col-sku">ACC-0918-M</td><td><div class="col-prod-n">Manguera neumática 8 mm</div><div class="col-prod-m">Festo · PUN-8x1.25-BL · m</div></td><td><span class="cat cat-acc"><span class="sw"></span>Accesorios</span></td><td class="col-loc">E-08-N2</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">120</span><span class="spill sp-succ">88</span><span class="spill sp-succ">45</span><span class="spill sp-warn">8</span></div></td><td class="col-pr">$ 18.500</td></tr>
+                      <tr><td class="col-sku">SKU-4220-V</td><td><div class="col-prod-n">Válvula admisión Ingersoll R5</div><div class="col-prod-m">Ingersoll Rand · 39875847</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span></td><td class="col-loc">B-06-N3</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-warn">2</span><span class="spill sp-dang">1</span><span class="spill sp-zero">—</span><span class="spill sp-warn">1</span></div></td><td class="col-pr">$ 1.245.000</td></tr>
+                      <tr><td class="col-sku">HRM-0335-C</td><td><div class="col-prod-n">Calibrador de presión 0-300 PSI</div><div class="col-prod-m">Wika · 213.53</div></td><td><span class="cat cat-hrm"><span class="sw"></span>Herramientas</span></td><td class="col-loc">D-01-N2</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">18</span><span class="spill sp-succ">9</span><span class="spill sp-succ">6</span><span class="spill sp-succ">11</span></div></td><td class="col-pr">$ 285.000</td></tr>
+                      <tr><td class="col-sku">LBR-0218-G</td><td><div class="col-prod-n">Grasa multipropósito EP-2 · 1 kg</div><div class="col-prod-m">Mobilgrease XHP 222</div></td><td><span class="cat cat-lbr"><span class="sw"></span>Lubricantes</span></td><td class="col-loc">C-03-N2</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">35</span><span class="spill sp-succ">22</span><span class="spill sp-succ">14</span><span class="spill sp-succ">18</span></div></td><td class="col-pr">$ 78.500</td></tr>
+                      <tr><td class="col-sku">SKU-4108-S</td><td><div class="col-prod-n">Sello mecánico 35 mm Type-21</div><div class="col-prod-m">John Crane · T21 · SiC/Carb</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span></td><td class="col-loc">B-09-N1</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">12</span><span class="spill sp-succ">8</span><span class="spill sp-warn">3</span><span class="spill sp-succ">7</span></div></td><td class="col-pr">$ 580.000</td></tr>
+                      <tr><td class="col-sku">ACC-0512-A</td><td><div class="col-prod-n">Acople rápido neumático 1/4"</div><div class="col-prod-m">Parker · 23 Series · NPT</div></td><td><span class="cat cat-acc"><span class="sw"></span>Accesorios</span></td><td class="col-loc">E-04-N1</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">85</span><span class="spill sp-succ">62</span><span class="spill sp-succ">48</span><span class="spill sp-succ">35</span></div></td><td class="col-pr">$ 24.500</td></tr>
+                      <tr><td class="col-sku">CMP-2540-I</td><td><div class="col-prod-n">Compresor Ingersoll Rand R5.5</div><div class="col-prod-m">Ingersoll · R5.5i · 7.5 HP</div></td><td><span class="cat cat-cmp"><span class="sw"></span>Compresores</span></td><td class="col-loc">A-03-N1</td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">4</span><span class="spill sp-succ">2</span><span class="spill sp-succ">1</span><span class="spill sp-succ">2</span></div></td><td class="col-pr">$ 14.200.000</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 5 TABLET DARK -->
+  <div class="frame-wrap">
+    <div class="frame-label dk"><span class="lbl-num">5</span><span>Tablet dark · rail + tabla compacta</span><span class="lbl-px">900 px</span></div>
+    <p class="frame-desc">Mismo patrón rail + filtros 180 px + tabla con columnas comprimidas en tokens dark.</p>
+    <div class="frame dk">
+      <div class="vp-tablet">
+        <div class="shell sh-tablet dk">
+          <aside class="side rail">
+            <div class="brand"><div class="logo">C</div></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v3H3zM3 7h10v3H3zM3 11h6v3H3z"/></svg></div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5l6-3 6 3v6l-6 3-6-3z"/></svg></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="13" r="1.5"/><circle cx="12" cy="13" r="1.5"/><path d="M2 3h2l2 8h8"/></svg></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l5-4 5 4v6H3z"/></svg></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l5-5M13 8L8 3M3 8l5 5M13 8l-5 5"/></svg></div>
+          </aside>
+          <main class="main">
+            <div class="main-inner tablet">
+              <p class="ph-meta">Compresores del Valle · Operaciones</p>
+              <div class="ph-row">
+                <div><h1 class="ph-title" style="font-size:18px">Inventario</h1><p class="ph-sub" style="font-size:12px"><b>2,847</b> SKUs · <b>4</b> sedes</p></div>
+                <div class="h-actions">
+                  <div class="seg" style="height:32px"><button class="on" style="height:24px;font-size:12px;padding:0 10px">Tabla</button><button style="height:24px;font-size:12px;padding:0 10px">Tarjetas</button></div>
+                  <button class="btn btn-sec" style="height:32px;font-size:12px;padding:0 12px">Exportar</button>
+                </div>
+              </div>
+              <div class="search-row">
+                <label class="search"><svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input placeholder="Buscar por nombre, SKU o referencia..." /><span class="kbd">⌘K</span></label>
+                <button class="btn-scan"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/></svg>Escanear</button>
+              </div>
+              <div class="cat-layout" style="grid-template-columns:180px 1fr">
+                <aside class="filt">
+                  <div class="filt-sec">
+                    <p class="filt-lbl">Sede</p>
+                    <div class="filt-item on">Todas<span class="filt-cnt">2,847</span></div>
+                    <div class="filt-item">WH-01<span class="filt-cnt">1,420</span></div>
+                    <div class="filt-item">WH-02<span class="filt-cnt">612</span></div>
+                    <div class="filt-item">WH-03<span class="filt-cnt">485</span></div>
+                  </div>
+                  <div class="filt-sec">
+                    <p class="filt-lbl">Stock</p>
+                    <div class="filt-item"><span class="dot" style="background:var(--succ-500)"></span>En stock<span class="filt-cnt">2,184</span></div>
+                    <div class="filt-item"><span class="dot" style="background:var(--warn-500)"></span>Bajo<span class="filt-cnt">478</span></div>
+                    <div class="filt-item"><span class="dot" style="background:var(--dang-500)"></span>Agotado<span class="filt-cnt">185</span></div>
+                  </div>
+                  <div class="filt-sec">
+                    <p class="filt-lbl">Categoría</p>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--cmp)"></span>Compresores<span class="filt-cnt">340</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--rpt)"></span>Repuestos<span class="filt-cnt">892</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--hrm)"></span>Herramientas<span class="filt-cnt">415</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--lbr)"></span>Lubricantes<span class="filt-cnt">218</span></div>
+                    <div class="filt-item"><span class="filt-dot" style="background:var(--acc)"></span>Accesorios<span class="filt-cnt">612</span></div>
+                  </div>
+                </aside>
+                <div class="tbl-card">
+                  <table class="tbl">
+                    <thead><tr><th style="width:110px">SKU</th><th>Producto</th><th style="width:100px">Cat.</th><th style="text-align:right;width:140px">Stock</th><th style="text-align:right;width:100px">Precio</th></tr></thead>
+                    <tbody>
+                      <tr><td class="col-sku">SKU-4521-A</td><td><div class="col-prod-n">Filtro de aire GA-22</div><div class="col-prod-m">Atlas Copco</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Rep.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">24</span><span class="spill sp-succ">18</span><span class="spill sp-warn">6</span><span class="spill sp-succ">12</span></div></td><td class="col-pr">$ 245k</td></tr>
+                      <tr><td class="col-sku">CMP-2210-K</td><td><div class="col-prod-n">Compresor Kaeser SX-7</div><div class="col-prod-m">7 HP</div></td><td><span class="cat cat-cmp"><span class="sw"></span>Cmp.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">3</span><span class="spill sp-warn">1</span><span class="spill sp-zero">—</span><span class="spill sp-succ">2</span></div></td><td class="col-pr">$ 12.4M</td></tr>
+                      <tr><td class="col-sku">CMP-1840-A</td><td><div class="col-prod-n">Compresor Atlas Copco GA-22</div><div class="col-prod-m">30 HP</div></td><td><span class="cat cat-cmp"><span class="sw"></span>Cmp.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">5</span><span class="spill sp-succ">2</span><span class="spill sp-succ">3</span><span class="spill sp-warn">1</span></div></td><td class="col-pr">$ 38.9M</td></tr>
+                      <tr><td class="col-sku">SKU-3301-R</td><td><div class="col-prod-n">Banda en V SPB-2240</div><div class="col-prod-m">Optibelt</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Rep.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">42</span><span class="spill sp-succ">28</span><span class="spill sp-succ">15</span><span class="spill sp-succ">22</span></div></td><td class="col-pr">$ 89k</td></tr>
+                      <tr><td class="col-sku">HRM-0712-T</td><td><div class="col-prod-n">Llave torque eléctrica</div><div class="col-prod-m">Bosch</div></td><td><span class="cat cat-hrm"><span class="sw"></span>Hrm.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">8</span><span class="spill sp-warn">2</span><span class="spill sp-zero">—</span><span class="spill sp-succ">4</span></div></td><td class="col-pr">$ 1.89M</td></tr>
+                      <tr><td class="col-sku">LBR-0451-S</td><td><div class="col-prod-n">Aceite ISO-VG 46 · 20 L</div><div class="col-prod-m">Shell Corena</div></td><td><span class="cat cat-lbr"><span class="sw"></span>Lbr.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">15</span><span class="spill sp-succ">12</span><span class="spill sp-succ">8</span><span class="spill sp-succ">10</span></div></td><td class="col-pr">$ 420k</td></tr>
+                      <tr class="depleted"><td class="col-sku">CMP-1410-S</td><td><div class="col-prod-n">Compresor Sullair LS-25</div><div class="col-prod-m">25 HP</div></td><td><span class="cat cat-cmp"><span class="sw"></span>Cmp.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-zero">—</span><span class="spill sp-zero">—</span><span class="spill sp-zero">—</span><span class="spill sp-zero">—</span></div></td><td class="col-pr">$ 31.5M</td></tr>
+                      <tr><td class="col-sku">SKU-4220-V</td><td><div class="col-prod-n">Válvula admisión Ingersoll R5</div><div class="col-prod-m">Ingersoll Rand</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Rep.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-warn">2</span><span class="spill sp-dang">1</span><span class="spill sp-zero">—</span><span class="spill sp-warn">1</span></div></td><td class="col-pr">$ 1.24M</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 6 MOBILE DARK -->
+  <div class="frame-wrap">
+    <div class="frame-label dk"><span class="lbl-num">6</span><span>Mobile dark · OLED-friendly</span><span class="lbl-px">390 px</span></div>
+    <p class="frame-desc">Lista en n-950, tab activa Inventario en p-300.</p>
+    <div class="vp-mobile">
+      <div class="mob dk">
+        <header class="mob-top">
+          <div class="mob-top-row">
+            <button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+            <div style="flex:1"><div class="mob-title">Inventario</div><div class="mob-sub"><b>2,847</b> SKUs · <b>4</b> sedes</div></div>
+            <button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M6 12h12M9 18h6"/></svg></button>
+          </div>
+          <label class="mob-search"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input placeholder="Buscar nombre, SKU o referencia..." /></label>
+        </header>
+        <div class="mob-list">
+          <div class="mob-li"><div class="mob-li-top"><span class="mob-li-sku">SKU-4521-A · B-04-N2</span><span class="mob-li-pr">$ 245.000</span></div><div class="mob-li-name">Filtro de aire Atlas Copco GA-22</div><div class="mob-li-meta">Atlas Copco · 1613-7409-00</div><div class="mob-li-foot"><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="stock-pills"><span class="spill sp-succ">24</span><span class="spill sp-succ">18</span><span class="spill sp-warn">6</span><span class="spill sp-succ">12</span></div></div></div>
+          <div class="mob-li"><div class="mob-li-top"><span class="mob-li-sku">CMP-2210-K · A-01-N1</span><span class="mob-li-pr">$ 12.450.000</span></div><div class="mob-li-name">Compresor Kaeser SX-7</div><div class="mob-li-meta">Kaeser · SX 7 · 7 HP</div><div class="mob-li-foot"><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="stock-pills"><span class="spill sp-succ">3</span><span class="spill sp-warn">1</span><span class="spill sp-zero">—</span><span class="spill sp-succ">2</span></div></div></div>
+          <div class="mob-li"><div class="mob-li-top"><span class="mob-li-sku">CMP-1840-A · A-01-N2</span><span class="mob-li-pr">$ 38.900.000</span></div><div class="mob-li-name">Compresor Atlas Copco GA-22</div><div class="mob-li-meta">Atlas Copco · 30 HP</div><div class="mob-li-foot"><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><div class="stock-pills"><span class="spill sp-succ">5</span><span class="spill sp-succ">2</span><span class="spill sp-succ">3</span><span class="spill sp-warn">1</span></div></div></div>
+          <div class="mob-li"><div class="mob-li-top"><span class="mob-li-sku">HRM-0712-T · D-03-N3</span><span class="mob-li-pr">$ 1.890.000</span></div><div class="mob-li-name">Llave torque eléctrica 1/2"</div><div class="mob-li-meta">Bosch · GDS 18V-1050 H</div><div class="mob-li-foot"><span class="cat cat-hrm"><span class="sw"></span>Herramientas</span><div class="stock-pills"><span class="spill sp-succ">8</span><span class="spill sp-warn">2</span><span class="spill sp-zero">—</span><span class="spill sp-succ">4</span></div></div></div>
+          <div class="mob-li"><div class="mob-li-top"><span class="mob-li-sku">LBR-0451-S · C-02-N1</span><span class="mob-li-pr">$ 420.000</span></div><div class="mob-li-name">Aceite ISO-VG 46 · 20 L</div><div class="mob-li-meta">Shell Corena S2 R 46</div><div class="mob-li-foot"><span class="cat cat-lbr"><span class="sw"></span>Lubricantes</span><div class="stock-pills"><span class="spill sp-succ">15</span><span class="spill sp-succ">12</span><span class="spill sp-succ">8</span><span class="spill sp-succ">10</span></div></div></div>
+          <div class="mob-li"><div class="mob-li-top"><span class="mob-li-sku">SKU-4220-V · B-06-N3</span><span class="mob-li-pr">$ 1.245.000</span></div><div class="mob-li-name">Válvula admisión Ingersoll R5</div><div class="mob-li-meta">Ingersoll Rand</div><div class="mob-li-foot"><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><div class="stock-pills"><span class="spill sp-warn">2</span><span class="spill sp-dang">1</span><span class="spill sp-zero">—</span><span class="spill sp-warn">1</span></div></div></div>
+        </div>
+        <button class="mob-fab" aria-label="Escanear QR"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></button>
+        <nav class="mob-bottom">
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Cockpit</span></button>
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 5h16v3H4zM4 10.5h16v3H4zM4 16h10v3H4z"/></svg><span>OS</span></button>
+          <button class="mob-tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l9-4 9 4v9l-9 4-9-4z"/></svg><span>Inv.</span></button>
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h3l3 12h12"/></svg><span>Ventas</span></button>
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg><span>Más</span></button>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 7 DETALLE PRODUCTO -->
+  <div class="section-divider"><span class="lbl">Detalle del producto · panel lateral 480 px</span><span class="ln"></span></div>
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">7</span><span>Desktop light · panel lateral derecho con producto seleccionado</span><span class="lbl-px">1280 px</span></div>
+    <p class="frame-desc">Al click en una fila, se abre panel 480 px desde la derecha. Tabla con la fila seleccionada en bg <code>p-50</code>. Panel con SKU + nombre 24 px, QR 200×200, 2×2 de stock por sede con border-top de semáforo, timeline de movimientos, bloque costos solo admin (info-bg). Footer sticky con Ajustar stock + Editar producto.</p>
+    <div class="frame">
+      <div class="vp-desktop">
+        <div class="shell sh-desktop" style="position:relative">
+          <aside class="side">
+            <div class="brand"><div class="logo">C</div><div><div class="bn">Compresores Valle</div><div class="bs">WH-01 · Cali</div></div></div>
+            <div class="sec">Operación</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg><span>Cockpit</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v3H3zM3 7h10v3H3zM3 11h6v3H3z"/></svg><span>Órdenes de servicio</span></div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5l6-3 6 3v6l-6 3-6-3z"/></svg><span>Inventario</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="13" r="1.5"/><circle cx="12" cy="13" r="1.5"/><path d="M2 3h2l2 8h8"/></svg><span>Ventas</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l5-4 5 4v6H3z"/></svg><span>Compras</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l5-5M13 8L8 3M3 8l5 5M13 8l-5 5"/></svg><span>Traslados</span></div>
+          </aside>
+          <main class="main">
+            <div class="main-inner">
+              <p class="ph-meta">Compresores del Valle · Operaciones</p>
+              <div class="ph-row">
+                <div><h1 class="ph-title">Inventario</h1><p class="ph-sub"><b>2,847</b> SKUs · <b>4</b> sedes</p></div>
+                <div class="h-actions"><div class="seg"><button class="on">Tabla</button><button>Tarjetas</button></div><button class="btn btn-sec">Exportar</button></div>
+              </div>
+              <div class="search-row">
+                <label class="search"><svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input value="filtro" /><span class="kbd">⌘K</span></label>
+                <button class="btn-scan"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/></svg>Escanear QR</button>
+              </div>
+              <div class="cat-layout">
+                <aside class="filt">
+                  <div class="filt-sec"><p class="filt-lbl">Sede</p><div class="filt-item on">Todas las sedes<span class="filt-cnt">2,847</span></div><div class="filt-item">WH-01<span class="filt-cnt">1,420</span></div><div class="filt-item">WH-02<span class="filt-cnt">612</span></div><div class="filt-item">WH-03<span class="filt-cnt">485</span></div></div>
+                  <div class="filt-sec"><p class="filt-lbl">Categoría</p><div class="filt-item"><span class="filt-dot" style="background:var(--cmp)"></span>Compresores<span class="filt-cnt">340</span></div><div class="filt-item"><span class="filt-dot" style="background:var(--rpt)"></span>Repuestos<span class="filt-cnt">892</span></div><div class="filt-item"><span class="filt-dot" style="background:var(--hrm)"></span>Herramientas<span class="filt-cnt">415</span></div></div>
+                </aside>
+                <div class="tbl-card" style="padding-right:480px">
+                  <table class="tbl">
+                    <thead><tr><th>SKU</th><th>Producto</th><th>Cat.</th><th style="text-align:right">Stock</th></tr></thead>
+                    <tbody>
+                      <tr class="sel"><td class="col-sku">SKU-4521-A</td><td><div class="col-prod-n">Filtro de aire GA-22</div><div class="col-prod-m">Atlas Copco</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Rep.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">24</span><span class="spill sp-succ">18</span><span class="spill sp-warn">6</span><span class="spill sp-succ">12</span></div></td></tr>
+                      <tr><td class="col-sku">SKU-3301-R</td><td><div class="col-prod-n">Banda en V SPB-2240</div><div class="col-prod-m">Optibelt</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Rep.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">42</span><span class="spill sp-succ">28</span><span class="spill sp-succ">15</span><span class="spill sp-succ">22</span></div></td></tr>
+                      <tr><td class="col-sku">SKU-4108-S</td><td><div class="col-prod-n">Sello mecánico 35 mm Type-21</div><div class="col-prod-m">John Crane</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Rep.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-succ">12</span><span class="spill sp-succ">8</span><span class="spill sp-warn">3</span><span class="spill sp-succ">7</span></div></td></tr>
+                      <tr><td class="col-sku">SKU-4220-V</td><td><div class="col-prod-n">Válvula admisión R5</div><div class="col-prod-m">Ingersoll Rand</div></td><td><span class="cat cat-rpt"><span class="sw"></span>Rep.</span></td><td class="col-stock"><div class="stock-pills"><span class="spill sp-warn">2</span><span class="spill sp-dang">1</span><span class="spill sp-zero">—</span><span class="spill sp-warn">1</span></div></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- DETAIL PANEL -->
+            <aside class="det-panel">
+              <header class="det-head">
+                <p class="det-eyebrow">Producto</p>
+                <button class="det-x" aria-label="Cerrar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+              </header>
+              <div class="det-body">
+                <div class="det-hero">
+                  <p class="det-sku">SKU-4521-A · Filtro de aire</p>
+                  <h2 class="det-name">Filtro de aire Atlas Copco GA-22</h2>
+                  <p class="det-model">Atlas Copco · 1613-7409-00</p>
+                  <span class="cat cat-rpt lg"><span class="sw"></span>Repuestos</span>
+                </div>
+                <div class="det-block">
+                  <p class="det-block-lbl">QR del producto</p>
+                  <div class="det-qr">
+                    <div class="det-qr-img">
+                      <svg viewBox="0 0 21 21" shape-rendering="crispEdges"><rect width="21" height="21" fill="#fff"/><g fill="#101828">
+                        <rect x="0" y="0" width="7" height="1"/><rect x="0" y="6" width="7" height="1"/><rect x="0" y="0" width="1" height="7"/><rect x="6" y="0" width="1" height="7"/><rect x="2" y="2" width="3" height="3"/>
+                        <rect x="14" y="0" width="7" height="1"/><rect x="14" y="6" width="7" height="1"/><rect x="14" y="0" width="1" height="7"/><rect x="20" y="0" width="1" height="7"/><rect x="16" y="2" width="3" height="3"/>
+                        <rect x="0" y="14" width="7" height="1"/><rect x="0" y="20" width="7" height="1"/><rect x="0" y="14" width="1" height="7"/><rect x="6" y="14" width="1" height="7"/><rect x="2" y="16" width="3" height="3"/>
+                        <rect x="8" y="0" width="1" height="2"/><rect x="10" y="1" width="2" height="1"/><rect x="9" y="3" width="1" height="2"/><rect x="11" y="3" width="2" height="1"/><rect x="8" y="5" width="2" height="1"/>
+                        <rect x="0" y="8" width="2" height="1"/><rect x="3" y="8" width="1" height="2"/><rect x="5" y="9" width="2" height="1"/><rect x="8" y="8" width="1" height="2"/><rect x="10" y="8" width="2" height="1"/><rect x="13" y="9" width="3" height="1"/><rect x="17" y="8" width="1" height="2"/><rect x="19" y="9" width="2" height="1"/>
+                        <rect x="2" y="10" width="2" height="1"/><rect x="5" y="11" width="1" height="2"/><rect x="8" y="11" width="3" height="1"/><rect x="12" y="10" width="1" height="3"/><rect x="14" y="11" width="2" height="1"/><rect x="17" y="10" width="2" height="1"/><rect x="20" y="11" width="1" height="2"/>
+                        <rect x="9" y="13" width="2" height="1"/><rect x="13" y="14" width="1" height="2"/><rect x="15" y="14" width="2" height="1"/><rect x="18" y="13" width="1" height="3"/>
+                        <rect x="8" y="15" width="1" height="2"/><rect x="11" y="16" width="3" height="1"/><rect x="15" y="17" width="1" height="2"/><rect x="17" y="16" width="2" height="1"/><rect x="20" y="17" width="1" height="2"/>
+                        <rect x="9" y="18" width="2" height="1"/><rect x="12" y="19" width="1" height="2"/><rect x="14" y="20" width="3" height="1"/><rect x="19" y="20" width="2" height="1"/>
+                      </g></svg>
+                    </div>
+                    <button class="btn btn-sec" style="height:36px">Imprimir etiqueta</button>
+                  </div>
+                </div>
+                <div class="det-block">
+                  <p class="det-block-lbl">Stock por sede</p>
+                  <div class="det-stock-grid">
+                    <div class="det-stock-c t-succ"><p class="det-stock-name">Bodega central</p><p class="det-stock-num">24</p><p class="det-stock-min">Mín. 10</p></div>
+                    <div class="det-stock-c t-succ"><p class="det-stock-name">Almacén Norte</p><p class="det-stock-num">18</p><p class="det-stock-min">Mín. 8</p></div>
+                    <div class="det-stock-c t-warn"><p class="det-stock-name">Almacén Sur</p><p class="det-stock-num">6</p><p class="det-stock-min">Mín. 8</p></div>
+                    <div class="det-stock-c t-succ"><p class="det-stock-name">Almacén Cali</p><p class="det-stock-num">12</p><p class="det-stock-min">Mín. 6</p></div>
+                  </div>
+                </div>
+                <div class="det-block">
+                  <p class="det-block-lbl">Últimos movimientos</p>
+                  <div class="det-tl">
+                    <div class="det-tl-row"><span class="det-tl-dot tl-succ"></span><span class="det-tl-time">Hoy 10:42</span><span class="det-tl-desc"><b>Venta VT-0247</b> · −3 unid · WH-01</span></div>
+                    <div class="det-tl-row"><span class="det-tl-dot tl-info"></span><span class="det-tl-time">Ayer 16:18</span><span class="det-tl-desc"><b>Compra OC-1182</b> · +30 unid · WH-01</span></div>
+                    <div class="det-tl-row"><span class="det-tl-dot tl-prog"></span><span class="det-tl-time">02 may</span><span class="det-tl-desc"><b>Traspaso TR-0124</b> · 6 unid · WH-01 → WH-03</span></div>
+                    <div class="det-tl-row"><span class="det-tl-dot tl-warn"></span><span class="det-tl-time">28 abr</span><span class="det-tl-desc"><b>Ajuste AJ-0089</b> · −1 unid · daño en bodega</span></div>
+                    <div class="det-tl-row"><span class="det-tl-dot tl-succ"></span><span class="det-tl-time">25 abr</span><span class="det-tl-desc"><b>Venta VT-0231</b> · −2 unid · WH-02</span></div>
+                  </div>
+                </div>
+                <div class="det-block">
+                  <p class="det-block-lbl adm"><span class="pulse"></span>Costos · solo admin</p>
+                  <div class="det-cost">
+                    <div><p class="det-cost-c-lbl">Costo unit.</p><p class="det-cost-c-num">$ 168.500</p></div>
+                    <div><p class="det-cost-c-lbl">P. venta</p><p class="det-cost-c-num">$ 245.000</p></div>
+                    <div><p class="det-cost-c-lbl">Margen</p><p class="det-cost-c-num">31%</p></div>
+                  </div>
+                </div>
+              </div>
+              <footer class="det-foot">
+                <button class="btn btn-sec">Ajustar stock</button>
+                <button class="btn btn-pri">Editar producto</button>
+              </footer>
+            </aside>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALT: CARDS GRID -->
+  <div class="section-divider"><span class="lbl">Vista alterna · Tarjetas (toggle al lado de Tabla)</span><span class="ln"></span></div>
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">+</span><span>Desktop light · grilla 4 col · sin fotos</span><span class="lbl-px">1280 px</span></div>
+    <p class="frame-desc">Toggle alterno cuando el usuario prefiere navegación visual. SKU arriba, nombre, marca/modelo, badge en posición absoluta arriba-derecha, pills de stock al pie con precio.</p>
+    <div class="frame">
+      <div class="vp-desktop" style="background:var(--n-25);padding:32px 40px">
+        <div class="cards-grid">
+          <div class="prod-card"><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><span class="prod-card-sku">SKU-4521-A</span><div class="prod-card-name">Filtro de aire Atlas Copco GA-22</div><div class="prod-card-meta">Atlas Copco · 1613-7409-00</div><div class="prod-card-foot"><div class="stock-pills"><span class="spill sp-succ">24</span><span class="spill sp-succ">18</span><span class="spill sp-warn">6</span><span class="spill sp-succ">12</span></div><span class="prod-card-pr">$ 245k</span></div></div>
+          <div class="prod-card"><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><span class="prod-card-sku">CMP-2210-K</span><div class="prod-card-name">Compresor Kaeser SX-7</div><div class="prod-card-meta">Kaeser · SX 7 · 7 HP</div><div class="prod-card-foot"><div class="stock-pills"><span class="spill sp-succ">3</span><span class="spill sp-warn">1</span><span class="spill sp-zero">—</span><span class="spill sp-succ">2</span></div><span class="prod-card-pr">$ 12.4M</span></div></div>
+          <div class="prod-card"><span class="cat cat-hrm"><span class="sw"></span>Herramientas</span><span class="prod-card-sku">HRM-0712-T</span><div class="prod-card-name">Llave torque eléctrica 1/2"</div><div class="prod-card-meta">Bosch · GDS 18V-1050 H</div><div class="prod-card-foot"><div class="stock-pills"><span class="spill sp-succ">8</span><span class="spill sp-warn">2</span><span class="spill sp-zero">—</span><span class="spill sp-succ">4</span></div><span class="prod-card-pr">$ 1.89M</span></div></div>
+          <div class="prod-card"><span class="cat cat-lbr"><span class="sw"></span>Lubricantes</span><span class="prod-card-sku">LBR-0451-S</span><div class="prod-card-name">Aceite ISO-VG 46 · 20 L</div><div class="prod-card-meta">Shell Corena S2 R 46</div><div class="prod-card-foot"><div class="stock-pills"><span class="spill sp-succ">15</span><span class="spill sp-succ">12</span><span class="spill sp-succ">8</span><span class="spill sp-succ">10</span></div><span class="prod-card-pr">$ 420k</span></div></div>
+          <div class="prod-card"><span class="cat cat-acc"><span class="sw"></span>Accesorios</span><span class="prod-card-sku">ACC-0918-M</span><div class="prod-card-name">Manguera neumática 8 mm</div><div class="prod-card-meta">Festo · PUN-8x1.25-BL</div><div class="prod-card-foot"><div class="stock-pills"><span class="spill sp-succ">120</span><span class="spill sp-succ">88</span><span class="spill sp-succ">45</span><span class="spill sp-warn">8</span></div><span class="prod-card-pr">$ 18k</span></div></div>
+          <div class="prod-card"><span class="cat cat-rpt"><span class="sw"></span>Repuestos</span><span class="prod-card-sku">SKU-3301-R</span><div class="prod-card-name">Banda en V SPB-2240</div><div class="prod-card-meta">Optibelt · SPB 2240 LW</div><div class="prod-card-foot"><div class="stock-pills"><span class="spill sp-succ">42</span><span class="spill sp-succ">28</span><span class="spill sp-succ">15</span><span class="spill sp-succ">22</span></div><span class="prod-card-pr">$ 89k</span></div></div>
+          <div class="prod-card"><span class="cat cat-cmp"><span class="sw"></span>Compresores</span><span class="prod-card-sku">CMP-1840-A</span><div class="prod-card-name">Compresor Atlas Copco GA-22</div><div class="prod-card-meta">Atlas Copco · 30 HP</div><div class="prod-card-foot"><div class="stock-pills"><span class="spill sp-succ">5</span><span class="spill sp-succ">2</span><span class="spill sp-succ">3</span><span class="spill sp-warn">1</span></div><span class="prod-card-pr">$ 38.9M</span></div></div>
+          <div class="prod-card"><span class="cat cat-hrm"><span class="sw"></span>Herramientas</span><span class="prod-card-sku">HRM-0335-C</span><div class="prod-card-name">Calibrador 0-300 PSI</div><div class="prod-card-meta">Wika · 213.53 glicerina</div><div class="prod-card-foot"><div class="stock-pills"><span class="spill sp-succ">18</span><span class="spill sp-succ">9</span><span class="spill sp-succ">6</span><span class="spill sp-succ">11</span></div><span class="prod-card-pr">$ 285k</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPECIALS -->
+  <div class="section-divider"><span class="lbl">Estados especiales · aislados</span><span class="ln"></span></div>
+  <div class="special-grid">
+    <div class="special-card">
+      <p class="special-h">A · Empty state</p>
+      <p class="special-d">Búsqueda sin resultados. Mensaje + sub-mensaje sugiriendo escaneo.</p>
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l9-4 9 4v9l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v9"/><circle cx="18" cy="18" r="3"/><path d="M20.5 20.5L22 22"/></svg>
+        <p class="empty-msg">No encontramos productos para "compresor xz"</p>
+        <p class="empty-sub">Intenta con otro término o escanea el QR físico del producto</p>
+      </div>
+    </div>
+    <div class="special-card">
+      <p class="special-h">B · Modal escaneo QR</p>
+      <p class="special-d">Backdrop blur + card con cámara + frame punteado animado en p-500.</p>
+      <div class="qr-modal">
+        <div class="qr-card">
+          <div class="qr-cam"><div class="qr-frame"></div></div>
+          <p class="qr-msg">Apunta al QR del producto</p>
+          <button class="qr-cancel">Cancelar</button>
+        </div>
+      </div>
+    </div>
+    <div class="special-card">
+      <p class="special-h">C · Skeleton loader</p>
+      <p class="special-d">6 filas con shimmer respetando estructura de columnas reales.</p>
+      <div style="padding:0">
+        <div class="sk-row"><span class="sk" style="width:80px;height:11px"></span><div><span class="sk" style="width:75%;height:12px;display:block;margin-bottom:4px"></span><span class="sk" style="width:55%;height:10px"></span></div><span class="sk" style="width:70px;height:18px;border-radius:4px"></span><span class="sk" style="width:50px;height:10px"></span><span class="sk" style="width:90px;height:18px"></span><span class="sk" style="width:60px;height:11px"></span></div>
+        <div class="sk-row"><span class="sk" style="width:80px;height:11px"></span><div><span class="sk" style="width:65%;height:12px;display:block;margin-bottom:4px"></span><span class="sk" style="width:45%;height:10px"></span></div><span class="sk" style="width:70px;height:18px;border-radius:4px"></span><span class="sk" style="width:50px;height:10px"></span><span class="sk" style="width:90px;height:18px"></span><span class="sk" style="width:60px;height:11px"></span></div>
+        <div class="sk-row"><span class="sk" style="width:80px;height:11px"></span><div><span class="sk" style="width:80%;height:12px;display:block;margin-bottom:4px"></span><span class="sk" style="width:50%;height:10px"></span></div><span class="sk" style="width:70px;height:18px;border-radius:4px"></span><span class="sk" style="width:50px;height:10px"></span><span class="sk" style="width:90px;height:18px"></span><span class="sk" style="width:60px;height:11px"></span></div>
+        <div class="sk-row"><span class="sk" style="width:80px;height:11px"></span><div><span class="sk" style="width:60%;height:12px;display:block;margin-bottom:4px"></span><span class="sk" style="width:40%;height:10px"></span></div><span class="sk" style="width:70px;height:18px;border-radius:4px"></span><span class="sk" style="width:50px;height:10px"></span><span class="sk" style="width:90px;height:18px"></span><span class="sk" style="width:60px;height:11px"></span></div>
+        <div class="sk-row"><span class="sk" style="width:80px;height:11px"></span><div><span class="sk" style="width:70%;height:12px;display:block;margin-bottom:4px"></span><span class="sk" style="width:55%;height:10px"></span></div><span class="sk" style="width:70px;height:18px;border-radius:4px"></span><span class="sk" style="width:50px;height:10px"></span><span class="sk" style="width:90px;height:18px"></span><span class="sk" style="width:60px;height:11px"></span></div>
+        <div class="sk-row"><span class="sk" style="width:80px;height:11px"></span><div><span class="sk" style="width:75%;height:12px;display:block;margin-bottom:4px"></span><span class="sk" style="width:50%;height:10px"></span></div><span class="sk" style="width:70px;height:18px;border-radius:4px"></span><span class="sk" style="width:50px;height:10px"></span><span class="sk" style="width:90px;height:18px"></span><span class="sk" style="width:60px;height:11px"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VALIDATION -->
+  <div style="margin-top:80px">
+    <div class="frame-label"><span class="lbl-num">✓</span><span>Validación · 6 puntos críticos</span></div>
+    <div class="check-card">
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>SKU como ancla tipográfica</strong> — al barrer la tabla, el SKU mono peso 500 (ej. <code>CMP-2210-K</code>) es lo primero que se lee. La columna está aislada a 130 px y la familia mono crea contraste de textura con el sans del nombre.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Categorías con color propio</strong> — <code>cat-cmp</code> Indigo Steel, <code>cat-rpt</code> teal, <code>cat-hrm</code> púrpura, <code>cat-lbr</code> ámbar dorado, <code>cat-acc</code> rosa. Inmediatamente diferenciables por color sin leer label. Indigo Steel marca compresores (la categoría más cara).</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>"Escanear QR" inconfundible</strong> — botón royal sólido al lado del search en desktop/tablet, FAB royal flotante en mobile. Es la afordancia más prominente; no compite con nada más en la pantalla.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Pills legibles sin números</strong> — el patrón cromático de los 4 pills (verde/ámbar/rojo/gris) lee de un vistazo: SKU-4521-A "saludable mayoritariamente con un punto bajo", CMP-1410-S "agotado total", SKU-4220-V "crítico en una sede". El número refuerza, no es necesario.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Tres azules conviven</strong> — royal CTA <code>#2D3CE5</code> en Escanear QR, info pill <code>#2E90FA</code> en filtro "En stock"+bloque costos admin, Indigo Steel <code>#4456C2</code> en Compresores. Los tres en pantalla simultáneamente sin pelear.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Sin fotos no se siente vacío</strong> — la tabla y las tarjetas se sienten profesionales, completas. SKU + categoría + 4 pills cargan toda la lectura visual. No hay ningún placeholder de imagen ni gris que sugiera "falta algo aquí".</div></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHV · Plataforma de Inventario y Operaciones</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+html, body, #root { height: 100%; margin: 0; }
+body { background: var(--color-bg-page); overflow: hidden; transition: background 200ms, color 200ms; }
+* { box-sizing: border-box; }
+
+/* ── View switcher ── */
+.view-switcher {
+  position: fixed; right: 16px; bottom: 16px; z-index: 200;
+  background: var(--color-bg-card); border: 1px solid var(--color-border);
+  border-radius: 999px; padding: 3px; display: flex; gap: 2px;
+  box-shadow: var(--shadow-sm);
+}
+.view-switcher button {
+  border: none; background: transparent; cursor: pointer;
+  font-family: var(--font-ui); font-size: 12px; font-weight: 500;
+  color: var(--color-fg-secondary); padding: 6px 14px; border-radius: 999px;
+  transition: all 80ms;
+}
+.view-switcher button.active { background: var(--blue-600); color: #fff; }
+
+/* ── Mobile device frame ── */
+.device-wrap {
+  height: 100%; display: flex; align-items: center; justify-content: center;
+  background: var(--color-bg-subtle); overflow: hidden;
+}
+.device-frame {
+  width: 390px; height: 780px; border-radius: 44px;
+  background: #0F172A; padding: 12px;
+  box-shadow: 0 24px 80px -20px rgba(0,0,0,.4), 0 0 0 2px #1E293B;
+  margin: 0 auto; flex-shrink: 0;
+}
+.device-screen {
+  width: 100%; height: 100%; border-radius: 32px;
+  overflow: hidden; background: var(--color-bg-card);
+  display: flex; flex-direction: column;
+}
+
+/* ── Tweaks panel ── */
+.tweaks-panel {
+  position: fixed; bottom: 64px; right: 16px; z-index: 500;
+  width: 260px; background: var(--color-bg-card);
+  border: 1px solid var(--color-border); border-radius: var(--radius-card);
+  box-shadow: var(--shadow-overlay);
+  animation: modalIn 200ms cubic-bezier(0.16,1,0.3,1);
+}
+.tweaks-header {
+  padding: 12px 16px; border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-display); font-weight: 700; font-size: 14px;
+  color: var(--color-fg-primary);
+}
+.tweaks-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+.tweak-row { display: flex; justify-content: space-between; align-items: center; }
+.tweak-label { font-family: var(--font-ui); font-size: 12px; font-weight: 500; color: var(--color-fg-secondary); }
+.tweak-select {
+  height: 26px; padding: 0 8px; border: 1px solid var(--color-border);
+  border-radius: 6px; font-family: var(--font-ui); font-size: 12px;
+  background: var(--color-bg-card); color: var(--color-fg-primary); cursor: pointer;
+}
+
+/* ── Module transition ── */
+.module-wrap { animation: slideUp 200ms cubic-bezier(0.16,1,0.3,1) both; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="./Tokens.jsx"></script>
+<script type="text/babel" src="./Shell.jsx"></script>
+<script type="text/babel" src="./Login.jsx"></script>
+<script type="text/babel" src="./Dashboard.jsx"></script>
+<script type="text/babel" src="./Inventory.jsx"></script>
+<script type="text/babel" src="./Operations.jsx"></script>
+<script type="text/babel" src="./Workshop.jsx"></script>
+<script type="text/babel" src="./MobileModules.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "role": "admin",
+  "density": "comfortable",
+  "darkMode": false
+}/*EDITMODE-END*/;
+
+const SK = "chv_platform_v3";
+const load = () => { try { return JSON.parse(localStorage.getItem(SK)) || {}; } catch { return {}; } };
+const save = (s) => { try { localStorage.setItem(SK, JSON.stringify(s)); } catch {} };
+
+const TITLE_MAP = {
+  dashboard:   { t:"Dashboard",           s:"Resumen general · todas las ubicaciones" },
+  inventario:  { t:"Inventario",          s:"1.284 SKUs · 4 ubicaciones" },
+  ventas:      { t:"Ventas",              s:"Historial y nuevas ventas" },
+  cotizaciones:{ t:"Cotizaciones",        s:"Propuestas comerciales" },
+  compras:     { t:"Compras",             s:"Órdenes y recepción" },
+  traslados:   { t:"Traslados",           s:"Movimiento entre sedes" },
+  picking:     { t:"Picking",             s:"Recolección en bodega" },
+  devoluciones:{ t:"Devoluciones",        s:"De clientes y a proveedores" },
+  servicio:    { t:"Órdenes de servicio", s:"Reparaciones y mantenimientos" },
+  ensambles:   { t:"Ensambles (BOM)",     s:"Productos compuestos" },
+  prestamos:   { t:"Préstamo herramientas",s:"Control de disponibilidad" },
+  conteos:     { t:"Conteos",             s:"Verificación física" },
+  usuarios:    { t:"Usuarios",            s:"Gestión de accesos" },
+  auditoria:   { t:"Auditoría",           s:"Log de movimientos" },
+};
+
+// ── ROLE-BASED NAV ──────────────────────────────────────────
+const ROLE_TABS = {
+  admin:    [{id:"dashboard",icon:"layout-dashboard",label:"Inicio"},{id:"inventario",icon:"package",label:"Inventario"},{id:"ventas",icon:"shopping-cart",label:"Ventas",count:"7"},{id:"mas",icon:"menu",label:"Más"}],
+  operator: [{id:"inventario",icon:"package",label:"Inventario"},{id:"picking",icon:"boxes",label:"Picking",count:"2"},{id:"traslados",icon:"truck",label:"Traslados"},{id:"mas",icon:"menu",label:"Más"}],
+  sales:    [{id:"ventas",icon:"shopping-cart",label:"Ventas"},{id:"cotizaciones",icon:"file-text",label:"Cotizas"},{id:"inventario",icon:"package",label:"Stock"},{id:"mas",icon:"menu",label:"Más"}],
+  tech:     [{id:"servicio",icon:"wrench",label:"Servicios",count:"4"},{id:"inventario",icon:"package",label:"Repuestos"},{id:"prestamos",icon:"hand-coins",label:"Herram."},{id:"mas",icon:"menu",label:"Más"}],
+};
+
+// ── DESKTOP APP ──────────────────────────────────────────────
+function DesktopApp({ dark, onToggleDark }) {
+  const init = load();
+  const [authed, setAuthed] = useState(init.authed ?? false);
+  const [active, setActive] = useState(init.active || "dashboard");
+  const [collapsed, setCollapsed] = useState(init.collapsed ?? false);
+  const [subView, setSubView] = useState(null);
+  const prevActive = useRef(active);
+
+  useEffect(() => { save({ ...load(), authed, active, collapsed }); }, [authed, active, collapsed]);
+
+  if (!authed) return <Login onDone={() => { setAuthed(true); save({ ...load(), authed: true }); }} />;
+
+  const navigate = (id) => {
+    prevActive.current = active;
+    setActive(id);
+    setSubView(null);
+    save({ ...load(), active: id });
+  };
+
+  const handleLogout = () => {
+    setAuthed(false);
+    save({ ...load(), authed: false });
+  };
+
+  const head = TITLE_MAP[active] || { t: active, s: "Módulo" };
+
+  let content;
+  if (active === "ventas" && subView === "new") {
+    content = <Sale onBack={() => setSubView(null)} />;
+  } else {
+    const key = `${active}-${subView}`;
+    switch (active) {
+      case "dashboard":    content = <Dashboard key={key} />; break;
+      case "inventario":   content = <Inventory key={key} />; break;
+      case "ventas":       content = <VentasHistorial key={key} onNewSale={()=>setSubView("new")} />; break;
+      case "cotizaciones": content = <Cotizaciones key={key} />; break;
+      case "compras":      content = <Compras key={key} />; break;
+      case "traslados":    content = <Traslados key={key} />; break;
+      case "picking":      content = <PickingDesktop key={key} />; break;
+      case "devoluciones": content = <Devoluciones key={key} />; break;
+      case "servicio":     content = <OrdenesServicio key={key} />; break;
+      case "ensambles":    content = <Ensambles key={key} />; break;
+      case "prestamos":    content = <Prestamos key={key} />; break;
+      case "conteos":      content = <Conteos key={key} />; break;
+      case "usuarios":     content = <Usuarios key={key} />; break;
+      case "auditoria":    content = <Auditoria key={key} />; break;
+      default: content = (
+        <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center" }}>
+          <EmptyState icon="construction" title={active} description="Módulo en desarrollo." />
+        </div>
+      );
+    }
+  }
+
+  return (
+    <div style={{ display:"flex", height:"100%", background:"var(--color-bg-app)" }}>
+      <Sidebar active={active} onNavigate={navigate} collapsed={collapsed} onCollapse={()=>setCollapsed(!collapsed)} onLogout={handleLogout} />
+      <div style={{ flex:1, display:"flex", flexDirection:"column", minWidth:0 }}>
+        <TopHeader title={head.t} subtitle={head.s}
+          onToggleSidebar={()=>setCollapsed(!collapsed)}
+          active={active} onNavigate={navigate}
+          dark={dark} onToggleDark={onToggleDark}
+          onLogout={handleLogout} />
+        <main style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column", minHeight:0 }}>
+          {content}
+        </main>
+      </div>
+    </div>
+  );
+}
+
+// ── MOBILE APP ───────────────────────────────────────────────
+function MobileApp({ role }) {
+  const tabs = ROLE_TABS[role] || ROLE_TABS.operator;
+  const [tab, setTab] = useState(tabs[0].id);
+
+  const handleNav = (id) => setTab(id);
+
+  let content;
+  if (tab === "mas") {
+    content = <MobileMas onNavigate={(id)=>setTab(id)} />;
+  } else if (tab === "picking" || (role==="operator" && tab==="picking")) {
+    content = <MobilePicking />;
+  } else if (tab === "inventario") {
+    content = <MobileInventario />;
+  } else if (tab === "ventas") {
+    content = <MobileVentas />;
+  } else if (tab === "servicio") {
+    content = <MobileServicio />;
+  } else if (tab === "traslados") {
+    content = <MobileTraslados />;
+  } else if (tab === "picking") {
+    content = <MobilePicking />;
+  } else {
+    const info = TITLE_MAP[tab] || { t: tab, s: "" };
+    content = (
+      <div style={{ flex:1, display:"flex", flexDirection:"column" }}>
+        <MobileHeader title={info.t} subtitle={info.s} />
+        <EmptyState icon="smartphone" title="Vista móvil" description={`Navega desde desktop para ver ${info.t} completo.`} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="device-wrap">
+      <div className="device-frame">
+        <div className="device-screen">
+          {content}
+          <MobileTabBar active={tab} onChange={setTab} tabs={tabs} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── TWEAKS PANEL ─────────────────────────────────────────────
+function TweaksPanel({ tweaks, onChange, visible }) {
+  if (!visible) return null;
+  const set = (k, v) => {
+    const next = { ...tweaks, [k]: v };
+    onChange(next);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [k]: v } }, '*');
+  };
+  return (
+    <div className="tweaks-panel">
+      <div className="tweaks-header">Tweaks</div>
+      <div className="tweaks-body">
+        <div className="tweak-row">
+          <span className="tweak-label">Rol</span>
+          <select className="tweak-select" value={tweaks.role} onChange={e=>set("role",e.target.value)}>
+            <option value="admin">Admin</option>
+            <option value="operator">Bodeguero</option>
+            <option value="sales">Vendedor</option>
+            <option value="tech">Técnico</option>
+          </select>
+        </div>
+        <div className="tweak-row">
+          <span className="tweak-label">Modo oscuro</span>
+          <input type="checkbox" checked={tweaks.darkMode} onChange={e=>set("darkMode",e.target.checked)} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── ROOT ─────────────────────────────────────────────────────
+function App() {
+  const [view, setView] = useState(load().view || "desktop");
+  const [tweaks, setTweaks] = useState({ ...TWEAK_DEFAULTS, ...load().tweaks });
+  const [tweaksVisible, setTweaksVisible] = useState(false);
+
+  // Dark mode — apply to <html>
+  useEffect(() => {
+    document.documentElement.setAttribute("data-dark", tweaks.darkMode ? "true" : "false");
+  }, [tweaks.darkMode]);
+
+  useEffect(() => { save({ ...load(), view }); }, [view]);
+  useEffect(() => { save({ ...load(), tweaks }); }, [tweaks]);
+
+  // Tweaks protocol
+  useEffect(() => {
+    const h = (e) => {
+      if (e.data?.type === '__activate_edit_mode')   setTweaksVisible(true);
+      if (e.data?.type === '__deactivate_edit_mode')  setTweaksVisible(false);
+    };
+    window.addEventListener('message', h);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', h);
+  }, []);
+
+  const toggleDark = () => setTweaks(t => ({ ...t, darkMode: !t.darkMode }));
+
+  return (
+    <DarkModeContext.Provider value={{ dark: tweaks.darkMode, toggle: toggleDark }}>
+      {view === "desktop"
+        ? <DesktopApp dark={tweaks.darkMode} onToggleDark={toggleDark} />
+        : <MobileApp role={tweaks.role} />}
+
+      <div className="view-switcher">
+        <button className={view==="desktop"?"active":""} onClick={()=>setView("desktop")}>Desktop</button>
+        <button className={view==="mobile"?"active":""} onClick={()=>setView("mobile")}>Móvil</button>
+      </div>
+
+      <TweaksPanel tweaks={tweaks} onChange={setTweaks} visible={tweaksVisible} />
+    </DarkModeContext.Provider>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

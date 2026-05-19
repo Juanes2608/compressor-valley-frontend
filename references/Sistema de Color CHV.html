@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Sistema de color · CHV · Workshop Cool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after { box-sizing: border-box; }
+  :root {
+    /* Neutros fríos */
+    --n-0: #FFFFFF;
+    --n-25: #FBFBFC;
+    --n-50: #F7F8FA;
+    --n-75: #F2F4F7;
+    --n-100: #EEF1F5;
+    --n-150: #E4E7EC;
+    --n-200: #D0D5DD;
+    --n-300: #98A2B3;
+    --n-500: #667085;
+    --n-700: #475467;
+    --n-800: #344054;
+    --n-900: #101828;
+
+    --primary: #2D3CE5;
+    --primary-hover: #2531C8;
+    --primary-subtle: #EEF0FF;
+
+    --r-card: 12px;
+    --r-md: 6px;
+    --r-sm: 4px;
+  }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--n-25);
+    color: var(--n-900);
+    padding: 56px 40px 96px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .page { max-width: 1320px; margin: 0 auto; }
+  .doc-h1 {
+    font-weight: 600;
+    font-size: 30px;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px;
+  }
+  .doc-sub {
+    font-size: 14px;
+    color: var(--n-500);
+    margin: 0 0 8px;
+    max-width: 760px;
+    line-height: 1.55;
+  }
+  .meta-row {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--n-300);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0 0 48px;
+  }
+  .meta-row span + span::before {
+    content: " · "; margin: 0 6px; color: var(--n-200);
+  }
+
+  .section { margin-bottom: 72px; }
+  .sec-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--n-300);
+    margin: 0 0 6px;
+    font-weight: 500;
+  }
+  .sec-title {
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: -0.015em;
+    margin: 0 0 6px;
+  }
+  .sec-sub {
+    font-size: 13px;
+    color: var(--n-500);
+    margin: 0 0 24px;
+    max-width: 720px;
+    line-height: 1.6;
+  }
+
+  /* RAMP */
+  .ramp {
+    display: grid;
+    grid-template-columns: 160px repeat(11, 1fr);
+    gap: 0;
+    border: 1px solid var(--n-150);
+    border-radius: var(--r-card);
+    overflow: hidden;
+    background: #fff;
+    margin-bottom: 16px;
+  }
+  .ramp + .ramp { margin-top: 0; }
+  .ramp-label {
+    padding: 18px 16px;
+    background: var(--n-50);
+    border-right: 1px solid var(--n-150);
+    display: flex; flex-direction: column; gap: 4px; justify-content: center;
+  }
+  .ramp-name {
+    font-weight: 600; font-size: 14px;
+    letter-spacing: -0.01em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ramp-dot {
+    width: 12px; height: 12px; border-radius: 999px;
+  }
+  .ramp-meaning {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--n-500);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .swatch-cell {
+    height: 92px;
+    position: relative;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 8px 9px;
+  }
+  .sw-step {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  .sw-hex {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    line-height: 1;
+  }
+
+  /* SEMANTIC + CATEGORY USAGE PANELS */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--n-150);
+    border-radius: var(--r-card);
+    padding: 20px;
+  }
+  .card h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--n-500);
+    margin: 0 0 14px;
+    font-weight: 500;
+  }
+
+  /* status pills */
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 24px; padding: 0 10px;
+    border-radius: 999px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 500; font-size: 12px;
+    line-height: 1;
+    border: 1px solid transparent;
+  }
+  .pill .dot { width: 6px; height: 6px; border-radius: 999px; }
+
+  /* SUCCESS */
+  .pill-success { background: #ECFDF3; color: #027A48; border-color: #A6F4C5; }
+  .pill-success .dot { background: #12B76A; }
+  /* WARNING */
+  .pill-warn { background: #FFFAEB; color: #B54708; border-color: #FEDF89; }
+  .pill-warn .dot { background: #F79009; }
+  /* DANGER */
+  .pill-danger { background: #FEF3F2; color: #B42318; border-color: #FECDCA; }
+  .pill-danger .dot { background: #F04438; }
+  /* INFO */
+  .pill-info { background: #EFF4FF; color: #175CD3; border-color: #B2CCFF; }
+  .pill-info .dot { background: #2E90FA; }
+  /* IN-PROGRESS */
+  .pill-progress { background: #F4EBFF; color: #6941C6; border-color: #D9C2FF; }
+  .pill-progress .dot { background: #9A6FDF; }
+  /* NEUTRAL */
+  .pill-neutral { background: var(--n-100); color: var(--n-700); border-color: var(--n-200); }
+  .pill-neutral .dot { background: var(--n-300); }
+
+  /* CATEGORY badges with weight */
+  .cat-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 28px; padding: 0 12px 0 10px;
+    border-radius: 6px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 500; font-size: 12.5px;
+    letter-spacing: -0.005em;
+    border: 1px solid transparent;
+  }
+  .cat-badge .swatch {
+    width: 10px; height: 10px; border-radius: 2px;
+  }
+  .cat-compresores { background: #EBF1FF; color: #1849A9; border-color: #B2CCFF; }
+  .cat-compresores .swatch { background: #1849A9; }
+  .cat-repuestos   { background: #E8FAF6; color: #0F766E; border-color: #99E8DD; }
+  .cat-repuestos .swatch { background: #0F766E; }
+  .cat-herramientas{ background: #F2EBFF; color: #5B21B6; border-color: #D9C2FF; }
+  .cat-herramientas .swatch { background: #5B21B6; }
+  .cat-lubricantes { background: #FEF0CC; color: #92400E; border-color: #FCD888; }
+  .cat-lubricantes .swatch { background: #92400E; }
+  .cat-accesorios  { background: #FEEEF4; color: #B83280; border-color: #FBC8DD; }
+  .cat-accesorios .swatch { background: #B83280; }
+
+  /* Mock card rows for "estado se siente" demo */
+  .case-row {
+    display: grid;
+    grid-template-columns: 86px 1fr 110px 110px;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--n-100);
+  }
+  .case-row:last-child { border-bottom: none; }
+  .case-id {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--n-700);
+    letter-spacing: -0.01em;
+  }
+  .case-title { font-size: 13px; font-weight: 500; color: var(--n-900); }
+  .case-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--n-500);
+  }
+
+  /* Mono usage examples */
+  .mono-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px 28px;
+  }
+  .mono-item {
+    border-bottom: 1px dashed var(--n-150);
+    padding: 10px 0;
+  }
+  .mono-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--n-300);
+    margin-bottom: 4px;
+  }
+  .mono-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--n-900);
+  }
+
+  /* type spec table */
+  .type-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 200px;
+    align-items: baseline;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--n-100);
+  }
+  .type-row:last-child { border-bottom: none; }
+  .type-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--n-500);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .type-spec {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--n-500);
+    text-align: right;
+  }
+
+  /* category usage demo (table row) */
+  .tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .tbl th {
+    text-align: left;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--n-500);
+    font-weight: 500;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--n-150);
+    background: var(--n-50);
+  }
+  .tbl td {
+    padding: 12px;
+    border-bottom: 1px solid var(--n-100);
+    vertical-align: middle;
+  }
+  .tbl td.sku { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--n-700); }
+  .tbl td.qty { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; text-align: right; color: var(--n-900); }
+  .tbl td.price { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; text-align: right; color: var(--n-900); }
+
+  /* Side-by-side: timid vs confident */
+  .compare {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  }
+  .compare-col h5 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--n-500);
+    margin: 0 0 10px;
+    font-weight: 500;
+  }
+  .timid-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--n-100);
+    font-size: 13px;
+  }
+  .timid-dot { width: 6px; height: 6px; border-radius: 999px; }
+
+</style>
+</head>
+<body>
+<div class="page">
+  <p class="meta-row"><span>Compresores del Valle S.A.S.</span><span>Workshop Cool</span><span>Sistema de color v1</span></p>
+  <h1 class="doc-h1">Sistema de color completo</h1>
+  <p class="doc-sub">Neutros fríos como base. Estados semánticos vivos pero técnicos — esmeralda con calidez, ámbar cálido, coral rojizo, azul royal, ciruela, gris frío. Categorías como "color de vida": azul / teal / púrpura / ámbar oscuro / rosa, usadas como badges con peso real en listas, tablas y filtros — nunca como bolitas en dropdown.</p>
+
+  <!-- =========================================
+       1. NEUTROS BASE
+       ========================================= -->
+  <section class="section">
+    <p class="sec-eyebrow">01 · Base</p>
+    <h2 class="sec-title">Neutros fríos</h2>
+    <p class="sec-sub">Gris azulado puro, no negros bombero. Bordes 0.5–1 px en n-150 hacen toda la jerarquía. Texto principal en n-900, secundario en n-500, terciario en n-300. Hover en n-100, fondos sutiles en n-75.</p>
+
+    <div class="ramp">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:var(--n-700)"></span> Neutral / Cool gray</div>
+        <div class="ramp-meaning">Base · borders · text</div>
+      </div>
+      <div class="swatch-cell" style="background:#FFFFFF; color:#101828; border-right:1px solid var(--n-150)"><span class="sw-step">0</span><span class="sw-hex">#FFFFFF</span></div>
+      <div class="swatch-cell" style="background:#FBFBFC; color:#101828"><span class="sw-step">25</span><span class="sw-hex">#FBFBFC</span></div>
+      <div class="swatch-cell" style="background:#F7F8FA; color:#101828"><span class="sw-step">50</span><span class="sw-hex">#F7F8FA</span></div>
+      <div class="swatch-cell" style="background:#F2F4F7; color:#101828"><span class="sw-step">75</span><span class="sw-hex">#F2F4F7</span></div>
+      <div class="swatch-cell" style="background:#EEF1F5; color:#101828"><span class="sw-step">100</span><span class="sw-hex">#EEF1F5</span></div>
+      <div class="swatch-cell" style="background:#E4E7EC; color:#101828"><span class="sw-step">150</span><span class="sw-hex">#E4E7EC</span></div>
+      <div class="swatch-cell" style="background:#D0D5DD; color:#101828"><span class="sw-step">200</span><span class="sw-hex">#D0D5DD</span></div>
+      <div class="swatch-cell" style="background:#98A2B3; color:#fff"><span class="sw-step">300</span><span class="sw-hex">#98A2B3</span></div>
+      <div class="swatch-cell" style="background:#667085; color:#fff"><span class="sw-step">500</span><span class="sw-hex">#667085</span></div>
+      <div class="swatch-cell" style="background:#475467; color:#fff"><span class="sw-step">700</span><span class="sw-hex">#475467</span></div>
+      <div class="swatch-cell" style="background:#101828; color:#fff"><span class="sw-step">900</span><span class="sw-hex">#101828</span></div>
+    </div>
+
+    <div class="ramp">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:#2D3CE5"></span> Primary · Royal</div>
+        <div class="ramp-meaning">CTA · nav activa</div>
+      </div>
+      <div class="swatch-cell" style="background:#F0F2FF; color:#1E2273"><span class="sw-step">50</span><span class="sw-hex">#F0F2FF</span></div>
+      <div class="swatch-cell" style="background:#E0E5FF; color:#1E2273"><span class="sw-step">100</span><span class="sw-hex">#E0E5FF</span></div>
+      <div class="swatch-cell" style="background:#C2CCFF; color:#1E2273"><span class="sw-step">200</span><span class="sw-hex">#C2CCFF</span></div>
+      <div class="swatch-cell" style="background:#94A3FF; color:#fff"><span class="sw-step">300</span><span class="sw-hex">#94A3FF</span></div>
+      <div class="swatch-cell" style="background:#6B7BFF; color:#fff"><span class="sw-step">400</span><span class="sw-hex">#6B7BFF</span></div>
+      <div class="swatch-cell" style="background:#4B5BF5; color:#fff"><span class="sw-step">500</span><span class="sw-hex">#4B5BF5</span></div>
+      <div class="swatch-cell" style="background:#2D3CE5; color:#fff; outline: 2px solid #fff; outline-offset: -4px"><span class="sw-step">600 ★</span><span class="sw-hex">#2D3CE5</span></div>
+      <div class="swatch-cell" style="background:#2531C8; color:#fff"><span class="sw-step">700</span><span class="sw-hex">#2531C8</span></div>
+      <div class="swatch-cell" style="background:#1F2BA8; color:#fff"><span class="sw-step">800</span><span class="sw-hex">#1F2BA8</span></div>
+      <div class="swatch-cell" style="background:#1A2380; color:#fff"><span class="sw-step">900</span><span class="sw-hex">#1A2380</span></div>
+      <div class="swatch-cell" style="background:#0F1554; color:#fff"><span class="sw-step">950</span><span class="sw-hex">#0F1554</span></div>
+    </div>
+  </section>
+
+  <!-- =========================================
+       2. SEMÁNTICOS — RAMPAS COMPLETAS
+       ========================================= -->
+  <section class="section">
+    <p class="sec-eyebrow">02 · Estados</p>
+    <h2 class="sec-title">Paleta semántica · viva pero técnica</h2>
+    <p class="sec-sub">Verde esmeralda con calidez (no menta). Ámbar cálido. Coral rojizo (no rojo bombero). Azul royal. Púrpura ciruela. Gris frío. El paso que aparece marcado <strong>★</strong> es el "principal" del estado — el que llega a un dot, un border, un texto. Los pasos 50/100 son los fondos de pill, 200 el border, 700 el texto.</p>
+
+    <!-- Success: emerald with warmth -->
+    <div class="ramp">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:#12B76A"></span> Success · Esmeralda</div>
+        <div class="ramp-meaning">en stock · completado · aprobado</div>
+      </div>
+      <div class="swatch-cell" style="background:#ECFDF3; color:#054F31"><span class="sw-step">50</span><span class="sw-hex">#ECFDF3</span></div>
+      <div class="swatch-cell" style="background:#D1FADF; color:#054F31"><span class="sw-step">100</span><span class="sw-hex">#D1FADF</span></div>
+      <div class="swatch-cell" style="background:#A6F4C5; color:#054F31"><span class="sw-step">200</span><span class="sw-hex">#A6F4C5</span></div>
+      <div class="swatch-cell" style="background:#6CE9A6; color:#054F31"><span class="sw-step">300</span><span class="sw-hex">#6CE9A6</span></div>
+      <div class="swatch-cell" style="background:#32D583; color:#054F31"><span class="sw-step">400</span><span class="sw-hex">#32D583</span></div>
+      <div class="swatch-cell" style="background:#12B76A; color:#fff; outline: 2px solid #fff; outline-offset: -4px"><span class="sw-step">500 ★</span><span class="sw-hex">#12B76A</span></div>
+      <div class="swatch-cell" style="background:#039855; color:#fff"><span class="sw-step">600</span><span class="sw-hex">#039855</span></div>
+      <div class="swatch-cell" style="background:#027A48; color:#fff"><span class="sw-step">700</span><span class="sw-hex">#027A48</span></div>
+      <div class="swatch-cell" style="background:#05603A; color:#fff"><span class="sw-step">800</span><span class="sw-hex">#05603A</span></div>
+      <div class="swatch-cell" style="background:#054F31; color:#fff"><span class="sw-step">900</span><span class="sw-hex">#054F31</span></div>
+      <div class="swatch-cell" style="background:#053823; color:#fff"><span class="sw-step">950</span><span class="sw-hex">#053823</span></div>
+    </div>
+
+    <!-- Warning: warm amber -->
+    <div class="ramp">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:#F79009"></span> Warning · Ámbar</div>
+        <div class="ramp-meaning">stock bajo · prestado · pronto</div>
+      </div>
+      <div class="swatch-cell" style="background:#FFFAEB; color:#7A2E0E"><span class="sw-step">50</span><span class="sw-hex">#FFFAEB</span></div>
+      <div class="swatch-cell" style="background:#FEF0C7; color:#7A2E0E"><span class="sw-step">100</span><span class="sw-hex">#FEF0C7</span></div>
+      <div class="swatch-cell" style="background:#FEDF89; color:#7A2E0E"><span class="sw-step">200</span><span class="sw-hex">#FEDF89</span></div>
+      <div class="swatch-cell" style="background:#FEC84B; color:#7A2E0E"><span class="sw-step">300</span><span class="sw-hex">#FEC84B</span></div>
+      <div class="swatch-cell" style="background:#FDB022; color:#7A2E0E"><span class="sw-step">400</span><span class="sw-hex">#FDB022</span></div>
+      <div class="swatch-cell" style="background:#F79009; color:#fff; outline: 2px solid #fff; outline-offset: -4px"><span class="sw-step">500 ★</span><span class="sw-hex">#F79009</span></div>
+      <div class="swatch-cell" style="background:#DC6803; color:#fff"><span class="sw-step">600</span><span class="sw-hex">#DC6803</span></div>
+      <div class="swatch-cell" style="background:#B54708; color:#fff"><span class="sw-step">700</span><span class="sw-hex">#B54708</span></div>
+      <div class="swatch-cell" style="background:#93370D; color:#fff"><span class="sw-step">800</span><span class="sw-hex">#93370D</span></div>
+      <div class="swatch-cell" style="background:#7A2E0E; color:#fff"><span class="sw-step">900</span><span class="sw-hex">#7A2E0E</span></div>
+      <div class="swatch-cell" style="background:#4E1D09; color:#fff"><span class="sw-step">950</span><span class="sw-hex">#4E1D09</span></div>
+    </div>
+
+    <!-- Danger: coral red -->
+    <div class="ramp">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:#F04438"></span> Danger · Coral</div>
+        <div class="ramp-meaning">agotado · vencido · anulado</div>
+      </div>
+      <div class="swatch-cell" style="background:#FEF3F2; color:#7A271A"><span class="sw-step">50</span><span class="sw-hex">#FEF3F2</span></div>
+      <div class="swatch-cell" style="background:#FEE4E2; color:#7A271A"><span class="sw-step">100</span><span class="sw-hex">#FEE4E2</span></div>
+      <div class="swatch-cell" style="background:#FECDCA; color:#7A271A"><span class="sw-step">200</span><span class="sw-hex">#FECDCA</span></div>
+      <div class="swatch-cell" style="background:#FDA29B; color:#7A271A"><span class="sw-step">300</span><span class="sw-hex">#FDA29B</span></div>
+      <div class="swatch-cell" style="background:#F97066; color:#7A271A"><span class="sw-step">400</span><span class="sw-hex">#F97066</span></div>
+      <div class="swatch-cell" style="background:#F04438; color:#fff; outline: 2px solid #fff; outline-offset: -4px"><span class="sw-step">500 ★</span><span class="sw-hex">#F04438</span></div>
+      <div class="swatch-cell" style="background:#D92D20; color:#fff"><span class="sw-step">600</span><span class="sw-hex">#D92D20</span></div>
+      <div class="swatch-cell" style="background:#B42318; color:#fff"><span class="sw-step">700</span><span class="sw-hex">#B42318</span></div>
+      <div class="swatch-cell" style="background:#912018; color:#fff"><span class="sw-step">800</span><span class="sw-hex">#912018</span></div>
+      <div class="swatch-cell" style="background:#7A271A; color:#fff"><span class="sw-step">900</span><span class="sw-hex">#7A271A</span></div>
+      <div class="swatch-cell" style="background:#55160C; color:#fff"><span class="sw-step">950</span><span class="sw-hex">#55160C</span></div>
+    </div>
+
+    <!-- Info: royal blue -->
+    <div class="ramp">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:#2E90FA"></span> Info · Azul royal</div>
+        <div class="ramp-meaning">en proceso · diagnóstico · pendiente</div>
+      </div>
+      <div class="swatch-cell" style="background:#EFF8FF; color:#194185"><span class="sw-step">50</span><span class="sw-hex">#EFF8FF</span></div>
+      <div class="swatch-cell" style="background:#D1E9FF; color:#194185"><span class="sw-step">100</span><span class="sw-hex">#D1E9FF</span></div>
+      <div class="swatch-cell" style="background:#B2DDFF; color:#194185"><span class="sw-step">200</span><span class="sw-hex">#B2DDFF</span></div>
+      <div class="swatch-cell" style="background:#84CAFF; color:#194185"><span class="sw-step">300</span><span class="sw-hex">#84CAFF</span></div>
+      <div class="swatch-cell" style="background:#53B1FD; color:#194185"><span class="sw-step">400</span><span class="sw-hex">#53B1FD</span></div>
+      <div class="swatch-cell" style="background:#2E90FA; color:#fff; outline: 2px solid #fff; outline-offset: -4px"><span class="sw-step">500 ★</span><span class="sw-hex">#2E90FA</span></div>
+      <div class="swatch-cell" style="background:#1570EF; color:#fff"><span class="sw-step">600</span><span class="sw-hex">#1570EF</span></div>
+      <div class="swatch-cell" style="background:#175CD3; color:#fff"><span class="sw-step">700</span><span class="sw-hex">#175CD3</span></div>
+      <div class="swatch-cell" style="background:#1849A9; color:#fff"><span class="sw-step">800</span><span class="sw-hex">#1849A9</span></div>
+      <div class="swatch-cell" style="background:#194185; color:#fff"><span class="sw-step">900</span><span class="sw-hex">#194185</span></div>
+      <div class="swatch-cell" style="background:#102A56; color:#fff"><span class="sw-step">950</span><span class="sw-hex">#102A56</span></div>
+    </div>
+
+    <!-- In-progress: plum purple -->
+    <div class="ramp">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:#9A6FDF"></span> In-progress · Ciruela</div>
+        <div class="ramp-meaning">en reparación · ensamblando</div>
+      </div>
+      <div class="swatch-cell" style="background:#F9F5FF; color:#42307D"><span class="sw-step">50</span><span class="sw-hex">#F9F5FF</span></div>
+      <div class="swatch-cell" style="background:#F4EBFF; color:#42307D"><span class="sw-step">100</span><span class="sw-hex">#F4EBFF</span></div>
+      <div class="swatch-cell" style="background:#E9D7FE; color:#42307D"><span class="sw-step">200</span><span class="sw-hex">#E9D7FE</span></div>
+      <div class="swatch-cell" style="background:#D6BBFB; color:#42307D"><span class="sw-step">300</span><span class="sw-hex">#D6BBFB</span></div>
+      <div class="swatch-cell" style="background:#B692F6; color:#42307D"><span class="sw-step">400</span><span class="sw-hex">#B692F6</span></div>
+      <div class="swatch-cell" style="background:#9A6FDF; color:#fff; outline: 2px solid #fff; outline-offset: -4px"><span class="sw-step">500 ★</span><span class="sw-hex">#9A6FDF</span></div>
+      <div class="swatch-cell" style="background:#7F56D9; color:#fff"><span class="sw-step">600</span><span class="sw-hex">#7F56D9</span></div>
+      <div class="swatch-cell" style="background:#6941C6; color:#fff"><span class="sw-step">700</span><span class="sw-hex">#6941C6</span></div>
+      <div class="swatch-cell" style="background:#53389E; color:#fff"><span class="sw-step">800</span><span class="sw-hex">#53389E</span></div>
+      <div class="swatch-cell" style="background:#42307D; color:#fff"><span class="sw-step">900</span><span class="sw-hex">#42307D</span></div>
+      <div class="swatch-cell" style="background:#2C1C5F; color:#fff"><span class="sw-step">950</span><span class="sw-hex">#2C1C5F</span></div>
+    </div>
+
+    <!-- Neutral status (cool gray) -->
+    <div class="ramp">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:#98A2B3"></span> Neutral · Pasivo</div>
+        <div class="ramp-meaning">recibida · entregada · cerrado</div>
+      </div>
+      <div class="swatch-cell" style="background:#F7F8FA; color:#101828"><span class="sw-step">50</span><span class="sw-hex">#F7F8FA</span></div>
+      <div class="swatch-cell" style="background:#EEF1F5; color:#101828"><span class="sw-step">100</span><span class="sw-hex">#EEF1F5</span></div>
+      <div class="swatch-cell" style="background:#E4E7EC; color:#101828"><span class="sw-step">200</span><span class="sw-hex">#E4E7EC</span></div>
+      <div class="swatch-cell" style="background:#D0D5DD; color:#101828"><span class="sw-step">300</span><span class="sw-hex">#D0D5DD</span></div>
+      <div class="swatch-cell" style="background:#98A2B3; color:#fff; outline: 2px solid #fff; outline-offset: -4px"><span class="sw-step">400 ★</span><span class="sw-hex">#98A2B3</span></div>
+      <div class="swatch-cell" style="background:#667085; color:#fff"><span class="sw-step">500</span><span class="sw-hex">#667085</span></div>
+      <div class="swatch-cell" style="background:#475467; color:#fff"><span class="sw-step">700</span><span class="sw-hex">#475467</span></div>
+      <div class="swatch-cell" style="background:#344054; color:#fff"><span class="sw-step">800</span><span class="sw-hex">#344054</span></div>
+      <div class="swatch-cell" style="background:#1D2939; color:#fff"><span class="sw-step">900</span><span class="sw-hex">#1D2939</span></div>
+      <div class="swatch-cell" style="background:#101828; color:#fff"><span class="sw-step">950</span><span class="sw-hex">#101828</span></div>
+      <div class="swatch-cell" style="background:#0B1320; color:#fff; border-left:1px solid var(--n-150)"><span class="sw-step">975</span><span class="sw-hex">#0B1320</span></div>
+    </div>
+
+    <!-- "estado se siente" demo -->
+    <div class="card" style="margin-top:24px;padding:0">
+      <div style="padding:14px 18px; border-bottom: 1px solid var(--n-150); display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <h4 style="margin:0">Estado se siente · ejemplo en tarjetas de OS</h4>
+        </div>
+      </div>
+      <div class="case-row">
+        <span class="case-id">OS-2845</span>
+        <span class="case-title">Cambio de aceite + filtros · Atlas Copco GA-22</span>
+        <span class="pill pill-progress"><span class="dot"></span>En reparación</span>
+        <span class="case-meta">02d 04h</span>
+      </div>
+      <div class="case-row">
+        <span class="case-id">OS-2844</span>
+        <span class="case-title">Diagnóstico falla térmica · Kaeser SX-7</span>
+        <span class="pill pill-info"><span class="dot"></span>Diagnóstico</span>
+        <span class="case-meta">06h 12m</span>
+      </div>
+      <div class="case-row">
+        <span class="case-id">OS-2841</span>
+        <span class="case-title">Reemplazo válvula admisión · Ingersoll R5</span>
+        <span class="pill pill-warn"><span class="dot"></span>Esperando repuesto</span>
+        <span class="case-meta">04d 18h</span>
+      </div>
+      <div class="case-row">
+        <span class="case-id">OS-2839</span>
+        <span class="case-title">Mantenimiento preventivo 2.000h</span>
+        <span class="pill pill-success"><span class="dot"></span>Completada</span>
+        <span class="case-meta">— ayer</span>
+      </div>
+      <div class="case-row">
+        <span class="case-id">OS-2832</span>
+        <span class="case-title">Reparación urgente compresor línea 3</span>
+        <span class="pill pill-danger"><span class="dot"></span>Vencida</span>
+        <span class="case-meta">+1d 02h</span>
+      </div>
+      <div class="case-row">
+        <span class="case-id">OS-2811</span>
+        <span class="case-title">Cambio bandas · Sullair LS-25</span>
+        <span class="pill pill-neutral"><span class="dot"></span>Entregada</span>
+        <span class="case-meta">12 abr</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================
+       3. CATEGORÍAS — color de vida
+       ========================================= -->
+  <section class="section">
+    <p class="sec-eyebrow">03 · Categorías</p>
+    <h2 class="sec-title">Color de vida · categorías de producto</h2>
+    <p class="sec-sub">Cinco familias con peso visual real. No bolitas tímidas en un dropdown — badges con borde, fondo tintado y swatch sólido. Aparecen en filas de tabla, en filtros, en cards de productos. Son la "textura cálida" que rompe la monotonía del fondo neutro frío.</p>
+
+    <!-- Five badges row -->
+    <div class="card" style="margin-bottom:20px">
+      <h4>Familia · badge canónico</h4>
+      <div style="display:flex; flex-wrap:wrap; gap:12px;">
+        <span class="cat-badge cat-compresores"><span class="swatch"></span> Compresores</span>
+        <span class="cat-badge cat-repuestos"><span class="swatch"></span> Repuestos</span>
+        <span class="cat-badge cat-herramientas"><span class="swatch"></span> Herramientas</span>
+        <span class="cat-badge cat-lubricantes"><span class="swatch"></span> Lubricantes</span>
+        <span class="cat-badge cat-accesorios"><span class="swatch"></span> Accesorios</span>
+      </div>
+    </div>
+
+    <!-- Ramps -->
+    <div class="ramp">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:#1849A9"></span> Compresores · Azul</div>
+        <div class="ramp-meaning">familia principal</div>
+      </div>
+      <div class="swatch-cell" style="background:#EBF1FF; color:#102A56"><span class="sw-step">50</span><span class="sw-hex">#EBF1FF</span></div>
+      <div class="swatch-cell" style="background:#D1E0FF; color:#102A56"><span class="sw-step">100</span><span class="sw-hex">#D1E0FF</span></div>
+      <div class="swatch-cell" style="background:#B2CCFF; color:#102A56"><span class="sw-step">200</span><span class="sw-hex">#B2CCFF</span></div>
+      <div class="swatch-cell" style="background:#84A6FF; color:#fff"><span class="sw-step">300</span><span class="sw-hex">#84A6FF</span></div>
+      <div class="swatch-cell" style="background:#5378E0; color:#fff"><span class="sw-step">400</span><span class="sw-hex">#5378E0</span></div>
+      <div class="swatch-cell" style="background:#2E5BCB; color:#fff"><span class="sw-step">500</span><span class="sw-hex">#2E5BCB</span></div>
+      <div class="swatch-cell" style="background:#1849A9; color:#fff; outline: 2px solid #fff; outline-offset: -4px"><span class="sw-step">600 ★</span><span class="sw-hex">#1849A9</span></div>
+      <div class="swatch-cell" style="background:#143C8C; color:#fff"><span class="sw-step">700</span><span class="sw-hex">#143C8C</span></div>
+      <div class="swatch-cell" style="background:#102E6F; color:#fff"><span class="sw-step">800</span><span class="sw-hex">#102E6F</span></div>
+      <div class="swatch-cell" style="background:#0C2456; color:#fff"><span class="sw-step">900</span><span class="sw-hex">#0C2456</span></div>
+      <div class="swatch-cell" style="background:#081938; color:#fff"><span class="sw-step">950</span><span class="sw-hex">#081938</span></div>
+    </div>
+
+    <div class="ramp">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:#0F766E"></span> Repuestos · Teal</div>
+        <div class="ramp-meaning">alta rotación</div>
+      </div>
+      <div class="swatch-cell" style="background:#F0FDFA; color:#0B3F3A"><span class="sw-step">50</span><span class="sw-hex">#F0FDFA</span></div>
+      <div class="swatch-cell" style="background:#CCFBEF; color:#0B3F3A"><span class="sw-step">100</span><span class="sw-hex">#CCFBEF</span></div>
+      <div class="swatch-cell" style="background:#99E8DD; color:#0B3F3A"><span class="sw-step">200</span><span class="sw-hex">#99E8DD</span></div>
+      <div class="swatch-cell" style="background:#5DD4C5; color:#0B3F3A"><span class="sw-step">300</span><span class="sw-hex">#5DD4C5</span></div>
+      <div class="swatch-cell" style="background:#2DBBA8; color:#fff"><span class="sw-step">400</span><span class="sw-hex">#2DBBA8</span></div>
+      <div class="swatch-cell" style="background:#159F8A; color:#fff"><span class="sw-step">500</span><span class="sw-hex">#159F8A</span></div>
+      <div class="swatch-cell" style="background:#0F766E; color:#fff; outline: 2px solid #fff; outline-offset: -4px"><span class="sw-step">600 ★</span><span class="sw-hex">#0F766E</span></div>
+      <div class="swatch-cell" style="background:#0E5F5A; color:#fff"><span class="sw-step">700</span><span class="sw-hex">#0E5F5A</span></div>
+      <div class="swatch-cell" style="background:#0C4A47; color:#fff"><span class="sw-step">800</span><span class="sw-hex">#0C4A47</span></div>
+      <div class="swatch-cell" style="background:#0B3F3A; color:#fff"><span class="sw-step">900</span><span class="sw-hex">#0B3F3A</span></div>
+      <div class="swatch-cell" style="background:#062A26; color:#fff"><span class="sw-step">950</span><span class="sw-hex">#062A26</span></div>
+    </div>
+
+    <div class="ramp">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:#5B21B6"></span> Herramientas · Púrpura</div>
+        <div class="ramp-meaning">activo · préstamo</div>
+      </div>
+      <div class="swatch-cell" style="background:#F5F0FF; color:#2E0E73"><span class="sw-step">50</span><span class="sw-hex">#F5F0FF</span></div>
+      <div class="swatch-cell" style="background:#E8DAFF; color:#2E0E73"><span class="sw-step">100</span><span class="sw-hex">#E8DAFF</span></div>
+      <div class="swatch-cell" style="background:#D9C2FF; color:#2E0E73"><span class="sw-step">200</span><span class="sw-hex">#D9C2FF</span></div>
+      <div class="swatch-cell" style="background:#B999F5; color:#fff"><span class="sw-step">300</span><span class="sw-hex">#B999F5</span></div>
+      <div class="swatch-cell" style="background:#9070E5; color:#fff"><span class="sw-step">400</span><span class="sw-hex">#9070E5</span></div>
+      <div class="swatch-cell" style="background:#7244D5; color:#fff"><span class="sw-step">500</span><span class="sw-hex">#7244D5</span></div>
+      <div class="swatch-cell" style="background:#5B21B6; color:#fff; outline: 2px solid #fff; outline-offset: -4px"><span class="sw-step">600 ★</span><span class="sw-hex">#5B21B6</span></div>
+      <div class="swatch-cell" style="background:#491A99; color:#fff"><span class="sw-step">700</span><span class="sw-hex">#491A99</span></div>
+      <div class="swatch-cell" style="background:#39157A; color:#fff"><span class="sw-step">800</span><span class="sw-hex">#39157A</span></div>
+      <div class="swatch-cell" style="background:#2E0E73; color:#fff"><span class="sw-step">900</span><span class="sw-hex">#2E0E73</span></div>
+      <div class="swatch-cell" style="background:#1E0A4F; color:#fff"><span class="sw-step">950</span><span class="sw-hex">#1E0A4F</span></div>
+    </div>
+
+    <div class="ramp">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:#92400E"></span> Lubricantes · Ámbar oscuro</div>
+        <div class="ramp-meaning">consumibles</div>
+      </div>
+      <div class="swatch-cell" style="background:#FEF8E1; color:#451A03"><span class="sw-step">50</span><span class="sw-hex">#FEF8E1</span></div>
+      <div class="swatch-cell" style="background:#FEEFB8; color:#451A03"><span class="sw-step">100</span><span class="sw-hex">#FEEFB8</span></div>
+      <div class="swatch-cell" style="background:#FCD888; color:#451A03"><span class="sw-step">200</span><span class="sw-hex">#FCD888</span></div>
+      <div class="swatch-cell" style="background:#F0B85A; color:#451A03"><span class="sw-step">300</span><span class="sw-hex">#F0B85A</span></div>
+      <div class="swatch-cell" style="background:#D89236; color:#fff"><span class="sw-step">400</span><span class="sw-hex">#D89236</span></div>
+      <div class="swatch-cell" style="background:#B26A1A; color:#fff"><span class="sw-step">500</span><span class="sw-hex">#B26A1A</span></div>
+      <div class="swatch-cell" style="background:#92400E; color:#fff; outline: 2px solid #fff; outline-offset: -4px"><span class="sw-step">600 ★</span><span class="sw-hex">#92400E</span></div>
+      <div class="swatch-cell" style="background:#7A340B; color:#fff"><span class="sw-step">700</span><span class="sw-hex">#7A340B</span></div>
+      <div class="swatch-cell" style="background:#5E2807; color:#fff"><span class="sw-step">800</span><span class="sw-hex">#5E2807</span></div>
+      <div class="swatch-cell" style="background:#451A03; color:#fff"><span class="sw-step">900</span><span class="sw-hex">#451A03</span></div>
+      <div class="swatch-cell" style="background:#2A0F02; color:#fff"><span class="sw-step">950</span><span class="sw-hex">#2A0F02</span></div>
+    </div>
+
+    <div class="ramp">
+      <div class="ramp-label">
+        <div class="ramp-name"><span class="ramp-dot" style="background:#B83280"></span> Accesorios · Rosa</div>
+        <div class="ramp-meaning">misceláneos</div>
+      </div>
+      <div class="swatch-cell" style="background:#FEEEF4; color:#5A1244"><span class="sw-step">50</span><span class="sw-hex">#FEEEF4</span></div>
+      <div class="swatch-cell" style="background:#FCDBE6; color:#5A1244"><span class="sw-step">100</span><span class="sw-hex">#FCDBE6</span></div>
+      <div class="swatch-cell" style="background:#FBC8DD; color:#5A1244"><span class="sw-step">200</span><span class="sw-hex">#FBC8DD</span></div>
+      <div class="swatch-cell" style="background:#F3A0BF; color:#5A1244"><span class="sw-step">300</span><span class="sw-hex">#F3A0BF</span></div>
+      <div class="swatch-cell" style="background:#E972A0; color:#fff"><span class="sw-step">400</span><span class="sw-hex">#E972A0</span></div>
+      <div class="swatch-cell" style="background:#D24E8E; color:#fff"><span class="sw-step">500</span><span class="sw-hex">#D24E8E</span></div>
+      <div class="swatch-cell" style="background:#B83280; color:#fff; outline: 2px solid #fff; outline-offset: -4px"><span class="sw-step">600 ★</span><span class="sw-hex">#B83280</span></div>
+      <div class="swatch-cell" style="background:#9B226B; color:#fff"><span class="sw-step">700</span><span class="sw-hex">#9B226B</span></div>
+      <div class="swatch-cell" style="background:#7A1A55; color:#fff"><span class="sw-step">800</span><span class="sw-hex">#7A1A55</span></div>
+      <div class="swatch-cell" style="background:#5A1244; color:#fff"><span class="sw-step">900</span><span class="sw-hex">#5A1244</span></div>
+      <div class="swatch-cell" style="background:#3D0B2D; color:#fff"><span class="sw-step">950</span><span class="sw-hex">#3D0B2D</span></div>
+    </div>
+
+    <!-- Tímido vs con peso -->
+    <div class="compare" style="margin-top:24px">
+      <div class="card compare-col">
+        <h5>✗ Tímido — bolita en dropdown</h5>
+        <div class="timid-row">
+          <span class="timid-dot" style="background:#1849A9"></span>
+          <span style="color: var(--n-700)">Compresor pistón 2HP · 220V</span>
+          <span style="margin-left:auto;font-family:'IBM Plex Mono';font-size:11px;color:var(--n-500)">CMP-A2H-220</span>
+        </div>
+        <div class="timid-row">
+          <span class="timid-dot" style="background:#0F766E"></span>
+          <span style="color: var(--n-700)">Filtro succión 1/2"</span>
+          <span style="margin-left:auto;font-family:'IBM Plex Mono';font-size:11px;color:var(--n-500)">RPT-FS-12</span>
+        </div>
+        <div class="timid-row">
+          <span class="timid-dot" style="background:#5B21B6"></span>
+          <span style="color: var(--n-700)">Llave torque 1/2" 30-150 N·m</span>
+          <span style="margin-left:auto;font-family:'IBM Plex Mono';font-size:11px;color:var(--n-500)">HRM-LT-150</span>
+        </div>
+        <div class="timid-row">
+          <span class="timid-dot" style="background:#92400E"></span>
+          <span style="color: var(--n-700)">Aceite ISO-VG 46 · 20L</span>
+          <span style="margin-left:auto;font-family:'IBM Plex Mono';font-size:11px;color:var(--n-500)">LBR-ISO46-20</span>
+        </div>
+      </div>
+      <div class="card compare-col">
+        <h5>✓ Con peso — badge real</h5>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width:160px">SKU</th>
+              <th>Producto</th>
+              <th style="width:140px">Familia</th>
+              <th style="width:80px;text-align:right">Stock</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="sku">CMP-A2H-220</td>
+              <td>Compresor pistón 2HP · 220V</td>
+              <td><span class="cat-badge cat-compresores"><span class="swatch"></span> Compresores</span></td>
+              <td class="qty">14</td>
+            </tr>
+            <tr>
+              <td class="sku">RPT-FS-12</td>
+              <td>Filtro succión 1/2"</td>
+              <td><span class="cat-badge cat-repuestos"><span class="swatch"></span> Repuestos</span></td>
+              <td class="qty">238</td>
+            </tr>
+            <tr>
+              <td class="sku">HRM-LT-150</td>
+              <td>Llave torque 1/2" 30-150 N·m</td>
+              <td><span class="cat-badge cat-herramientas"><span class="swatch"></span> Herramientas</span></td>
+              <td class="qty">06</td>
+            </tr>
+            <tr>
+              <td class="sku">LBR-ISO46-20</td>
+              <td>Aceite ISO-VG 46 · 20L</td>
+              <td><span class="cat-badge cat-lubricantes"><span class="swatch"></span> Lubricantes</span></td>
+              <td class="qty">42</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================
+       4. TIPOGRAFÍA — confirmaciones
+       ========================================= -->
+  <section class="section">
+    <p class="sec-eyebrow">04 · Tipografía</p>
+    <h2 class="sec-title">IBM Plex Sans · IBM Plex Mono</h2>
+    <p class="sec-sub">Plex Sans para todo lo humano (títulos, labels, copy de botones, body). Plex Mono se usa con confianza en todo lo que es código, identificador, cantidad o medida — no solo SKUs. Se vuelve el "tic" de personalidad de la app.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>Escala tipográfica</h4>
+        <div class="type-row">
+          <span class="type-name">display</span>
+          <span style="font-family:'IBM Plex Sans';font-weight:600;font-size:30px;letter-spacing:-0.02em;line-height:1.1">Órdenes de servicio</span>
+          <span class="type-spec">600 · 30 / 32 · -2%</span>
+        </div>
+        <div class="type-row">
+          <span class="type-name">h1</span>
+          <span style="font-family:'IBM Plex Sans';font-weight:600;font-size:22px;letter-spacing:-0.015em;line-height:1.2">Compresor pistón 2HP</span>
+          <span class="type-spec">600 · 22 / 28 · -1.5%</span>
+        </div>
+        <div class="type-row">
+          <span class="type-name">h2</span>
+          <span style="font-family:'IBM Plex Sans';font-weight:600;font-size:18px;letter-spacing:-0.01em;line-height:1.3">Stock por sede</span>
+          <span class="type-spec">600 · 18 / 24 · -1%</span>
+        </div>
+        <div class="type-row">
+          <span class="type-name">title</span>
+          <span style="font-family:'IBM Plex Sans';font-weight:500;font-size:15px;line-height:1.4">Filtro succión 1/2"</span>
+          <span class="type-spec">500 · 15 / 22</span>
+        </div>
+        <div class="type-row">
+          <span class="type-name">body</span>
+          <span style="font-family:'IBM Plex Sans';font-weight:400;font-size:14px;line-height:1.55">Mantenimiento preventivo cada 2.000h</span>
+          <span class="type-spec">400 · 14 / 22</span>
+        </div>
+        <div class="type-row">
+          <span class="type-name">small</span>
+          <span style="font-family:'IBM Plex Sans';font-weight:400;font-size:12.5px;color:var(--n-500)">3 esperando repuesto · 1 vencida</span>
+          <span class="type-spec">400 · 12.5 / 18</span>
+        </div>
+        <div class="type-row">
+          <span class="type-name">overline</span>
+          <span style="font-family:'IBM Plex Mono';font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--n-500)">TALLER · SERVICIO</span>
+          <span class="type-spec">mono 11 · 8% · upper</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Mono · uso intensivo</h4>
+        <div class="mono-grid">
+          <div class="mono-item">
+            <p class="mono-tag">SKU</p>
+            <p class="mono-val">CMP-A2H-220</p>
+          </div>
+          <div class="mono-item">
+            <p class="mono-tag">N° de OS</p>
+            <p class="mono-val">OS-2845</p>
+          </div>
+          <div class="mono-item">
+            <p class="mono-tag">N° de venta</p>
+            <p class="mono-val">VTA-104891</p>
+          </div>
+          <div class="mono-item">
+            <p class="mono-tag">Cantidad</p>
+            <p class="mono-val">238 un</p>
+          </div>
+          <div class="mono-item">
+            <p class="mono-tag">Ubicación</p>
+            <p class="mono-val">A-04-12</p>
+          </div>
+          <div class="mono-item">
+            <p class="mono-tag">Sede</p>
+            <p class="mono-val">WH01</p>
+          </div>
+          <div class="mono-item">
+            <p class="mono-tag">Total</p>
+            <p class="mono-val">$ 4.280.000</p>
+          </div>
+          <div class="mono-item">
+            <p class="mono-tag">Auditoría · ts</p>
+            <p class="mono-val">2026-05-02 14:08:21</p>
+          </div>
+          <div class="mono-item">
+            <p class="mono-tag">Lote</p>
+            <p class="mono-val">L24-A0388</p>
+          </div>
+        </div>
+        <p style="font-family:'IBM Plex Mono';font-size:11px;color:var(--n-500);margin:18px 0 0;letter-spacing:0;line-height:1.5">
+          Regla: si es identificador, cantidad, código, ubicación, fecha-hora, dinero o medida → mono.
+          Si es lectura humana (nombres, descripciones, copy) → sans.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================
+       5. RESUMEN ANCLA
+       ========================================= -->
+  <section class="section">
+    <p class="sec-eyebrow">05 · Cierre</p>
+    <h2 class="sec-title">Decisiones confirmables</h2>
+    <div class="card" style="padding:0">
+      <div style="padding:18px 22px; border-bottom: 1px solid var(--n-100); display:flex; align-items:flex-start; gap:14px;">
+        <div style="width:8px;height:8px;border-radius:999px;background:#12B76A;margin-top:7px;flex-shrink:0"></div>
+        <div>
+          <div style="font-weight:500;font-size:14px;margin-bottom:2px">Tipografía: IBM Plex Sans + IBM Plex Mono. Mono se usa intensivamente en SKUs, OS, ventas, cantidades, ubicaciones, fechas, dinero, lotes.</div>
+          <div style="font-size:13px;color:var(--n-500);font-family:'IBM Plex Sans'">Escala 11 / 12.5 / 14 / 15 / 18 / 22 / 30. Letterspacing negativo en displays, positivo y upper en overlines mono.</div>
+        </div>
+      </div>
+      <div style="padding:18px 22px; border-bottom: 1px solid var(--n-100); display:flex; align-items:flex-start; gap:14px;">
+        <div style="width:8px;height:8px;border-radius:999px;background:#12B76A;margin-top:7px;flex-shrink:0"></div>
+        <div>
+          <div style="font-weight:500;font-size:14px;margin-bottom:2px">Neutros: 12 pasos en gris azulado frío. Borders en 150 (no 200), texto principal en 900, secundario en 500, terciario en 300.</div>
+          <div style="font-size:13px;color:var(--n-500);font-family:'IBM Plex Sans'">Sombras prohibidas como decoración — solo focus rings funcionales.</div>
+        </div>
+      </div>
+      <div style="padding:18px 22px; border-bottom: 1px solid var(--n-100); display:flex; align-items:flex-start; gap:14px;">
+        <div style="width:8px;height:8px;border-radius:999px;background:#12B76A;margin-top:7px;flex-shrink:0"></div>
+        <div>
+          <div style="font-weight:500;font-size:14px;margin-bottom:2px">Estados con peso: rampas 50→950 para success, warning, danger, info, in-progress, neutral. El paso 500 es el "principal".</div>
+          <div style="font-size:13px;color:var(--n-500);font-family:'IBM Plex Sans'">Pills: bg=50, border=200, text=700, dot=500. La transición de estado en una tarjeta cambia los cuatro tokens a la vez.</div>
+        </div>
+      </div>
+      <div style="padding:18px 22px; display:flex; align-items:flex-start; gap:14px;">
+        <div style="width:8px;height:8px;border-radius:999px;background:#12B76A;margin-top:7px;flex-shrink:0"></div>
+        <div>
+          <div style="font-weight:500;font-size:14px;margin-bottom:2px">Categorías como badges con peso: borde 1px, fondo tintado, swatch sólido, label en sans 12.5/500. Aparecen en tablas, filtros, cards de producto.</div>
+          <div style="font-size:13px;color:var(--n-500);font-family:'IBM Plex Sans'">Compresores azul · Repuestos teal · Herramientas púrpura · Lubricantes ámbar oscuro · Accesorios rosa.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
