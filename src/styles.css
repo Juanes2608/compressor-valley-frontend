@@ -413,6 +413,30 @@ html, body {
 .dark .link-pill { background: rgba(45, 60, 229, 0.16); color: #C2CCFF; border-color: rgba(45, 60, 229, 0.35); }
 .dark .link-pill:hover { background: rgba(45, 60, 229, 0.25); }
 
+/* ─── BTN (header/CTA del módulo) ─── */
+.btn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 7px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid;
+  line-height: 1;
+  white-space: nowrap;
+}
+.btn-pri { background: var(--p-600); color: #fff; border-color: var(--p-600); }
+.btn-pri:hover { background: var(--p-700); border-color: var(--p-700); }
+.btn-out { background: var(--n-0); color: var(--n-700); border-color: var(--n-200); }
+.btn-out:hover { background: var(--n-50); }
+.dark .btn-out { background: rgba(255,255,255,0.04); color: var(--n-700); border-color: rgba(255,255,255,0.12); }
+.dark .btn-out:hover { background: rgba(255,255,255,0.08); }
+
+
 /* ─── SIDEBAR (oscura fija) ─── */
 .chv-sidebar {
   background: #0B1320;
@@ -425,8 +449,89 @@ html, body {
   border-right: 1px solid var(--p-600);
 }
 
+/* ─── STOCK PILLS (tabla Inventario) ─── */
+.stk-pill {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 3px;
+  line-height: 1.4;
+  border: 1px solid;
+  min-width: 46px;
+  text-align: center;
+  display: inline-block;
+}
+.stk-pill .lb {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  font-weight: 400;
+  color: var(--n-500);
+  margin-bottom: 1px;
+}
+.stk-pill.s { background: var(--succ-50); color: var(--succ-700); border-color: var(--succ-border); }
+.stk-pill.w { background: var(--warn-50); color: var(--warn-700); border-color: var(--warn-border); }
+.stk-pill.d { background: var(--dang-50); color: var(--dang-700); border-color: var(--dang-border); }
+.stk-pill.n { background: var(--n-50);    color: var(--n-300);   border-color: var(--n-150); }
+.dark .stk-pill.s { background: rgba(18,183,106,.16); color:#6CE9A6; border-color: rgba(18,183,106,.35); }
+.dark .stk-pill.w { background: rgba(247,144,9,.16);  color:#FDB022; border-color: rgba(247,144,9,.35); }
+.dark .stk-pill.d { background: rgba(240,68,56,.16);  color:#FDA29B; border-color: rgba(240,68,56,.35); }
+.dark .stk-pill.n { background: rgba(255,255,255,.04); color: var(--n-500); border-color: rgba(255,255,255,.08); }
+
+/* ─── BADGE compacto categoría (inventario tabla) ─── */
+.bdg {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  border: 1px solid;
+  white-space: nowrap;
+}
+.bdg.cmp { background: var(--cat-cmp-bg); color: var(--cat-cmp-text); border-color: var(--cat-cmp-border); }
+.bdg.rpt { background: var(--cat-rpt-bg); color: var(--cat-rpt-text); border-color: var(--cat-rpt-border); }
+.bdg.hrm { background: var(--cat-hrm-bg); color: var(--cat-hrm-text); border-color: var(--cat-hrm-border); }
+.bdg.lbr { background: var(--cat-lbr-bg); color: var(--cat-lbr-text); border-color: var(--cat-lbr-border); }
+.bdg.acc { background: var(--cat-acc-bg); color: var(--cat-acc-text); border-color: var(--cat-acc-border); }
+.dark .bdg.cmp { background: rgba(68,86,194,.14);  color:#C7D0F2; border-color: rgba(68,86,194,.35); }
+.dark .bdg.rpt { background: rgba(21,159,138,.14); color:#99E8DD; border-color: rgba(21,159,138,.35); }
+.dark .bdg.hrm { background: rgba(114,68,213,.14); color:#D9C2FF; border-color: rgba(114,68,213,.35); }
+.dark .bdg.lbr { background: rgba(198,132,32,.14); color:#FCD888; border-color: rgba(198,132,32,.40); }
+.dark .bdg.acc { background: rgba(210,78,142,.14); color:#FBC8DD; border-color: rgba(210,78,142,.35); }
+.bdg.lg { font-size: 12px; padding: 3px 10px; }
+.bdg.succ { background: var(--succ-50); color: var(--succ-700); border-color: var(--succ-border); }
+.bdg.info { background: var(--info-50); color: var(--info-700); border-color: var(--info-border); }
+.dark .bdg.succ { background: rgba(18,183,106,.18); color:#6CE9A6; border-color: rgba(18,183,106,.4); }
+.dark .bdg.info { background: rgba(46,144,250,.18); color:#7CC4FD; border-color: rgba(46,144,250,.4); }
+
+/* ─── DOTS pequeños usados en filtros ─── */
+.dot-stk { width: 7px; height: 7px; border-radius: 999px; flex-shrink: 0; display: inline-block; }
+.dot-stk.s { background: var(--succ-500); }
+.dot-stk.w { background: var(--warn-500); }
+.dot-stk.d { background: var(--dang-500); }
+.dot-stk.n { background: var(--n-300); }
+.dot-cat { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; display: inline-block; }
+.dot-cat.cmp { background: var(--cat-cmp); }
+.dot-cat.rpt { background: var(--cat-rpt); }
+.dot-cat.hrm { background: var(--cat-hrm); }
+.dot-cat.lbr { background: var(--cat-lbr); }
+.dot-cat.acc { background: var(--cat-acc); }
+
+/* ─── ABC pill ─── */
+.abc { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:5px; font-family: var(--mono); font-size:11px; font-weight:700; border:1px solid; }
+.abc.A { background: var(--succ-50); color: var(--succ-700); border-color: var(--succ-border); }
+.abc.B { background: var(--warn-50); color: var(--warn-700); border-color: var(--warn-border); }
+.abc.C { background: var(--n-50);    color: var(--n-500);    border-color: var(--n-150); }
+.dark .abc.A { background: rgba(18,183,106,.18); color:#6CE9A6; border-color: rgba(18,183,106,.4); }
+.dark .abc.B { background: rgba(247,144,9,.18);  color:#FDB022; border-color: rgba(247,144,9,.4); }
+
 @layer base {
   * { border-color: hsl(var(--border)); }
   body { background-color: var(--n-25); color: var(--n-900); }
   .dark body { background-color: var(--n-0); color: var(--n-900); }
 }
+
