@@ -3,16 +3,17 @@ import {
   ArrowLeftCircle, User, Package, Wallet, Link2, Activity,
   XCircle, Undo2, Printer, Share2, Shield,
 } from "lucide-react";
-import { V_2847 } from "@/lib/ventas-data";
+import { getVentaDetail } from "@/lib/ventas-data";
 import { formatCOP } from "@/lib/format";
 
 export const Route = createFileRoute("/ops/ventas/$id")({
-  head: () => ({ meta: [{ title: "V-2847 · Detalle · CHV" }] }),
+  head: ({ params }) => ({ meta: [{ title: `${params.id} · Detalle · CHV` }] }),
   component: DetalleVenta,
 });
 
 function DetalleVenta() {
-  const d = V_2847;
+  const { id } = Route.useParams();
+  const d = getVentaDetail(id);
   return (
     <div className="px-6 pb-16 pt-5 lg:px-8">
       <Link to="/ops/ventas" className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-muted-foreground hover:text-foreground">
