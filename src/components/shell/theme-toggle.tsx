@@ -8,7 +8,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={resolved === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-      className="focus-ring grid h-9 w-9 place-items-center rounded-md text-[--n-700] hover:bg-[--n-75] dark:text-[--n-700] dark:hover:bg-white/[0.06]"
+      className="focus-ring grid h-9 w-9 place-items-center rounded-md text-white/85 hover:bg-white/10"
     >
       {resolved === "dark" ? <Sun className="h-4 w-4" strokeWidth={1.75} /> : <Moon className="h-4 w-4" strokeWidth={1.75} />}
     </button>
