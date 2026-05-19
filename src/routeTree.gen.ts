@@ -40,6 +40,8 @@ import { Route as OpsRecibosIndexRouteImport } from './routes/ops.recibos.index'
 import { Route as OpsCotizacionesIndexRouteImport } from './routes/ops.cotizaciones.index'
 import { Route as OpsVentasNuevaRouteImport } from './routes/ops.ventas.nueva'
 import { Route as OpsVentasIdRouteImport } from './routes/ops.ventas.$id'
+import { Route as OpsRecibosNuevaRouteImport } from './routes/ops.recibos.nueva'
+import { Route as OpsRecibosIdRouteImport } from './routes/ops.recibos.$id'
 import { Route as OpsCotizacionesNuevaRouteImport } from './routes/ops.cotizaciones.nueva'
 import { Route as OpsCotizacionesIdRouteImport } from './routes/ops.cotizaciones.$id'
 
@@ -198,6 +200,16 @@ const OpsVentasIdRoute = OpsVentasIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => OpsVentasRoute,
 } as any)
+const OpsRecibosNuevaRoute = OpsRecibosNuevaRouteImport.update({
+  id: '/nueva',
+  path: '/nueva',
+  getParentRoute: () => OpsRecibosRoute,
+} as any)
+const OpsRecibosIdRoute = OpsRecibosIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => OpsRecibosRoute,
+} as any)
 const OpsCotizacionesNuevaRoute = OpsCotizacionesNuevaRouteImport.update({
   id: '/nueva',
   path: '/nueva',
@@ -238,6 +250,8 @@ export interface FileRoutesByFullPath {
   '/ops/ventas': typeof OpsVentasRouteWithChildren
   '/ops/cotizaciones/$id': typeof OpsCotizacionesIdRoute
   '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
+  '/ops/recibos/$id': typeof OpsRecibosIdRoute
+  '/ops/recibos/nueva': typeof OpsRecibosNuevaRoute
   '/ops/ventas/$id': typeof OpsVentasIdRoute
   '/ops/ventas/nueva': typeof OpsVentasNuevaRoute
   '/ops/cotizaciones/': typeof OpsCotizacionesIndexRoute
@@ -270,6 +284,8 @@ export interface FileRoutesByTo {
   '/ops/traspasos': typeof OpsTraspasosRoute
   '/ops/cotizaciones/$id': typeof OpsCotizacionesIdRoute
   '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
+  '/ops/recibos/$id': typeof OpsRecibosIdRoute
+  '/ops/recibos/nueva': typeof OpsRecibosNuevaRoute
   '/ops/ventas/$id': typeof OpsVentasIdRoute
   '/ops/ventas/nueva': typeof OpsVentasNuevaRoute
   '/ops/cotizaciones': typeof OpsCotizacionesIndexRoute
@@ -306,6 +322,8 @@ export interface FileRoutesById {
   '/ops/ventas': typeof OpsVentasRouteWithChildren
   '/ops/cotizaciones/$id': typeof OpsCotizacionesIdRoute
   '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
+  '/ops/recibos/$id': typeof OpsRecibosIdRoute
+  '/ops/recibos/nueva': typeof OpsRecibosNuevaRoute
   '/ops/ventas/$id': typeof OpsVentasIdRoute
   '/ops/ventas/nueva': typeof OpsVentasNuevaRoute
   '/ops/cotizaciones/': typeof OpsCotizacionesIndexRoute
@@ -343,6 +361,8 @@ export interface FileRouteTypes {
     | '/ops/ventas'
     | '/ops/cotizaciones/$id'
     | '/ops/cotizaciones/nueva'
+    | '/ops/recibos/$id'
+    | '/ops/recibos/nueva'
     | '/ops/ventas/$id'
     | '/ops/ventas/nueva'
     | '/ops/cotizaciones/'
@@ -375,6 +395,8 @@ export interface FileRouteTypes {
     | '/ops/traspasos'
     | '/ops/cotizaciones/$id'
     | '/ops/cotizaciones/nueva'
+    | '/ops/recibos/$id'
+    | '/ops/recibos/nueva'
     | '/ops/ventas/$id'
     | '/ops/ventas/nueva'
     | '/ops/cotizaciones'
@@ -410,6 +432,8 @@ export interface FileRouteTypes {
     | '/ops/ventas'
     | '/ops/cotizaciones/$id'
     | '/ops/cotizaciones/nueva'
+    | '/ops/recibos/$id'
+    | '/ops/recibos/nueva'
     | '/ops/ventas/$id'
     | '/ops/ventas/nueva'
     | '/ops/cotizaciones/'
@@ -643,6 +667,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpsVentasIdRouteImport
       parentRoute: typeof OpsVentasRoute
     }
+    '/ops/recibos/nueva': {
+      id: '/ops/recibos/nueva'
+      path: '/nueva'
+      fullPath: '/ops/recibos/nueva'
+      preLoaderRoute: typeof OpsRecibosNuevaRouteImport
+      parentRoute: typeof OpsRecibosRoute
+    }
+    '/ops/recibos/$id': {
+      id: '/ops/recibos/$id'
+      path: '/$id'
+      fullPath: '/ops/recibos/$id'
+      preLoaderRoute: typeof OpsRecibosIdRouteImport
+      parentRoute: typeof OpsRecibosRoute
+    }
     '/ops/cotizaciones/nueva': {
       id: '/ops/cotizaciones/nueva'
       path: '/nueva'
@@ -705,10 +743,14 @@ const OpsCotizacionesRouteWithChildren = OpsCotizacionesRoute._addFileChildren(
 )
 
 interface OpsRecibosRouteChildren {
+  OpsRecibosIdRoute: typeof OpsRecibosIdRoute
+  OpsRecibosNuevaRoute: typeof OpsRecibosNuevaRoute
   OpsRecibosIndexRoute: typeof OpsRecibosIndexRoute
 }
 
 const OpsRecibosRouteChildren: OpsRecibosRouteChildren = {
+  OpsRecibosIdRoute: OpsRecibosIdRoute,
+  OpsRecibosNuevaRoute: OpsRecibosNuevaRoute,
   OpsRecibosIndexRoute: OpsRecibosIndexRoute,
 }
 
@@ -773,3 +815,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
