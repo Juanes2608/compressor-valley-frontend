@@ -176,3 +176,55 @@ export const V_2847 = {
     { tone: "succ" as const, act: "Venta V-2847 completada y recibo Rec-1284 emitido",   meta: "Stock descontado · OT-2845 actualizada", time: "14 may 14:23" },
   ],
 };
+
+export function getVentaDetail(id: string) {
+  const row = VENTAS_ROWS.find((venta) => venta.num === id);
+  if (!row || row.num === V_2847.num) return V_2847;
+
+  const subtotal = Math.round(row.total / 1.19);
+  const iva = row.total - subtotal;
+  const fallbackSku = `CMP-${row.num.replace("V-", "")}-A`;
+
+  return {
+    ...V_2847,
+    num: row.num,
+    cliente: {
+      razon: row.cliente,
+      nit: "900.456.789-2",
+      tel: row.telefono,
+      contacto: "Contacto compras",
+      cargo: "Coordinación de mantenimiento",
+    },
+    fechaTxt: row.fecha,
+    vendedor: row.vendedor,
+    estadoLabel: row.estadoLabel,
+    productos: [
+      {
+        sku: fallbackSku,
+        meta: row.metodoLabel,
+        nombre: row.productos,
+        qty: 1,
+        unit: subtotal,
+        subtotal,
+      },
+    ] satisfies VentaItem[],
+    subtotal,
+    iva,
+    total: row.total,
+    pago: {
+      label: row.metodoLabel,
+      fecha: row.fecha,
+      ref: row.recibo.replace("Rec-", "REF-"),
+      cuenta: row.metodo === "efectivo" ? "Caja WH-01" : "Bancolombia 123-4567890-1",
+    },
+    vinculos: {
+      origen: { kind: "Origen", num: "Directa", estado: "Venta mostrador" },
+      ot: { kind: "OT asociada", num: "—", estado: "No aplica" },
+      recibo: { kind: "Recibo emitido", num: row.recibo, estado: row.estado === "anul" ? "Anulado" : "Activo" },
+    },
+    historial: [
+      { tone: "info" as const, act: `Venta ${row.num} registrada`, meta: row.vendedor.nombre, time: row.fecha },
+      { tone: row.estado === "anul" ? "info" as const : "succ" as const, act: row.estadoLabel, meta: row.estadoNota ?? `${row.metodoLabel} · ${row.recibo}`, time: row.fecha },
+    ],
+  };
+}
