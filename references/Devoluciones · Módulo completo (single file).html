@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Devoluciones · Tabs duales + Detalle + Wizard · Fase 6.3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --n-0:#FFFFFF;--n-25:#FBFBFC;--n-50:#F5F6F8;--n-75:#EFF1F4;--n-100:#E6E8ED;--n-150:#DADCE3;--n-200:#C7CAD3;--n-300:#A2A6B3;--n-400:#7E8290;--n-500:#5C6070;--n-700:#383C4A;--n-800:#262936;--n-900:#181A24;--n-950:#0E1018;--n-975:#070912;
+  --p-50:#EEF0FE;--p-100:#DCE0FE;--p-200:#B7BFFC;--p-500:#3D4DE8;--p-600:#2D3CE5;--p-700:#2330C0;
+  --succ-50:#E8F7EE;--succ-100:#CCEDD8;--succ-200:#9FDDB5;--succ-500:#2DA75A;--succ-600:#1F8A48;--succ-700:#176B38;
+  --warn-50:#FEF4DC;--warn-200:#F8D079;--warn-500:#C98A0F;--warn-600:#A6720B;--warn-700:#7E5708;
+  --dang-50:#FCE9E7;--dang-200:#F1A39B;--dang-500:#C53A2C;--dang-600:#A52E22;--dang-700:#7E2419;
+  --info-50:#E5F0FE;--info-100:#C8DFFC;--info-200:#9AC4F8;--info-500:#2E84E0;--info-600:#246EC0;--info-700:#1B5499;
+  --purp-50:#F1EBFA;--purp-200:#C5AAE5;--purp-500:#7B3FBF;--purp-700:#48226F;
+  --ff-sans:"IBM Plex Sans",system-ui,sans-serif;--ff-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+.dark{--n-0:#0E1018;--n-25:#10131C;--n-50:#141823;--n-75:#181C28;--n-100:#1F2330;--n-150:#262B3A;--n-200:#2F3447;--n-300:#525A72;--n-400:#6F778F;--n-500:#8E96AD;--n-700:#B7BCCB;--n-800:#D2D5DF;--n-900:#E6E8ED;--n-950:#F1F2F6;--p-50:#1A1F4D;--p-200:#2C3681;--p-500:#7180E2;--p-600:#8A98EE;--succ-50:#0E2A1A;--succ-200:#1C5234;--succ-500:#3FB672;--succ-700:#86DBA8;--warn-50:#2C1F08;--warn-200:#5A4012;--warn-500:#D49A2A;--warn-700:#F0CC7E;--dang-50:#2C0F0B;--dang-200:#5C211B;--dang-500:#D75144;--dang-700:#EE9388;--info-50:#0F1F36;--info-200:#1D406F;--info-500:#4D9AEC;--info-700:#9CC8F4;--purp-50:#1F0F33;--purp-200:#3D1F66;--purp-500:#A66FE0}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{font-family:var(--ff-sans);background:#0B0E16;color:var(--n-700);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.mono{font-family:var(--ff-mono);font-feature-settings:"tnum","ss01"}
+.doc-head{padding:48px 56px 24px;color:#E6E8ED;max-width:1700px;margin:0 auto}
+.doc-eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#7E8290;margin-bottom:8px}
+.doc-title{font-size:30px;font-weight:500;letter-spacing:-.02em;margin:0 0 8px;color:#FBFBFC}
+.doc-sub{font-size:14px;color:#A2A6B3;max-width:880px;line-height:1.55}
+.frames{display:flex;flex-direction:column;gap:48px;padding:24px 56px 96px;max-width:1700px;margin:0 auto}
+.frame-wrap{display:flex;flex-direction:column;gap:10px}
+.frame-label{display:flex;align-items:center;gap:10px;color:#A2A6B3;font-family:var(--ff-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.lbl-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:#2D3CE5;color:#fff;font-size:11px;font-weight:600}
+.lbl-num.alt{background:#7E5708}
+.lbl-mode{margin-left:auto;font-size:10px;color:#5C6070}
+.frame{background:var(--n-25);border-radius:14px;overflow:hidden;box-shadow:0 24px 48px rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06)}
+.frame .frame-inner{overflow-x:auto;overflow-y:hidden}
+
+.shell{display:flex;background:var(--n-25);min-width:1280px}
+.sidebar{width:240px;flex-shrink:0;background:var(--n-975);color:#E6E8ED;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.04)}
+.sb-brand{padding:18px 18px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.05)}
+.sb-logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#2D3CE5,#4456C2);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--ff-mono);font-size:13px;font-weight:600}
+.sb-co{display:flex;flex-direction:column;line-height:1.15}
+.sb-co-name{font-size:13px;font-weight:600;color:#fff}
+.sb-co-meta{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;color:#7E8290;text-transform:uppercase}
+.sb-section{padding:14px 0 4px}
+.sb-sect-label{padding:0 18px 6px;font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#5C6070}
+.sb-item{display:flex;align-items:center;gap:10px;padding:8px 18px;color:#C7CAD3;font-size:13px;cursor:pointer;border-left:2px solid transparent;text-decoration:none}
+.sb-item:hover{background:rgba(255,255,255,.025);color:#fff}
+.sb-item.active{background:rgba(45,60,229,.16);color:#fff;border-left-color:#3D4DE8;font-weight:500}
+.sb-ico{width:16px;height:16px;flex-shrink:0;opacity:.85}.sb-ico svg{width:16px;height:16px}
+.sb-count{margin-left:auto;font-family:var(--ff-mono);font-size:11px;color:#7E8290;background:rgba(255,255,255,.05);padding:1px 7px;border-radius:999px;min-width:22px;text-align:center}
+.sb-item.active .sb-count{color:#B7BFFC;background:rgba(45,60,229,.2)}
+.sb-foot{margin-top:auto;padding:14px 18px;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:10px}
+.sb-avatar{width:30px;height:30px;border-radius:999px;background:linear-gradient(135deg,#3645A8,#5F6DF1);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.sb-user{display:flex;flex-direction:column;line-height:1.2;flex:1}
+.sb-user-name{font-size:12px;color:#fff;font-weight:500}
+.sb-user-role{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;color:#7E8290;text-transform:uppercase}
+.main{flex:1;display:flex;flex-direction:column;background:var(--n-25);min-width:0}
+.topbar{height:56px;background:var(--n-0);border-bottom:1px solid var(--n-100);display:flex;align-items:center;padding:0 24px;gap:16px}
+.crumb{display:flex;align-items:center;gap:6px;font-family:var(--ff-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--n-400)}
+.crumb b{color:var(--n-700);font-weight:500}.crumb .sep{opacity:.5}
+.tb-search{flex:1;max-width:420px;background:var(--n-50);border:1px solid var(--n-100);border-radius:8px;height:32px;display:flex;align-items:center;padding:0 10px;gap:8px;color:var(--n-400);font-size:12px}
+.tb-search .kbd{margin-left:auto;font-family:var(--ff-mono);font-size:10px;background:var(--n-0);border:1px solid var(--n-100);padding:1px 5px;border-radius:4px;color:var(--n-500)}
+.tb-spacer{flex:1}
+.tb-sede{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--n-700);padding:6px 10px;border-radius:8px;border:1px solid var(--n-100);background:var(--n-0)}
+.tb-sede .dot{width:6px;height:6px;border-radius:999px;background:#2DA75A}
+.tb-avatar{width:32px;height:32px;border-radius:999px;background:linear-gradient(135deg,#2D3CE5,#4456C2);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
+
+.page{padding:22px 28px 60px;display:flex;flex-direction:column;gap:14px}
+.ph{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding-bottom:14px;border-bottom:1px solid var(--n-100);flex-wrap:wrap}
+.ph-l{display:flex;flex-direction:column;gap:4px}
+.ph-title{font-size:22px;font-weight:600;color:var(--n-950);letter-spacing:-.01em;margin:0}
+.ph-sub{font-size:13px;color:var(--n-500)}.ph-sub b{font-family:var(--ff-mono);font-weight:500;color:var(--n-700)}
+.btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;border:1px solid transparent;background:transparent;color:var(--n-700)}
+.btn svg{width:14px;height:14px}
+.btn.primary{background:var(--p-600);color:#fff;border-color:var(--p-600)}
+.btn.out{background:var(--n-0);border-color:var(--n-150);color:var(--n-700)}
+.btn.dang{color:var(--dang-600);border-color:var(--dang-200);background:var(--n-0)}
+.btn.dang.solid{background:var(--dang-600);color:#fff;border-color:var(--dang-600)}
+.btn.succ.solid{background:var(--succ-600);color:#fff;border-color:var(--succ-600)}
+.btn.warn.solid{background:var(--warn-600);color:#fff;border-color:var(--warn-600)}
+.btn.ghost{background:transparent;color:var(--n-500)}
+.btn-drop{position:relative;display:inline-flex}
+.btn-drop .menu{position:absolute;top:42px;right:0;background:var(--n-0);border:1px solid var(--n-150);border-radius:8px;box-shadow:0 8px 24px rgba(14,16,24,.16);width:200px;padding:5px;z-index:5}
+.btn-drop .menu .item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:6px;font-size:12.5px;color:var(--n-700);cursor:pointer;font-weight:500}
+.btn-drop .menu .item:hover{background:var(--n-50);color:var(--n-950)}
+.btn-drop .menu .item svg{width:14px;height:14px;color:var(--n-500)}
+
+/* TABS DUALES */
+.tabs-dual{display:flex;align-items:flex-end;border-bottom:1px solid var(--n-150);max-width:480px}
+.tab-dual{flex:1;height:44px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-size:13px;font-weight:500;color:var(--n-500);cursor:pointer;background:transparent;border:none;border-bottom:2px solid transparent;padding:0 16px;position:relative;top:1px}
+.tab-dual svg{width:16px;height:16px}
+.tab-dual .ct{font-family:var(--ff-mono);font-size:11.5px;font-weight:500;color:var(--n-400);background:var(--n-100);padding:1px 7px;border-radius:999px;min-width:24px;text-align:center}
+.tab-dual.active{color:var(--p-700);background:var(--p-50);border-bottom-color:var(--p-600);font-weight:600}
+.tab-dual.active .ct{background:var(--p-100);color:var(--p-700)}
+
+/* Sub-filtros */
+.subfilters{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px}
+.filter-pills{display:flex;gap:4px;flex-wrap:wrap}
+.filter-pill{padding:5px 11px;border:1px solid var(--n-150);background:var(--n-0);color:var(--n-700);font-family:inherit;font-size:12px;font-weight:500;border-radius:999px;cursor:pointer}
+.filter-pill.active{background:var(--n-950);color:var(--n-0);border-color:var(--n-950)}
+.fselect{height:32px;background:var(--n-0);border:1px solid var(--n-150);border-radius:6px;padding:0 32px 0 12px;font-family:inherit;font-size:12.5px;color:var(--n-700);outline:none;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237E8290' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 10px center}
+
+.card{background:var(--n-0);border:1px solid var(--n-150);border-radius:10px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead th{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-400);font-weight:500;padding:11px 12px;text-align:left;background:var(--n-25);border-bottom:1px solid var(--n-150);white-space:nowrap}
+thead th.r{text-align:right}
+tbody td{padding:11px 12px;border-bottom:1px solid var(--n-75);font-size:13px;color:var(--n-700);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--n-25)}
+tbody tr.row-lote td{background:rgba(197,58,44,.035)}
+.row-num{font-family:var(--ff-mono);font-size:12.5px;font-weight:500;color:var(--n-950)}
+.row-date{font-family:var(--ff-mono);font-size:11.5px;color:var(--n-500)}
+.row-cli{font-size:13px;font-weight:500;color:var(--n-950);line-height:1.3}
+.row-cli .sub{font-size:11px;color:var(--n-500);font-family:var(--ff-mono);font-weight:400}
+.row-prod{font-size:12.5px;color:var(--n-950);font-weight:500;line-height:1.3}
+.row-prod .sub{font-size:11px;color:var(--n-500);font-family:var(--ff-mono);font-weight:400}
+.row-mot{font-size:12px;color:var(--n-700);font-style:italic;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row-total{font-family:var(--ff-mono);font-size:13.5px;font-weight:500;color:var(--n-950);text-align:right}
+.link-pill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:6px;font-family:var(--ff-mono);font-size:11.5px;font-weight:500;border:1px solid;cursor:pointer}
+.link-pill.v{background:var(--succ-50);color:var(--succ-700);border-color:var(--succ-200)}
+.link-pill.ot{background:var(--info-50);color:var(--info-700);border-color:var(--info-200)}
+.link-pill.oc{background:var(--warn-50);color:var(--warn-700);border-color:var(--warn-200)}
+
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:500;border:1px solid;line-height:1.35;white-space:nowrap}
+.pill .dot{width:5px;height:5px;border-radius:999px}
+.pill .dot.pulse{animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.5}}
+.pill.neut{background:var(--n-50);color:var(--n-700);border-color:var(--n-150)}.pill.neut .dot{background:var(--n-400)}
+.pill.info{background:var(--info-50);color:var(--info-700);border-color:var(--info-200)}.pill.info .dot{background:var(--info-500)}
+.pill.prog{background:var(--p-50);color:var(--p-700);border-color:var(--p-200)}.pill.prog .dot{background:var(--p-500)}
+.pill.succ{background:var(--succ-50);color:var(--succ-700);border-color:var(--succ-200)}.pill.succ .dot{background:var(--succ-500)}
+.pill.warn{background:var(--warn-50);color:var(--warn-700);border-color:var(--warn-200)}.pill.warn .dot{background:var(--warn-500)}
+.pill.dang{background:var(--dang-50);color:var(--dang-700);border-color:var(--dang-200)}.pill.dang .dot{background:var(--dang-500)}
+.pill.purp{background:var(--purp-50);color:var(--purp-700);border-color:var(--purp-200)}.pill.purp .dot{background:var(--purp-500)}
+.lote-badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;background:var(--dang-50);color:var(--dang-700);border:1px solid var(--dang-200);font-family:var(--ff-mono);font-size:10px;font-weight:600;margin-left:6px;letter-spacing:.04em;text-transform:uppercase}
+
+.tr-foot{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--n-25);border-top:1px solid var(--n-100);font-size:12px;color:var(--n-500)}
+.tr-foot b{font-family:var(--ff-mono);font-weight:500;color:var(--n-700)}
+
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--n-500);font-size:12.5px;font-weight:500;background:transparent;border:none;cursor:pointer;width:fit-content;font-family:inherit}
+.back-btn svg{width:14px;height:14px}
+
+/* DETAIL */
+.det-head{display:flex;align-items:flex-start;gap:20px;padding-bottom:14px;border-bottom:1px solid var(--n-100)}
+.det-l{flex:1}
+.det-eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--n-300);margin-bottom:6px}
+.det-num{font-family:var(--ff-mono);font-size:28px;font-weight:500;color:var(--n-950);letter-spacing:-.01em;line-height:1.05;margin-bottom:8px}
+.det-sub-h{font-size:14px;color:var(--n-500)}
+.det-sub-h b{color:var(--n-950);font-weight:500}
+.det-r{display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.det-tot-lbl{font-family:var(--ff-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--n-300)}
+.det-tot{font-family:var(--ff-mono);font-size:22px;font-weight:500;color:var(--n-950);line-height:1.1}
+
+.actions-row{display:flex;gap:8px;flex-wrap:wrap;padding:12px 14px;background:var(--n-50);border-radius:10px;border:1px solid var(--n-150)}
+
+.det-layout{display:grid;grid-template-columns:540px 1fr;gap:20px;align-items:flex-start}
+.iblock{background:var(--n-0);border:1px solid var(--n-150);border-radius:10px;padding:18px}
+.iblock.focus{border:2px solid var(--p-600);padding:17px;box-shadow:0 1px 0 var(--p-50)}
+.iblock.info-tint{background:var(--info-50);border-color:var(--info-100)}
+.ib-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ib-ico{width:26px;height:26px;border-radius:6px;background:var(--n-50);color:var(--n-700);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ib-ico svg{width:14px;height:14px}
+.ib-ico.info{background:var(--info-50);color:var(--info-700)}
+.ib-ico.p{background:var(--p-50);color:var(--p-700)}
+.ib-ico.warn{background:var(--warn-50);color:var(--warn-700)}
+.ib-title{font-size:13.5px;font-weight:500;color:var(--n-950)}
+.ib-aux{margin-left:auto;font-family:var(--ff-mono);font-size:11.5px;color:var(--n-500)}
+
+.prod-line{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:6px 0}
+.prod-line .sk{font-family:var(--ff-mono);font-size:12px;font-weight:500;color:var(--n-700);background:var(--n-50);padding:4px 8px;border-radius:5px;border:1px solid var(--n-100)}
+.prod-line .nm{font-size:13px;font-weight:500;color:var(--n-950)}
+.prod-line .nm .sub{font-size:11px;color:var(--n-500);font-family:var(--ff-mono);font-weight:400;display:block}
+.prod-line .v{font-family:var(--ff-mono);font-size:13.5px;font-weight:500;color:var(--n-950);text-align:right}
+
+.thumbs{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.thumb{width:80px;height:80px;border-radius:8px;background:linear-gradient(135deg,#262936,#5C6070);position:relative;flex-shrink:0;overflow:hidden;border:1px solid var(--n-200);display:flex;align-items:center;justify-content:center;color:#fff}
+.thumb.dang{background:linear-gradient(135deg,#7E2419,#C53A2C)}
+.thumb svg{width:24px;height:24px}
+.thumb-add{width:80px;height:80px;border-radius:8px;border:2px dashed var(--n-200);display:flex;align-items:center;justify-content:center;color:var(--n-400);background:var(--n-50);cursor:pointer}
+.thumb-add svg{width:24px;height:24px}
+.thumbs-note{font-size:11px;color:var(--n-500);margin-top:8px;font-style:italic}
+
+.cli-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.cli-grid .full{grid-column:1/-1}
+.cli-grid .lk{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-300);margin-bottom:2px;font-weight:500}
+.cli-grid .vl{font-size:13px;color:var(--n-950);font-weight:500}
+.cli-grid .vl.mono{font-family:var(--ff-mono)}
+
+.policy-card{background:var(--info-50);border:1px solid var(--info-100);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-top:10px}
+.policy-card svg{width:14px;height:14px;color:var(--info-700);flex-shrink:0}
+.policy-card .body{font-size:12px;color:var(--info-700);line-height:1.5}
+.policy-card .body b{font-weight:600;font-family:var(--ff-mono)}
+
+.motive-text{font-size:13px;color:var(--n-700);line-height:1.55;font-style:italic;background:var(--n-25);border-left:3px solid var(--n-200);padding:10px 14px;border-radius:0 6px 6px 0}
+.motive-foot{font-family:var(--ff-mono);font-size:11px;color:var(--n-500);margin-top:10px}
+
+.radio-options{display:flex;flex-direction:column;gap:8px}
+.radio-option{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--n-150);border-radius:10px;background:var(--n-0);cursor:pointer}
+.radio-option.sel{border:2px solid var(--p-600);background:var(--p-50);padding:11px 13px}
+.radio-option .rd{width:18px;height:18px;border-radius:999px;border:2px solid var(--n-300);flex-shrink:0;margin-top:2px;display:inline-flex;align-items:center;justify-content:center}
+.radio-option.sel .rd{border-color:var(--p-600)}
+.radio-option.sel .rd::after{content:"";width:9px;height:9px;border-radius:999px;background:var(--p-600)}
+.radio-option .body{flex:1}
+.radio-option .nm{font-size:13.5px;font-weight:500;color:var(--n-950);margin-bottom:3px}
+.radio-option .desc{font-size:12px;color:var(--n-500);line-height:1.55}
+.radio-option .desc b{color:var(--n-700);font-weight:500}
+
+.stock-card{margin-top:12px;padding:12px 14px;background:var(--succ-50);border:1px solid var(--succ-200);border-radius:8px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--succ-700)}
+.stock-card svg{width:14px;height:14px;color:var(--succ-600);flex-shrink:0}
+.stock-card .body b{font-family:var(--ff-mono);font-weight:500}
+
+.crit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.crit-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--n-25);border-radius:6px;border:1px solid var(--n-100)}
+.crit-row.warn{background:var(--warn-50);border-color:var(--warn-200)}
+.crit-row .ico{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.crit-row.ok .ico{background:var(--succ-600);color:#fff}
+.crit-row.no .ico{background:var(--n-400);color:#fff}
+.crit-row.warn .ico{background:var(--warn-600);color:#fff}
+.crit-row .ico svg{width:11px;height:11px}
+.crit-row .lbl{flex:1;font-size:12px;color:var(--n-700);font-weight:500}
+.crit-row .val{font-size:11.5px;color:var(--n-500);font-family:var(--ff-mono)}
+.crit-row.warn .val{color:var(--warn-700)}
+
+.timeline{display:flex;flex-direction:column;padding-left:6px}
+.tl-row{display:grid;grid-template-columns:14px 1fr auto;gap:12px;padding:8px 0;position:relative;align-items:flex-start}
+.tl-row:not(:last-child)::before{content:"";position:absolute;left:6px;top:18px;bottom:-4px;width:1px;background:var(--n-150)}
+.tl-dot{width:13px;height:13px;border-radius:999px;border:2.5px solid var(--n-0);box-shadow:0 0 0 1px var(--n-150);background:var(--n-300);margin-top:3px}
+.tl-dot.info{background:var(--info-500)}.tl-dot.warn{background:var(--warn-500)}.tl-dot.succ{background:var(--succ-500)}
+.tl-act{font-size:13px;font-weight:500;color:var(--n-950)}
+.tl-meta{font-family:var(--ff-mono);font-size:11px;color:var(--n-500);margin-top:1px}
+.tl-time{font-family:var(--ff-mono);font-size:11px;color:var(--n-500);text-align:right}
+
+.policy-block{padding:14px;background:var(--info-50);border:1px solid var(--info-100);border-radius:10px}
+.policy-block .eb{font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--info-700);font-weight:600;margin-bottom:8px}
+.policy-block ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--n-700);line-height:1.55}
+.policy-block ul li b{color:var(--n-950);font-weight:500}
+.policy-block .lk{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:12px;font-weight:500;color:var(--info-700);background:transparent;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-family:inherit;padding:0}
+
+/* WIZARD */
+.stepper{display:flex;align-items:center;background:var(--n-0);border:1px solid var(--n-150);border-radius:10px;padding:14px 24px}
+.step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;min-width:140px}
+.step-dot{width:28px;height:28px;border-radius:999px;border:2px solid;font-family:var(--ff-mono);font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center}
+.step.active .step-dot{background:var(--p-600);border-color:var(--p-600);color:#fff}
+.step.todo .step-dot{background:var(--n-0);border-color:var(--n-200);color:var(--n-400)}
+.step-lbl{font-size:12px;color:var(--n-500)}
+.step.active .step-lbl{color:var(--n-950);font-weight:500}
+.step-line{flex:1;height:2px;background:var(--n-150);margin-top:14px;border-radius:2px}
+
+.wiz-grid{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:flex-start}
+.wiz-card{background:var(--n-0);border:1px solid var(--n-150);border-radius:10px;padding:24px}
+.wc-eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-300);font-weight:500;margin-bottom:5px}
+.wc-title{font-size:18px;font-weight:600;color:var(--n-950);margin:0 0 6px;letter-spacing:-.005em}
+.wc-sub{font-size:13px;color:var(--n-500);line-height:1.55;margin-bottom:18px}
+
+.search-row{display:flex;gap:0;margin-bottom:14px}
+.search-row .si{flex:1;display:flex;align-items:center;gap:10px;height:48px;background:var(--n-0);border:1px solid var(--n-150);border-right:none;border-radius:10px 0 0 10px;padding:0 14px}
+.search-row .si svg{width:16px;height:16px;color:var(--n-400);flex-shrink:0}
+.search-row .si input{flex:1;border:none;outline:none;background:transparent;font-family:inherit;font-size:14px;color:var(--n-700)}
+.search-row button{height:48px;padding:0 18px;background:var(--p-600);color:#fff;border:none;border-radius:0 10px 10px 0;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-family:inherit}
+.search-row button svg{width:14px;height:14px}
+
+.search-results{display:flex;flex-direction:column;gap:6px}
+.result{display:grid;grid-template-columns:auto 1fr auto auto auto;gap:14px;align-items:center;padding:12px 14px;background:var(--n-0);border:1px solid var(--n-150);border-radius:10px;cursor:pointer}
+.result:hover{background:var(--p-50);border-color:var(--p-200)}
+.result .pl{font-family:var(--ff-mono);font-size:13px;font-weight:600;color:var(--n-950);padding:5px 10px;border-radius:6px;border:1px solid}
+.result .pl.v{background:var(--succ-50);color:var(--succ-700);border-color:var(--succ-200)}
+.result .pl.ot{background:var(--info-50);color:var(--info-700);border-color:var(--info-200)}
+.result .cli{font-size:13px;font-weight:500;color:var(--n-950)}
+.result .cli .sub{font-size:11px;color:var(--n-500);font-family:var(--ff-mono);font-weight:400;display:block}
+.result .date{font-family:var(--ff-mono);font-size:11.5px;color:var(--n-500)}
+.result .amt{font-family:var(--ff-mono);font-size:13px;font-weight:500;color:var(--n-950)}
+.result .vendor{font-size:11.5px;color:var(--n-500);font-family:var(--ff-mono)}
+
+.special-link{margin-top:14px;padding:10px 12px;background:var(--n-50);border-radius:8px;font-size:11.5px;color:var(--n-500);display:flex;align-items:center;gap:8px}
+.special-link svg{width:13px;height:13px;color:var(--n-400)}
+.special-link button{background:transparent;border:none;color:var(--n-700);text-decoration:underline;text-underline-offset:3px;font-family:inherit;font-size:11.5px;font-weight:500;cursor:pointer;padding:0;margin-left:auto}
+
+.cart{position:sticky;top:80px;background:var(--n-0);border:1px solid var(--n-150);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.cart-eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-300);font-weight:500}
+.cart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 12px;color:var(--n-300);text-align:center;gap:10px}
+.cart-empty svg{width:32px;height:32px}
+.cart-empty .body{font-size:12.5px;color:var(--n-500);line-height:1.5}
+
+/* MOBILE */
+.mob-shell{width:390px;min-height:780px;background:var(--n-25);display:flex;flex-direction:column;position:relative}
+.m-status{height:38px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-family:var(--ff-mono);font-size:12.5px;font-weight:500;color:var(--n-950);background:var(--n-0)}
+.m-top{padding:12px 18px;background:var(--n-0);border-bottom:1px solid var(--n-100);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.m-title{font-size:20px;font-weight:600;color:var(--n-950);letter-spacing:-.01em}
+.m-newbtn{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:var(--p-700);background:transparent;border:none;font-weight:600;cursor:pointer;font-family:inherit}
+.m-newbtn svg{width:14px;height:14px}
+.m-sub{padding:0 18px 10px;font-size:11.5px;color:var(--n-500);background:var(--n-0);border-bottom:1px solid var(--n-100)}
+.m-sub b{font-family:var(--ff-mono);font-weight:500;color:var(--n-700)}
+.m-tabs-dual{display:flex;background:var(--n-0);border-bottom:1px solid var(--n-100)}
+.m-tab-dual{flex:1;height:42px;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;font-size:12.5px;font-weight:500;color:var(--n-500);background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer}
+.m-tab-dual svg{width:14px;height:14px}
+.m-tab-dual .ct{font-family:var(--ff-mono);font-size:11px;font-weight:500;color:var(--n-400);background:var(--n-100);padding:1px 6px;border-radius:999px}
+.m-tab-dual.active{color:var(--p-700);background:var(--p-50);border-bottom-color:var(--p-600);font-weight:600}
+.m-tab-dual.active .ct{background:var(--p-100);color:var(--p-700)}
+.m-pills{display:flex;gap:6px;overflow-x:auto;padding:10px 18px;background:var(--n-0);border-bottom:1px solid var(--n-100);scrollbar-width:none}
+.m-pills::-webkit-scrollbar{display:none}
+.m-pill{flex-shrink:0;padding:5px 11px;border:1px solid var(--n-150);background:var(--n-0);color:var(--n-700);font-family:inherit;font-size:11.5px;font-weight:500;border-radius:999px;cursor:pointer;white-space:nowrap}
+.m-pill.active{background:var(--n-950);color:var(--n-0);border-color:var(--n-950)}
+.m-list{flex:1;padding:14px;display:flex;flex-direction:column;gap:10px;padding-bottom:90px;overflow-y:auto}
+.m-card{background:var(--n-0);border:1px solid var(--n-150);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.m-card-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.m-card-num{font-family:var(--ff-mono);font-size:12.5px;font-weight:500;color:var(--n-950)}
+.m-card-cli{font-size:14px;font-weight:500;color:var(--n-950);line-height:1.25}
+.m-card-prod{font-size:12px;color:var(--n-500)}.m-card-prod .sub{font-family:var(--ff-mono);font-size:11px;color:var(--n-400);display:block;margin-top:1px}
+.m-card-mot{font-size:11.5px;color:var(--n-700);font-style:italic;line-height:1.4}
+.m-card-foot{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px dashed var(--n-100);margin-top:4px}
+.m-card-val{font-family:var(--ff-mono);font-size:14px;font-weight:500;color:var(--n-950)}
+.m-card-link{font-family:var(--ff-mono);font-size:11.5px;color:var(--succ-700)}
+.m-bot{position:absolute;left:0;right:0;bottom:0;height:64px;background:var(--n-0);border-top:1px solid var(--n-100);display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:8px}
+.m-bot-t{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--n-400);font-size:10.5px;padding-top:6px}
+.m-bot-t svg{width:20px;height:20px}
+.m-bot-t.active{color:var(--p-600)}
+
+/* Modals */
+.modal-stage{background:rgba(14,16,24,.5);padding:32px;display:flex;align-items:center;justify-content:center;min-height:560px}
+.modal{background:var(--n-0);border-radius:14px;width:560px;border:1px solid var(--n-100);box-shadow:0 24px 60px rgba(0,0,0,.3);overflow:hidden}
+.modal.w480{width:480px}
+.modal-head{padding:18px 22px 14px;display:flex;gap:14px;align-items:flex-start;border-bottom:1px solid var(--n-100)}
+.modal-ico{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.modal-ico.dang{background:var(--dang-50);color:var(--dang-600)}
+.modal-ico.succ{background:var(--succ-50);color:var(--succ-700)}
+.modal-ico svg{width:20px;height:20px}
+.modal-title{font-size:16px;font-weight:600;color:var(--n-950);margin:0}
+.modal-sub{font-size:12.5px;color:var(--n-500);margin-top:4px;line-height:1.5}
+.modal-body{padding:18px 22px;display:flex;flex-direction:column;gap:14px}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--n-100);background:var(--n-25);display:flex;justify-content:flex-end;gap:8px}
+
+.flbl{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);font-weight:500;margin-bottom:6px;display:block}
+.ftextarea{min-height:74px;padding:9px 12px;background:var(--n-0);border:1px solid var(--n-150);border-radius:8px;font-family:var(--ff-sans);font-size:13px;color:var(--n-950);outline:none;width:100%;line-height:1.5;resize:none}
+.suggest-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.suggest{padding:5px 11px;border:1px solid var(--n-150);background:var(--n-0);color:var(--n-700);font-family:inherit;font-size:11.5px;font-weight:500;border-radius:999px;cursor:pointer}
+.suggest:hover{background:var(--n-50);border-color:var(--n-300)}
+.suggest.other{border-style:dashed}
+
+.crit-modal{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.crit-modal .crit-row{padding:10px 12px}
+.drop-zone{border:2px dashed var(--n-200);background:var(--n-25);border-radius:10px;padding:18px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:var(--n-500);font-size:12.5px}
+.drop-zone svg{width:22px;height:22px}
+
+.f12-banner{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--info-50);border:1px solid var(--info-100);border-radius:10px;color:var(--info-700)}
+.f12-banner svg{width:18px;height:18px;color:var(--info-500);flex-shrink:0;margin-top:1px}
+.f12-banner .body{flex:1;font-size:13px;line-height:1.55}
+.f12-banner .body b{font-weight:600;font-family:var(--ff-mono)}
+.f12-banner .lk{margin-top:6px;display:inline-block;font-size:12px;color:var(--info-700);font-weight:500;background:transparent;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-family:inherit;padding:0}
+
+/* CHECKLIST */
+.ck-card{background:var(--n-0);border:1px solid var(--n-100);border-radius:10px;padding:24px 28px}
+.ck-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 32px}
+.ck-item{display:flex;gap:10px;align-items:flex-start;padding:6px 0;font-size:13px;color:var(--n-700);line-height:1.5}
+.ck-dot{width:18px;height:18px;border-radius:5px;background:var(--succ-600);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.ck-dot svg{width:11px;height:11px}
+.ck-item b{color:var(--n-950);font-weight:500}
+
+@media (prefers-reduced-motion:no-preference){
+  .frame{animation:rise .5s ease both}
+  .frame:nth-child(2){animation-delay:.05s}.frame:nth-child(3){animation-delay:.1s}
+}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<header class="doc-head">
+  <div class="doc-eyebrow">Operaciones · Devoluciones · Fase 6.3 · F12</div>
+  <h1 class="doc-title">Devoluciones · Tabs duales Cliente / Proveedor + Detalle + Wizard</h1>
+  <p class="doc-sub">Dos flujos operativos paralelos según F12. Tab Cliente reingresa stock al inventario; Tab Proveedor lo resta. Detalle de DEV-C-0421 con resolución pendiente y validación física como checklist operativo.</p>
+</header>
+
+<div class="frames">
+
+<!-- ====== VISTA 1 · TAB CLIENTE ====== -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">1</span>Desktop · 1280 px · light · TAB CLIENTE (default)<span class="lbl-mode">5 estados representados · DEV-C-0417 con lote vencido · DEV-C-0416 vinculada a OT</span></div>
+  <div class="frame"><div class="frame-inner"><div class="shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+      <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+        <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/><path d="M3 9l9 6 9-6"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg></span>Productos</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9M19 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h5"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+          <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg></span>Devoluciones</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Taller</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+      </nav>
+      <div class="sb-foot"><div class="sb-avatar">DP</div><div class="sb-user"><span class="sb-user-name">Diego P.</span><span class="sb-user-role">Bodeguero · Cali</span></div></div>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span style="color:var(--n-700)">DEVOLUCIONES</span></div>
+        <div class="tb-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><span>Buscar global...</span><span class="kbd">⌘K</span></div>
+        <div class="tb-spacer"></div>
+        <div class="tb-sede"><span class="dot"></span>Cali · Bod. principal</div>
+        <div class="tb-avatar">DP</div>
+      </header>
+      <div class="page">
+        <div class="ph">
+          <div class="ph-l"><h1 class="ph-title">Devoluciones</h1><div class="ph-sub"><b>8</b> este mes · <b>3</b> cliente activas · <b>2</b> proveedor pendientes · <b>$2.4M</b> procesado</div></div>
+          <div class="btn-drop"><button class="btn primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>Nueva devolución<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+            <div class="menu"><div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg>Desde cliente</div><div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:scaleX(-1)"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg>A proveedor</div></div>
+          </div>
+        </div>
+
+        <div class="tabs-dual">
+          <button class="tab-dual active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg>Devoluciones de cliente<span class="ct">5</span></button>
+          <button class="tab-dual"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:scaleX(-1)"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg>Devoluciones a proveedor<span class="ct">3</span></button>
+        </div>
+
+        <div class="subfilters">
+          <div class="filter-pills"><span class="filter-pill active">Todas</span><span class="filter-pill">Pendiente validación</span><span class="filter-pill">Aprobadas</span><span class="filter-pill">Rechazadas</span><span class="filter-pill">Procesadas</span></div>
+          <select class="fselect"><option>Resolución: Todas</option><option>Nota crédito</option><option>Cambio de pieza</option><option>Reembolso</option></select>
+        </div>
+
+        <div class="card">
+          <table>
+            <thead><tr><th style="width:110px">#</th><th style="width:84px">Fecha</th><th style="width:200px">Cliente</th><th style="width:210px">Producto</th><th style="width:110px">Venta origen</th><th>Motivo</th><th style="width:140px">Resolución</th><th class="r" style="width:110px">Valor</th><th style="width:160px">Estado</th></tr></thead>
+            <tbody>
+              <tr><td><span class="row-num">DEV-C-0421</span></td><td><span class="row-date">Hoy 11:20</span></td><td><div class="row-cli">Industrial XYZ S.A.S.<div class="sub">+57 318 442 5512</div></div></td><td><div class="row-prod">Filtro de aire GA-22<div class="sub">CMP-2210-A · Atlas</div></div></td><td><span class="link-pill v">V-2843</span></td><td><div class="row-mot">Producto llegó dañado</div></td><td><span class="pill prog"><span class="dot"></span>Cambio de pieza</span></td><td class="row-total">$ 245.000</td><td><span class="pill warn"><span class="dot pulse"></span>Pend. validación</span></td></tr>
+              <tr><td><span class="row-num">DEV-C-0420</span></td><td><span class="row-date">Ayer</span></td><td><div class="row-cli">Constructora del Valle<div class="sub">+57 312 778 2210</div></div></td><td><div class="row-prod">Banda V SPB 2240<div class="sub">BAN-2240-V · Genérica</div></div></td><td><span class="link-pill v">V-2842</span></td><td><div class="row-mot">Tamaño incorrecto</div></td><td><span class="pill prog"><span class="dot"></span>Cambio de pieza</span></td><td class="row-total">$ 89.500</td><td><span class="pill succ"><span class="dot"></span>Aprobada</span></td></tr>
+              <tr><td><span class="row-num">DEV-C-0419</span></td><td><span class="row-date">17 abr</span></td><td><div class="row-cli">Refinadora Pacífico<div class="sub">+57 313 718 0044</div></div></td><td><div class="row-prod">Válvula seguridad 1/2"<div class="sub">VHS-3300 · Ind. Hidr.</div></div></td><td><span class="link-pill v">V-2841</span></td><td><div class="row-mot">Cliente desistió compra</div></td><td><span class="pill warn"><span class="dot"></span>Reembolso</span></td><td class="row-total">$ 356.000</td><td><span class="pill succ"><span class="dot"></span>Procesada</span></td></tr>
+              <tr><td><span class="row-num">DEV-C-0418</span></td><td><span class="row-date">16 abr</span></td><td><div class="row-cli">Petrocali S.A.S.<div class="sub">+57 315 778 8801</div></div></td><td><div class="row-prod">Manguera descarga 1m<div class="sub">CMP-1985-C · Genérica</div></div></td><td><span class="link-pill v">V-2840</span></td><td><div class="row-mot">Color distinto al solicitado</div></td><td><span class="pill info"><span class="dot"></span>Nota crédito</span></td><td class="row-total">$ 89.500</td><td><span class="pill succ"><span class="dot"></span>Procesada</span></td></tr>
+              <tr class="row-lote"><td><span class="row-num">DEV-C-0417</span></td><td><span class="row-date">14 abr</span></td><td><div class="row-cli">Embotelladora Norte<div class="sub">+57 316 226 5510</div></div></td><td><div class="row-prod">Aceite ISO VG-46 5L<span class="lote-badge">Lote vencido</span><div class="sub">CMP-2308-B · Shell</div></div></td><td><span class="link-pill v">V-2839</span></td><td><div class="row-mot">Lote vencido al recibir</div></td><td><span class="pill warn"><span class="dot"></span>Reembolso</span></td><td class="row-total">$ 142.000</td><td><span class="pill succ"><span class="dot"></span>Aprobada</span></td></tr>
+              <tr><td><span class="row-num">DEV-C-0416</span></td><td><span class="row-date">12 abr</span></td><td><div class="row-cli">Compañía Lácteos Cali<div class="sub">+57 314 502 ··</div></div></td><td><div class="row-prod">Filtro de aceite<div class="sub">CMP-2308-B · Atlas</div></div></td><td><span class="link-pill ot">OT-2841</span></td><td><div class="row-mot">Garantía 3 meses · falla prematura</div></td><td><span class="pill prog"><span class="dot"></span>Cambio de pieza</span></td><td class="row-total">$ 185.000</td><td><span class="pill succ"><span class="dot"></span>Procesada</span></td></tr>
+              <tr><td><span class="row-num">DEV-C-0415</span></td><td><span class="row-date">10 abr</span></td><td><div class="row-cli">Tecnologías del Sur<div class="sub">+57 311 446 0078</div></div></td><td><div class="row-prod">Compresor portátil<div class="sub">CMP-9100-P · Atlas</div></div></td><td><span class="link-pill v">V-2837</span></td><td><div class="row-mot">Cliente cambió de opinión</div></td><td><span class="pill neut"><span class="dot"></span>Pendiente</span></td><td class="row-total">—</td><td><span class="pill dang"><span class="dot"></span>Rechazada</span><div style="font-size:10.5px;color:var(--dang-700);margin-top:3px;font-family:var(--ff-mono)">Fuera de política · 8 días</div></td></tr>
+              <tr><td><span class="row-num">DEV-C-0414</span></td><td><span class="row-date">8 abr</span></td><td><div class="row-cli">Manufacturas Andes<div class="sub">+57 318 558 1100</div></div></td><td><div class="row-prod">Llave torque<div class="sub">HRM-0801-T · Genérica</div></div></td><td><span class="link-pill v">V-2836</span></td><td><div class="row-mot">Producto defectuoso</div></td><td><span class="pill prog"><span class="dot"></span>Cambio de pieza</span></td><td class="row-total">$ 145.000</td><td><span class="pill succ"><span class="dot"></span>Procesada</span></td></tr>
+            </tbody>
+          </table>
+          <div class="tr-foot"><span>Mostrando <b>8</b> de <b>24</b> devoluciones de cliente este mes</span><span>Total devuelto <b>$ 1.450.500</b></span></div>
+        </div>
+      </div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- ====== VISTA 2 · TAB PROVEEDOR ====== -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">2</span>Desktop · 1280 px · light · TAB PROVEEDOR<span class="lbl-mode">6 filas · banner F13 garantía · pills warn por vinculación OC</span></div>
+  <div class="frame"><div class="frame-inner"><div class="shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+      <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+        <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/></svg></span>Productos</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+          <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg></span>Devoluciones</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Taller</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+      </nav>
+      <div class="sb-foot"><div class="sb-avatar">DP</div><div class="sb-user"><span class="sb-user-name">Diego P.</span><span class="sb-user-role">Bodeguero · Cali</span></div></div>
+    </aside>
+    <div class="main">
+      <header class="topbar"><div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span style="color:var(--n-700)">DEVOLUCIONES</span></div><div class="tb-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/></svg><span>Buscar global...</span><span class="kbd">⌘K</span></div><div class="tb-spacer"></div><div class="tb-sede"><span class="dot"></span>Cali</div><div class="tb-avatar">DP</div></header>
+      <div class="page">
+        <div class="ph"><div class="ph-l"><h1 class="ph-title">Devoluciones</h1><div class="ph-sub"><b>8</b> este mes · <b>3</b> cliente activas · <b>2</b> proveedor pend. · <b>$2.4M</b> procesado</div></div><button class="btn primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>Nueva devolución</button></div>
+        <div class="tabs-dual">
+          <button class="tab-dual"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg>Devoluciones de cliente<span class="ct">5</span></button>
+          <button class="tab-dual active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:scaleX(-1)"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg>Devoluciones a proveedor<span class="ct">3</span></button>
+        </div>
+        <div class="subfilters"><div class="filter-pills"><span class="filter-pill active">Todas</span><span class="filter-pill">Pendiente envío</span><span class="filter-pill">Enviadas al proveedor</span><span class="filter-pill">Aceptadas</span><span class="filter-pill">Rechazadas</span></div><select class="fselect"><option>Motivo: Todos</option><option>Defecto fábrica</option><option>Error de pedido</option><option>Producto vencido</option><option>Garantía</option></select></div>
+
+        <div class="f12-banner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div class="body">Las devoluciones a proveedor por garantía siguen el protocolo <b>F13</b>. Cuando el motivo es <b>Garantía</b>, el flujo automáticamente registra la garantía como pendiente de resolución por parte del proveedor.<button class="lk">Ver módulo Garantías →</button></div>
+        </div>
+
+        <div class="card">
+          <table>
+            <thead><tr><th style="width:110px">#</th><th style="width:84px">Fecha</th><th style="width:200px">Proveedor</th><th style="width:240px">Producto</th><th style="width:110px">Compra origen</th><th>Motivo</th><th class="r" style="width:110px">Valor</th><th style="width:170px">Estado</th></tr></thead>
+            <tbody>
+              <tr><td><span class="row-num">DEV-P-0118</span></td><td><span class="row-date">19 abr</span></td><td><div class="row-cli">Atlas Copco Colombia<div class="sub">900.123.456-7</div></div></td><td><div class="row-prod">Filtro aire GA-22 · 5 unidades<div class="sub">CMP-2210-A</div></div></td><td><span class="link-pill oc">OC-1842</span></td><td><div class="row-mot">Defecto fábrica · sellado roto</div></td><td class="row-total">$ 1.225.000</td><td><span class="pill neut"><span class="dot"></span>Pendiente envío</span></td></tr>
+              <tr><td><span class="row-num">DEV-P-0117</span></td><td><span class="row-date">16 abr</span></td><td><div class="row-cli">Industrias Hidráulicas<div class="sub">800.442.018-9</div></div></td><td><div class="row-prod">Válvula seguridad 1/2"<div class="sub">VHS-3300</div></div></td><td><span class="link-pill oc">OC-1839</span></td><td><div class="row-mot">Garantía F13 · falla prematura</div></td><td class="row-total">$ 640.000</td><td><span class="pill info"><span class="dot pulse"></span>Enviada al proveedor</span></td></tr>
+              <tr><td><span class="row-num">DEV-P-0116</span></td><td><span class="row-date">14 abr</span></td><td><div class="row-cli">Shell Lubricantes S.A.<div class="sub">860.555.221-3</div></div></td><td><div class="row-prod">Aceite ISO · 10 litros<div class="sub">CMP-2308-B</div></div></td><td><span class="link-pill oc">OC-1838</span></td><td><div class="row-mot">Producto vencido al inventariar</div></td><td class="row-total">$ 284.000</td><td><span class="pill succ"><span class="dot"></span>Aceptada</span><div style="font-size:10.5px;color:var(--succ-700);margin-top:3px;font-family:var(--ff-mono)">Reposición programada</div></td></tr>
+              <tr><td><span class="row-num">DEV-P-0115</span></td><td><span class="row-date">12 abr</span></td><td><div class="row-cli">Sullair Colombia<div class="sub">901.220.554-1</div></div></td><td><div class="row-prod">Manguera neumática<div class="sub">CMP-2520-A</div></div></td><td><span class="link-pill oc">OC-1837</span></td><td><div class="row-mot">Error de pedido · referencia equivocada</div></td><td class="row-total">$ 89.500</td><td><span class="pill succ"><span class="dot"></span>Aceptada</span></td></tr>
+              <tr><td><span class="row-num">DEV-P-0114</span></td><td><span class="row-date">10 abr</span></td><td><div class="row-cli">Tornillos y Tuercas SAS<div class="sub">901.005.339-4</div></div></td><td><div class="row-prod">Tornillería surtida<div class="sub">TRN-MIX-001</div></div></td><td><span class="link-pill oc">OC-1836</span></td><td><div class="row-mot">Especificación incorrecta</div></td><td class="row-total">$ 45.000</td><td><span class="pill dang"><span class="dot"></span>Rechazada</span><div style="font-size:10.5px;color:var(--dang-700);margin-top:3px;font-family:var(--ff-mono)">Proveedor argumenta uso</div></td></tr>
+              <tr><td><span class="row-num">DEV-P-0113</span></td><td><span class="row-date">8 abr</span></td><td><div class="row-cli">Distribuidora del Sur<div class="sub">901.778.110-2</div></div></td><td><div class="row-prod">Acoples rápidos<div class="sub">ACR-3800-A</div></div></td><td><span class="link-pill oc">OC-1835</span></td><td><div class="row-mot">Defecto fábrica</div></td><td class="row-total">$ 156.000</td><td><span class="pill succ"><span class="dot"></span>Aceptada</span></td></tr>
+            </tbody>
+          </table>
+          <div class="tr-foot"><span>Mostrando <b>6</b> devoluciones a proveedor</span><span>Total reclamado <b>$ 2.439.500</b></span></div>
+        </div>
+      </div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- ====== VISTA 3 · DETALLE DEV-C-0421 ====== -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">3</span>Desktop · 1280 px · light · DETALLE DEV-C-0421<span class="lbl-mode">resolución pendiente destacada · validación física checklist · galería evidencia</span></div>
+  <div class="frame"><div class="frame-inner"><div class="shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+      <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+        <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/></svg></span>Productos</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+          <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg></span>Devoluciones</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Taller</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+      </nav>
+      <div class="sb-foot"><div class="sb-avatar">DP</div><div class="sb-user"><span class="sb-user-name">Diego P.</span><span class="sb-user-role">Bodeguero · Cali</span></div></div>
+    </aside>
+    <div class="main">
+      <header class="topbar"><div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span>DEVOLUCIONES</span><span class="sep">›</span><span style="color:var(--n-700)">DEV-C-0421</span></div><div class="tb-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/></svg><span>Buscar global...</span><span class="kbd">⌘K</span></div><div class="tb-spacer"></div><div class="tb-sede"><span class="dot"></span>Cali</div><div class="tb-avatar">DP</div></header>
+      <div class="page">
+        <button class="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M14 8l-4 4 4 4M16 12H8"/></svg>Volver a Devoluciones</button>
+        <div class="det-head">
+          <div class="det-l"><div class="det-eyebrow">Devolución de cliente</div><div class="det-num">DEV-C-0421</div><div class="det-sub-h"><b>Industrial XYZ S.A.S.</b> · Filtro de aire Atlas Copco GA-22 · Vinculada a <span class="link-pill v" style="vertical-align:middle">V-2843</span></div></div>
+          <div class="det-r"><span class="pill warn" style="font-size:13px;padding:6px 14px"><span class="dot pulse" style="width:7px;height:7px"></span>Pendiente validación</span><div style="text-align:right"><div class="det-tot-lbl">Valor</div><div class="det-tot">$ 245.000</div></div></div>
+        </div>
+        <div class="actions-row">
+          <button class="btn succ solid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Aprobar devolución</button>
+          <button class="btn dang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Rechazar devolución</button>
+          <button class="btn out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimir comprobante</button>
+        </div>
+        <div class="det-layout">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="iblock">
+              <div class="ib-head"><div class="ib-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div><div class="ib-title">Producto devuelto</div></div>
+              <div class="prod-line"><span class="sk">CMP-2210-A</span><div class="nm">Filtro de aire Atlas Copco GA-22<span class="sub">Atlas · 1613-7409-00 · cantidad ×1</span></div><span class="v">$ 245.000</span></div>
+              <div class="thumbs"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></div><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/></svg></div><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/></svg></div><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div><div class="thumb-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></div></div>
+              <div class="thumbs-note">Fotos del producto al momento de recepción. Validar estado antes de aprobar devolución.</div>
+            </div>
+
+            <div class="iblock">
+              <div class="ib-head"><div class="ib-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div><div class="ib-title">Cliente y venta origen</div></div>
+              <div class="cli-grid">
+                <div class="full"><div class="lk">Razón social</div><div class="vl">Industrial XYZ S.A.S.</div></div>
+                <div><div class="lk">NIT</div><div class="vl mono">800.123.456-7</div></div>
+                <div><div class="lk">Tel</div><div class="vl mono">+57 318 442 5512</div></div>
+                <div><div class="lk">Contacto</div><div class="vl">Sandra Pérez</div></div>
+                <div><div class="lk">Venta origen</div><div class="vl"><span class="link-pill v">V-2843</span></div></div>
+                <div><div class="lk">Fecha venta</div><div class="vl mono" style="font-weight:400">14 abr · hace 6 días</div></div>
+                <div><div class="lk">Vendedor</div><div class="vl" style="font-weight:400">Carlos R.</div></div>
+                <div><div class="lk">Monto venta</div><div class="vl mono">$ 1.450.000</div></div>
+              </div>
+              <div class="policy-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div class="body">Dentro de política · <b>6 días</b> después de compra (límite 30 días)</div></div>
+            </div>
+
+            <div class="iblock">
+              <div class="ib-head"><div class="ib-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div class="ib-title">Motivo de devolución</div></div>
+              <div class="motive-text">"Producto llegó con caja dañada. Cliente reporta que el filtro tiene una abolladura visible en el cuerpo metálico. Solicita cambio por pieza nueva del mismo modelo."</div>
+              <div class="thumbs"><div class="thumb dang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></div><div class="thumb dang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/></svg></div><div class="thumb dang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/></svg></div></div>
+              <div class="motive-foot">Reportado vía WhatsApp · 318 442 5512 · Sandra Pérez · 3 fotos adjuntas</div>
+            </div>
+
+            <div class="iblock focus">
+              <div class="ib-head"><div class="ib-ico p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 11l3 3L22 4"/></svg></div><div class="ib-title">Resolución propuesta</div><div class="ib-aux">Decisión pendiente</div></div>
+              <div class="radio-options">
+                <div class="radio-option sel"><span class="rd"></span><div class="body"><div class="nm">Cambio de pieza por el mismo producto</div><div class="desc">Reingresa stock del producto devuelto (si está reparable) y entrega uno nuevo del catálogo. Genera traspaso interno si la unidad nueva está en otra sede.</div></div></div>
+                <div class="radio-option"><span class="rd"></span><div class="body"><div class="nm">Nota crédito por el valor pagado</div><div class="desc">Aplica como saldo a favor del cliente para futuras compras. Genera documento crédito automático.</div></div></div>
+                <div class="radio-option"><span class="rd"></span><div class="body"><div class="nm">Reembolso al método de pago original</div><div class="desc">Devuelve el monto al medio de pago original. <b>Solo Admin puede aprobar reembolsos.</b></div></div></div>
+              </div>
+              <div class="stock-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/></svg><div class="body">Stock del producto nuevo: <b>WH-01 Cali (12)</b> · WH-02 Norte (8). Se entregará desde WH-01.</div></div>
+            </div>
+
+            <div class="iblock">
+              <div class="ib-head"><div class="ib-ico warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-3"/><path d="M9 11l3 3L22 4"/></svg></div><div class="ib-title">Validación del estado físico</div><span class="pill warn"><span class="dot"></span>Pendiente</span></div>
+              <div style="font-size:12px;color:var(--n-500);margin-bottom:12px">Antes de aprobar, valida físicamente el estado del producto devuelto:</div>
+              <div class="crit-grid">
+                <div class="crit-row ok"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span class="lbl">Empaque original</span><span class="val">Sí</span></div>
+                <div class="crit-row warn"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><span class="lbl">Sin uso visible</span><span class="val">Marca de instalación</span></div>
+                <div class="crit-row ok"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span class="lbl">Daños reportados coinciden</span><span class="val">Sí</span></div>
+                <div class="crit-row ok"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span class="lbl">Etiqueta/SKU verificable</span><span class="val">Sí</span></div>
+                <div class="crit-row ok" style="grid-column:1/-1"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span class="lbl">Componentes completos</span><span class="val">Sí</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px;position:sticky;top:80px">
+            <div class="iblock"><div class="ib-head"><div class="ib-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="ib-title">Historial</div></div>
+              <div class="timeline">
+                <div class="tl-row"><span class="tl-dot info"></span><div><div class="tl-act">Devolución solicitada vía WhatsApp</div><div class="tl-meta">Sandra Pérez · cliente</div></div><span class="tl-time">Hoy 09:15</span></div>
+                <div class="tl-row"><span class="tl-dot info"></span><div><div class="tl-act">Producto recibido en taller</div><div class="tl-meta">Diego P. · bodeguero</div></div><span class="tl-time">Hoy 10:30</span></div>
+                <div class="tl-row"><span class="tl-dot info"></span><div><div class="tl-act">Fotos cargadas para validación</div><div class="tl-meta">Diego P. · 4 fotos</div></div><span class="tl-time">Hoy 10:45</span></div>
+                <div class="tl-row"><span class="tl-dot warn"></span><div><div class="tl-act">Estado actual: pendiente validación</div><div class="tl-meta">Decisión requerida</div></div><span class="tl-time">Ahora</span></div>
+              </div>
+            </div>
+            <div class="policy-block">
+              <div class="eb">Política aplicable F13</div>
+              <ul>
+                <li><b>Garantía:</b> 3 meses después de venta.</li>
+                <li><b>Devolución por insatisfacción:</b> 30 días.</li>
+                <li><b>Defecto fábrica:</b> aplica garantía sin límite si el defecto es reproducible.</li>
+              </ul>
+              <button class="lk">Ver políticas completas en F13 · Garantías →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- ====== VISTA 4 · WIZARD NUEVA DEVOLUCIÓN ====== -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">4</span>Desktop · 1280 px · light · NUEVA DEVOLUCIÓN (paso 1 cliente)<span class="lbl-mode">búsqueda venta origen · 3 resultados · carrito vacío</span></div>
+  <div class="frame"><div class="frame-inner"><div class="shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+      <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+        <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/></svg></span>Productos</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+          <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg></span>Devoluciones</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Taller</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+      </nav>
+      <div class="sb-foot"><div class="sb-avatar">DP</div><div class="sb-user"><span class="sb-user-name">Diego P.</span><span class="sb-user-role">Bodeguero · Cali</span></div></div>
+    </aside>
+    <div class="main">
+      <header class="topbar"><div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span>DEVOLUCIONES</span><span class="sep">›</span><span style="color:var(--n-700)">NUEVA · CLIENTE</span></div><div class="tb-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/></svg><span>Buscar global...</span><span class="kbd">⌘K</span></div><div class="tb-spacer"></div><div class="tb-sede"><span class="dot"></span>Cali</div><div class="tb-avatar">DP</div></header>
+      <div class="page">
+        <button class="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M14 8l-4 4 4 4M16 12H8"/></svg>Volver a Devoluciones</button>
+        <div class="ph"><div class="ph-l"><h1 class="ph-title">Nueva devolución · Desde cliente</h1><div class="ph-sub">Reingresa stock al inventario tras validar estado físico</div></div></div>
+        <div class="stepper">
+          <div class="step active"><div class="step-dot">1</div><div class="step-lbl">Cliente y venta origen</div></div>
+          <div class="step-line"></div>
+          <div class="step todo"><div class="step-dot">2</div><div class="step-lbl">Producto y motivo</div></div>
+          <div class="step-line"></div>
+          <div class="step todo"><div class="step-dot">3</div><div class="step-lbl">Resolución</div></div>
+          <div class="step-line"></div>
+          <div class="step todo"><div class="step-dot">4</div><div class="step-lbl">Confirmar</div></div>
+        </div>
+        <div class="wiz-grid">
+          <div class="wiz-card">
+            <div><div class="wc-eyebrow">Paso 1 de 4</div><h2 class="wc-title">Buscar la venta origen</h2><div class="wc-sub">La devolución debe vincularse a una venta o OT previa. Busca por número, cliente, o escanea recibo.</div></div>
+            <div class="search-row"><div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><input value="industrial" placeholder="V-XXXX, OT-XXXX, cliente, teléfono, o producto..."></div><button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>Escanear QR del recibo</button></div>
+            <div class="search-results">
+              <div class="result"><span class="pl v">V-2843</span><div class="cli">Industrial XYZ S.A.S.<span class="sub">+57 318 442 ··</span></div><span class="date">14 abr 2026</span><span class="amt">$ 1.450.000</span><span class="vendor">4 prod · Carlos R.</span></div>
+              <div class="result"><span class="pl v">V-2841</span><div class="cli">Industrial XYZ S.A.S.<span class="sub">+57 318 442 ··</span></div><span class="date">10 abr 2026</span><span class="amt">$ 890.000</span><span class="vendor">3 prod · María L.</span></div>
+              <div class="result"><span class="pl ot">OT-2845</span><div class="cli">Industrial XYZ S.A.S.<span class="sub">En proceso</span></div><span class="date">14 may</span><span class="amt">$ 1.840.000</span><span class="vendor">Vinc. Cot-1042</span></div>
+            </div>
+            <div class="special-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Si no encuentras la venta, puedes crear una devolución sin vinculación (no recomendado, solo para casos especiales)<button>Devolución sin venta origen</button></div>
+          </div>
+          <div class="cart">
+            <div class="cart-eyebrow">Resumen de la devolución</div>
+            <div class="cart-empty">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg>
+              <div class="body">Selecciona una venta para continuar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- ====== VISTA 5 · MOBILE ====== -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">5</span>Mobile · 390 px · light · LISTA con tabs duales<span class="lbl-mode">tabs cliente/proveedor compactas · cards apiladas · scroll horizontal pills</span></div>
+  <div class="frame" style="display:flex;justify-content:center;background:var(--n-25);padding:32px 0">
+    <div class="mob-shell" style="border-radius:24px;overflow:hidden;box-shadow:0 8px 24px rgba(14,16,24,.18)">
+      <div class="m-status"><span>11:24</span><span style="font-family:var(--ff-mono);font-size:12px">82%</span></div>
+      <div class="m-top"><div class="m-title">Devoluciones</div><button class="m-newbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Nueva</button></div>
+      <div class="m-sub"><b>8</b> mes · <b>3</b> cliente · <b>2</b> prov. · <b>$2.4M</b></div>
+      <div class="m-tabs-dual">
+        <button class="m-tab-dual active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg>Cliente<span class="ct">5</span></button>
+        <button class="m-tab-dual"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:scaleX(-1)"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg>Proveedor<span class="ct">3</span></button>
+      </div>
+      <div class="m-pills"><span class="m-pill active">Todas</span><span class="m-pill">Pend. validación</span><span class="m-pill">Aprobadas</span><span class="m-pill">Rechazadas</span><span class="m-pill">Procesadas</span></div>
+      <div class="m-list">
+        <div class="m-card"><div class="m-card-h"><span class="m-card-num">DEV-C-0421</span><span class="pill warn"><span class="dot pulse"></span>Pend. validación</span></div><div class="m-card-cli">Industrial XYZ S.A.S.</div><div class="m-card-prod">Filtro de aire GA-22<span class="sub">CMP-2210-A · Atlas</span></div><div class="m-card-mot">"Producto llegó dañado"</div><div class="m-card-foot"><span class="m-card-link">V-2843</span><span class="m-card-val">$ 245.000</span></div></div>
+        <div class="m-card"><div class="m-card-h"><span class="m-card-num">DEV-C-0420</span><span class="pill succ"><span class="dot"></span>Aprobada</span></div><div class="m-card-cli">Constructora del Valle</div><div class="m-card-prod">Banda V SPB 2240<span class="sub">BAN-2240-V</span></div><div class="m-card-mot">"Tamaño incorrecto"</div><div class="m-card-foot"><span class="m-card-link">V-2842</span><span class="m-card-val">$ 89.500</span></div></div>
+        <div class="m-card"><div class="m-card-h"><span class="m-card-num">DEV-C-0419</span><span class="pill succ"><span class="dot"></span>Procesada</span></div><div class="m-card-cli">Refinadora Pacífico</div><div class="m-card-prod">Válvula seguridad 1/2"</div><div class="m-card-mot">"Cliente desistió compra"</div><div class="m-card-foot"><span class="m-card-link">V-2841</span><span class="m-card-val">$ 356.000</span></div></div>
+        <div class="m-card" style="background:rgba(197,58,44,.025)"><div class="m-card-h"><span class="m-card-num">DEV-C-0417</span><span class="pill succ"><span class="dot"></span>Aprobada</span></div><div class="m-card-cli">Embotelladora Norte<span class="lote-badge" style="margin-left:6px">Lote vencido</span></div><div class="m-card-prod">Aceite ISO VG-46 5L</div><div class="m-card-mot">"Lote vencido al recibir"</div><div class="m-card-foot"><span class="m-card-link">V-2839</span><span class="m-card-val">$ 142.000</span></div></div>
+        <div class="m-card"><div class="m-card-h"><span class="m-card-num">DEV-C-0416</span><span class="pill succ"><span class="dot"></span>Procesada</span></div><div class="m-card-cli">Compañía Lácteos Cali</div><div class="m-card-prod">Filtro de aceite</div><div class="m-card-mot">"Garantía · falla prematura"</div><div class="m-card-foot"><span class="m-card-link" style="color:var(--info-700)">OT-2841</span><span class="m-card-val">$ 185.000</span></div></div>
+      </div>
+      <nav class="m-bot">
+        <div class="m-bot-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>Inicio</div>
+        <div class="m-bot-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg>Ventas</div>
+        <div class="m-bot-t active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg>Dev.</div>
+        <div class="m-bot-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/></svg>Buscar</div>
+        <div class="m-bot-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- ====== VISTA 6 · DARK ====== -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num">6</span>Desktop · 1280 px · dark · TAB CLIENTE<span class="lbl-mode">réplica con tokens dark</span></div>
+  <div class="frame"><div class="frame-inner dark"><div class="shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="sb-logo">CV</div><div class="sb-co"><span class="sb-co-name">Compresores del Valle</span><span class="sb-co-meta">Operaciones</span></div></div>
+      <nav style="flex:1;overflow-y:auto;padding-bottom:12px">
+        <div class="sb-section"><div class="sb-sect-label">Catálogo y stock</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v12H3z"/></svg></span>Inventario<span class="sb-count">2.847</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/></svg></span>Productos</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Operación comercial</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></svg></span>Ventas</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9"/></svg></span>Cotizaciones<span class="sb-count">5</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h16v18l-3-2-3 2-3-2-3 2-3-2z"/></svg></span>Recibos</a>
+          <a class="sb-item active"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg></span>Devoluciones</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Bodega y movimiento</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/></svg></span>Compras</a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M15 6l6 6-6 6"/></svg></span>Traspasos<span class="sb-count">3</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Garantías</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Taller</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6"/></svg></span>Órdenes de Trabajo<span class="sb-count">14</span></a>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>Ensambles</a></div>
+        <div class="sb-section"><div class="sb-sect-label">Soporte</div>
+          <a class="sb-item"><span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></span>Herramientas<span class="sb-count">2</span></a></div>
+      </nav>
+      <div class="sb-foot"><div class="sb-avatar">DP</div><div class="sb-user"><span class="sb-user-name">Diego P.</span><span class="sb-user-role">Bodeguero · Cali</span></div></div>
+    </aside>
+    <div class="main">
+      <header class="topbar"><div class="crumb"><b>OPERACIONES</b><span class="sep">›</span><span style="color:var(--n-700)">DEVOLUCIONES</span></div><div class="tb-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/></svg><span>Buscar...</span><span class="kbd">⌘K</span></div><div class="tb-spacer"></div><div class="tb-sede"><span class="dot"></span>Cali</div><div class="tb-avatar">DP</div></header>
+      <div class="page">
+        <div class="ph"><div class="ph-l"><h1 class="ph-title">Devoluciones</h1><div class="ph-sub"><b>8</b> mes · <b>3</b> cliente · <b>2</b> prov. · <b>$2.4M</b></div></div><button class="btn primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>Nueva devolución</button></div>
+        <div class="tabs-dual">
+          <button class="tab-dual active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg>Devoluciones de cliente<span class="ct">5</span></button>
+          <button class="tab-dual"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:scaleX(-1)"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 014 4v3"/></svg>Devoluciones a proveedor<span class="ct">3</span></button>
+        </div>
+        <div class="subfilters"><div class="filter-pills"><span class="filter-pill active">Todas</span><span class="filter-pill">Pend. val.</span><span class="filter-pill">Aprobadas</span><span class="filter-pill">Procesadas</span></div></div>
+        <div class="card">
+          <table>
+            <thead><tr><th style="width:110px">#</th><th style="width:84px">Fecha</th><th style="width:200px">Cliente</th><th style="width:200px">Producto</th><th style="width:110px">Venta</th><th>Motivo</th><th style="width:140px">Resolución</th><th class="r" style="width:110px">Valor</th><th style="width:160px">Estado</th></tr></thead>
+            <tbody>
+              <tr><td><span class="row-num">DEV-C-0421</span></td><td><span class="row-date">Hoy 11:20</span></td><td><div class="row-cli">Industrial XYZ S.A.S.<div class="sub">+57 318 442 ··</div></div></td><td><div class="row-prod">Filtro de aire GA-22<div class="sub">CMP-2210-A</div></div></td><td><span class="link-pill v">V-2843</span></td><td><div class="row-mot">Producto llegó dañado</div></td><td><span class="pill prog"><span class="dot"></span>Cambio</span></td><td class="row-total">$ 245.000</td><td><span class="pill warn"><span class="dot pulse"></span>Pend. validación</span></td></tr>
+              <tr><td><span class="row-num">DEV-C-0420</span></td><td><span class="row-date">Ayer</span></td><td><div class="row-cli">Constructora del Valle<div class="sub">+57 312 778 ··</div></div></td><td><div class="row-prod">Banda V SPB 2240</div></td><td><span class="link-pill v">V-2842</span></td><td><div class="row-mot">Tamaño incorrecto</div></td><td><span class="pill prog"><span class="dot"></span>Cambio</span></td><td class="row-total">$ 89.500</td><td><span class="pill succ"><span class="dot"></span>Aprobada</span></td></tr>
+              <tr><td><span class="row-num">DEV-C-0419</span></td><td><span class="row-date">17 abr</span></td><td><div class="row-cli">Refinadora Pacífico</div></td><td><div class="row-prod">Válvula seguridad</div></td><td><span class="link-pill v">V-2841</span></td><td><div class="row-mot">Cliente desistió</div></td><td><span class="pill warn"><span class="dot"></span>Reembolso</span></td><td class="row-total">$ 356.000</td><td><span class="pill succ"><span class="dot"></span>Procesada</span></td></tr>
+              <tr><td><span class="row-num">DEV-C-0418</span></td><td><span class="row-date">16 abr</span></td><td><div class="row-cli">Petrocali S.A.S.</div></td><td><div class="row-prod">Manguera descarga</div></td><td><span class="link-pill v">V-2840</span></td><td><div class="row-mot">Color distinto</div></td><td><span class="pill info"><span class="dot"></span>Nota crédito</span></td><td class="row-total">$ 89.500</td><td><span class="pill succ"><span class="dot"></span>Procesada</span></td></tr>
+              <tr class="row-lote"><td><span class="row-num">DEV-C-0417</span></td><td><span class="row-date">14 abr</span></td><td><div class="row-cli">Embotelladora Norte</div></td><td><div class="row-prod">Aceite ISO VG-46<span class="lote-badge">Lote vencido</span></div></td><td><span class="link-pill v">V-2839</span></td><td><div class="row-mot">Lote vencido</div></td><td><span class="pill warn"><span class="dot"></span>Reembolso</span></td><td class="row-total">$ 142.000</td><td><span class="pill succ"><span class="dot"></span>Aprobada</span></td></tr>
+              <tr><td><span class="row-num">DEV-C-0416</span></td><td><span class="row-date">12 abr</span></td><td><div class="row-cli">Compañía Lácteos Cali</div></td><td><div class="row-prod">Filtro de aceite</div></td><td><span class="link-pill ot">OT-2841</span></td><td><div class="row-mot">Garantía · falla prematura</div></td><td><span class="pill prog"><span class="dot"></span>Cambio</span></td><td class="row-total">$ 185.000</td><td><span class="pill succ"><span class="dot"></span>Procesada</span></td></tr>
+              <tr><td><span class="row-num">DEV-C-0415</span></td><td><span class="row-date">10 abr</span></td><td><div class="row-cli">Tecnologías del Sur</div></td><td><div class="row-prod">Compresor portátil</div></td><td><span class="link-pill v">V-2837</span></td><td><div class="row-mot">Cambió opinión</div></td><td><span class="pill neut"><span class="dot"></span>Pendiente</span></td><td class="row-total">—</td><td><span class="pill dang"><span class="dot"></span>Rechazada</span></td></tr>
+              <tr><td><span class="row-num">DEV-C-0414</span></td><td><span class="row-date">8 abr</span></td><td><div class="row-cli">Manufacturas Andes</div></td><td><div class="row-prod">Llave torque</div></td><td><span class="link-pill v">V-2836</span></td><td><div class="row-mot">Defectuoso</div></td><td><span class="pill prog"><span class="dot"></span>Cambio</span></td><td class="row-total">$ 145.000</td><td><span class="pill succ"><span class="dot"></span>Procesada</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- ====== ESTADOS ESPECIALES ====== -->
+
+<!-- A · Modal validar estado -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num alt">A</span>Modal · Validar estado del producto<span class="lbl-mode">5 criterios checklist + drag-and-drop fotos · CTA aprobar</span></div>
+  <div class="frame"><div class="frame-inner"><div class="modal-stage">
+    <div class="modal">
+      <header class="modal-head">
+        <div class="modal-ico succ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-3"/><path d="M9 11l3 3L22 4"/></svg></div>
+        <div style="flex:1"><h3 class="modal-title">Validar estado del producto devuelto</h3><div class="modal-sub">Antes de aprobar, confirma que el estado físico coincide con lo declarado por el cliente.</div></div>
+      </header>
+      <div class="modal-body">
+        <span class="flbl">Criterios de evaluación</span>
+        <div class="crit-modal">
+          <div class="crit-row ok"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span class="lbl">Empaque original</span><span class="val">Sí</span></div>
+          <div class="crit-row warn"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><span class="lbl">Sin uso visible</span><span class="val">Marca instal.</span></div>
+          <div class="crit-row ok"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span class="lbl">Daños coinciden</span><span class="val">Sí</span></div>
+          <div class="crit-row ok"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span class="lbl">SKU verificable</span><span class="val">Sí</span></div>
+          <div class="crit-row ok" style="grid-column:1/-1"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span class="lbl">Componentes completos</span><span class="val">Sí</span></div>
+        </div>
+        <span class="flbl" style="margin-top:8px">Fotos del producto al validar</span>
+        <div class="drop-zone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><div>Arrastra fotos aquí o haz click para seleccionar</div><div style="font-size:11px;color:var(--n-400)">PNG, JPG hasta 10MB cada una</div></div>
+      </div>
+      <footer class="modal-foot"><button class="btn ghost">Cancelar</button><button class="btn succ solid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Aprobar devolución</button></footer>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- B · Modal rechazar -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num alt">B</span>Modal · Rechazar devolución<span class="lbl-mode">motivo obligatorio · 4 sugerencias rápidas · cliente notificado</span></div>
+  <div class="frame"><div class="frame-inner"><div class="modal-stage">
+    <div class="modal w480">
+      <header class="modal-head">
+        <div class="modal-ico dang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
+        <div style="flex:1"><h3 class="modal-title">Rechazar devolución DEV-C-0421</h3><div class="modal-sub">El cliente recibirá una notificación con el motivo del rechazo.</div></div>
+      </header>
+      <div class="modal-body">
+        <div>
+          <label class="flbl">Motivo de rechazo<span style="color:var(--dang-500)">*</span></label>
+          <textarea class="ftextarea" placeholder="Describe la razón del rechazo..."></textarea>
+        </div>
+        <div>
+          <label class="flbl" style="margin-bottom:0">Sugerencias rápidas</label>
+          <div class="suggest-row">
+            <span class="suggest">Fuera de política · más de 30 días</span>
+            <span class="suggest">Producto con uso evidente</span>
+            <span class="suggest">Daño no reportado al momento de compra</span>
+            <span class="suggest">No coincide con declarado</span>
+            <span class="suggest other">+ Otro motivo (personalizado)</span>
+          </div>
+        </div>
+      </div>
+      <footer class="modal-foot"><button class="btn ghost">No rechazar</button><button class="btn dang solid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg>Rechazar devolución</button></footer>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- C · Banner F12 garantía proveedor -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num alt">C</span>Banner F12 · Devoluciones a proveedor por garantía<span class="lbl-mode">tinte info · link a módulo Garantías</span></div>
+  <div class="frame"><div class="frame-inner"><div style="background:var(--n-25);padding:32px;display:flex;justify-content:center">
+    <div style="width:780px">
+      <div class="f12-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div class="body">Las devoluciones a proveedor por garantía siguen el protocolo <b>F13</b>. Cuando el motivo es <b>Garantía</b>, el flujo automáticamente registra la garantía como pendiente de resolución por parte del proveedor.<button class="lk">Ver módulo Garantías →</button></div>
+      </div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- D · Lote vencido -->
+<div class="frame-wrap">
+  <div class="frame-label"><span class="lbl-num alt">D</span>Validación · Lote vencido<span class="lbl-mode">fila destacada · badge dang · auditoría F13</span></div>
+  <div class="frame"><div class="frame-inner"><div style="background:var(--n-25);padding:32px;display:flex;justify-content:center">
+    <div class="card" style="width:880px">
+      <table>
+        <thead><tr><th style="width:110px">#</th><th style="width:200px">Cliente</th><th>Producto</th><th style="width:110px">Venta</th><th>Motivo</th><th class="r" style="width:110px">Valor</th></tr></thead>
+        <tbody>
+          <tr class="row-lote"><td><span class="row-num">DEV-C-0417</span></td><td><div class="row-cli">Embotelladora Norte<div class="sub">+57 316 226 5510</div></div></td><td><div class="row-prod">Aceite ISO VG-46 5L<span class="lote-badge">Lote vencido</span><div class="sub">CMP-2308-B · Shell · Lote BL-2024-A442</div></div></td><td><span class="link-pill v">V-2839</span></td><td><div class="row-mot">Lote vencido al recibir</div></td><td class="row-total">$ 142.000</td></tr>
+        </tbody>
+      </table>
+      <div style="padding:14px 16px;background:var(--dang-50);border-top:1px solid var(--dang-200);font-size:12.5px;color:var(--dang-700);line-height:1.55"><b style="font-weight:600">Caso prioritario:</b> El cliente reportó que el producto recibido tenía fecha de vencimiento previa al momento de la compra. <b style="font-family:var(--ff-mono);font-weight:500">Validar lote en bodega</b> + registrar discrepancia para auditoría <b style="font-family:var(--ff-mono);font-weight:500">F13</b>.</div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- CHECKLIST -->
+<div class="frame-wrap" style="margin-bottom:80px">
+  <div class="frame-label"><span class="lbl-num" style="background:#2DA75A">✓</span>Validación · 5 puntos críticos · Cierre Fase 6</div>
+  <div class="ck-card">
+    <div class="ck-grid">
+      <div class="ck-item"><div class="ck-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div><b>Sidebar canónica con Devoluciones activo.</b> 12 módulos exactos · contadores intactos · sin módulos prohibidos.</div></div>
+      <div class="ck-item"><div class="ck-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div><b>Tabs duales Cliente/Proveedor como módulos hermanos.</b> Cada uno con su jerarquía (cliente vs proveedor, V/OT vs OC) y estados de proceso propios. Sub-filtros contextuales por tab.</div></div>
+      <div class="ck-item"><div class="ck-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div><b>Columna Vinculación con pills clickeables.</b> V-2843 succ · OT-2841 info · OC-1839 warn · coherencia bidireccional con archivos previos.</div></div>
+      <div class="ck-item"><div class="ck-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div><b>Bloque Resolución destacado con border 2 px p-600.</b> Tres opciones diferenciadas (Cambio · Nota crédito · Reembolso) con sub-texto explicativo. Stock card succ aparece según elección.</div></div>
+      <div class="ck-item"><div class="ck-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div><b>Validación física es checklist operativo.</b> 5 criterios (Empaque · Sin uso · Daños coinciden · SKU · Componentes) con estado por criterio. Refleja el flujo real del bodeguero, no es decoración.</div></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

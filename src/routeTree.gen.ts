@@ -9,38 +9,366 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OpsRouteImport } from './routes/ops'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OpsVentasRouteImport } from './routes/ops.ventas'
+import { Route as OpsTraspasosRouteImport } from './routes/ops.traspasos'
+import { Route as OpsRecibosRouteImport } from './routes/ops.recibos'
+import { Route as OpsProductosRouteImport } from './routes/ops.productos'
+import { Route as OpsOrdenesTrabajoRouteImport } from './routes/ops.ordenes-trabajo'
+import { Route as OpsInventarioRouteImport } from './routes/ops.inventario'
+import { Route as OpsHerramientasRouteImport } from './routes/ops.herramientas'
+import { Route as OpsGarantiasRouteImport } from './routes/ops.garantias'
+import { Route as OpsEnsamblesRouteImport } from './routes/ops.ensambles'
+import { Route as OpsDevolucionesRouteImport } from './routes/ops.devoluciones'
+import { Route as OpsCotizacionesRouteImport } from './routes/ops.cotizaciones'
+import { Route as OpsComprasRouteImport } from './routes/ops.compras'
+import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
+import { Route as AdminTop10RouteImport } from './routes/admin.top-10'
+import { Route as AdminReordenRouteImport } from './routes/admin.reorden'
+import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as AdminConteoCiclicoRouteImport } from './routes/admin.conteo-ciclico'
+import { Route as AdminConfiguracionRouteImport } from './routes/admin.configuracion'
+import { Route as AdminCierresRouteImport } from './routes/admin.cierres'
+import { Route as AdminAuditoriaRouteImport } from './routes/admin.auditoria'
+import { Route as AdminAnalisisAbcRouteImport } from './routes/admin.analisis-abc'
+import { Route as AdminAlertasRouteImport } from './routes/admin.alertas'
 
+const OpsRoute = OpsRouteImport.update({
+  id: '/ops',
+  path: '/ops',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OpsVentasRoute = OpsVentasRouteImport.update({
+  id: '/ventas',
+  path: '/ventas',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsTraspasosRoute = OpsTraspasosRouteImport.update({
+  id: '/traspasos',
+  path: '/traspasos',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsRecibosRoute = OpsRecibosRouteImport.update({
+  id: '/recibos',
+  path: '/recibos',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsProductosRoute = OpsProductosRouteImport.update({
+  id: '/productos',
+  path: '/productos',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsOrdenesTrabajoRoute = OpsOrdenesTrabajoRouteImport.update({
+  id: '/ordenes-trabajo',
+  path: '/ordenes-trabajo',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsInventarioRoute = OpsInventarioRouteImport.update({
+  id: '/inventario',
+  path: '/inventario',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsHerramientasRoute = OpsHerramientasRouteImport.update({
+  id: '/herramientas',
+  path: '/herramientas',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsGarantiasRoute = OpsGarantiasRouteImport.update({
+  id: '/garantias',
+  path: '/garantias',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsEnsamblesRoute = OpsEnsamblesRouteImport.update({
+  id: '/ensambles',
+  path: '/ensambles',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsDevolucionesRoute = OpsDevolucionesRouteImport.update({
+  id: '/devoluciones',
+  path: '/devoluciones',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsCotizacionesRoute = OpsCotizacionesRouteImport.update({
+  id: '/cotizaciones',
+  path: '/cotizaciones',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsComprasRoute = OpsComprasRouteImport.update({
+  id: '/compras',
+  path: '/compras',
+  getParentRoute: () => OpsRoute,
+} as any)
+const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTop10Route = AdminTop10RouteImport.update({
+  id: '/top-10',
+  path: '/top-10',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReordenRoute = AdminReordenRouteImport.update({
+  id: '/reorden',
+  path: '/reorden',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDashboardRoute = AdminDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConteoCiclicoRoute = AdminConteoCiclicoRouteImport.update({
+  id: '/conteo-ciclico',
+  path: '/conteo-ciclico',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConfiguracionRoute = AdminConfiguracionRouteImport.update({
+  id: '/configuracion',
+  path: '/configuracion',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCierresRoute = AdminCierresRouteImport.update({
+  id: '/cierres',
+  path: '/cierres',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuditoriaRoute = AdminAuditoriaRouteImport.update({
+  id: '/auditoria',
+  path: '/auditoria',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalisisAbcRoute = AdminAnalisisAbcRouteImport.update({
+  id: '/analisis-abc',
+  path: '/analisis-abc',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAlertasRoute = AdminAlertasRouteImport.update({
+  id: '/alertas',
+  path: '/alertas',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/login': typeof LoginRoute
+  '/ops': typeof OpsRouteWithChildren
+  '/admin/alertas': typeof AdminAlertasRoute
+  '/admin/analisis-abc': typeof AdminAnalisisAbcRoute
+  '/admin/auditoria': typeof AdminAuditoriaRoute
+  '/admin/cierres': typeof AdminCierresRoute
+  '/admin/configuracion': typeof AdminConfiguracionRoute
+  '/admin/conteo-ciclico': typeof AdminConteoCiclicoRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/reorden': typeof AdminReordenRoute
+  '/admin/top-10': typeof AdminTop10Route
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/ops/compras': typeof OpsComprasRoute
+  '/ops/cotizaciones': typeof OpsCotizacionesRoute
+  '/ops/devoluciones': typeof OpsDevolucionesRoute
+  '/ops/ensambles': typeof OpsEnsamblesRoute
+  '/ops/garantias': typeof OpsGarantiasRoute
+  '/ops/herramientas': typeof OpsHerramientasRoute
+  '/ops/inventario': typeof OpsInventarioRoute
+  '/ops/ordenes-trabajo': typeof OpsOrdenesTrabajoRoute
+  '/ops/productos': typeof OpsProductosRoute
+  '/ops/recibos': typeof OpsRecibosRoute
+  '/ops/traspasos': typeof OpsTraspasosRoute
+  '/ops/ventas': typeof OpsVentasRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/login': typeof LoginRoute
+  '/ops': typeof OpsRouteWithChildren
+  '/admin/alertas': typeof AdminAlertasRoute
+  '/admin/analisis-abc': typeof AdminAnalisisAbcRoute
+  '/admin/auditoria': typeof AdminAuditoriaRoute
+  '/admin/cierres': typeof AdminCierresRoute
+  '/admin/configuracion': typeof AdminConfiguracionRoute
+  '/admin/conteo-ciclico': typeof AdminConteoCiclicoRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/reorden': typeof AdminReordenRoute
+  '/admin/top-10': typeof AdminTop10Route
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/ops/compras': typeof OpsComprasRoute
+  '/ops/cotizaciones': typeof OpsCotizacionesRoute
+  '/ops/devoluciones': typeof OpsDevolucionesRoute
+  '/ops/ensambles': typeof OpsEnsamblesRoute
+  '/ops/garantias': typeof OpsGarantiasRoute
+  '/ops/herramientas': typeof OpsHerramientasRoute
+  '/ops/inventario': typeof OpsInventarioRoute
+  '/ops/ordenes-trabajo': typeof OpsOrdenesTrabajoRoute
+  '/ops/productos': typeof OpsProductosRoute
+  '/ops/recibos': typeof OpsRecibosRoute
+  '/ops/traspasos': typeof OpsTraspasosRoute
+  '/ops/ventas': typeof OpsVentasRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/login': typeof LoginRoute
+  '/ops': typeof OpsRouteWithChildren
+  '/admin/alertas': typeof AdminAlertasRoute
+  '/admin/analisis-abc': typeof AdminAnalisisAbcRoute
+  '/admin/auditoria': typeof AdminAuditoriaRoute
+  '/admin/cierres': typeof AdminCierresRoute
+  '/admin/configuracion': typeof AdminConfiguracionRoute
+  '/admin/conteo-ciclico': typeof AdminConteoCiclicoRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/reorden': typeof AdminReordenRoute
+  '/admin/top-10': typeof AdminTop10Route
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/ops/compras': typeof OpsComprasRoute
+  '/ops/cotizaciones': typeof OpsCotizacionesRoute
+  '/ops/devoluciones': typeof OpsDevolucionesRoute
+  '/ops/ensambles': typeof OpsEnsamblesRoute
+  '/ops/garantias': typeof OpsGarantiasRoute
+  '/ops/herramientas': typeof OpsHerramientasRoute
+  '/ops/inventario': typeof OpsInventarioRoute
+  '/ops/ordenes-trabajo': typeof OpsOrdenesTrabajoRoute
+  '/ops/productos': typeof OpsProductosRoute
+  '/ops/recibos': typeof OpsRecibosRoute
+  '/ops/traspasos': typeof OpsTraspasosRoute
+  '/ops/ventas': typeof OpsVentasRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/ops'
+    | '/admin/alertas'
+    | '/admin/analisis-abc'
+    | '/admin/auditoria'
+    | '/admin/cierres'
+    | '/admin/configuracion'
+    | '/admin/conteo-ciclico'
+    | '/admin/dashboard'
+    | '/admin/reorden'
+    | '/admin/top-10'
+    | '/admin/usuarios'
+    | '/ops/compras'
+    | '/ops/cotizaciones'
+    | '/ops/devoluciones'
+    | '/ops/ensambles'
+    | '/ops/garantias'
+    | '/ops/herramientas'
+    | '/ops/inventario'
+    | '/ops/ordenes-trabajo'
+    | '/ops/productos'
+    | '/ops/recibos'
+    | '/ops/traspasos'
+    | '/ops/ventas'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/ops'
+    | '/admin/alertas'
+    | '/admin/analisis-abc'
+    | '/admin/auditoria'
+    | '/admin/cierres'
+    | '/admin/configuracion'
+    | '/admin/conteo-ciclico'
+    | '/admin/dashboard'
+    | '/admin/reorden'
+    | '/admin/top-10'
+    | '/admin/usuarios'
+    | '/ops/compras'
+    | '/ops/cotizaciones'
+    | '/ops/devoluciones'
+    | '/ops/ensambles'
+    | '/ops/garantias'
+    | '/ops/herramientas'
+    | '/ops/inventario'
+    | '/ops/ordenes-trabajo'
+    | '/ops/productos'
+    | '/ops/recibos'
+    | '/ops/traspasos'
+    | '/ops/ventas'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/ops'
+    | '/admin/alertas'
+    | '/admin/analisis-abc'
+    | '/admin/auditoria'
+    | '/admin/cierres'
+    | '/admin/configuracion'
+    | '/admin/conteo-ciclico'
+    | '/admin/dashboard'
+    | '/admin/reorden'
+    | '/admin/top-10'
+    | '/admin/usuarios'
+    | '/ops/compras'
+    | '/ops/cotizaciones'
+    | '/ops/devoluciones'
+    | '/ops/ensambles'
+    | '/ops/garantias'
+    | '/ops/herramientas'
+    | '/ops/inventario'
+    | '/ops/ordenes-trabajo'
+    | '/ops/productos'
+    | '/ops/recibos'
+    | '/ops/traspasos'
+    | '/ops/ventas'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  OpsRoute: typeof OpsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/ops': {
+      id: '/ops'
+      path: '/ops'
+      fullPath: '/ops'
+      preLoaderRoute: typeof OpsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,12 +376,239 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ops/ventas': {
+      id: '/ops/ventas'
+      path: '/ventas'
+      fullPath: '/ops/ventas'
+      preLoaderRoute: typeof OpsVentasRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/traspasos': {
+      id: '/ops/traspasos'
+      path: '/traspasos'
+      fullPath: '/ops/traspasos'
+      preLoaderRoute: typeof OpsTraspasosRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/recibos': {
+      id: '/ops/recibos'
+      path: '/recibos'
+      fullPath: '/ops/recibos'
+      preLoaderRoute: typeof OpsRecibosRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/productos': {
+      id: '/ops/productos'
+      path: '/productos'
+      fullPath: '/ops/productos'
+      preLoaderRoute: typeof OpsProductosRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/ordenes-trabajo': {
+      id: '/ops/ordenes-trabajo'
+      path: '/ordenes-trabajo'
+      fullPath: '/ops/ordenes-trabajo'
+      preLoaderRoute: typeof OpsOrdenesTrabajoRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/inventario': {
+      id: '/ops/inventario'
+      path: '/inventario'
+      fullPath: '/ops/inventario'
+      preLoaderRoute: typeof OpsInventarioRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/herramientas': {
+      id: '/ops/herramientas'
+      path: '/herramientas'
+      fullPath: '/ops/herramientas'
+      preLoaderRoute: typeof OpsHerramientasRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/garantias': {
+      id: '/ops/garantias'
+      path: '/garantias'
+      fullPath: '/ops/garantias'
+      preLoaderRoute: typeof OpsGarantiasRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/ensambles': {
+      id: '/ops/ensambles'
+      path: '/ensambles'
+      fullPath: '/ops/ensambles'
+      preLoaderRoute: typeof OpsEnsamblesRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/devoluciones': {
+      id: '/ops/devoluciones'
+      path: '/devoluciones'
+      fullPath: '/ops/devoluciones'
+      preLoaderRoute: typeof OpsDevolucionesRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/cotizaciones': {
+      id: '/ops/cotizaciones'
+      path: '/cotizaciones'
+      fullPath: '/ops/cotizaciones'
+      preLoaderRoute: typeof OpsCotizacionesRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/compras': {
+      id: '/ops/compras'
+      path: '/compras'
+      fullPath: '/ops/compras'
+      preLoaderRoute: typeof OpsComprasRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/admin/usuarios': {
+      id: '/admin/usuarios'
+      path: '/usuarios'
+      fullPath: '/admin/usuarios'
+      preLoaderRoute: typeof AdminUsuariosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/top-10': {
+      id: '/admin/top-10'
+      path: '/top-10'
+      fullPath: '/admin/top-10'
+      preLoaderRoute: typeof AdminTop10RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reorden': {
+      id: '/admin/reorden'
+      path: '/reorden'
+      fullPath: '/admin/reorden'
+      preLoaderRoute: typeof AdminReordenRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/conteo-ciclico': {
+      id: '/admin/conteo-ciclico'
+      path: '/conteo-ciclico'
+      fullPath: '/admin/conteo-ciclico'
+      preLoaderRoute: typeof AdminConteoCiclicoRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/configuracion': {
+      id: '/admin/configuracion'
+      path: '/configuracion'
+      fullPath: '/admin/configuracion'
+      preLoaderRoute: typeof AdminConfiguracionRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/cierres': {
+      id: '/admin/cierres'
+      path: '/cierres'
+      fullPath: '/admin/cierres'
+      preLoaderRoute: typeof AdminCierresRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/auditoria': {
+      id: '/admin/auditoria'
+      path: '/auditoria'
+      fullPath: '/admin/auditoria'
+      preLoaderRoute: typeof AdminAuditoriaRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analisis-abc': {
+      id: '/admin/analisis-abc'
+      path: '/analisis-abc'
+      fullPath: '/admin/analisis-abc'
+      preLoaderRoute: typeof AdminAnalisisAbcRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/alertas': {
+      id: '/admin/alertas'
+      path: '/alertas'
+      fullPath: '/admin/alertas'
+      preLoaderRoute: typeof AdminAlertasRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminAlertasRoute: typeof AdminAlertasRoute
+  AdminAnalisisAbcRoute: typeof AdminAnalisisAbcRoute
+  AdminAuditoriaRoute: typeof AdminAuditoriaRoute
+  AdminCierresRoute: typeof AdminCierresRoute
+  AdminConfiguracionRoute: typeof AdminConfiguracionRoute
+  AdminConteoCiclicoRoute: typeof AdminConteoCiclicoRoute
+  AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminReordenRoute: typeof AdminReordenRoute
+  AdminTop10Route: typeof AdminTop10Route
+  AdminUsuariosRoute: typeof AdminUsuariosRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAlertasRoute: AdminAlertasRoute,
+  AdminAnalisisAbcRoute: AdminAnalisisAbcRoute,
+  AdminAuditoriaRoute: AdminAuditoriaRoute,
+  AdminCierresRoute: AdminCierresRoute,
+  AdminConfiguracionRoute: AdminConfiguracionRoute,
+  AdminConteoCiclicoRoute: AdminConteoCiclicoRoute,
+  AdminDashboardRoute: AdminDashboardRoute,
+  AdminReordenRoute: AdminReordenRoute,
+  AdminTop10Route: AdminTop10Route,
+  AdminUsuariosRoute: AdminUsuariosRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface OpsRouteChildren {
+  OpsComprasRoute: typeof OpsComprasRoute
+  OpsCotizacionesRoute: typeof OpsCotizacionesRoute
+  OpsDevolucionesRoute: typeof OpsDevolucionesRoute
+  OpsEnsamblesRoute: typeof OpsEnsamblesRoute
+  OpsGarantiasRoute: typeof OpsGarantiasRoute
+  OpsHerramientasRoute: typeof OpsHerramientasRoute
+  OpsInventarioRoute: typeof OpsInventarioRoute
+  OpsOrdenesTrabajoRoute: typeof OpsOrdenesTrabajoRoute
+  OpsProductosRoute: typeof OpsProductosRoute
+  OpsRecibosRoute: typeof OpsRecibosRoute
+  OpsTraspasosRoute: typeof OpsTraspasosRoute
+  OpsVentasRoute: typeof OpsVentasRoute
+}
+
+const OpsRouteChildren: OpsRouteChildren = {
+  OpsComprasRoute: OpsComprasRoute,
+  OpsCotizacionesRoute: OpsCotizacionesRoute,
+  OpsDevolucionesRoute: OpsDevolucionesRoute,
+  OpsEnsamblesRoute: OpsEnsamblesRoute,
+  OpsGarantiasRoute: OpsGarantiasRoute,
+  OpsHerramientasRoute: OpsHerramientasRoute,
+  OpsInventarioRoute: OpsInventarioRoute,
+  OpsOrdenesTrabajoRoute: OpsOrdenesTrabajoRoute,
+  OpsProductosRoute: OpsProductosRoute,
+  OpsRecibosRoute: OpsRecibosRoute,
+  OpsTraspasosRoute: OpsTraspasosRoute,
+  OpsVentasRoute: OpsVentasRoute,
+}
+
+const OpsRouteWithChildren = OpsRoute._addFileChildren(OpsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  LoginRoute: LoginRoute,
+  OpsRoute: OpsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

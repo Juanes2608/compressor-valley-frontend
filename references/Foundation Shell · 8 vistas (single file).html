@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Foundation Shell · 8 vistas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --n-0:#FFFFFF;--n-25:#FBFBFC;--n-50:#F7F8FA;--n-75:#F2F4F7;--n-100:#EEF1F5;
+  --n-150:#E4E7EC;--n-200:#D0D5DD;--n-300:#98A2B3;--n-400:#7A8290;--n-500:#667085;
+  --n-700:#475467;--n-800:#344054;--n-900:#1D2939;--n-950:#101828;--n-975:#0B1320;
+  --p-50:#F0F2FF;--p-100:#E0E5FF;--p-200:#C2CCFF;--p-300:#94A3FF;--p-500:#4B5BF5;
+  --p-600:#2D3CE5;--p-700:#2531C8;
+  --info:#2E90FA;--info-d:#175CD3;--info-bg:#EFF8FF;--info-bd:#B2DDFF;
+  --warn-50:#FFFAEB;--warn-500:#F79009;--warn-700:#B54708;
+  --succ-50:#ECFDF3;--succ-500:#12B76A;--succ-700:#027A48;
+  --dang-50:#FEF3F2;--dang-500:#F04438;--dang-700:#B42318;
+}
+html,body{margin:0;padding:0;background:#F5F6F8;color:var(--n-950);
+  font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased}
+.page-wrap{max-width:1480px;margin:0 auto;padding:48px 32px}
+.doc-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+  letter-spacing:.1em;text-transform:uppercase;margin:0 0 8px}
+.doc-title{font-size:32px;font-weight:600;letter-spacing:-0.02em;margin:0 0 8px}
+.doc-sub{font-size:15px;color:var(--n-500);margin:0;max-width:820px;line-height:1.55}
+.doc-sub code{font-family:'IBM Plex Mono',monospace;font-size:12px;background:#fff;
+  padding:1px 6px;border-radius:3px;border:1px solid var(--n-150);color:var(--n-700)}
+.section-divider{margin:80px 0 48px;display:flex;align-items:center;gap:16px}
+.section-divider .ln{flex:1;height:1px;background:var(--n-200)}
+.section-divider .lbl{font-family:'IBM Plex Mono',monospace;font-size:12px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--n-700);font-weight:500}
+.frame-wrap{margin-bottom:64px}
+.frame-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+  letter-spacing:.1em;text-transform:uppercase;margin:0 0 12px;font-weight:500;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.frame-label .lbl-num{display:inline-flex;align-items:center;justify-content:center;
+  width:24px;height:24px;border-radius:5px;background:var(--n-950);color:#fff;font-size:11px}
+.frame-label.ad .lbl-num{background:var(--info-d)}
+.frame-label.dk .lbl-num{background:var(--p-600)}
+.frame-label .lbl-px{margin-left:auto;color:var(--n-300);font-weight:400}
+.frame-desc{font-size:13px;color:var(--n-500);margin:0 0 16px;max-width:820px;line-height:1.55}
+.frame-desc b{color:var(--n-700);font-weight:500}
+.frame{border:1px solid var(--n-200);border-radius:14px;overflow:hidden;background:#fff;
+  box-shadow:0 12px 40px -16px rgba(16,24,40,.18);overflow-x:auto}
+.frame.dk{border-color:#1F2937}
+.vp-desktop{width:1280px;margin:0 auto}
+.vp-tablet{width:900px;margin:0 auto}
+.vp-mobile{padding:32px 16px;background:#E4E7EC;display:flex;justify-content:center}
+.vp-mobile.dk{background:#0F1115}
+
+/* Shell */
+.shell{display:grid;background:var(--n-25)}
+.shell.sh-desktop{grid-template-columns:240px 1fr;min-height:760px}
+.shell.sh-tablet{grid-template-columns:56px 1fr;min-height:660px}
+.shell.dk{background:var(--n-975)}
+
+/* Sidebar OPS */
+.side{background:var(--n-950);color:#fff;padding:16px 12px 20px;display:flex;flex-direction:column;gap:1px;position:relative}
+.side.rail{padding:14px 8px}
+.side.rail .link{justify-content:center;padding:10px 0;width:40px;margin:1px auto;position:relative}
+.side.rail .link .lk-cnt{display:none}
+.side.rail .brand{padding:0 0 12px;justify-content:center;border-bottom:1px solid var(--n-800);margin-bottom:10px}
+.side.rail .sec{display:none}
+.side.rail .ad-flag{display:none}
+
+.brand{display:flex;align-items:center;gap:10px;padding:6px 8px 16px;
+  border-bottom:1px solid var(--n-800);margin-bottom:8px;cursor:pointer;border-radius:6px}
+.brand:hover{background:rgba(255,255,255,.03)}
+.logo{width:30px;height:30px;border-radius:7px;background:var(--p-500);color:#fff;
+  font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;letter-spacing:-0.02em}
+.bn{font-size:13px;font-weight:600;line-height:1.2}
+.bs{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--n-300);letter-spacing:.04em;display:flex;align-items:center;gap:5px}
+.bs .dot-s{width:5px;height:5px;border-radius:999px;background:var(--succ-500)}
+.brand-chev{margin-left:auto;color:var(--n-500)}
+.brand-chev svg{width:12px;height:12px}
+
+.ad-flag{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--info);padding:8px 8px 6px}
+.ad-flag .pulse{width:6px;height:6px;border-radius:999px;background:var(--info);animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+
+.side.admin{background:var(--n-975);border-right:1px solid var(--p-600)}
+.shell.dk .side.admin{background:#070C18}
+
+.sec{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--n-500);padding:14px 12px 6px;font-weight:500}
+.link{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:5px;
+  color:var(--n-300);font-size:13px;cursor:pointer;position:relative;line-height:1}
+.link:hover{background:var(--n-900);color:#fff}
+.link svg{width:16px;height:16px;flex-shrink:0;color:var(--n-500);stroke-width:1.5}
+.link:hover svg{color:var(--n-200)}
+.link.on{background:rgba(75,91,245,.16);color:#fff;font-weight:500}
+.link.on svg{color:var(--p-300)}
+.link.on::before{content:"";position:absolute;left:-3px;top:8px;bottom:8px;width:3px;background:var(--p-500);border-radius:2px}
+.side.rail .link.on::before{left:0}
+.side.admin .link.on{background:rgba(46,144,250,.14)}
+.side.admin .link.on::before{background:var(--info)}
+.side.admin .link.on svg{color:#7CC4FD}
+.lk-cnt{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);
+  background:rgba(255,255,255,.08);padding:1px 6px;border-radius:3px;font-weight:500;line-height:1.4}
+.link.on .lk-cnt{background:rgba(255,255,255,.14);color:#fff}
+
+/* Main */
+.main{background:var(--n-25);overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.dk .main{background:var(--n-975)}
+
+/* Header */
+.tophead{height:56px;background:#fff;border-bottom:1px solid var(--n-150);
+  display:flex;align-items:center;padding:0 24px;gap:16px}
+.dk .tophead{background:var(--n-950);border-color:var(--n-800)}
+.th-left{display:flex;flex-direction:column;gap:2px;min-width:0}
+.th-crumb{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);
+  letter-spacing:.06em;text-transform:uppercase}
+.th-crumb .sep{margin:0 6px;color:var(--n-300)}
+.th-mod{font-size:14px;font-weight:500;color:var(--n-950)}
+.dk .th-mod{color:#fff}.dk .th-crumb{color:var(--n-400)}
+.th-search{flex:0 1 320px;height:36px;border:1px solid var(--n-150);background:var(--n-50);
+  border-radius:6px;display:flex;align-items:center;padding:0 12px;gap:10px;color:var(--n-500);
+  margin:0 auto;cursor:pointer}
+.th-search:hover{background:#fff;border-color:var(--n-200)}
+.th-search input{flex:1;border:none;outline:none;background:transparent;font-family:inherit;
+  font-size:13px;color:var(--n-500);pointer-events:none}
+.th-search svg{width:14px;height:14px;flex-shrink:0;stroke:var(--n-500)}
+.kbd{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--n-500);
+  border:1px solid var(--n-200);padding:2px 6px;border-radius:3px;background:#fff;font-weight:500}
+.dk .th-search{background:var(--n-900);border-color:var(--n-800);color:var(--n-300)}
+.dk .th-search:hover{background:var(--n-800)}
+.dk .kbd{background:var(--n-950);border-color:var(--n-800);color:var(--n-300)}
+
+.th-right{display:flex;align-items:center;gap:10px;margin-left:auto}
+.site-chip{display:flex;align-items:center;gap:6px;height:30px;padding:0 10px;border:1px solid var(--n-150);
+  background:var(--n-50);border-radius:6px;font-size:12px;color:var(--n-700);font-weight:500;cursor:pointer}
+.site-chip:hover{background:#fff;border-color:var(--n-200)}
+.site-chip .dot-s{width:6px;height:6px;border-radius:999px;background:var(--succ-500)}
+.site-chip .nm{font-family:'IBM Plex Mono',monospace;font-size:11px}
+.dk .site-chip{background:var(--n-900);border-color:var(--n-800);color:var(--n-200)}
+
+.th-btn{height:32px;padding:0 12px;border-radius:6px;border:1px solid;background:transparent;
+  font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:12.5px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.th-btn svg{width:14px;height:14px;stroke-width:1.5}
+.th-btn-admin{color:var(--info-d);border-color:var(--info-bd);background:var(--info-bg)}
+.th-btn-admin:hover{background:#DCEBFE}
+.th-btn-back{color:var(--n-700);border-color:var(--n-200);background:#fff}
+.th-btn-back:hover{background:var(--n-50)}
+.dk .th-btn-back{background:var(--n-900);color:var(--n-200);border-color:var(--n-800)}
+.dk .th-btn-admin{background:rgba(46,144,250,.14);color:#7CC4FD;border-color:rgba(46,144,250,.4)}
+
+.th-icon{width:32px;height:32px;border:1px solid var(--n-150);background:var(--n-50);border-radius:6px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--n-700);position:relative}
+.th-icon:hover{background:#fff;border-color:var(--n-200)}
+.th-icon svg{width:14px;height:14px;stroke-width:1.5}
+.th-icon .badge{position:absolute;top:-3px;right:-3px;background:var(--dang-500);color:#fff;
+  font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;
+  width:14px;height:14px;border-radius:999px;display:flex;align-items:center;justify-content:center;line-height:1}
+.dk .th-icon{background:var(--n-900);border-color:var(--n-800);color:var(--n-200)}
+
+.th-avatar{width:32px;height:32px;border-radius:999px;background:linear-gradient(135deg,#3D4ACC,#7244D5);
+  color:#fff;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  border:2px solid var(--n-100)}
+.dk .th-avatar{border-color:var(--n-800)}
+
+/* Content placeholder */
+.content{flex:1;padding:32px 32px 40px;display:flex;flex-direction:column;gap:16px}
+.content.tablet{padding:24px}
+.content-head{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.ph-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px}
+.ph-title{font-weight:600;font-size:22px;letter-spacing:-0.018em;margin:0;color:var(--n-950)}
+.ph-msg{font-size:13px;color:var(--n-500);margin:6px 0 0;max-width:560px;line-height:1.55}
+.dk .ph-title{color:#fff}.dk .ph-msg{color:var(--n-300)}.dk .ph-meta{color:var(--n-500)}
+.placeholder{flex:1;border:1.5px dashed var(--n-200);border-radius:12px;background:transparent;
+  display:flex;align-items:center;justify-content:center;min-height:340px}
+.placeholder span{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);letter-spacing:.1em;text-transform:uppercase}
+.dk .placeholder{border-color:var(--n-800)}
+.dk .placeholder span{color:var(--n-500)}
+
+/* Mobile shell */
+.mob{width:390px;background:var(--n-25);min-height:680px;display:flex;flex-direction:column;
+  position:relative;border:1px solid var(--n-200);border-radius:24px;overflow:hidden;
+  box-shadow:0 20px 60px -20px rgba(16,24,40,.2)}
+.mob.dk{background:var(--n-975);border-color:var(--n-800)}
+.mob-top{height:48px;background:#fff;border-bottom:1px solid var(--n-150);
+  display:flex;align-items:center;padding:0 8px;gap:4px}
+.dk .mob-top{background:var(--n-950);border-color:var(--n-800)}
+.mob-top.admin{background:var(--n-975);color:#fff;border-color:var(--p-600)}
+.mob-icon{width:40px;height:40px;border-radius:8px;border:none;background:transparent;
+  color:var(--n-700);cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative}
+.dk .mob-icon{color:var(--n-200)}
+.mob-top.admin .mob-icon{color:#fff}
+.mob-icon svg{width:20px;height:20px;stroke-width:1.5}
+.mob-icon .badge{position:absolute;top:6px;right:6px;background:var(--dang-500);color:#fff;
+  font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;
+  width:14px;height:14px;border-radius:999px;display:flex;align-items:center;justify-content:center;line-height:1}
+.mob-title{flex:1;text-align:center;font-size:14px;font-weight:600;color:var(--n-950);letter-spacing:-0.01em}
+.dk .mob-title{color:#fff}
+.mob-top.admin .mob-title{color:#fff;display:flex;align-items:center;justify-content:center;gap:8px}
+.mob-top.admin .mob-title .pulse{width:6px;height:6px;border-radius:999px;background:var(--info);animation:pulse 2s infinite}
+
+.mob-body{flex:1;padding:20px 16px 96px;display:flex;flex-direction:column;gap:12px}
+.mob-ph-title{font-size:20px;font-weight:600;color:var(--n-950);margin:0}
+.dk .mob-ph-title{color:#fff}
+.mob-ph-msg{font-size:13px;color:var(--n-500);margin:0;line-height:1.5}
+.dk .mob-ph-msg{color:var(--n-300)}
+.mob-ph-card{flex:1;border:1.5px dashed var(--n-200);border-radius:12px;display:flex;align-items:center;justify-content:center;min-height:280px}
+.dk .mob-ph-card{border-color:var(--n-800)}
+.mob-ph-card span{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-300);letter-spacing:.08em;text-transform:uppercase}
+
+.mob-bottom{height:64px;background:#fff;border-top:1px solid var(--n-150);
+  display:grid;grid-template-columns:repeat(5,1fr);position:absolute;bottom:0;left:0;right:0;align-items:center}
+.dk .mob-bottom{background:var(--n-950);border-color:var(--n-800)}
+.mob-tab{background:transparent;border:none;cursor:pointer;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;color:var(--n-500);font-size:11px;
+  font-family:'IBM Plex Sans',sans-serif;font-weight:500;height:100%}
+.mob-tab svg{width:22px;height:22px;stroke-width:1.5}
+.mob-tab.on{color:var(--p-600)}
+.dk .mob-tab.on{color:var(--p-300)}
+.mob-fab-tab{display:flex;align-items:center;justify-content:center}
+.mob-fab-btn{width:48px;height:48px;border-radius:999px;background:var(--p-600);color:#fff;border:none;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(45,60,229,.4);
+  transform:translateY(-12px)}
+.mob-fab-btn svg{width:22px;height:22px;stroke-width:2}
+.mob-fab-lbl{position:absolute;bottom:6px;font-size:10px;color:var(--n-500);font-weight:500}
+
+/* Drawer admin mobile */
+.mob-drawer{position:absolute;top:0;left:0;width:280px;height:100%;background:var(--n-975);
+  border-right:1px solid var(--p-600);display:flex;flex-direction:column;padding:16px 12px;z-index:5;
+  box-shadow:0 0 60px rgba(0,0,0,.4);color:#fff}
+.mob-drawer-bg{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:4}
+
+/* Tooltip on rail hover (visual demo) */
+.rail-tip{position:absolute;left:48px;top:50%;transform:translateY(-50%);background:var(--n-950);
+  color:#fff;font-size:12px;padding:5px 10px;border-radius:5px;white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.3);font-weight:500;display:none;z-index:10}
+.rail-tip::before{content:"";position:absolute;left:-4px;top:50%;transform:translateY(-50%);
+  width:8px;height:8px;background:var(--n-950);transform:rotate(45deg) translateY(-50%);transform-origin:left}
+
+/* Specials */
+.spec-grid{display:grid;grid-template-columns:1fr;gap:32px}
+
+/* Switcher diagram */
+.switcher{background:#fff;border:1px solid var(--n-150);border-radius:14px;padding:32px;display:grid;
+  grid-template-columns:1fr 80px 1fr;gap:24px;align-items:center}
+.sw-frame{border:1px solid var(--n-150);border-radius:10px;background:var(--n-50);overflow:hidden}
+.sw-mock{height:240px;display:flex;flex-direction:column}
+.sw-mock-head{height:48px;background:#fff;border-bottom:1px solid var(--n-150);display:flex;align-items:center;justify-content:flex-end;padding:0 16px;gap:8px}
+.sw-mock-head.admin{background:#fff}
+.sw-mock-body{flex:1;display:flex}
+.sw-side{width:64px;background:var(--n-950)}
+.sw-side.admin{background:var(--n-975);border-right:1px solid var(--p-600)}
+.sw-content{flex:1;background:var(--n-50)}
+.sw-arrow{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--info-d)}
+.sw-arrow svg{width:32px;height:32px;stroke-width:1.5}
+.sw-arrow .lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--n-500);text-align:center;line-height:1.4;font-weight:500}
+.sw-cap{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--n-500);font-weight:500;padding:10px 16px;border-bottom:1px solid var(--n-150);display:flex;justify-content:space-between;align-items:center}
+.sw-cap .pill{font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:500;padding:1px 6px;border-radius:3px;background:var(--info-bg);color:var(--info-d);border:1px solid var(--info-bd);text-transform:none;letter-spacing:0}
+.sw-cap.admin .pill{background:rgba(46,144,250,.14);color:var(--info-d)}
+
+.sw-btn-hover{height:30px;padding:0 10px;border:1.5px solid var(--info-d);background:var(--info-bg);
+  color:var(--info-d);border-radius:6px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:5px;
+  box-shadow:0 0 0 3px rgba(46,144,250,.15)}
+.sw-btn-hover svg{width:13px;height:13px;stroke-width:1.5}
+
+/* Dropdown demo */
+.dd-demo{background:#fff;border:1px solid var(--n-150);border-radius:14px;padding:24px;display:flex;justify-content:flex-end;position:relative;min-height:340px}
+.dd-anchor{display:flex;align-items:center;gap:8px;padding:6px 8px 6px 6px;border:1px solid var(--n-150);background:var(--n-50);border-radius:8px}
+.dd-anchor .av{width:28px;height:28px;border-radius:999px;background:linear-gradient(135deg,#3D4ACC,#7244D5);color:#fff;font-weight:600;font-size:11px;display:flex;align-items:center;justify-content:center}
+.dd-anchor .nm{font-size:12px;color:var(--n-700);font-weight:500;line-height:1.2}
+.dd-anchor .nm small{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--n-500);font-weight:400;letter-spacing:.04em}
+
+.dd-panel{position:absolute;top:74px;right:24px;width:300px;background:#fff;border:1px solid var(--n-150);
+  border-radius:10px;box-shadow:0 16px 40px -8px rgba(16,24,40,.2);overflow:hidden}
+.dd-head{padding:14px 14px 12px;border-bottom:1px solid var(--n-100);display:flex;gap:10px;align-items:flex-start}
+.dd-head .av-lg{width:38px;height:38px;border-radius:999px;background:linear-gradient(135deg,#3D4ACC,#7244D5);color:#fff;font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dd-name{font-size:13px;font-weight:500;color:var(--n-950);line-height:1.3}
+.dd-role{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--info-d);background:var(--info-bg);padding:1px 6px;border-radius:3px;border:1px solid var(--info-bd);font-weight:500;display:inline-block;margin:3px 0}
+.dd-email{font-size:11px;color:var(--n-500);font-family:'IBM Plex Mono',monospace}
+.dd-sec-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-500);padding:10px 14px 6px;font-weight:500}
+.dd-site{display:flex;align-items:center;gap:8px;padding:7px 14px;font-size:12.5px;color:var(--n-700);cursor:pointer}
+.dd-site:hover{background:var(--n-50)}
+.dd-site .dot-s{width:6px;height:6px;border-radius:999px;background:var(--succ-500)}
+.dd-site.on{font-weight:500;color:var(--n-950);background:var(--p-50)}
+.dd-site .nm{font-family:'IBM Plex Mono',monospace;font-size:11px;margin-left:auto;color:var(--n-500)}
+.dd-site.on .nm{color:var(--p-600)}
+.dd-site .check{margin-left:8px;color:var(--p-600)}
+.dd-site .check svg{width:12px;height:12px}
+.dd-divide{height:1px;background:var(--n-100);margin:6px 0}
+.dd-item{display:flex;align-items:center;gap:10px;padding:8px 14px;font-size:12.5px;color:var(--n-700);cursor:pointer}
+.dd-item:hover{background:var(--n-50)}
+.dd-item svg{width:14px;height:14px;color:var(--n-500);stroke-width:1.5}
+.dd-item.dang{color:var(--dang-700)}
+.dd-item.dang svg{color:var(--dang-500)}
+
+/* Cmd K */
+.ck-demo{background:linear-gradient(180deg,rgba(16,24,40,.45),rgba(16,24,40,.6));border-radius:14px;padding:48px 32px;display:flex;justify-content:center;align-items:flex-start;backdrop-filter:blur(2px);position:relative;min-height:520px;overflow:hidden}
+.ck-demo::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><g fill='none' stroke='%23fff' stroke-width='1' opacity='0.04'><path d='M0 0h60v60H0z'/><path d='M0 30h60M30 0v60'/></g></svg>");opacity:.5}
+.ck-modal{width:600px;background:#fff;border-radius:12px;box-shadow:0 24px 80px -16px rgba(0,0,0,.4),0 0 0 1px rgba(16,24,40,.05);overflow:hidden;position:relative;z-index:1}
+.ck-input-row{display:flex;align-items:center;padding:14px 18px;gap:12px;border-bottom:1px solid var(--n-100)}
+.ck-input-row svg{width:16px;height:16px;stroke:var(--n-500);stroke-width:1.5}
+.ck-input{flex:1;font-family:'IBM Plex Sans',sans-serif;font-size:15px;color:var(--n-950);display:flex;align-items:center;gap:1px}
+.ck-input .cursor{display:inline-block;width:1.5px;height:18px;background:var(--p-600);animation:blink 1s infinite;margin-left:1px}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+.ck-input .placeholder-after{color:var(--n-300)}
+.ck-esc{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--n-500);border:1px solid var(--n-200);background:var(--n-50);padding:2px 8px;border-radius:4px;font-weight:500}
+.ck-list{max-height:420px;overflow-y:auto;padding:6px 0 12px}
+.ck-group-h{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-500);padding:10px 18px 6px;font-weight:500}
+.ck-item{display:flex;align-items:center;gap:12px;padding:8px 18px;font-size:13px;color:var(--n-700);cursor:pointer}
+.ck-item.on{background:var(--p-50);color:var(--n-950)}
+.ck-item svg{width:15px;height:15px;color:var(--n-500);stroke-width:1.5}
+.ck-item.on svg{color:var(--p-600)}
+.ck-lbl{flex:1}
+.ck-meta{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--n-500)}
+.ck-shortcut{display:flex;gap:3px;align-items:center}
+.ck-shortcut .key{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--n-500);border:1px solid var(--n-200);background:var(--n-50);padding:1px 5px;border-radius:3px;font-weight:500;line-height:1.4}
+.ck-foot{padding:10px 18px;border-top:1px solid var(--n-100);background:var(--n-50);display:flex;gap:14px;font-size:11px;color:var(--n-500);font-family:'IBM Plex Mono',monospace}
+.ck-foot .key{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--n-500);border:1px solid var(--n-200);background:#fff;padding:0 5px;border-radius:3px;font-weight:500;margin-right:4px}
+
+/* Validation */
+.check-card{background:#fff;border:1px solid var(--n-150);border-radius:12px;overflow:hidden;margin-top:24px}
+.check-row{display:grid;grid-template-columns:24px 1fr;gap:12px;padding:16px 20px;border-bottom:1px solid var(--n-100);align-items:start}
+.check-row:last-child{border-bottom:none}
+.check-dot{width:18px;height:18px;border-radius:999px;background:#12B76A;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;margin-top:2px}
+.check-text{font-size:13px;color:var(--n-800);line-height:1.55}
+.check-text strong{color:var(--n-950);font-weight:600}
+.check-text code{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--n-700);background:var(--n-50);padding:1px 6px;border-radius:3px;border:1px solid var(--n-150)}
+.arg-card{background:var(--info-bg);border:1px solid var(--info-bd);border-radius:12px;padding:18px 22px;margin-top:24px}
+.arg-card h4{margin:0 0 6px;font-size:13px;color:var(--info-d);font-weight:600}
+.arg-card p{margin:0;font-size:13px;color:var(--n-800);line-height:1.55}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div style="margin-bottom:48px">
+    <p class="doc-eyebrow">CHV · Sistema canónico v1.0 · Pantalla 5 · Foundation</p>
+    <h1 class="doc-title">Foundation Shell · Chrome de navegación</h1>
+    <p class="doc-sub">Dos shells canónicos. <code>/ops</code> con 12 módulos para todos los roles (royal como acento). <code>/admin</code> con 10 módulos solo para Admin (info como acento, header "PANEL ADMINISTRATIVO" + filete royal en borde derecho). El header de página, búsqueda Cmd+K y mecanismo de alternancia son los mismos en ambos shells.</p>
+  </div>
+
+  <div class="arg-card">
+    <h4>Decisión sobre /admin: combinación A + C</h4>
+    <p>Adopto las dos. <b>(C) Header "PANEL ADMINISTRATIVO" con dot pulsante info</b> da certeza textual inmediata sin ambigüedad — un Admin que vuelve después de horas no necesita inferir el contexto. <b>(A) Background n-975 + filete 1 px royal en borde derecho</b> añade la señal cromática "área privilegiada" sin invadir contenido. La combinación las refuerza mutuamente: el header captura la atención cognitiva, el filete trabaja en visión periférica. El active state pasa de royal a <code>info-500</code> para una tercera capa de diferenciación.</p>
+  </div>
+
+  <!-- LIGHT -->
+  <div class="section-divider"><span class="lbl">Light · Desktop · Shells lado a lado</span><span class="ln"></span></div>
+
+  <!-- VISTA 1 OPS DESKTOP -->
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">1</span><span>Desktop · Shell <code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--n-50);padding:1px 5px;border-radius:3px;border:1px solid var(--n-150);color:var(--n-700)">/ops</code> · sidebar 240 px · 12 módulos en 5 secciones</span><span class="lbl-px">1280 px</span></div>
+    <p class="frame-desc">Sidebar n-950 con logo + selector de sede arriba (chip clickeable). Active state Inventario con bg <code>p-500/16</code> + border-left royal + icono <code>p-300</code>. Header con breadcrumb mono + título sans 14, search global 320 px centrado con <code>⌘K</code>, chip de sede activa "WH-01 Cali" con dot succ, botón <b>Panel Admin</b> outline info (visible solo si rol=Admin), avatar 32 px con dropdown.</p>
+    <div class="frame">
+      <div class="vp-desktop">
+        <div class="shell sh-desktop">
+          <aside class="side">
+            <div class="brand">
+              <div class="logo">C</div>
+              <div style="flex:1"><div class="bn">Compresores Valle</div><div class="bs"><span class="dot-s"></span>WH-01 · Cali</div></div>
+              <span class="brand-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 6l3 3 3-3M5 10l3-3 3 3"/></svg></span>
+            </div>
+            <div class="sec">Catálogo y stock</div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M2.5 5L8 2l5.5 3v6L8 14l-5.5-3z"/><path d="M2.5 5L8 8m0 0l5.5-3M8 8v6"/></svg><span>Inventario</span><span class="lk-cnt">2,847</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 7V3h4l7 7-4 4-7-7z"/><circle cx="6" cy="6" r=".8" fill="currentColor"/></svg><span>Productos</span></div>
+            <div class="sec">Operación comercial</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="6" cy="13" r="1.2"/><circle cx="12" cy="13" r="1.2"/><path d="M2 3h2l2 8h8l1.5-5H5"/></svg><span>Ventas</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 2h7l3 3v9H3z"/><path d="M10 2v3h3M5 8h6M5 11h4"/></svg><span>Cotizaciones</span><span class="lk-cnt">5</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 2h10v12l-2-1.5L8 14l-3-1.5L3 14z"/><path d="M5 5h6M5 8h6M5 11h4"/></svg><span>Recibos</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 9l3-3m-3 3l3 3m-3-3h7a3 3 0 003-3v-1"/></svg><span>Devoluciones</span></div>
+            <div class="sec">Bodega y movimiento</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 4h8v8H3z"/><path d="M11 7h2.5L14 9v3h-3M5 13.5a1.2 1.2 0 100-2.4 1.2 1.2 0 000 2.4zm7 0a1.2 1.2 0 100-2.4 1.2 1.2 0 000 2.4z"/></svg><span>Compras</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M2 5h7v6H2z"/><path d="M9 7h3l2 2v2H9M5 13a1 1 0 100-2 1 1 0 000 2zm7 0a1 1 0 100-2 1 1 0 000 2z"/></svg><span>Traspasos</span><span class="lk-cnt">3</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M8 2L3 4v4c0 3 2.5 5 5 6 2.5-1 5-3 5-6V4z"/><path d="M6 8l1.5 1.5L10 7"/></svg><span>Garantías</span></div>
+            <div class="sec">Taller</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M11 3a2.5 2.5 0 00-3.4 3.2l-4.4 4.4a1.4 1.4 0 102 2l4.4-4.4A2.5 2.5 0 0013 5l-1.5 1.5L10 5l1.5-1.5z"/></svg><span>Órdenes de trabajo</span><span class="lk-cnt">14</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M5 3h3v3h3v3H8v3H5V9H2V6h3z"/></svg><span>Ensambles</span></div>
+            <div class="sec">Soporte</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 13l4-4M9 7l3-3 1 1-3 3M5 11l1 1M11 5l-1-1"/><path d="M2 14l2-2"/></svg><span>Herramientas</span><span class="lk-cnt">2</span></div>
+          </aside>
+          <main class="main">
+            <header class="tophead">
+              <div class="th-left">
+                <div class="th-crumb">Operaciones <span class="sep">/</span> Catálogo y stock</div>
+                <div class="th-mod">Inventario</div>
+              </div>
+              <div class="th-search">
+                <svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+                <input placeholder="Buscar en todo · Cmd+K" disabled />
+                <span class="kbd">⌘K</span>
+              </div>
+              <div class="th-right">
+                <div class="site-chip"><span class="dot-s"></span><span class="nm">WH-01 · Cali</span><svg viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 6l3 3 3-3"/></svg></div>
+                <button class="th-btn th-btn-admin"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M8 2L3 4v4c0 3 2.5 5 5 6 2.5-1 5-3 5-6V4z"/><path d="M6 8l1.5 1.5L10 7"/></svg>Panel Admin</button>
+                <button class="th-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span class="badge">3</span></button>
+                <div class="th-avatar">MR</div>
+              </div>
+            </header>
+            <div class="content">
+              <div class="content-head">
+                <div><p class="ph-meta">Operaciones · Catálogo y stock</p><h1 class="ph-title">Inventario</h1><p class="ph-msg">El contenido de este módulo se diseña en su fase correspondiente. Esta pantalla foundation define solo el chrome de navegación.</p></div>
+              </div>
+              <div class="placeholder"><span>[ Contenido del módulo ]</span></div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 2 ADMIN DESKTOP -->
+  <div class="frame-wrap">
+    <div class="frame-label ad"><span class="lbl-num">2</span><span>Desktop · Shell <code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--info-bg);padding:1px 5px;border-radius:3px;border:1px solid var(--info-bd);color:var(--info-d)">/admin</code> · sidebar 240 px n-975 · header "PANEL ADMINISTRATIVO" · filete royal</span><span class="lbl-px">1280 px</span></div>
+    <p class="frame-desc">Sidebar n-975 (más oscura) + borde derecho 1 px <code>p-600</code>. Header textual mono caps "PANEL ADMINISTRATIVO" con dot pulsante info debajo del logo. Active state Dashboard con bg <code>info-500/14</code> + border-left <code>info-500</code> + icono <code>#7CC4FD</code>. Botón <b>Volver a Operaciones</b> outline neutro con icono <code>arrow-left-circle</code> (única flecha permitida en el sistema).</p>
+    <div class="frame">
+      <div class="vp-desktop">
+        <div class="shell sh-desktop">
+          <aside class="side admin">
+            <div class="brand">
+              <div class="logo" style="background:var(--info-d)">C</div>
+              <div style="flex:1"><div class="bn">Compresores Valle</div><div class="bs"><span class="dot-s"></span>WH-01 · Cali</div></div>
+              <span class="brand-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 6l3 3 3-3M5 10l3-3 3 3"/></svg></span>
+            </div>
+            <div class="ad-flag"><span class="pulse"></span>Panel administrativo</div>
+            <div class="sec">Visión general</div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><rect x="2" y="2" width="5" height="6" rx="1"/><rect x="9" y="2" width="5" height="3" rx="1"/><rect x="2" y="10" width="5" height="4" rx="1"/><rect x="9" y="7" width="5" height="7" rx="1"/></svg><span>Dashboard</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span>Alertas</span><span class="lk-cnt">8</span></div>
+            <div class="sec">Análisis y reportes</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M8 8L13 5M8 8L8 2"/></svg><span>Análisis ABC</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M2 12l4-4 3 3 5-5"/><path d="M10 6h4v4"/></svg><span>Top 10</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 8a5 5 0 019-3M13 8a5 5 0 01-9 3"/><path d="M9 5h3V2M7 11H4v3"/></svg><span>Reorden</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 2h7l3 3v9a2 2 0 01-2 2H6a2 2 0 01-2-2V2z"/><path d="M11 2v3h3M7 7h4M7 10h4M7 13h2"/></svg><span>Auditoría</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M5 8.5l2 2 4-4"/></svg><span>Cierres</span></div>
+            <div class="sec">Operación administrativa</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><rect x="3" y="3" width="10" height="11" rx="1"/><path d="M6 1.5h4v2H6zM5 7h6M5 9.5h6M5 12h4"/></svg><span>Conteo cíclico</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M14 8h-2M3 8H1M12.2 3.8L11 5M5 11l-1.2 1.2M12.2 12.2L11 11M5 5L3.8 3.8"/></svg><span>Configuración</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="2.2"/><path d="M2 13c0-2.5 1.8-3.8 4-3.8s4 1.3 4 3.8"/><circle cx="11.5" cy="6.5" r="1.7"/><path d="M14 13c0-2-1.1-3-2.5-3"/></svg><span>Usuarios</span></div>
+          </aside>
+          <main class="main">
+            <header class="tophead">
+              <div class="th-left">
+                <div class="th-crumb">Admin <span class="sep">/</span> Visión general</div>
+                <div class="th-mod">Dashboard</div>
+              </div>
+              <div class="th-search">
+                <svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+                <input placeholder="Buscar en todo · Cmd+K" disabled />
+                <span class="kbd">⌘K</span>
+              </div>
+              <div class="th-right">
+                <div class="site-chip"><span class="dot-s"></span><span class="nm">WH-01 · Cali</span><svg viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 6l3 3 3-3"/></svg></div>
+                <button class="th-btn th-btn-back"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M9.5 5L6.5 8l3 3M6.5 8H11"/></svg>Volver a Operaciones</button>
+                <button class="th-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span class="badge">8</span></button>
+                <div class="th-avatar">MR</div>
+              </div>
+            </header>
+            <div class="content">
+              <div class="content-head">
+                <div><p class="ph-meta">Admin · Visión general</p><h1 class="ph-title">Dashboard</h1><p class="ph-msg">El contenido de este módulo se diseña en su fase correspondiente. Esta pantalla foundation define solo el chrome de navegación.</p></div>
+              </div>
+              <div class="placeholder"><span>[ Contenido del módulo ]</span></div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLET -->
+  <div class="section-divider"><span class="lbl">Light · Tablet · sidebar rail 56 px</span><span class="ln"></span></div>
+
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">3</span><span>Tablet · Shell /ops · rail 56 px</span><span class="lbl-px">900 px</span></div>
+    <p class="frame-desc">Rail iconos lucide 18 px. Active state mantiene border-left royal. Tooltip al hover muestra el nombre. Headers de sección desaparecen, queda separación visual sutil. Header de página comprime el search a 220 px.</p>
+    <div class="frame">
+      <div class="vp-tablet">
+        <div class="shell sh-tablet">
+          <aside class="side rail">
+            <div class="brand"><div class="logo">C</div></div>
+            <div class="link on" style="position:relative"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6L9 3l6 3v6l-6 3-6-3z"/><path d="M3 6l6 3m0 0l6-3M9 9v6"/></svg><span class="rail-tip" style="display:block">Inventario</span></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8V3h5l8 8-5 5-8-8z"/><circle cx="7" cy="7" r="1" fill="currentColor"/></svg></div>
+            <div style="height:8px"></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="15" r="1.4"/><circle cx="14" cy="15" r="1.4"/><path d="M2 3h2l2 9h9l2-6H6"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h8l3 3v11H3z"/><path d="M11 2v3h3M5 9h7M5 12h5"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h12v14l-2-1.5L9 16l-4-1.5L3 16z"/><path d="M5 6h8M5 9h8M5 12h6"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10l3-3m-3 3l3 3m-3-3h9a3 3 0 003-3v-2"/></svg></div>
+            <div style="height:8px"></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h9v9H3z"/><path d="M12 7h3l2 2v3h-4M5 15a1.2 1.2 0 100-2.4 1.2 1.2 0 000 2.4zm8 0a1.2 1.2 0 100-2.4 1.2 1.2 0 000 2.4z"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5h8v7H2z"/><path d="M10 8h3l2 2v2h-5M5 14a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2L4 4v5c0 4 3 6 5 7 2-1 5-3 5-7V4z"/><path d="M7 9l1.5 1.5L11 8"/></svg></div>
+            <div style="height:8px"></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3a3 3 0 00-4 4l-5 5a1.6 1.6 0 002.2 2.2l5-5a3 3 0 003.8-3.5l-1.7 1.7L11 5.5 12.5 4z"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h3v3h3v3H9v3H6V9H3V6h3z"/></svg></div>
+            <div style="height:8px"></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 15l5-5M11 8l3-3 1 1-3 3M5 13l1 1M13 5l-1-1M2 16l2-2"/></svg></div>
+          </aside>
+          <main class="main">
+            <header class="tophead" style="padding:0 16px">
+              <div class="th-left"><div class="th-crumb">Operaciones</div><div class="th-mod" style="font-size:13px">Inventario</div></div>
+              <div class="th-search" style="flex:0 1 220px"><svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input placeholder="Buscar · Cmd+K" disabled /><span class="kbd">⌘K</span></div>
+              <div class="th-right" style="gap:6px">
+                <div class="site-chip"><span class="dot-s"></span><span class="nm">WH-01</span></div>
+                <button class="th-btn th-btn-admin" style="padding:0 8px"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M8 2L3 4v4c0 3 2.5 5 5 6 2.5-1 5-3 5-6V4z"/></svg>Admin</button>
+                <button class="th-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span class="badge">3</span></button>
+                <div class="th-avatar" style="width:30px;height:30px">MR</div>
+              </div>
+            </header>
+            <div class="content tablet">
+              <div class="content-head"><div><p class="ph-meta">Operaciones · Catálogo</p><h1 class="ph-title" style="font-size:18px">Inventario</h1></div></div>
+              <div class="placeholder"><span>[ Contenido del módulo ]</span></div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame-wrap">
+    <div class="frame-label ad"><span class="lbl-num">4</span><span>Tablet · Shell /admin · rail 56 px · filete royal mantenido</span><span class="lbl-px">900 px</span></div>
+    <p class="frame-desc">Mismo patrón rail. El filete royal de 1 px en el borde derecho de la sidebar se mantiene en tablet — es la única señal del shell admin cuando el header textual desaparece. Active state en <code>info-500</code>.</p>
+    <div class="frame">
+      <div class="vp-tablet">
+        <div class="shell sh-tablet">
+          <aside class="side admin rail">
+            <div class="brand"><div class="logo" style="background:var(--info-d)">C</div></div>
+            <div class="link on" style="position:relative"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="6" height="7" rx="1"/><rect x="10" y="2" width="6" height="3" rx="1"/><rect x="2" y="11" width="6" height="5" rx="1"/><rect x="10" y="7" width="6" height="9" rx="1"/></svg><span class="rail-tip" style="display:block">Dashboard</span></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 8a4 4 0 018 0v3l1 2H4l1-2zM7 14a2 2 0 004 0"/></svg></div>
+            <div style="height:8px"></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M9 9L15 6M9 9L9 2"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 13l4-4 3 3 6-6"/><path d="M11 6h4v4"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9a6 6 0 0110-3M15 9a6 6 0 01-10 3"/><path d="M11 6h3V3M7 12H4v3"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2h8l3 3v10a2 2 0 01-2 2H6a2 2 0 01-2-2V2z"/><path d="M12 2v3h3M7 8h4M7 11h4"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M5.5 9.5L8 12l4.5-4.5"/></svg></div>
+            <div style="height:8px"></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="12" height="13" rx="1"/><path d="M7 1.5h4v2H7zM5 8h8M5 11h8M5 14h6"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2M9 15v2M16 9h-2M4 9H2M14 4L12.5 5.5M5.5 12.5L4 14M14 14L12.5 12.5M5.5 5.5L4 4"/></svg></div>
+            <div class="link"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6.5" cy="7" r="2.5"/><path d="M2 15c0-3 2-4.3 4.5-4.3s4.5 1.3 4.5 4.3"/><circle cx="13" cy="7.5" r="2"/><path d="M16 15c0-2.3-1.3-3.5-3-3.5"/></svg></div>
+          </aside>
+          <main class="main">
+            <header class="tophead" style="padding:0 16px">
+              <div class="th-left"><div class="th-crumb">Admin</div><div class="th-mod" style="font-size:13px">Dashboard</div></div>
+              <div class="th-search" style="flex:0 1 220px"><svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input placeholder="Buscar · Cmd+K" disabled /><span class="kbd">⌘K</span></div>
+              <div class="th-right" style="gap:6px">
+                <div class="site-chip"><span class="dot-s"></span><span class="nm">WH-01</span></div>
+                <button class="th-btn th-btn-back" style="padding:0 8px"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M9.5 5L6.5 8l3 3M6.5 8H11"/></svg>Volver</button>
+                <button class="th-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span class="badge">8</span></button>
+                <div class="th-avatar" style="width:30px;height:30px">MR</div>
+              </div>
+            </header>
+            <div class="content tablet">
+              <div class="content-head"><div><p class="ph-meta">Admin · Visión general</p><h1 class="ph-title" style="font-size:18px">Dashboard</h1></div></div>
+              <div class="placeholder"><span>[ Contenido del módulo ]</span></div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE -->
+  <div class="section-divider"><span class="lbl">Light · Mobile · 390 px</span><span class="ln"></span></div>
+
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">5</span><span>Mobile · Shell /ops · rol Vendedor · bottom tab bar 5 entradas + FAB <code>Vender</code></span><span class="lbl-px">390 px</span></div>
+    <p class="frame-desc">Header 48 px con menú hamburguesa, título centrado y campana de notificaciones. Bottom tab bar 64 px con 5 entradas: Inicio, Inventario, <b>Vender</b> (FAB royal elevado −12 px), Servicio, Más. El FAB es el patrón clave para rol Vendedor. Otros roles (Bodeguero, Técnico) tendrían distinto FAB en su lugar.</p>
+    <div class="vp-mobile">
+      <div class="mob">
+        <header class="mob-top">
+          <button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+          <div class="mob-title">Inventario</div>
+          <button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 10a6 6 0 0112 0v4l1.5 3h-15L6 14zM10 20a2 2 0 004 0"/></svg><span class="badge">3</span></button>
+        </header>
+        <div class="mob-body">
+          <p class="ph-meta">Operaciones · Catálogo</p>
+          <h1 class="mob-ph-title">Inventario</h1>
+          <p class="mob-ph-msg">El contenido de este módulo se diseña en su fase correspondiente. Esta foundation define el chrome.</p>
+          <div class="mob-ph-card"><span>[ Contenido del módulo ]</span></div>
+        </div>
+        <nav class="mob-bottom">
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg><span>Inicio</span></button>
+          <button class="mob-tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l9-4 9 4v9l-9 4-9-4z"/><path d="M3 7l9 4m0 0l9-4M12 11v9"/></svg><span>Inventario</span></button>
+          <div class="mob-fab-tab" style="position:relative">
+            <button class="mob-fab-btn" aria-label="Vender"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button>
+            <span class="mob-fab-lbl">Vender</span>
+          </div>
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 4a3.5 3.5 0 00-4.5 4.5l-7 7a2 2 0 102.8 2.8l7-7A3.5 3.5 0 0019 6l-2 2-2-2 2-2z"/></svg><span>Servicio</span></button>
+          <button class="mob-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg><span>Más</span></button>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame-wrap">
+    <div class="frame-label ad"><span class="lbl-num">6</span><span>Mobile · Shell /admin · drawer abierto desde hamburguesa</span><span class="lbl-px">390 px</span></div>
+    <p class="frame-desc">Sin bottom tab bar — el admin se usa primariamente desktop. Header 48 px en n-975 con borde inferior royal, título "Panel Administrativo" con dot pulsante info, hamburguesa abre drawer lateral 280 px con las 10 entradas agrupadas. Drawer mantiene el filete royal en su borde derecho.</p>
+    <div class="vp-mobile dk">
+      <div class="mob">
+        <header class="mob-top admin">
+          <button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+          <div class="mob-title"><span class="pulse"></span>Panel Administrativo</div>
+          <button class="mob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 10a6 6 0 0112 0v4l1.5 3h-15L6 14zM10 20a2 2 0 004 0"/></svg><span class="badge">8</span></button>
+        </header>
+        <div class="mob-drawer-bg"></div>
+        <aside class="mob-drawer">
+          <div class="brand">
+            <div class="logo" style="background:var(--info-d)">C</div>
+            <div style="flex:1"><div class="bn">Compresores Valle</div><div class="bs"><span class="dot-s"></span>WH-01 · Cali</div></div>
+          </div>
+          <div class="ad-flag" style="padding-top:12px"><span class="pulse"></span>Panel administrativo</div>
+          <div class="sec">Visión general</div>
+          <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="6" rx="1"/><rect x="9" y="2" width="5" height="3" rx="1"/><rect x="2" y="10" width="5" height="4" rx="1"/><rect x="9" y="7" width="5" height="7" rx="1"/></svg><span>Dashboard</span></div>
+          <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span>Alertas</span><span class="lk-cnt">8</span></div>
+          <div class="sec">Análisis y reportes</div>
+          <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 8L13 5M8 8L8 2"/></svg><span>Análisis ABC</span></div>
+          <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12l4-4 3 3 5-5"/><path d="M10 6h4v4"/></svg><span>Top 10</span></div>
+          <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8a5 5 0 019-3M13 8a5 5 0 01-9 3"/><path d="M9 5h3V2M7 11H4v3"/></svg><span>Reorden</span></div>
+          <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2h7l3 3v9a2 2 0 01-2 2H6a2 2 0 01-2-2V2z"/><path d="M11 2v3h3M7 7h4M7 10h4"/></svg><span>Auditoría</span></div>
+          <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M5 8.5l2 2 4-4"/></svg><span>Cierres</span></div>
+          <div class="sec">Operación</div>
+          <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="10" height="11" rx="1"/><path d="M6 1.5h4v2H6zM5 7h6M5 9.5h6"/></svg><span>Conteo cíclico</span></div>
+          <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M14 8h-2M3 8H1"/></svg><span>Configuración</span></div>
+          <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="2.2"/><path d="M2 13c0-2.5 1.8-3.8 4-3.8s4 1.3 4 3.8"/></svg><span>Usuarios</span></div>
+        </aside>
+        <div class="mob-body" style="padding-bottom:20px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DARK -->
+  <div class="section-divider"><span class="lbl">Dark · Desktop · ambos shells</span><span class="ln"></span></div>
+
+  <div class="frame-wrap">
+    <div class="frame-label dk"><span class="lbl-num">7</span><span>Desktop dark · Shell /ops</span><span class="lbl-px">1280 px</span></div>
+    <p class="frame-desc">Mismo n-950 en dark; el contenido baja a n-975. Header n-950 con borde n-800. Search en n-900.</p>
+    <div class="frame dk">
+      <div class="vp-desktop">
+        <div class="shell sh-desktop dk">
+          <aside class="side">
+            <div class="brand"><div class="logo">C</div><div style="flex:1"><div class="bn">Compresores Valle</div><div class="bs"><span class="dot-s"></span>WH-01 · Cali</div></div><span class="brand-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 6l3 3 3-3M5 10l3-3 3 3"/></svg></span></div>
+            <div class="sec">Catálogo y stock</div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M2.5 5L8 2l5.5 3v6L8 14l-5.5-3z"/><path d="M2.5 5L8 8m0 0l5.5-3M8 8v6"/></svg><span>Inventario</span><span class="lk-cnt">2,847</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 7V3h4l7 7-4 4-7-7z"/></svg><span>Productos</span></div>
+            <div class="sec">Operación comercial</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="6" cy="13" r="1.2"/><circle cx="12" cy="13" r="1.2"/><path d="M2 3h2l2 8h8l1.5-5H5"/></svg><span>Ventas</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 2h7l3 3v9H3z"/><path d="M10 2v3h3M5 8h6"/></svg><span>Cotizaciones</span><span class="lk-cnt">5</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 2h10v12l-2-1.5L8 14l-3-1.5L3 14z"/></svg><span>Recibos</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 9l3-3m-3 3l3 3m-3-3h7a3 3 0 003-3v-1"/></svg><span>Devoluciones</span></div>
+            <div class="sec">Bodega y movimiento</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 4h8v8H3z"/><path d="M11 7h2.5L14 9v3h-3"/></svg><span>Compras</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M2 5h7v6H2z"/><path d="M9 7h3l2 2v2H9"/></svg><span>Traspasos</span><span class="lk-cnt">3</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M8 2L3 4v4c0 3 2.5 5 5 6 2.5-1 5-3 5-6V4z"/></svg><span>Garantías</span></div>
+            <div class="sec">Taller</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M11 3a2.5 2.5 0 00-3.4 3.2l-4.4 4.4a1.4 1.4 0 102 2l4.4-4.4A2.5 2.5 0 0013 5l-1.5 1.5L10 5l1.5-1.5z"/></svg><span>Órdenes de trabajo</span><span class="lk-cnt">14</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M5 3h3v3h3v3H8v3H5V9H2V6h3z"/></svg><span>Ensambles</span></div>
+            <div class="sec">Soporte</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 13l4-4M9 7l3-3 1 1-3 3"/></svg><span>Herramientas</span><span class="lk-cnt">2</span></div>
+          </aside>
+          <main class="main">
+            <header class="tophead">
+              <div class="th-left"><div class="th-crumb">Operaciones / Catálogo y stock</div><div class="th-mod">Inventario</div></div>
+              <div class="th-search"><svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input placeholder="Buscar en todo · Cmd+K" disabled /><span class="kbd">⌘K</span></div>
+              <div class="th-right">
+                <div class="site-chip"><span class="dot-s"></span><span class="nm">WH-01 · Cali</span></div>
+                <button class="th-btn th-btn-admin"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M8 2L3 4v4c0 3 2.5 5 5 6 2.5-1 5-3 5-6V4z"/></svg>Panel Admin</button>
+                <button class="th-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span class="badge">3</span></button>
+                <div class="th-avatar">MR</div>
+              </div>
+            </header>
+            <div class="content"><div class="content-head"><div><p class="ph-meta">Operaciones · Catálogo y stock</p><h1 class="ph-title">Inventario</h1><p class="ph-msg">Foundation define solo el chrome de navegación.</p></div></div><div class="placeholder"><span>[ Contenido del módulo ]</span></div></div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame-wrap">
+    <div class="frame-label dk"><span class="lbl-num">8</span><span>Desktop dark · Shell /admin · filete royal mantenido en dark</span><span class="lbl-px">1280 px</span></div>
+    <p class="frame-desc">Sidebar baja a <code>#070C18</code> (más oscura que ops en dark) y conserva el filete royal de 1 px en borde derecho. Header textual mantiene el dot pulsante. Active state en <code>info-500</code>.</p>
+    <div class="frame dk">
+      <div class="vp-desktop">
+        <div class="shell sh-desktop dk">
+          <aside class="side admin">
+            <div class="brand"><div class="logo" style="background:var(--info-d)">C</div><div style="flex:1"><div class="bn">Compresores Valle</div><div class="bs"><span class="dot-s"></span>WH-01 · Cali</div></div><span class="brand-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 6l3 3 3-3M5 10l3-3 3 3"/></svg></span></div>
+            <div class="ad-flag"><span class="pulse"></span>Panel administrativo</div>
+            <div class="sec">Visión general</div>
+            <div class="link on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><rect x="2" y="2" width="5" height="6" rx="1"/><rect x="9" y="2" width="5" height="3" rx="1"/><rect x="2" y="10" width="5" height="4" rx="1"/><rect x="9" y="7" width="5" height="7" rx="1"/></svg><span>Dashboard</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span>Alertas</span><span class="lk-cnt">8</span></div>
+            <div class="sec">Análisis y reportes</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M8 8L13 5M8 8L8 2"/></svg><span>Análisis ABC</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M2 12l4-4 3 3 5-5"/><path d="M10 6h4v4"/></svg><span>Top 10</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 8a5 5 0 019-3M13 8a5 5 0 01-9 3"/></svg><span>Reorden</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 2h7l3 3v9a2 2 0 01-2 2H6a2 2 0 01-2-2V2z"/></svg><span>Auditoría</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M5 8.5l2 2 4-4"/></svg><span>Cierres</span></div>
+            <div class="sec">Operación administrativa</div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><rect x="3" y="3" width="10" height="11" rx="1"/></svg><span>Conteo cíclico</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2"/></svg><span>Configuración</span></div>
+            <div class="link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="2.2"/><path d="M2 13c0-2.5 1.8-3.8 4-3.8"/></svg><span>Usuarios</span></div>
+          </aside>
+          <main class="main">
+            <header class="tophead">
+              <div class="th-left"><div class="th-crumb">Admin / Visión general</div><div class="th-mod">Dashboard</div></div>
+              <div class="th-search"><svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input placeholder="Buscar en todo · Cmd+K" disabled /><span class="kbd">⌘K</span></div>
+              <div class="th-right">
+                <div class="site-chip"><span class="dot-s"></span><span class="nm">WH-01 · Cali</span></div>
+                <button class="th-btn th-btn-back"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M9.5 5L6.5 8l3 3M6.5 8H11"/></svg>Volver a Operaciones</button>
+                <button class="th-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 7a4 4 0 018 0v3l1 2H3l1-2zM6 13a2 2 0 004 0"/></svg><span class="badge">8</span></button>
+                <div class="th-avatar">MR</div>
+              </div>
+            </header>
+            <div class="content"><div class="content-head"><div><p class="ph-meta">Admin · Visión general</p><h1 class="ph-title">Dashboard</h1><p class="ph-msg">Foundation define solo el chrome de navegación.</p></div></div><div class="placeholder"><span>[ Contenido del módulo ]</span></div></div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPECIALS -->
+  <div class="section-divider"><span class="lbl">Estados especiales</span><span class="ln"></span></div>
+
+  <!-- A SWITCHER -->
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">A</span><span>Mecanismo de alternancia entre shells</span></div>
+    <p class="frame-desc">Solo un Admin tiene los dos botones. La transición es bidireccional y simétrica. Las flechas curvadas al centro son las únicas flechas decorativas permitidas en el sistema, justificadas como diagrama arquitectónico.</p>
+    <div class="switcher">
+      <div class="sw-frame">
+        <div class="sw-cap">Shell /ops · vista actual<span class="pill">Cualquier rol</span></div>
+        <div class="sw-mock">
+          <div class="sw-mock-head"><button class="sw-btn-hover"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M8 2L3 4v4c0 3 2.5 5 5 6 2.5-1 5-3 5-6V4z"/><path d="M6 8l1.5 1.5L10 7"/></svg>Panel Admin</button><div class="th-avatar" style="width:28px;height:28px;font-size:11px;border-width:1px">MR</div></div>
+          <div class="sw-mock-body"><div class="sw-side"></div><div class="sw-content"></div></div>
+        </div>
+      </div>
+      <div class="sw-arrow">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 10h22M22 6l4 4-4 4"/><path d="M28 22H6m4-4l-4 4 4 4"/></svg>
+        <div class="lbl">Solo Admin<br>alterna shells</div>
+      </div>
+      <div class="sw-frame">
+        <div class="sw-cap admin">Shell /admin · vista futura<span class="pill">Solo Admin</span></div>
+        <div class="sw-mock">
+          <div class="sw-mock-head admin"><button class="sw-btn-hover" style="border-color:var(--n-700);background:var(--n-50);color:var(--n-700);box-shadow:0 0 0 3px rgba(102,112,133,.15)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M9.5 5L6.5 8l3 3M6.5 8H11"/></svg>Volver a Operaciones</button><div class="th-avatar" style="width:28px;height:28px;font-size:11px;border-width:1px">MR</div></div>
+          <div class="sw-mock-body"><div class="sw-side admin"></div><div class="sw-content"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B DROPDOWN -->
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">B</span><span>Dropdown del usuario abierto · sede activa + cuenta</span></div>
+    <p class="frame-desc">Anchor avatar con dropdown 300 px. Header con nombre, rol como pill <code>info-bg</code>, email mono. Switcher de las 4 sedes (la activa marcada con check royal). Sección Cuenta con Mis preferencias, Cambiar PIN, Cerrar sesión (último en <code>dang-700</code>).</p>
+    <div class="dd-demo">
+      <div class="dd-anchor">
+        <div class="av">MR</div>
+        <div class="nm">María Restrepo<small>maria.r@cvalle.co</small></div>
+      </div>
+      <div class="dd-panel">
+        <div class="dd-head">
+          <div class="av-lg">MR</div>
+          <div style="flex:1;min-width:0">
+            <div class="dd-name">María Restrepo<br><span class="dd-role">Administrador</span></div>
+            <div class="dd-email">maria.r@cvalle.co</div>
+          </div>
+        </div>
+        <div class="dd-sec-lbl">Sede activa</div>
+        <div class="dd-site on"><span class="dot-s"></span>Bodega central<span class="nm">WH-01 Cali</span><span class="check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg></span></div>
+        <div class="dd-site"><span class="dot-s"></span>Almacén Norte<span class="nm">WH-02 Pereira</span></div>
+        <div class="dd-site"><span class="dot-s"></span>Almacén Sur<span class="nm">WH-03 Buga</span></div>
+        <div class="dd-site"><span class="dot-s"></span>Almacén Tuluá<span class="nm">WH-04 Tuluá</span></div>
+        <div class="dd-divide"></div>
+        <div class="dd-sec-lbl">Cuenta</div>
+        <div class="dd-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M14 8h-2M3 8H1"/></svg>Mis preferencias</div>
+        <div class="dd-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="10" height="7" rx="1"/><path d="M5 7V5a3 3 0 016 0v2"/></svg>Cambiar PIN</div>
+        <div class="dd-divide"></div>
+        <div class="dd-item dang"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 3H4v10h5M11 5l3 3-3 3M14 8H7"/></svg>Cerrar sesión</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C CMD K -->
+  <div class="frame-wrap">
+    <div class="frame-label"><span class="lbl-num">C</span><span>Paleta Cmd+K · 600 px modal · agrupada por contexto</span></div>
+    <p class="frame-desc">Modal centrado con backdrop oscuro + grid sutil. Input grande 15 px con cursor parpadeante royal. Lista agrupada en mono caps por sección. Atajos a la derecha en chip mono. Item activo en <code>p-50</code>. Footer con leyenda de teclas.</p>
+    <div class="ck-demo">
+      <div class="ck-modal">
+        <div class="ck-input-row">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+          <div class="ck-input"><span class="cursor"></span><span class="placeholder-after">Buscar productos, módulos o acciones...</span></div>
+          <span class="ck-esc">esc</span>
+        </div>
+        <div class="ck-list">
+          <div class="ck-group-h">Acciones recientes</div>
+          <div class="ck-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="13" r="1.2"/><circle cx="12" cy="13" r="1.2"/><path d="M2 3h2l2 8h8l1.5-5H5"/></svg><span class="ck-lbl">Nueva venta</span><span class="ck-meta">VT-0247 · WH-01</span></div>
+          <div class="ck-item on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 5L8 2l5.5 3v6L8 14l-5.5-3z"/></svg><span class="ck-lbl">Buscar producto SKU-4521-A</span><span class="ck-meta">Filtro de aire GA-22</span></div>
+          <div class="ck-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 3a2.5 2.5 0 00-3.4 3.2l-4.4 4.4a1.4 1.4 0 102 2l4.4-4.4A2.5 2.5 0 0013 5"/></svg><span class="ck-lbl">Ir a OT-2845</span><span class="ck-meta">Mantenimiento Kaeser SX-7</span></div>
+          <div class="ck-group-h">Navegación</div>
+          <div class="ck-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 5L8 2l5.5 3v6L8 14l-5.5-3z"/></svg><span class="ck-lbl">Ir a Inventario</span><span class="ck-shortcut"><span class="key">G</span><span class="key">I</span></span></div>
+          <div class="ck-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h7l3 3v9H3z"/></svg><span class="ck-lbl">Ir a Cotizaciones</span><span class="ck-shortcut"><span class="key">G</span><span class="key">C</span></span></div>
+          <div class="ck-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="13" r="1.2"/><circle cx="12" cy="13" r="1.2"/><path d="M2 3h2l2 8h8"/></svg><span class="ck-lbl">Ir a Ventas</span><span class="ck-shortcut"><span class="key">G</span><span class="key">V</span></span></div>
+          <div class="ck-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5h7v6H2z"/><path d="M9 7h3l2 2v2H9"/></svg><span class="ck-lbl">Ir a Traspasos</span><span class="ck-shortcut"><span class="key">G</span><span class="key">T</span></span></div>
+          <div class="ck-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 3a2.5 2.5 0 00-3.4 3.2l-4.4 4.4a1.4 1.4 0 102 2l4.4-4.4"/></svg><span class="ck-lbl">Ir a Órdenes de trabajo</span><span class="ck-shortcut"><span class="key">G</span><span class="key">O</span></span></div>
+          <div class="ck-group-h">Acciones rápidas</div>
+          <div class="ck-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h7l3 3v9H3z"/><path d="M6 9h4M6 11h2"/></svg><span class="ck-lbl">Crear cotización</span><span class="ck-shortcut"><span class="key">N</span><span class="key">C</span></span></div>
+          <div class="ck-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/></svg><span class="ck-lbl">Generar QR</span><span class="ck-shortcut"><span class="key">⌘</span><span class="key">Q</span></span></div>
+          <div class="ck-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="10" height="11" rx="1"/><path d="M5 7h6M5 9.5h6"/></svg><span class="ck-lbl">Iniciar conteo cíclico</span><span class="ck-shortcut"><span class="key">⌘</span><span class="key">K</span></span></div>
+        </div>
+        <div class="ck-foot">
+          <span><span class="key">↑↓</span>Navegar</span>
+          <span><span class="key">↵</span>Abrir</span>
+          <span><span class="key">⌘</span><span class="key">K</span>Cerrar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VALIDATION -->
+  <div style="margin-top:80px">
+    <div class="frame-label"><span class="lbl-num">✓</span><span>Validación · 6 puntos críticos</span></div>
+    <div class="check-card">
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Shells inmediatamente distinguibles</strong> — combinación A+C: header textual "PANEL ADMINISTRATIVO" con dot pulsante info, fondo n-975 (más oscuro que n-950 de ops), filete royal 1 px en borde derecho, logo con bg <code>info-d</code>, active state en <code>info-500</code>. Cuatro señales redundantes garantizan reconocimiento instantáneo.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Alternancia visible no agresiva</strong> — botón "Panel Admin" outline con tinte info / "Volver a Operaciones" outline neutro. Ambos en altura 32 px, antes del avatar. No compiten con CTAs primarios; se sienten contextuales como "Switch project" en Linear.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>5 secciones agrupadas no abrumadoras</strong> — Catálogo y stock (2), Operación comercial (4), Bodega y movimiento (3), Taller (2), Soporte (1). Headers de sección en mono caps n-500 sirven como ancla, no como ruido. La operación comercial es la sección más densa porque concentra el día a día del Vendedor.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Header como Linear / Vercel</strong> — search 320 px en fondo n-50 con borde sutil, atajo <code>⌘K</code> visible, abre modal completo con agrupación contextual y atajos de teclado tipo "G I" (go to Inventario). El chip de sede como indicador de contexto, no como CTA. Avatar al final como dropdown denso con switcher de sedes.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Coherencia desktop → tablet → mobile</strong> — el border-left de 2 px del active state se conserva en rail tablet, los iconos crecen de 16 a 18 px, los headers de sección desaparecen. En mobile, el active state migra al bottom tab (color <code>p-600</code>) o al item del drawer. La identidad del shell se mantiene en cada breakpoint.</div></div>
+      <div class="check-row"><div class="check-dot">✓</div><div class="check-text"><strong>Mobile prioriza acción frecuente</strong> — para rol Vendedor, el FAB <b>Vender</b> es la acción del día. Para Bodeguero, sería "Recibir" o "Picking". Para Técnico, "Iniciar OT". El bottom tab es configurable por rol; las otras 4 entradas son shortcuts a los módulos más visitados, con "Más" abriendo el resto en drawer.</div></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
