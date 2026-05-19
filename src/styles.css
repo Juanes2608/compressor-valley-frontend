@@ -837,3 +837,11 @@ html, body {
 .cart-line .v { font-family: var(--mono); font-weight: 500; color: var(--n-700); }
 .cart-line.tot { padding-top: 8px; border-top: 1px solid var(--n-150); color: var(--n-900); font-weight: 500; font-size: 14px; margin-top: 4px; }
 .cart-line.tot .v { font-size: 18px; color: var(--n-900); }
+
+/* ─── Form inputs (wizard) ─── */
+.finput { height: 38px; background: var(--n-0); border: 1px solid var(--n-150); border-radius: 8px; padding: 0 12px; font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--n-900); outline: none; width: 100%; }
+.finput.sans { font-family: var(--sans); font-weight: 400; }
+.finput:focus { border-color: var(--p-500); }
+.dark .finput { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.10); color: var(--n-900); }
+.ftextarea { min-height: 64px; padding: 8px 12px; background: var(--n-0); border: 1px solid var(--n-150); border-radius: 8px; font-family: var(--sans); font-size: 13px; color: var(--n-900); outline: none; width: 100%; line-height: 1.5; resize: vertical; }
+.dark .ftextarea { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.10); }
