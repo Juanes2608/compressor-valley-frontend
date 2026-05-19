@@ -7,15 +7,15 @@
 export type CotEstado = "borr" | "env" | "apr" | "rec" | "ven" | "conv";
 
 export interface CotRow {
-  num: string;          // Cot-1042
-  fecha: string;        // "19 abr 26"
+  num: string;
+  fecha: string;
   cliente: string;
-  telefono: string;     // "+57 318 442 ··"
+  telefono: string;
   productos: string;
   valor: number;
   validez: { label: string; tone: "norm" | "warn" | "dang"; icon?: "alert" | "clock" };
   estado: CotEstado;
-  ot?: string | null;   // OT-2845 o null
+  ot?: string | null;
 }
 
 export const COT_ESTADOS: { id: CotEstado; label: string }[] = [
@@ -27,7 +27,6 @@ export const COT_ESTADOS: { id: CotEstado; label: string }[] = [
   { id: "conv", label: "Convertida" },
 ];
 
-/* Conteos canónicos por estado (del header de tabs) */
 export const COT_COUNTS: Record<CotEstado | "all", number> = {
   all: 33, borr: 2, env: 3, apr: 8, rec: 1, ven: 4, conv: 15,
 };
