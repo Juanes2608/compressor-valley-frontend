@@ -40,9 +40,6 @@ import { Route as OpsRecibosIndexRouteImport } from './routes/ops.recibos.index'
 import { Route as OpsOrdenesTrabajoIndexRouteImport } from './routes/ops.ordenes-trabajo.index'
 import { Route as OpsGarantiasIndexRouteImport } from './routes/ops.garantias.index'
 import { Route as OpsDevolucionesIndexRouteImport } from './routes/ops.devoluciones.index'
-import { Route as OpsGarantiasIndexRouteImport } from './routes/ops.garantias.index'
-import { Route as OpsGarantiasNuevaRouteImport } from './routes/ops.garantias.nueva'
-import { Route as OpsGarantiasIdRouteImport } from './routes/ops.garantias.$id'
 import { Route as OpsCotizacionesIndexRouteImport } from './routes/ops.cotizaciones.index'
 import { Route as OpsVentasNuevaRouteImport } from './routes/ops.ventas.nueva'
 import { Route as OpsVentasIdRouteImport } from './routes/ops.ventas.$id'
@@ -200,6 +197,21 @@ const OpsOrdenesTrabajoIndexRoute = OpsOrdenesTrabajoIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => OpsOrdenesTrabajoRoute,
+} as any)
+const OpsGarantiasIndexRoute = OpsGarantiasIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OpsGarantiasRoute,
+} as any)
+const OpsGarantiasNuevaRoute = OpsGarantiasNuevaRouteImport.update({
+  id: '/nueva',
+  path: '/nueva',
+  getParentRoute: () => OpsGarantiasRoute,
+} as any)
+const OpsGarantiasIdRoute = OpsGarantiasIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => OpsGarantiasRoute,
 } as any)
 const OpsGarantiasIndexRoute = OpsGarantiasIndexRouteImport.update({
   id: '/',
