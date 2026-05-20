@@ -3,14 +3,16 @@ import { useTheme } from "@/lib/theme";
 
 export function ThemeToggle() {
   const { resolved, toggle } = useTheme();
+  const isDark = resolved === "dark";
   return (
     <button
       type="button"
       onClick={toggle}
-      aria-label={resolved === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-      className="focus-ring grid h-9 w-9 place-items-center rounded-md text-white/85 hover:bg-white/10"
+      aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+      title={isDark ? "Modo claro" : "Modo oscuro"}
+      className="focus-ring grid h-9 w-9 place-items-center rounded-md text-white hover:bg-white/15 transition-colors"
     >
-      {resolved === "dark" ? <Sun className="h-4 w-4" strokeWidth={1.75} /> : <Moon className="h-4 w-4" strokeWidth={1.75} />}
+      {isDark ? <Sun className="h-[18px] w-[18px]" strokeWidth={2} /> : <Moon className="h-[18px] w-[18px]" strokeWidth={2} />}
     </button>
   );
 }
