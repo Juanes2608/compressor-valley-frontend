@@ -546,5 +546,3 @@ function TlRow({
   );
 }
 
-/* Triangle icon fallback — using lucide AlertTriangle for safety */
-void AlertTriangle;
