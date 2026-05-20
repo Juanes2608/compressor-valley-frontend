@@ -80,25 +80,26 @@ export const SECCIONES_ADMIN: SeccionDef[] = [
     label: "Visión general",
     modulos: [
       { id: "dashboard", label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard, reference: "Cockpit v2 · 7 vistas (single file).html" },
-      { id: "alertas",   label: "Alertas",   href: "/admin/alertas",   icon: Bell, reference: "(pendiente · Fase 10)" },
+      { id: "alertas",   label: "Alertas",   href: "/admin/alertas",   icon: Bell, reference: "Cockpit v2 · 7 vistas (single file).html" },
     ],
   },
   {
     id: "analisis",
     label: "Análisis y reportes",
     modulos: [
-      { id: "analisis-abc", label: "Análisis ABC", href: "/admin/analisis-abc", icon: BarChart3, reference: "(pendiente · Fase 10)" },
-      { id: "top-10",       label: "Top 10",       href: "/admin/top-10",       icon: TrendingUp, reference: "(pendiente · Fase 10)" },
-      { id: "reorden",      label: "Reorden",      href: "/admin/reorden",      icon: RefreshCw, reference: "(pendiente · Fase 10)" },
-      { id: "auditoria",    label: "Auditoría",    href: "/admin/auditoria",    icon: ClipboardCheck, reference: "(pendiente · Fase 10)" },
-      { id: "cierres",      label: "Cierres",      href: "/admin/cierres",      icon: FileBarChart, reference: "(pendiente · Fase 10)" },
+      { id: "analisis-abc", label: "Análisis ABC", href: "/admin/analisis-abc", icon: BarChart3, reference: "Cockpit v2 · 7 vistas (single file).html" },
+      { id: "top-10",       label: "Top 10",       href: "/admin/top-10",       icon: TrendingUp, reference: "Cockpit v2 · 7 vistas (single file).html" },
+      { id: "reorden",      label: "Reorden",      href: "/admin/reorden",      icon: RefreshCw, reference: "Cockpit v2 · 7 vistas (single file).html" },
+      { id: "auditoria",    label: "Auditoría",    href: "/admin/auditoria",    icon: ClipboardCheck, reference: "Cockpit v2 · 7 vistas (single file).html" },
+      { id: "cierres",      label: "Cierres",      href: "/admin/cierres",      icon: FileBarChart, reference: "Cockpit v2 · 7 vistas (single file).html" },
     ],
   },
   {
     id: "operacion-admin",
     label: "Operación administrativa",
     modulos: [
-      { id: "conteo-ciclico", label: "Conteo cíclico", href: "/admin/conteo-ciclico", icon: ClipboardList, reference: "(pendiente · Fase 11)" },
+      { id: "conteo-ciclico", label: "Conteo cíclico", href: "/admin/conteo-ciclico", icon: ClipboardList, reference: "9 Configuracion y Usuarios.html" },
+
       { id: "configuracion",  label: "Configuración",  href: "/admin/configuracion",  icon: Settings, reference: "9 Configuracion y Usuarios.html" },
       { id: "usuarios",       label: "Usuarios",       href: "/admin/usuarios",       icon: Users, reference: "9 Configuracion y Usuarios.html" },
     ],
