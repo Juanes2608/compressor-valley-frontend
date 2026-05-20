@@ -231,9 +231,9 @@ function Td({ children, align = "left" }: { children?: React.ReactNode; align?: 
 
 const RESOL_PILL: Record<string, string> = {
   reparacion: "bg-[--info-50] text-[--info-700] border-[#C8DFFC] dark:bg-[rgba(46,144,250,.16)] dark:text-[#7CC4FD] dark:border-[rgba(46,144,250,.35)]",
-  cambio:     "bg-[--prog-50] text-[--prog-700] border-[--prog-200] dark:bg-[rgba(154,111,223,.18)] dark:text-[#D6BBFB] dark:border-[rgba(154,111,223,.4)]",
+  cambio:     "bg-[--prog-50] text-[--prog-700] border-[--prog-border] dark:bg-[rgba(154,111,223,.18)] dark:text-[#D6BBFB] dark:border-[rgba(154,111,223,.4)]",
   reembolso:  "bg-[--warn-50] text-[--warn-700] border-[#FCE7B0] dark:bg-[rgba(247,144,9,.16)] dark:text-[#FDB022] dark:border-[rgba(247,144,9,.35)]",
-  reposicion: "bg-[--prog-50] text-[--prog-700] border-[--prog-200] dark:bg-[rgba(154,111,223,.18)] dark:text-[#D6BBFB] dark:border-[rgba(154,111,223,.4)]",
+  reposicion: "bg-[--prog-50] text-[--prog-700] border-[--prog-border] dark:bg-[rgba(154,111,223,.18)] dark:text-[#D6BBFB] dark:border-[rgba(154,111,223,.4)]",
   nota:       "bg-[--info-50] text-[--info-700] border-[#C8DFFC] dark:bg-[rgba(46,144,250,.16)] dark:text-[#7CC4FD] dark:border-[rgba(46,144,250,.35)]",
 };
 
@@ -398,7 +398,7 @@ function GarRowCompras({ row }: { row: GarRowC }) {
             ].join(" ")}>{row.estadoNota}</span>
           )}
           {row.altoValor && (
-            <span className="mt-0.5 inline-flex w-fit items-center rounded border border-[--prog-200] bg-[--prog-50] px-1.5 py-0.5 font-mono text-[9.5px] font-medium uppercase tracking-wider text-[--prog-700] dark:bg-[rgba(154,111,223,.16)] dark:text-[#D6BBFB] dark:border-[rgba(154,111,223,.35)]">
+            <span className="mt-0.5 inline-flex w-fit items-center rounded border border-[--prog-border] bg-[--prog-50] px-1.5 py-0.5 font-mono text-[9.5px] font-medium uppercase tracking-wider text-[--prog-700] dark:bg-[rgba(154,111,223,.16)] dark:text-[#D6BBFB] dark:border-[rgba(154,111,223,.35)]">
               Alto valor
             </span>
           )}
