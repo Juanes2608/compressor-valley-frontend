@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  AlertTriangle, Triangle, Wrench, Package, FileText, Clock,
+  Triangle, Wrench, Package, FileText, Clock,
   ArrowRight, Download,
 } from "lucide-react";
 
