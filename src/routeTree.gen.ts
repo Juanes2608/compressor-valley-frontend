@@ -13,6 +13,7 @@ import { Route as OpsRouteImport } from './routes/ops'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PickingIdRouteImport } from './routes/picking.$id'
 import { Route as OpsVentasRouteImport } from './routes/ops.ventas'
 import { Route as OpsTraspasosRouteImport } from './routes/ops.traspasos'
 import { Route as OpsRecibosRouteImport } from './routes/ops.recibos'
@@ -71,6 +72,11 @@ const AdminRoute = AdminRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PickingIdRoute = PickingIdRouteImport.update({
+  id: '/picking/$id',
+  path: '/picking/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OpsVentasRoute = OpsVentasRouteImport.update({
@@ -296,6 +302,7 @@ export interface FileRoutesByFullPath {
   '/ops/recibos': typeof OpsRecibosRouteWithChildren
   '/ops/traspasos': typeof OpsTraspasosRoute
   '/ops/ventas': typeof OpsVentasRouteWithChildren
+  '/picking/$id': typeof PickingIdRoute
   '/ops/cotizaciones/$id': typeof OpsCotizacionesIdRoute
   '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
   '/ops/devoluciones/$id': typeof OpsDevolucionesIdRoute
@@ -335,6 +342,7 @@ export interface FileRoutesByTo {
   '/ops/inventario': typeof OpsInventarioRoute
   '/ops/productos': typeof OpsProductosRoute
   '/ops/traspasos': typeof OpsTraspasosRoute
+  '/picking/$id': typeof PickingIdRoute
   '/ops/cotizaciones/$id': typeof OpsCotizacionesIdRoute
   '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
   '/ops/devoluciones/$id': typeof OpsDevolucionesIdRoute
@@ -381,6 +389,7 @@ export interface FileRoutesById {
   '/ops/recibos': typeof OpsRecibosRouteWithChildren
   '/ops/traspasos': typeof OpsTraspasosRoute
   '/ops/ventas': typeof OpsVentasRouteWithChildren
+  '/picking/$id': typeof PickingIdRoute
   '/ops/cotizaciones/$id': typeof OpsCotizacionesIdRoute
   '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
   '/ops/devoluciones/$id': typeof OpsDevolucionesIdRoute
@@ -428,6 +437,7 @@ export interface FileRouteTypes {
     | '/ops/recibos'
     | '/ops/traspasos'
     | '/ops/ventas'
+    | '/picking/$id'
     | '/ops/cotizaciones/$id'
     | '/ops/cotizaciones/nueva'
     | '/ops/devoluciones/$id'
@@ -467,6 +477,7 @@ export interface FileRouteTypes {
     | '/ops/inventario'
     | '/ops/productos'
     | '/ops/traspasos'
+    | '/picking/$id'
     | '/ops/cotizaciones/$id'
     | '/ops/cotizaciones/nueva'
     | '/ops/devoluciones/$id'
@@ -512,6 +523,7 @@ export interface FileRouteTypes {
     | '/ops/recibos'
     | '/ops/traspasos'
     | '/ops/ventas'
+    | '/picking/$id'
     | '/ops/cotizaciones/$id'
     | '/ops/cotizaciones/nueva'
     | '/ops/devoluciones/$id'
@@ -536,6 +548,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
   OpsRoute: typeof OpsRouteWithChildren
+  PickingIdRoute: typeof PickingIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -566,6 +579,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/picking/$id': {
+      id: '/picking/$id'
+      path: '/picking/$id'
+      fullPath: '/picking/$id'
+      preLoaderRoute: typeof PickingIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ops/ventas': {
@@ -1002,17 +1022,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
   OpsRoute: OpsRouteWithChildren,
+  PickingIdRoute: PickingIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
