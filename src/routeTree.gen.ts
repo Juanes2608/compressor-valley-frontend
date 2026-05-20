@@ -38,6 +38,7 @@ import { Route as AdminAlertasRouteImport } from './routes/admin.alertas'
 import { Route as OpsVentasIndexRouteImport } from './routes/ops.ventas.index'
 import { Route as OpsRecibosIndexRouteImport } from './routes/ops.recibos.index'
 import { Route as OpsOrdenesTrabajoIndexRouteImport } from './routes/ops.ordenes-trabajo.index'
+import { Route as OpsGarantiasIndexRouteImport } from './routes/ops.garantias.index'
 import { Route as OpsDevolucionesIndexRouteImport } from './routes/ops.devoluciones.index'
 import { Route as OpsCotizacionesIndexRouteImport } from './routes/ops.cotizaciones.index'
 import { Route as OpsVentasNuevaRouteImport } from './routes/ops.ventas.nueva'
@@ -45,6 +46,8 @@ import { Route as OpsVentasIdRouteImport } from './routes/ops.ventas.$id'
 import { Route as OpsRecibosNuevaRouteImport } from './routes/ops.recibos.nueva'
 import { Route as OpsRecibosIdRouteImport } from './routes/ops.recibos.$id'
 import { Route as OpsOrdenesTrabajoIdRouteImport } from './routes/ops.ordenes-trabajo.$id'
+import { Route as OpsGarantiasNuevaRouteImport } from './routes/ops.garantias.nueva'
+import { Route as OpsGarantiasIdRouteImport } from './routes/ops.garantias.$id'
 import { Route as OpsDevolucionesNuevaRouteImport } from './routes/ops.devoluciones.nueva'
 import { Route as OpsDevolucionesIdRouteImport } from './routes/ops.devoluciones.$id'
 import { Route as OpsCotizacionesNuevaRouteImport } from './routes/ops.cotizaciones.nueva'
@@ -195,6 +198,11 @@ const OpsOrdenesTrabajoIndexRoute = OpsOrdenesTrabajoIndexRouteImport.update({
   path: '/',
   getParentRoute: () => OpsOrdenesTrabajoRoute,
 } as any)
+const OpsGarantiasIndexRoute = OpsGarantiasIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OpsGarantiasRoute,
+} as any)
 const OpsDevolucionesIndexRoute = OpsDevolucionesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -229,6 +237,16 @@ const OpsOrdenesTrabajoIdRoute = OpsOrdenesTrabajoIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => OpsOrdenesTrabajoRoute,
+} as any)
+const OpsGarantiasNuevaRoute = OpsGarantiasNuevaRouteImport.update({
+  id: '/nueva',
+  path: '/nueva',
+  getParentRoute: () => OpsGarantiasRoute,
+} as any)
+const OpsGarantiasIdRoute = OpsGarantiasIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => OpsGarantiasRoute,
 } as any)
 const OpsDevolucionesNuevaRoute = OpsDevolucionesNuevaRouteImport.update({
   id: '/nueva',
@@ -270,7 +288,7 @@ export interface FileRoutesByFullPath {
   '/ops/cotizaciones': typeof OpsCotizacionesRouteWithChildren
   '/ops/devoluciones': typeof OpsDevolucionesRouteWithChildren
   '/ops/ensambles': typeof OpsEnsamblesRoute
-  '/ops/garantias': typeof OpsGarantiasRoute
+  '/ops/garantias': typeof OpsGarantiasRouteWithChildren
   '/ops/herramientas': typeof OpsHerramientasRoute
   '/ops/inventario': typeof OpsInventarioRoute
   '/ops/ordenes-trabajo': typeof OpsOrdenesTrabajoRouteWithChildren
@@ -282,6 +300,8 @@ export interface FileRoutesByFullPath {
   '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
   '/ops/devoluciones/$id': typeof OpsDevolucionesIdRoute
   '/ops/devoluciones/nueva': typeof OpsDevolucionesNuevaRoute
+  '/ops/garantias/$id': typeof OpsGarantiasIdRoute
+  '/ops/garantias/nueva': typeof OpsGarantiasNuevaRoute
   '/ops/ordenes-trabajo/$id': typeof OpsOrdenesTrabajoIdRoute
   '/ops/recibos/$id': typeof OpsRecibosIdRoute
   '/ops/recibos/nueva': typeof OpsRecibosNuevaRoute
@@ -289,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/ops/ventas/nueva': typeof OpsVentasNuevaRoute
   '/ops/cotizaciones/': typeof OpsCotizacionesIndexRoute
   '/ops/devoluciones/': typeof OpsDevolucionesIndexRoute
+  '/ops/garantias/': typeof OpsGarantiasIndexRoute
   '/ops/ordenes-trabajo/': typeof OpsOrdenesTrabajoIndexRoute
   '/ops/recibos/': typeof OpsRecibosIndexRoute
   '/ops/ventas/': typeof OpsVentasIndexRoute
@@ -310,7 +331,6 @@ export interface FileRoutesByTo {
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/ops/compras': typeof OpsComprasRoute
   '/ops/ensambles': typeof OpsEnsamblesRoute
-  '/ops/garantias': typeof OpsGarantiasRoute
   '/ops/herramientas': typeof OpsHerramientasRoute
   '/ops/inventario': typeof OpsInventarioRoute
   '/ops/productos': typeof OpsProductosRoute
@@ -319,6 +339,8 @@ export interface FileRoutesByTo {
   '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
   '/ops/devoluciones/$id': typeof OpsDevolucionesIdRoute
   '/ops/devoluciones/nueva': typeof OpsDevolucionesNuevaRoute
+  '/ops/garantias/$id': typeof OpsGarantiasIdRoute
+  '/ops/garantias/nueva': typeof OpsGarantiasNuevaRoute
   '/ops/ordenes-trabajo/$id': typeof OpsOrdenesTrabajoIdRoute
   '/ops/recibos/$id': typeof OpsRecibosIdRoute
   '/ops/recibos/nueva': typeof OpsRecibosNuevaRoute
@@ -326,6 +348,7 @@ export interface FileRoutesByTo {
   '/ops/ventas/nueva': typeof OpsVentasNuevaRoute
   '/ops/cotizaciones': typeof OpsCotizacionesIndexRoute
   '/ops/devoluciones': typeof OpsDevolucionesIndexRoute
+  '/ops/garantias': typeof OpsGarantiasIndexRoute
   '/ops/ordenes-trabajo': typeof OpsOrdenesTrabajoIndexRoute
   '/ops/recibos': typeof OpsRecibosIndexRoute
   '/ops/ventas': typeof OpsVentasIndexRoute
@@ -350,7 +373,7 @@ export interface FileRoutesById {
   '/ops/cotizaciones': typeof OpsCotizacionesRouteWithChildren
   '/ops/devoluciones': typeof OpsDevolucionesRouteWithChildren
   '/ops/ensambles': typeof OpsEnsamblesRoute
-  '/ops/garantias': typeof OpsGarantiasRoute
+  '/ops/garantias': typeof OpsGarantiasRouteWithChildren
   '/ops/herramientas': typeof OpsHerramientasRoute
   '/ops/inventario': typeof OpsInventarioRoute
   '/ops/ordenes-trabajo': typeof OpsOrdenesTrabajoRouteWithChildren
@@ -362,6 +385,8 @@ export interface FileRoutesById {
   '/ops/cotizaciones/nueva': typeof OpsCotizacionesNuevaRoute
   '/ops/devoluciones/$id': typeof OpsDevolucionesIdRoute
   '/ops/devoluciones/nueva': typeof OpsDevolucionesNuevaRoute
+  '/ops/garantias/$id': typeof OpsGarantiasIdRoute
+  '/ops/garantias/nueva': typeof OpsGarantiasNuevaRoute
   '/ops/ordenes-trabajo/$id': typeof OpsOrdenesTrabajoIdRoute
   '/ops/recibos/$id': typeof OpsRecibosIdRoute
   '/ops/recibos/nueva': typeof OpsRecibosNuevaRoute
@@ -369,6 +394,7 @@ export interface FileRoutesById {
   '/ops/ventas/nueva': typeof OpsVentasNuevaRoute
   '/ops/cotizaciones/': typeof OpsCotizacionesIndexRoute
   '/ops/devoluciones/': typeof OpsDevolucionesIndexRoute
+  '/ops/garantias/': typeof OpsGarantiasIndexRoute
   '/ops/ordenes-trabajo/': typeof OpsOrdenesTrabajoIndexRoute
   '/ops/recibos/': typeof OpsRecibosIndexRoute
   '/ops/ventas/': typeof OpsVentasIndexRoute
@@ -406,6 +432,8 @@ export interface FileRouteTypes {
     | '/ops/cotizaciones/nueva'
     | '/ops/devoluciones/$id'
     | '/ops/devoluciones/nueva'
+    | '/ops/garantias/$id'
+    | '/ops/garantias/nueva'
     | '/ops/ordenes-trabajo/$id'
     | '/ops/recibos/$id'
     | '/ops/recibos/nueva'
@@ -413,6 +441,7 @@ export interface FileRouteTypes {
     | '/ops/ventas/nueva'
     | '/ops/cotizaciones/'
     | '/ops/devoluciones/'
+    | '/ops/garantias/'
     | '/ops/ordenes-trabajo/'
     | '/ops/recibos/'
     | '/ops/ventas/'
@@ -434,7 +463,6 @@ export interface FileRouteTypes {
     | '/admin/usuarios'
     | '/ops/compras'
     | '/ops/ensambles'
-    | '/ops/garantias'
     | '/ops/herramientas'
     | '/ops/inventario'
     | '/ops/productos'
@@ -443,6 +471,8 @@ export interface FileRouteTypes {
     | '/ops/cotizaciones/nueva'
     | '/ops/devoluciones/$id'
     | '/ops/devoluciones/nueva'
+    | '/ops/garantias/$id'
+    | '/ops/garantias/nueva'
     | '/ops/ordenes-trabajo/$id'
     | '/ops/recibos/$id'
     | '/ops/recibos/nueva'
@@ -450,6 +480,7 @@ export interface FileRouteTypes {
     | '/ops/ventas/nueva'
     | '/ops/cotizaciones'
     | '/ops/devoluciones'
+    | '/ops/garantias'
     | '/ops/ordenes-trabajo'
     | '/ops/recibos'
     | '/ops/ventas'
@@ -485,6 +516,8 @@ export interface FileRouteTypes {
     | '/ops/cotizaciones/nueva'
     | '/ops/devoluciones/$id'
     | '/ops/devoluciones/nueva'
+    | '/ops/garantias/$id'
+    | '/ops/garantias/nueva'
     | '/ops/ordenes-trabajo/$id'
     | '/ops/recibos/$id'
     | '/ops/recibos/nueva'
@@ -492,6 +525,7 @@ export interface FileRouteTypes {
     | '/ops/ventas/nueva'
     | '/ops/cotizaciones/'
     | '/ops/devoluciones/'
+    | '/ops/garantias/'
     | '/ops/ordenes-trabajo/'
     | '/ops/recibos/'
     | '/ops/ventas/'
@@ -709,6 +743,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpsOrdenesTrabajoIndexRouteImport
       parentRoute: typeof OpsOrdenesTrabajoRoute
     }
+    '/ops/garantias/': {
+      id: '/ops/garantias/'
+      path: '/'
+      fullPath: '/ops/garantias/'
+      preLoaderRoute: typeof OpsGarantiasIndexRouteImport
+      parentRoute: typeof OpsGarantiasRoute
+    }
     '/ops/devoluciones/': {
       id: '/ops/devoluciones/'
       path: '/'
@@ -757,6 +798,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/ops/ordenes-trabajo/$id'
       preLoaderRoute: typeof OpsOrdenesTrabajoIdRouteImport
       parentRoute: typeof OpsOrdenesTrabajoRoute
+    }
+    '/ops/garantias/nueva': {
+      id: '/ops/garantias/nueva'
+      path: '/nueva'
+      fullPath: '/ops/garantias/nueva'
+      preLoaderRoute: typeof OpsGarantiasNuevaRouteImport
+      parentRoute: typeof OpsGarantiasRoute
+    }
+    '/ops/garantias/$id': {
+      id: '/ops/garantias/$id'
+      path: '/$id'
+      fullPath: '/ops/garantias/$id'
+      preLoaderRoute: typeof OpsGarantiasIdRouteImport
+      parentRoute: typeof OpsGarantiasRoute
     }
     '/ops/devoluciones/nueva': {
       id: '/ops/devoluciones/nueva'
@@ -849,6 +904,22 @@ const OpsDevolucionesRouteWithChildren = OpsDevolucionesRoute._addFileChildren(
   OpsDevolucionesRouteChildren,
 )
 
+interface OpsGarantiasRouteChildren {
+  OpsGarantiasIdRoute: typeof OpsGarantiasIdRoute
+  OpsGarantiasNuevaRoute: typeof OpsGarantiasNuevaRoute
+  OpsGarantiasIndexRoute: typeof OpsGarantiasIndexRoute
+}
+
+const OpsGarantiasRouteChildren: OpsGarantiasRouteChildren = {
+  OpsGarantiasIdRoute: OpsGarantiasIdRoute,
+  OpsGarantiasNuevaRoute: OpsGarantiasNuevaRoute,
+  OpsGarantiasIndexRoute: OpsGarantiasIndexRoute,
+}
+
+const OpsGarantiasRouteWithChildren = OpsGarantiasRoute._addFileChildren(
+  OpsGarantiasRouteChildren,
+)
+
 interface OpsOrdenesTrabajoRouteChildren {
   OpsOrdenesTrabajoIdRoute: typeof OpsOrdenesTrabajoIdRoute
   OpsOrdenesTrabajoIndexRoute: typeof OpsOrdenesTrabajoIndexRoute
@@ -899,7 +970,7 @@ interface OpsRouteChildren {
   OpsCotizacionesRoute: typeof OpsCotizacionesRouteWithChildren
   OpsDevolucionesRoute: typeof OpsDevolucionesRouteWithChildren
   OpsEnsamblesRoute: typeof OpsEnsamblesRoute
-  OpsGarantiasRoute: typeof OpsGarantiasRoute
+  OpsGarantiasRoute: typeof OpsGarantiasRouteWithChildren
   OpsHerramientasRoute: typeof OpsHerramientasRoute
   OpsInventarioRoute: typeof OpsInventarioRoute
   OpsOrdenesTrabajoRoute: typeof OpsOrdenesTrabajoRouteWithChildren
@@ -914,7 +985,7 @@ const OpsRouteChildren: OpsRouteChildren = {
   OpsCotizacionesRoute: OpsCotizacionesRouteWithChildren,
   OpsDevolucionesRoute: OpsDevolucionesRouteWithChildren,
   OpsEnsamblesRoute: OpsEnsamblesRoute,
-  OpsGarantiasRoute: OpsGarantiasRoute,
+  OpsGarantiasRoute: OpsGarantiasRouteWithChildren,
   OpsHerramientasRoute: OpsHerramientasRoute,
   OpsInventarioRoute: OpsInventarioRoute,
   OpsOrdenesTrabajoRoute: OpsOrdenesTrabajoRouteWithChildren,
