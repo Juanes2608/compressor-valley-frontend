@@ -23,7 +23,7 @@ export function BottomNav() {
               to={it.href}
               className="relative flex items-center justify-center"
             >
-              <span className="absolute -top-5 grid h-12 w-12 place-items-center rounded-full bg-white text-[--p-700] ring-2 ring-white/30 shadow-[--shadow-elevation]">
+              <span className="absolute -top-5 grid h-12 w-12 place-items-center rounded-full bg-white ring-2 ring-white/30 shadow-[var(--shadow-elevation)]" style={{ color: "var(--p-700)" }}>
                 <Icon className="h-5 w-5" strokeWidth={2} />
               </span>
               <span className="mt-7 text-[10px] font-medium text-white/75">{it.label}</span>
