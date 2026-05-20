@@ -203,6 +203,16 @@ const OpsGarantiasIndexRoute = OpsGarantiasIndexRouteImport.update({
   path: '/',
   getParentRoute: () => OpsGarantiasRoute,
 } as any)
+const OpsGarantiasNuevaRoute = OpsGarantiasNuevaRouteImport.update({
+  id: '/nueva',
+  path: '/nueva',
+  getParentRoute: () => OpsGarantiasRoute,
+} as any)
+const OpsGarantiasIdRoute = OpsGarantiasIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => OpsGarantiasRoute,
+} as any)
 const OpsDevolucionesIndexRoute = OpsDevolucionesIndexRouteImport.update({
   id: '/',
   path: '/',
