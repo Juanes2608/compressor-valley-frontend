@@ -1077,3 +1077,39 @@ html, body {
 .pk-done-sub { font-size: 14px; color: var(--n-500); margin: 0; }
 .pk-done-btn { height: 64px; width: 100%; max-width: 420px; background: var(--succ-500); color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; font-family: var(--sans); margin-top: 8px; display: block; text-decoration: none; }
 .pk-done-btn:hover { background: var(--succ-600); }
+
+/* ─── Herramientas (módulo 10) · F7.2 ─── */
+.hrm-tool-ico { width: 40px; height: 40px; border-radius: 8px; background: var(--cat-hrm-bg); color: var(--cat-hrm); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.hrm-tool-ico.lg { width: 56px; height: 56px; border-radius: 10px; }
+.hrm-tool-ico.xl { width: 72px; height: 72px; border-radius: 14px; }
+.dark .hrm-tool-ico { background: rgba(114,68,213,0.16); color: #C4B5FD; }
+.hrm-av { width: 30px; height: 30px; border-radius: 50%; color: #fff; font-family: var(--mono); font-weight: 600; font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.hrm-av.md { width: 36px; height: 36px; font-size: 12px; }
+.hrm-av.lg { width: 40px; height: 40px; font-size: 13px; }
+.hrm-av.sm { width: 24px; height: 24px; font-size: 10px; }
+.hrm-av-DP { background: linear-gradient(135deg,#7244D5,#9A6FDF); }
+.hrm-av-AM { background: linear-gradient(135deg,#2E90FA,#0E5FB8); }
+.hrm-av-SL { background: linear-gradient(135deg,#12B76A,#0A8E50); }
+.hrm-av-CR { background: linear-gradient(135deg,#F79009,#C66B00); }
+.hrm-av-ML { background: linear-gradient(135deg,#D24E8E,#9B226B); }
+.hrm-cat-card { background: var(--n-0); border: 1px solid var(--n-150); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 10px; cursor: pointer; transition: background .15s, border-color .15s; text-decoration: none; color: inherit; }
+.hrm-cat-card:hover { background: var(--n-50); border-color: var(--n-200); }
+.dark .hrm-cat-card { background: var(--n-0); border-color: var(--n-150); }
+.hrm-row-dang { background: #FEF5F4; }
+.hrm-row-dang:hover { background: #FCEAE9 !important; }
+.dark .hrm-row-dang { background: rgba(240,68,56,0.08); }
+.hrm-card-warn { border: 2px solid var(--warn-500); background: linear-gradient(180deg, var(--warn-50) 0%, var(--n-0) 70%); }
+.hrm-card-maint { border: 1px solid var(--n-200); background: var(--n-50); }
+.hrm-loan-stat { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; background: var(--n-0); border: 1px solid var(--n-150); border-radius: 6px; }
+.hrm-loan-stat .l { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .05em; color: var(--n-500); }
+.hrm-loan-stat .v { font-family: var(--mono); font-weight: 600; font-size: 16px; color: var(--n-900); }
+.hrm-loan-stat.dang .v { color: var(--dang-700); }
+.hrm-qr-canvas { width: 180px; height: 180px; margin: 0 auto 12px; background: #fff; border: 1px solid var(--n-200); border-radius: 8px; display: grid; place-items: center; padding: 14px; }
+.hrm-toggle { width: 34px; height: 20px; border-radius: 999px; background: var(--n-200); position: relative; flex-shrink: 0; cursor: pointer; margin-top: 2px; transition: background .15s; }
+.hrm-toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.hrm-toggle.on { background: var(--p-600); }
+.hrm-toggle.on::after { transform: translateX(14px); }
+.hrm-photo { width: 80px; height: 80px; border-radius: 6px; background: linear-gradient(135deg,#dee2eb 0%,#eef0f5 50%,#dee2eb 100%); border: 1px solid var(--n-150); display: grid; place-items: center; font-family: var(--mono); font-size: 9px; color: var(--n-500); }
+.hrm-photo.add { background: transparent; border: 1.5px dashed var(--n-200); color: var(--n-500); }
+@keyframes hrmPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.45;transform:scale(.7)} }
+.pulse-dot { animation: hrmPulse 1.6s ease-in-out infinite; }
