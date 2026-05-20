@@ -1040,3 +1040,40 @@ html, body {
 .dark .cost-row.tot { border-color: rgba(255,255,255,.12); }
 .dark .cost-row.saldo { border-color: rgba(45,60,229,.4); color:#C2CCFF; }
 .cost-row .v { font-family: var(--mono); }
+
+/* ─── Picking · Task Mode (sin chrome) ─── */
+.pk { display: flex; flex-direction: column; background: #fff; color: var(--n-950); font-family: var(--sans); }
+.pk-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--n-100); }
+.pk-close { width: 32px; height: 32px; border-radius: 999px; background: var(--n-100); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--n-700); flex-shrink: 0; }
+.pk-ctx { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--n-500); font-weight: 500; flex: 1; }
+.pk-loc { font-family: var(--mono); font-size: 12px; color: var(--n-700); font-weight: 500; }
+.pk-prog { display: flex; align-items: center; gap: 16px; padding: 12px 20px; border-bottom: 1px solid var(--n-100); }
+.pk-prog-bar { flex: 1; height: 6px; background: var(--n-100); border-radius: 3px; overflow: hidden; }
+.pk-prog-fill { height: 100%; background: var(--succ-500); border-radius: 3px; transition: width .3s ease; }
+.pk-prog-count { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--n-950); flex-shrink: 0; }
+.pk-desktop-wrap { display: flex; justify-content: center; gap: 64px; padding: 48px 20px; flex: 1; align-items: center; flex-wrap: wrap; }
+.pk-desktop-center { display: flex; flex-direction: column; align-items: center; gap: 18px; max-width: 600px; flex: 1; min-width: 280px; }
+.pk-step { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--n-300); font-weight: 500; text-align: center; }
+.pk-sku { font-family: var(--mono); font-size: 14px; color: var(--n-700); text-align: center; }
+.pk-name { font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; text-align: center; color: var(--n-950); margin: 0; max-width: 520px; text-wrap: pretty; }
+.pk-model { font-size: 16px; color: var(--n-500); text-align: center; margin: 0; }
+.pk-qty { background: var(--n-50); border-radius: 8px; padding: 20px; width: 200px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.pk-qty-lbl { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--n-300); font-weight: 500; }
+.pk-qty-num { font-family: var(--mono); font-size: 36px; font-weight: 500; color: var(--n-950); line-height: 1; }
+.pk-loc-inline { font-size: 14px; color: var(--n-500); text-align: center; margin: 0; }
+.pk-loc-inline .code { font-family: var(--mono); font-weight: 500; color: var(--n-700); margin-left: 4px; }
+.pk-qr { display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; }
+.pk-qr-img { width: 200px; height: 200px; border: 1px solid var(--n-150); border-radius: 8px; background: #fff; padding: 16px; display: flex; align-items: center; justify-content: center; }
+.pk-qr-lbl { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--n-300); font-weight: 500; }
+.pk-actions { display: flex; gap: 8px; padding: 20px; border-top: 1px solid var(--n-100); margin-top: auto; }
+.pk-btn { height: 64px; border-radius: 8px; font-family: var(--sans); font-weight: 500; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background .15s ease; }
+.pk-btn-skip { flex: 1; background: #fff; color: var(--n-700); border: 1px solid var(--n-200); }
+.pk-btn-skip:hover { background: var(--n-50); }
+.pk-btn-pick { flex: 2; background: var(--succ-500); color: #fff; border: none; }
+.pk-btn-pick:hover { background: var(--succ-600); }
+.pk-done { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 64px 20px; text-align: center; flex: 1; justify-content: center; }
+.pk-done-check { width: 64px; height: 64px; border-radius: 999px; background: var(--succ-100); display: flex; align-items: center; justify-content: center; color: var(--succ-700); }
+.pk-done-title { font-size: 28px; font-weight: 500; letter-spacing: -0.02em; color: var(--n-950); margin: 0; line-height: 1.15; }
+.pk-done-sub { font-size: 14px; color: var(--n-500); margin: 0; }
+.pk-done-btn { height: 64px; width: 100%; max-width: 420px; background: var(--succ-500); color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; font-family: var(--sans); margin-top: 8px; display: block; text-decoration: none; }
+.pk-done-btn:hover { background: var(--succ-600); }
