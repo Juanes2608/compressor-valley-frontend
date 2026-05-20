@@ -27,6 +27,7 @@ import { Route as OpsDevolucionesRouteImport } from './routes/ops.devoluciones'
 import { Route as OpsCotizacionesRouteImport } from './routes/ops.cotizaciones'
 import { Route as OpsComprasRouteImport } from './routes/ops.compras'
 import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
+import { Route as AdminTop10RouteImport } from './routes/admin.top10'
 import { Route as AdminTop10RouteImport } from './routes/admin.top-10'
 import { Route as AdminReordenRouteImport } from './routes/admin.reorden'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
@@ -149,6 +150,11 @@ const OpsComprasRoute = OpsComprasRouteImport.update({
 const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
   id: '/usuarios',
   path: '/usuarios',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTop10Route = AdminTop10RouteImport.update({
+  id: '/top10',
+  path: '/top10',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminTop10Route = AdminTop10RouteImport.update({
@@ -331,6 +337,7 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/reorden': typeof AdminReordenRoute
   '/admin/top-10': typeof AdminTop10Route
+  '/admin/top10': typeof AdminTop10Route
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/ops/compras': typeof OpsComprasRouteWithChildren
   '/ops/cotizaciones': typeof OpsCotizacionesRouteWithChildren
@@ -384,6 +391,7 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/reorden': typeof AdminReordenRoute
   '/admin/top-10': typeof AdminTop10Route
+  '/admin/top10': typeof AdminTop10Route
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/ops/ensambles': typeof OpsEnsamblesRoute
   '/ops/inventario': typeof OpsInventarioRoute
@@ -430,6 +438,7 @@ export interface FileRoutesById {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/reorden': typeof AdminReordenRoute
   '/admin/top-10': typeof AdminTop10Route
+  '/admin/top10': typeof AdminTop10Route
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/ops/compras': typeof OpsComprasRouteWithChildren
   '/ops/cotizaciones': typeof OpsCotizacionesRouteWithChildren
@@ -485,6 +494,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/reorden'
     | '/admin/top-10'
+    | '/admin/top10'
     | '/admin/usuarios'
     | '/ops/compras'
     | '/ops/cotizaciones'
@@ -538,6 +548,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/reorden'
     | '/admin/top-10'
+    | '/admin/top10'
     | '/admin/usuarios'
     | '/ops/ensambles'
     | '/ops/inventario'
@@ -583,6 +594,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/reorden'
     | '/admin/top-10'
+    | '/admin/top10'
     | '/admin/usuarios'
     | '/ops/compras'
     | '/ops/cotizaciones'
@@ -757,6 +769,13 @@ declare module '@tanstack/react-router' {
       path: '/usuarios'
       fullPath: '/admin/usuarios'
       preLoaderRoute: typeof AdminUsuariosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/top10': {
+      id: '/admin/top10'
+      path: '/top10'
+      fullPath: '/admin/top10'
+      preLoaderRoute: typeof AdminTop10RouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/top-10': {
@@ -1003,6 +1022,7 @@ interface AdminRouteChildren {
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminReordenRoute: typeof AdminReordenRoute
   AdminTop10Route: typeof AdminTop10Route
+  AdminTop10Route: typeof AdminTop10Route
   AdminUsuariosRoute: typeof AdminUsuariosRoute
 }
 
@@ -1015,6 +1035,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminConteoCiclicoRoute: AdminConteoCiclicoRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminReordenRoute: AdminReordenRoute,
+  AdminTop10Route: AdminTop10Route,
   AdminTop10Route: AdminTop10Route,
   AdminUsuariosRoute: AdminUsuariosRoute,
 }
