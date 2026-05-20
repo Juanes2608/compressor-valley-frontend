@@ -62,9 +62,9 @@ function ComprasLista() {
               </button>
             ))}
           </div>
-          <button className="btn-pri inline-flex items-center gap-1.5 rounded-lg border border-transparent px-3.5 py-2 text-[13px] font-medium">
+          <Link to="/ops/compras/nueva" className="btn-pri inline-flex items-center gap-1.5 rounded-lg border border-transparent px-3.5 py-2 text-[13px] font-medium">
             <Plus className="size-3.5" /> Nueva compra
-          </button>
+          </Link>
         </div>
       </div>
 
