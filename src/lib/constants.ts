@@ -101,7 +101,7 @@ export const SECCIONES_ADMIN: SeccionDef[] = [
       { id: "conteo-ciclico", label: "Conteo cíclico", href: "/admin/conteo-ciclico", icon: ClipboardList, reference: "9 Configuracion y Usuarios.html" },
 
       { id: "configuracion",  label: "Configuración",  href: "/admin/configuracion",  icon: Settings, reference: "9 Configuracion y Usuarios.html" },
-      { id: "usuarios",       label: "Usuarios",       href: "/admin/usuarios",       icon: Users, reference: "9 Configuracion y Usuarios.html" },
+      { id: "usuarios",       label: "Usuarios",       href: "/admin/usuarios",       icon: Users, counter: 6, reference: "9 Configuracion y Usuarios.html" },
     ],
   },
 ];
