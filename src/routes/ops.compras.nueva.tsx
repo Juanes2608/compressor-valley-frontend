@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { ArrowLeftCircle, ArrowRight, Check, Search, ScanLine, Trash2 } from "lucide-react";
 import { NUEVA_OC } from "@/lib/compras-data";
 import { formatCOP } from "@/lib/format";
+import { ComingSoonDialog } from "@/components/shell/coming-soon";
 
 export const Route = createFileRoute("/ops/compras/nueva")({
   head: () => ({ meta: [{ title: "Nueva compra · CHV" }] }),
