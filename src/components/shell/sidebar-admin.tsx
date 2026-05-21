@@ -33,6 +33,11 @@ export function SidebarAdmin() {
                     >
                       <Icon className="h-[15px] w-[15px] shrink-0" strokeWidth={1.75} />
                       <span className="truncate">{m.label}</span>
+                      {m.counter !== undefined && (
+                        <span className="ml-auto font-mono text-[11px] tabular-nums text-white/45 group-data-[active=true]:text-white/70">
+                          {m.counter}
+                        </span>
+                      )}
                     </Link>
                   </li>
                 );
