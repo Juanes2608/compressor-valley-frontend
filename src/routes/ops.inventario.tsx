@@ -63,12 +63,18 @@ function InventarioPage() {
             <Download className="h-3.5 w-3.5" strokeWidth={1.7} />
             Exportar
           </button>
-          <button className="btn btn-pri">
+          <button onClick={() => setNuevoOpen(true)} className="btn btn-pri">
             <Plus className="h-3.5 w-3.5" strokeWidth={2} />
             Nuevo producto
           </button>
         </div>
       </div>
+      <ComingSoonDialog
+        open={nuevoOpen}
+        onClose={() => setNuevoOpen(false)}
+        title="Crear nuevo producto"
+        description="El formulario de alta de SKU (categoría, precio, stock inicial por sede, proveedor, etiquetas) estará disponible en v1.1. Por ahora puedes editar SKUs existentes desde el detalle del lateral."
+      />
 
       {/* Search row */}
       <div className="flex items-center gap-2.5">
