@@ -11,6 +11,7 @@ export const Route = createFileRoute("/ops/compras/nueva")({
 });
 
 function ComprasNueva() {
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const subtotal = NUEVA_OC.catalogo.reduce((s, p) => s + p.cant * p.costo, 0);
   const totalItems = NUEVA_OC.catalogo.reduce((s, p) => s + p.cant, 0);
   const iva = Math.round(subtotal * 0.19);
