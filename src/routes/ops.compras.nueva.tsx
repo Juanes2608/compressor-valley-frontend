@@ -124,11 +124,21 @@ function ComprasNueva() {
           <div className="cart-line"><span>Subtotal</span><span className="v">{formatCOP(subtotal)}</span></div>
           <div className="cart-line"><span>IVA 19%</span><span className="v">{formatCOP(iva)}</span></div>
           <div className="cart-line tot"><span>Total estimado</span><span className="v">{formatCOP(total)}</span></div>
-          <button className="btn-pri mt-1.5 inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-lg border border-transparent text-[13px] font-medium">
+          <button
+            onClick={() => setConfirmOpen(true)}
+            className="btn-pri mt-1.5 inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-lg border border-transparent text-[13px] font-medium"
+          >
             Continuar a confirmación <ArrowRight className="size-3.5" />
           </button>
         </aside>
       </div>
+
+      <ComingSoonDialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        title="Paso 3 · Confirmación de compra"
+        description={`Esta vista mostrará el resumen final de ${NUEVA_OC.num} (${totalItems} items · ${formatCOP(total)}) con validación de proveedor, sede destino y emisión de la OC. Disponible en v1.1.`}
+      />
     </div>
   );
 }
