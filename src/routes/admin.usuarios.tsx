@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  Plus, Pencil, MoreHorizontal, Shield, Search, Lock,
+  Plus, Pencil, MoreHorizontal, Shield, Search,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/usuarios")({
