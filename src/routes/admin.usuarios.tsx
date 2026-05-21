@@ -152,32 +152,32 @@ function UsuariosPage() {
             </thead>
             <tbody>
               {filtrados.map((u) => (
-                <tr key={u.id} className="border-b border-[--n-100] last:border-0 hover:bg-[--n-25]">
-                  <td className="px-3 py-3">
-                    <span className={`grid h-8 w-8 place-items-center rounded-full text-[11px] font-semibold ${ROL_STYLE[u.rol].avatar}`}>
+                <tr key={u.id} className="border-b border-[--n-100] last:border-0 hover:bg-[--n-50]">
+                  <td className="px-3.5 py-3 align-middle" style={{ height: 64 }}>
+                    <span className={`grid h-7 w-7 place-items-center rounded-full font-mono text-[11px] font-semibold ${ROL_STYLE[u.rol].avatar}`}>
                       {u.iniciales}
                     </span>
                   </td>
-                  <td className="px-3 py-3">
-                    <div className="font-medium text-[--n-900]">{u.nombre}</div>
+                  <td className="px-3.5 py-3 align-middle">
+                    <div className="text-[13px] font-medium text-[--n-900]">{u.nombre}</div>
                     <div className="mt-0.5 font-mono text-[11px] text-[--n-500]">{u.email}</div>
                   </td>
-                  <td className="px-3 py-3">
-                    <span className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium ${ROL_STYLE[u.rol].pill}`}>
-                      <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
+                  <td className="px-3.5 py-3 align-middle">
+                    <span className={`inline-flex h-6 items-center gap-1.5 rounded-full border px-2.5 text-[11.5px] font-medium leading-none ${ROL_STYLE[u.rol].pill}`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${ROL_STYLE[u.rol].dot}`} />
                       {u.rol}
                     </span>
                   </td>
-                  <td className="px-3 py-3">
-                    <span className="inline-flex items-center gap-1.5 rounded-md bg-[--n-50] px-2 py-0.5 text-[11.5px] text-[--n-700]">
+                  <td className="px-3.5 py-3 align-middle">
+                    <span className="inline-flex h-6 items-center gap-1.5 rounded-full border border-[--n-200] bg-[--n-50] px-2.5 font-mono text-[11.5px] font-medium tracking-[0.02em] text-[--n-700]">
                       <span className={`h-1.5 w-1.5 rounded-full ${SEDE_DOT[u.sede]}`} />
                       {u.sede}
                     </span>
                   </td>
-                  <td className="px-3 py-3"><Toggle on={u.activo} locked={u.bloqueado} /></td>
-                  <td className="px-3 py-3 font-mono text-[11px] text-[--n-700]">{u.ultimaConexion}</td>
-                  <td className="px-3 py-3 text-[12px] leading-snug text-[--n-700]">{u.permisos}</td>
-                  <td className="px-3 py-3">
+                  <td className="px-3.5 py-3 align-middle"><Toggle on={u.activo} locked={u.bloqueado} /></td>
+                  <td className="px-3.5 py-3 align-middle font-mono text-[11px] text-[--n-700]">{u.ultimaConexion}</td>
+                  <td className="px-3.5 py-3 align-middle text-[12px] leading-[1.4] text-[--n-700]">{u.permisos}</td>
+                  <td className="px-3.5 py-3 align-middle">
                     <div className="flex items-center gap-1">
                       <button className="grid h-7 w-7 place-items-center rounded-md text-[--n-600] hover:bg-[--n-100] hover:text-[--n-900]">
                         <Pencil className="h-3.5 w-3.5" />
