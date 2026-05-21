@@ -8,6 +8,7 @@ import {
   type InventarioRow,
 } from "@/lib/inventario-data";
 import { formatCOP } from "@/lib/format";
+import { ComingSoonDialog } from "@/components/shell/coming-soon";
 
 export const Route = createFileRoute("/ops/productos")({
   head: () => ({ meta: [{ title: "Productos · CHV" }] }),
@@ -25,6 +26,7 @@ function ProductosPage() {
   const [view, setView] = useState<"tabla" | "tarjetas">("tabla");
   const [q, setQ] = useState("");
   const [cats, setCats] = useState<Set<CategoriaId>>(new Set());
+  const [nuevoOpen, setNuevoOpen] = useState(false);
 
   const rows = useMemo(() => {
     const needle = q.trim().toLowerCase();
