@@ -126,10 +126,19 @@ function Th({ children, w, right }: { children: React.ReactNode; w?: string; rig
 
 function CompraTr({ r }: { r: CompraRow }) {
   const pill = ESTADO_PILL[r.estado];
+  const navigate = useNavigate();
   return (
-    <tr className="border-b border-[--n-75] last:border-b-0 hover:bg-[--n-25]">
+    <tr
+      onClick={() => navigate({ to: "/ops/compras/$id", params: { id: r.num } })}
+      className="cursor-pointer border-b border-[--n-75] last:border-b-0 transition-colors hover:bg-[--p-cta]/5"
+    >
       <td className="px-3 py-2.5">
-        <Link to="/ops/compras/$id" params={{ id: r.num }} className="font-mono text-[12.5px] font-medium text-[--n-950] hover:underline">
+        <Link
+          to="/ops/compras/$id"
+          params={{ id: r.num }}
+          onClick={(e) => e.stopPropagation()}
+          className="font-mono text-[12.5px] font-medium text-[--n-950] hover:underline"
+        >
           {r.num}
         </Link>
       </td>
@@ -157,14 +166,6 @@ function RecBar({ r }: { r: CompraRow }) {
   if (!r.recibido) return null;
   const pct = (r.recibido.actual / r.recibido.total) * 100;
   const tone = r.estado === "parcial" ? "bg-[--warn-500]" : r.estado === "dev_garantia" ? "bg-[--info-500]" : "bg-[--succ-500]";
-  if (r.estado === "completa" && pct === 100) {
-    return (
-      <Link to="/ops/compras/$id" params={{ id: r.num }} className="block font-mono text-[11.5px] text-[--n-700] hover:text-[--n-950]">
-        <div className="mb-1">{r.recibido.actual}/{r.recibido.total} items</div>
-        <div className="h-1 rounded-full bg-[--n-100] overflow-hidden"><div className={`h-full rounded-full ${tone}`} style={{ width: `${pct}%` }} /></div>
-      </Link>
-    );
-  }
   return (
     <div className="font-mono text-[11.5px] text-[--n-700]">
       <div className="mb-1">{r.recibido.actual}/{r.recibido.total} items</div>
