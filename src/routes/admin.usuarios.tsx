@@ -34,29 +34,38 @@ const USUARIOS: Usuario[] = [
   { id: "USR-006", iniciales: "CR", nombre: "Carlos Restrepo", email: "crestrepo@cv.co", rol: "Bodeguero", sede: "WH-04 Tuluá", activo: true, ultimaConexion: "Ayer 16:40", permisos: "Inventario · Compras · Traspasos · Devoluciones · Garantías · Herramientas" },
 ];
 
-const ROL_STYLE: Record<Rol, { avatar: string; pill: string }> = {
-  "Admin":     { avatar: "bg-[--prog-50] text-[--prog-700]", pill: "bg-[--prog-50] text-[--prog-700] border-[--prog-700]/20" },
-  "Vendedor":  { avatar: "bg-[--info-50] text-[--info-700]", pill: "bg-[--info-50] text-[--info-700] border-[--info-700]/20" },
-  "Bodeguero": { avatar: "bg-[--warn-50] text-[--warn-700]", pill: "bg-[--warn-50] text-[--warn-700] border-[--warn-700]/20" },
-  "Técnico":   { avatar: "bg-[--succ-50] text-[--succ-700]", pill: "bg-[--succ-50] text-[--succ-700] border-[--succ-700]/20" },
+const ROL_STYLE: Record<Rol, { avatar: string; pill: string; dot: string }> = {
+  "Admin":     { avatar: "bg-[--prog-100] text-[--prog-700]", pill: "bg-[--prog-50] text-[--prog-700] border-[--prog-border]", dot: "bg-[--prog-500]" },
+  "Vendedor":  { avatar: "bg-[--info-100] text-[--info-700]", pill: "bg-[--info-50] text-[--info-700] border-[--info-border]", dot: "bg-[--info-500]" },
+  "Bodeguero": { avatar: "bg-[--warn-100] text-[--warn-700]", pill: "bg-[--warn-50] text-[--warn-700] border-[--warn-border]", dot: "bg-[--warn-500]" },
+  "Técnico":   { avatar: "bg-[--succ-100] text-[--succ-700]", pill: "bg-[--succ-50] text-[--succ-700] border-[--succ-border]", dot: "bg-[--succ-500]" },
 };
 
 const SEDE_DOT: Record<Sede, string> = {
-  "WH-01 Cali":  "bg-[--p-cta]",
-  "WH-02 Norte": "bg-[--info-700]",
-  "WH-04 Tuluá": "bg-[--warn-700]",
+  "WH-01 Cali":  "bg-[--sede-wh01]",
+  "WH-02 Norte": "bg-[--sede-wh02]",
+  "WH-04 Tuluá": "bg-[--sede-wh04]",
 };
 
 function Toggle({ on, locked }: { on: boolean; locked?: boolean }) {
+  if (locked) {
+    return (
+      <span
+        title="Eres el único Admin activo, no puedes desactivar tu cuenta"
+        className="relative inline-block h-[18px] w-[34px] cursor-not-allowed rounded-full bg-[--n-150]"
+      >
+        <span className="absolute inset-0 rounded-full border border-dashed border-[--n-300]" />
+        <span className="absolute left-[18px] top-[2px] h-[14px] w-[14px] rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,.18)]" />
+      </span>
+    );
+  }
   return (
     <span
-      title={locked ? "Eres el único Admin activo, no puedes desactivar tu cuenta" : undefined}
-      className={`relative inline-flex h-4 w-7 items-center rounded-full transition-colors ${on ? "bg-[--succ-700]" : "bg-[--n-200]"} ${locked ? "opacity-60" : ""}`}
+      className={`relative inline-block h-[18px] w-[34px] rounded-full transition-colors ${on ? "bg-[--succ-600]" : "bg-[--n-200]"}`}
     >
-      <span className={`absolute h-3 w-3 rounded-full bg-white shadow-sm transition-all ${on ? "left-3.5" : "left-0.5"}`} />
-      {locked && (
-        <Lock className="absolute -right-3.5 top-1/2 h-3 w-3 -translate-y-1/2 text-[--n-500]" />
-      )}
+      <span
+        className={`absolute top-[2px] h-[14px] w-[14px] rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,.18)] transition-all ${on ? "left-[18px]" : "left-[2px]"}`}
+      />
     </span>
   );
 }
