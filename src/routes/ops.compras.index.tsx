@@ -98,6 +98,9 @@ function ComprasLista() {
             </thead>
             <tbody>
               {rows.map((r) => <CompraTr key={r.num} r={r} />)}
+              {rows.length === 0 && (
+                <tr><td colSpan={8} className="px-3 py-10 text-center text-[12.5px] text-[--n-500]">Sin compras que coincidan con el filtro.</td></tr>
+              )}
             </tbody>
           </table>
           <div className="flex items-center justify-between border-t border-[--n-100] bg-[--n-25] px-4 py-3 text-[12px] text-[--n-500]">
