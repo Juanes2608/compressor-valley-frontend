@@ -8,6 +8,7 @@ import {
   type InventarioRow,
 } from "@/lib/inventario-data";
 import { formatCOP } from "@/lib/format";
+import { ComingSoonDialog } from "@/components/shell/coming-soon";
 
 export const Route = createFileRoute("/ops/productos")({
   head: () => ({ meta: [{ title: "Productos · CHV" }] }),
@@ -25,6 +26,7 @@ function ProductosPage() {
   const [view, setView] = useState<"tabla" | "tarjetas">("tabla");
   const [q, setQ] = useState("");
   const [cats, setCats] = useState<Set<CategoriaId>>(new Set());
+  const [nuevoOpen, setNuevoOpen] = useState(false);
 
   const rows = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -87,11 +89,17 @@ function ProductosPage() {
           <button className="btn-out inline-flex items-center gap-1.5">
             <Download className="size-3.5" /> Exportar
           </button>
-          <button className="btn-pri inline-flex items-center gap-1.5">
+          <button onClick={() => setNuevoOpen(true)} className="btn-pri inline-flex items-center gap-1.5">
             <Plus className="size-3.5" /> Nuevo producto
           </button>
         </div>
       </div>
+      <ComingSoonDialog
+        open={nuevoOpen}
+        onClose={() => setNuevoOpen(false)}
+        title="Crear nuevo producto"
+        description="El formulario de alta de SKU (categoría, precio, stock inicial por sede, proveedor, etiquetas) estará disponible en v1.1."
+      />
 
       {/* Filtros de categoría como chips */}
       <div className="flex flex-wrap items-center gap-2 border-b border-border bg-card/50 px-6 py-2.5">

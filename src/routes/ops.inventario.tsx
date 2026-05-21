@@ -11,6 +11,7 @@ import {
   KPI_TOTAL,
   type InventarioRow, type StockEstado,
 } from "@/lib/inventario-data";
+import { ComingSoonDialog } from "@/components/shell/coming-soon";
 
 export const Route = createFileRoute("/ops/inventario")({
   head: () => ({ meta: [{ title: "Inventario · CHV" }] }),
@@ -22,6 +23,7 @@ function InventarioPage() {
   const [vista, setVista] = useState<"tabla" | "tarjetas">("tabla");
   const [orden, setOrden] = useState<"SKU" | "Nombre" | "Stock">("SKU");
   const [query, setQuery] = useState("");
+  const [nuevoOpen, setNuevoOpen] = useState(false);
 
   const selected: InventarioRow | undefined = useMemo(
     () => INVENTARIO_ROWS.find((r) => r.sku === selectedSku),
@@ -61,12 +63,18 @@ function InventarioPage() {
             <Download className="h-3.5 w-3.5" strokeWidth={1.7} />
             Exportar
           </button>
-          <button className="btn btn-pri">
+          <button onClick={() => setNuevoOpen(true)} className="btn btn-pri">
             <Plus className="h-3.5 w-3.5" strokeWidth={2} />
             Nuevo producto
           </button>
         </div>
       </div>
+      <ComingSoonDialog
+        open={nuevoOpen}
+        onClose={() => setNuevoOpen(false)}
+        title="Crear nuevo producto"
+        description="El formulario de alta de SKU (categoría, precio, stock inicial por sede, proveedor, etiquetas) estará disponible en v1.1. Por ahora puedes editar SKUs existentes desde el detalle del lateral."
+      />
 
       {/* Search row */}
       <div className="flex items-center gap-2.5">
