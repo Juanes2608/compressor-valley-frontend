@@ -11,6 +11,7 @@ import {
   KPI_TOTAL,
   type InventarioRow, type StockEstado,
 } from "@/lib/inventario-data";
+import { ComingSoonDialog } from "@/components/shell/coming-soon";
 
 export const Route = createFileRoute("/ops/inventario")({
   head: () => ({ meta: [{ title: "Inventario · CHV" }] }),
@@ -22,6 +23,7 @@ function InventarioPage() {
   const [vista, setVista] = useState<"tabla" | "tarjetas">("tabla");
   const [orden, setOrden] = useState<"SKU" | "Nombre" | "Stock">("SKU");
   const [query, setQuery] = useState("");
+  const [nuevoOpen, setNuevoOpen] = useState(false);
 
   const selected: InventarioRow | undefined = useMemo(
     () => INVENTARIO_ROWS.find((r) => r.sku === selectedSku),
