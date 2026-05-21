@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { ArrowLeftCircle, ArrowRight, Check, Search, ScanLine, Trash2 } from "lucide-react";
 import { NUEVA_OC } from "@/lib/compras-data";
 import { formatCOP } from "@/lib/format";
+import { ComingSoonDialog } from "@/components/shell/coming-soon";
 
 export const Route = createFileRoute("/ops/compras/nueva")({
   head: () => ({ meta: [{ title: "Nueva compra · CHV" }] }),
@@ -9,6 +11,7 @@ export const Route = createFileRoute("/ops/compras/nueva")({
 });
 
 function ComprasNueva() {
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const subtotal = NUEVA_OC.catalogo.reduce((s, p) => s + p.cant * p.costo, 0);
   const totalItems = NUEVA_OC.catalogo.reduce((s, p) => s + p.cant, 0);
   const iva = Math.round(subtotal * 0.19);
@@ -121,11 +124,21 @@ function ComprasNueva() {
           <div className="cart-line"><span>Subtotal</span><span className="v">{formatCOP(subtotal)}</span></div>
           <div className="cart-line"><span>IVA 19%</span><span className="v">{formatCOP(iva)}</span></div>
           <div className="cart-line tot"><span>Total estimado</span><span className="v">{formatCOP(total)}</span></div>
-          <button className="btn-pri mt-1.5 inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-lg border border-transparent text-[13px] font-medium">
+          <button
+            onClick={() => setConfirmOpen(true)}
+            className="btn-pri mt-1.5 inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-lg border border-transparent text-[13px] font-medium"
+          >
             Continuar a confirmación <ArrowRight className="size-3.5" />
           </button>
         </aside>
       </div>
+
+      <ComingSoonDialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        title="Paso 3 · Confirmación de compra"
+        description={`Esta vista mostrará el resumen final de ${NUEVA_OC.num} (${totalItems} items · ${formatCOP(total)}) con validación de proveedor, sede destino y emisión de la OC. Disponible en v1.1.`}
+      />
     </div>
   );
 }

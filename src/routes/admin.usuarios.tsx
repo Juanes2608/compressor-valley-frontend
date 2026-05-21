@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  Plus, Pencil, MoreHorizontal, Shield, Search, Lock,
+  Plus, Pencil, MoreHorizontal, Shield, Search,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/usuarios")({
@@ -34,29 +34,38 @@ const USUARIOS: Usuario[] = [
   { id: "USR-006", iniciales: "CR", nombre: "Carlos Restrepo", email: "crestrepo@cv.co", rol: "Bodeguero", sede: "WH-04 Tuluá", activo: true, ultimaConexion: "Ayer 16:40", permisos: "Inventario · Compras · Traspasos · Devoluciones · Garantías · Herramientas" },
 ];
 
-const ROL_STYLE: Record<Rol, { avatar: string; pill: string }> = {
-  "Admin":     { avatar: "bg-[--prog-50] text-[--prog-700]", pill: "bg-[--prog-50] text-[--prog-700] border-[--prog-700]/20" },
-  "Vendedor":  { avatar: "bg-[--info-50] text-[--info-700]", pill: "bg-[--info-50] text-[--info-700] border-[--info-700]/20" },
-  "Bodeguero": { avatar: "bg-[--warn-50] text-[--warn-700]", pill: "bg-[--warn-50] text-[--warn-700] border-[--warn-700]/20" },
-  "Técnico":   { avatar: "bg-[--succ-50] text-[--succ-700]", pill: "bg-[--succ-50] text-[--succ-700] border-[--succ-700]/20" },
+const ROL_STYLE: Record<Rol, { avatar: string; pill: string; dot: string }> = {
+  "Admin":     { avatar: "bg-[--prog-100] text-[--prog-700]", pill: "bg-[--prog-50] text-[--prog-700] border-[--prog-border]", dot: "bg-[--prog-500]" },
+  "Vendedor":  { avatar: "bg-[--info-100] text-[--info-700]", pill: "bg-[--info-50] text-[--info-700] border-[--info-border]", dot: "bg-[--info-500]" },
+  "Bodeguero": { avatar: "bg-[--warn-100] text-[--warn-700]", pill: "bg-[--warn-50] text-[--warn-700] border-[--warn-border]", dot: "bg-[--warn-500]" },
+  "Técnico":   { avatar: "bg-[--succ-100] text-[--succ-700]", pill: "bg-[--succ-50] text-[--succ-700] border-[--succ-border]", dot: "bg-[--succ-500]" },
 };
 
 const SEDE_DOT: Record<Sede, string> = {
-  "WH-01 Cali":  "bg-[--p-cta]",
-  "WH-02 Norte": "bg-[--info-700]",
-  "WH-04 Tuluá": "bg-[--warn-700]",
+  "WH-01 Cali":  "bg-[--sede-wh01]",
+  "WH-02 Norte": "bg-[--sede-wh02]",
+  "WH-04 Tuluá": "bg-[--sede-wh04]",
 };
 
 function Toggle({ on, locked }: { on: boolean; locked?: boolean }) {
+  if (locked) {
+    return (
+      <span
+        title="Eres el único Admin activo, no puedes desactivar tu cuenta"
+        className="relative inline-block h-[18px] w-[34px] cursor-not-allowed rounded-full bg-[--n-150]"
+      >
+        <span className="absolute inset-0 rounded-full border border-dashed border-[--n-300]" />
+        <span className="absolute left-[18px] top-[2px] h-[14px] w-[14px] rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,.18)]" />
+      </span>
+    );
+  }
   return (
     <span
-      title={locked ? "Eres el único Admin activo, no puedes desactivar tu cuenta" : undefined}
-      className={`relative inline-flex h-4 w-7 items-center rounded-full transition-colors ${on ? "bg-[--succ-700]" : "bg-[--n-200]"} ${locked ? "opacity-60" : ""}`}
+      className={`relative inline-block h-[18px] w-[34px] rounded-full transition-colors ${on ? "bg-[--succ-600]" : "bg-[--n-200]"}`}
     >
-      <span className={`absolute h-3 w-3 rounded-full bg-white shadow-sm transition-all ${on ? "left-3.5" : "left-0.5"}`} />
-      {locked && (
-        <Lock className="absolute -right-3.5 top-1/2 h-3 w-3 -translate-y-1/2 text-[--n-500]" />
-      )}
+      <span
+        className={`absolute top-[2px] h-[14px] w-[14px] rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,.18)] transition-all ${on ? "left-[18px]" : "left-[2px]"}`}
+      />
     </span>
   );
 }
@@ -143,32 +152,32 @@ function UsuariosPage() {
             </thead>
             <tbody>
               {filtrados.map((u) => (
-                <tr key={u.id} className="border-b border-[--n-100] last:border-0 hover:bg-[--n-25]">
-                  <td className="px-3 py-3">
-                    <span className={`grid h-8 w-8 place-items-center rounded-full text-[11px] font-semibold ${ROL_STYLE[u.rol].avatar}`}>
+                <tr key={u.id} className="border-b border-[--n-100] last:border-0 hover:bg-[--n-50]">
+                  <td className="px-3.5 py-3 align-middle" style={{ height: 64 }}>
+                    <span className={`grid h-7 w-7 place-items-center rounded-full font-mono text-[11px] font-semibold ${ROL_STYLE[u.rol].avatar}`}>
                       {u.iniciales}
                     </span>
                   </td>
-                  <td className="px-3 py-3">
-                    <div className="font-medium text-[--n-900]">{u.nombre}</div>
+                  <td className="px-3.5 py-3 align-middle">
+                    <div className="text-[13px] font-medium text-[--n-900]">{u.nombre}</div>
                     <div className="mt-0.5 font-mono text-[11px] text-[--n-500]">{u.email}</div>
                   </td>
-                  <td className="px-3 py-3">
-                    <span className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium ${ROL_STYLE[u.rol].pill}`}>
-                      <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
+                  <td className="px-3.5 py-3 align-middle">
+                    <span className={`inline-flex h-6 items-center gap-1.5 rounded-full border px-2.5 text-[11.5px] font-medium leading-none ${ROL_STYLE[u.rol].pill}`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${ROL_STYLE[u.rol].dot}`} />
                       {u.rol}
                     </span>
                   </td>
-                  <td className="px-3 py-3">
-                    <span className="inline-flex items-center gap-1.5 rounded-md bg-[--n-50] px-2 py-0.5 text-[11.5px] text-[--n-700]">
+                  <td className="px-3.5 py-3 align-middle">
+                    <span className="inline-flex h-6 items-center gap-1.5 rounded-full border border-[--n-200] bg-[--n-50] px-2.5 font-mono text-[11.5px] font-medium tracking-[0.02em] text-[--n-700]">
                       <span className={`h-1.5 w-1.5 rounded-full ${SEDE_DOT[u.sede]}`} />
                       {u.sede}
                     </span>
                   </td>
-                  <td className="px-3 py-3"><Toggle on={u.activo} locked={u.bloqueado} /></td>
-                  <td className="px-3 py-3 font-mono text-[11px] text-[--n-700]">{u.ultimaConexion}</td>
-                  <td className="px-3 py-3 text-[12px] leading-snug text-[--n-700]">{u.permisos}</td>
-                  <td className="px-3 py-3">
+                  <td className="px-3.5 py-3 align-middle"><Toggle on={u.activo} locked={u.bloqueado} /></td>
+                  <td className="px-3.5 py-3 align-middle font-mono text-[11px] text-[--n-700]">{u.ultimaConexion}</td>
+                  <td className="px-3.5 py-3 align-middle text-[12px] leading-[1.4] text-[--n-700]">{u.permisos}</td>
+                  <td className="px-3.5 py-3 align-middle">
                     <div className="flex items-center gap-1">
                       <button className="grid h-7 w-7 place-items-center rounded-md text-[--n-600] hover:bg-[--n-100] hover:text-[--n-900]">
                         <Pencil className="h-3.5 w-3.5" />
